@@ -1,0 +1,17 @@
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.2.0
+    hooks:
+    -   id: trailing-whitespace
+    -   id: end-of-file-fixer
+    -   id: check-yaml
+    -   id: check-added-large-files
+        args: ['--maxkb=1000000']
+
+-   repo: https://github.com/sqlfluff/sqlfluff
+    rev: 1.4.5
+    hooks:
+    -   id: sqlfluff-lint
+        args: [ '--dialect=tsql' ]
+    -   id: sqlfluff-fix
+        args: [ '--dialect=tsql' ]
