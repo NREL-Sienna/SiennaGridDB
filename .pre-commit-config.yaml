@@ -12,6 +12,6 @@ repos:
     rev: 1.4.5
     hooks:
     -   id: sqlfluff-lint
-        args: [ '--dialect=tsql' ]
+        args: [ '--dialect=sqlite' ]
     -   id: sqlfluff-fix
-        args: [ '--dialect=tsql' ]
+        args: [ '--dialect=sqlite' ]
