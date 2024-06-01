@@ -1,17 +1,17 @@
+---
 repos:
--   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.2.0
-    hooks:
-    -   id: trailing-whitespace
-    -   id: end-of-file-fixer
-    -   id: check-yaml
-    -   id: check-added-large-files
-        args: ['--maxkb=1000000']
-
--   repo: https://github.com/sqlfluff/sqlfluff
-    rev: 1.4.5
-    hooks:
-    -   id: sqlfluff-lint
-        args: [ '--dialect=sqlite' ]
-    -   id: sqlfluff-fix
-        args: [ '--dialect=sqlite' ]
+    - repo: https://github.com/pre-commit/pre-commit-hooks
+      rev: v2.3.0
+      hooks:
+          - id: check-yaml
+          - id: end-of-file-fixer
+          - id: trailing-whitespace
+    - repo: https://github.com/jumanjihouse/pre-commit-hook-yamlfmt
+      rev: 0.2.1 # or other specific tag
+      hooks:
+          - id: yamlfmt
+    - repo: https://github.com/tconbeer/sqlfmt
+      rev: v0.21.3
+      hooks:
+          - id: sqlfmt
+            language_version: python
