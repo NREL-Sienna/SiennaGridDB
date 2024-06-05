@@ -56,8 +56,9 @@ create table  areas (
 create table  transmission_lines (
 	area_from text not null references balancing_topologies(name),
 	area_to text not null references balancing_topologies(name),
-	rating_up float not null check(rating_up >= 0),
-	rating_down float not null check (rating_down >=0)
+	continuous_rating float not null check(continuous_rating >= 0),
+	ste_rating float not null check (ste_rating >=0)
+	lte_rating float not null check (lte_rating >=0)
 );
 -- ) strict;
 -- flow between two regions
