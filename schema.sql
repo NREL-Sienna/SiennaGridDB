@@ -41,15 +41,15 @@ create table  storage_units (
 
 -- create table for technologies
 create table supply_technologies (
-	technology_id integer primary key,
-	prime_mover text not null references prime_mover_types(prime_mover),
-	capital_cost float not null check (capital_cost >= 0),
-	vom_cost float not null check (vom_cost >= 0),
-	fom_cost float not null check (fom_cost >= 0),
-	scenario text null,
-	area text null references areas(name),
-	balancing_topology text null references balancing_topologies(name),
-	-- Create a function input here maybe?
+    technology_id integer primary key,
+    prime_mover text not null references prime_mover_types(prime_mover),
+    capital_cost float not null check (capital_cost >= 0),
+    vom_cost float not null check (vom_cost >= 0),
+    fom_cost float not null check (fom_cost >= 0),
+    scenario text null,
+    area text null references areas(name),
+    balancing_topology text null references balancing_topologies(name)
+    -- Create a function input here maybe?
 );
 
 
@@ -125,7 +125,7 @@ insert into data_types (name, validation_query) values
 ('integer', 'cast(? as integer) is not null'),
 ('real', 'cast(? as real) is not null'),
 ('text', 'cast(? as text) is not null'),
-('time_series', '? is null');
+('time_series', '? is null'),
 ('piecewise_lin', '? is null');
 -- Create a new data type for function data here
 
