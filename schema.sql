@@ -45,7 +45,10 @@ create table supply_technologies (
 	prime_mover text not null references prime_mover_types(prime_mover),
 	capital_cost float not null check (capital_cost >= 0),
 	vom_cost float not null check (vom_cost >= 0),
-	fom_cost float not null check (fom_cost >= 0)
+	fom_cost float not null check (fom_cost >= 0),
+	scenario text null,
+	area text null references areas(name),
+	balancing_topology text null references balancing_topologies(name),
 	-- Create a function input here maybe?
 );
 
@@ -123,6 +126,7 @@ insert into data_types (name, validation_query) values
 ('real', 'cast(? as real) is not null'),
 ('text', 'cast(? as text) is not null'),
 ('time_series', '? is null');
+('piecewise_lin', '? is null');
 -- Create a new data type for function data here
 
 -- triggers
@@ -139,12 +143,20 @@ begin
             raise(fail, 'invalid data type for attribute value. expected real.')  -- noqa: PRS
         when new.data_type = 'text' and typeof(new.value) != 'text' then
             raise(fail, 'invalid data type for attribute value. expected text.')  -- noqa: PRS
+		when new.data_type = 'piecewise_lin' and typeof(new.value) != null then
+			raise(fail, 'invalid data type for attribute value. expected real.')  -- noqa: PRS
     -- add more conditions for other data types as needed
     end;
 end;
 
 
 create table time_series(
+	entity_attribute_id integer references attributes(entity_attribute_id),
+	timestamp int not null,
+	value real not null
+);
+
+create table piecewise_lin(
 	entity_attribute_id integer references attributes(entity_attribute_id),
 	timestamp int not null,
 	value real not null
