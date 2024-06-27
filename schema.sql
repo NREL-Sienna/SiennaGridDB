@@ -15,12 +15,13 @@ drop table if exists transmission_interchange;
 create table  generation_units (
 	unit_id integer primary key,
 	name text not null unique,
-	prime_mover text not null references prime_mover_types(prime_mover),
-	fuel text not null,
+	prime_mover text not null,
+	fuel_type text not null,
 	balancing_topology text not null references balancing_topologies(name),
 	rating float not null check (rating > 0 ),
 	base_power float not null check (base_power > 0),
-	check (base_power >= rating)
+	check (base_power >= rating),
+	foreign key (prime_mover, fuel_type) references prime_mover_types(prime_mover, fuel_type)
 );
 -- ) strict;
 -- create storage batteries table
@@ -28,34 +29,33 @@ create table  generation_units (
 create table  storage_units (
 	storage_unit_id integer primary key,
 	name text not null unique,
-	prime_mover text not null references prime_mover_types(prime_mover),
-	-- Used the RTS data for the below, would be needed for a future production cost model
+	prime_mover text not null,
+	fuel_type text not null,
 	max_capacity float not null check (max_capacity > 0),
 	round_trip_efficiency float check (round_trip_efficiency >= 0),
-	-- Used the RTS data for the above
 	balancing_topology text not null references balancing_topologies(name),
 	rating float not null check (rating > 0 ),
 	base_power float not null check (base_power > 0),
-	check (base_power >= rating)
+	check (base_power >= rating),
+	foreign key (prime_mover, fuel_type) references prime_mover_types(prime_mover, fuel_type)
 );
 
 -- create table for technologies
 create table supply_technologies (
     technology_id integer primary key,
-    prime_mover text not null references prime_mover_types(prime_mover),
-    capital_cost float not null check (capital_cost >= 0),
+    prime_mover text not null,
+	fuel_type text not null,
     vom_cost float not null check (vom_cost >= 0),
     fom_cost float not null check (fom_cost >= 0),
     scenario text null,
-    area text null references areas(name),
-    balancing_topology text null references balancing_topologies(name)
-    -- Create a function input here maybe?
+	foreign key (prime_mover, fuel_type) references prime_mover_types(prime_mover, fuel_type)
 );
 
 
 create table  prime_mover_types (
 	prime_mover text not null unique primary key,
-	description text null
+	fuel_type text not null,
+	primary key (prime_mover, fuel_type)
 );
 
 --
@@ -159,7 +159,11 @@ create table time_series(
 create table piecewise_lin(
 	entity_attribute_id integer references attributes(entity_attribute_id),
 	timestamp int not null,
-	value real not null
+	area text null references areas(name),
+    balancing_topology text null references balancing_topologies(name),
+	capacity_cost_per_mw real not null,
+	distance_km real not null,
+	reinforcement_cost_per_mw real not null,
 );
 
 create view unit_attributes as
