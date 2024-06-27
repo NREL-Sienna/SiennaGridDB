@@ -158,7 +158,8 @@ create table time_series(
 
 create table piecewise_lin(
 	entity_attribute_id integer references attributes(entity_attribute_id),
-	timestamp int not null,
+	from_capacity real not null,
+	to_capacity real not null,
 	area text null references areas(name),
     balancing_topology text null references balancing_topologies(name),
 	capacity_cost_per_mw real not null,
