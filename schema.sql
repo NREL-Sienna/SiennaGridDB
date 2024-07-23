@@ -82,8 +82,10 @@ create table  areas (
 
 -- electrical information of the lines
 create table  transmission_lines (
-	balancing_topology_from text not null references balancing_topologies(name),
-	balancing_topology_to text not null references balancing_topologies(name),
+	balancing_topology_from text references balancing_topologies(name),
+	balancing_topology_to text references balancing_topologies(name),
+	area_from text references areas(name),
+	area_to text references areas(name),
 	continuous_rating float not null check(continuous_rating >= 0),
 	ste_rating float not null check (ste_rating >=0),
 	lte_rating float not null check (lte_rating >=0),
