@@ -5,48 +5,76 @@ drop view if exists unit_attributes;
 drop view if exists unit_time_series;
 drop table if exists prime_mover_types;
 drop table if exists balancing_topologies;
+drop table if exists supply_technologies;
+drop table if exists transmission_lines;
+drop table if exists demand_requirements;
 drop table if exists areas;
 drop table if exists attributes;
 drop table if exists data_types;
 drop table if exists time_series;
+drop table if exists piecewise_linear;
 drop table if exists transmission_interchange;
 
 -- only generation units
 create table  generation_units (
 	unit_id integer primary key,
 	name text not null unique,
-	prime_mover text not null references prime_mover_types(prime_mover),
+	prime_mover text not null,
+	fuel_type text not null,
 	balancing_topology text not null references balancing_topologies(name),
 	rating float not null check (rating > 0 ),
 	base_power float not null check (base_power > 0),
-	check (base_power >= rating)
+	check (base_power >= rating),
+	foreign key (prime_mover, fuel_type) references prime_mover_types(prime_mover, fuel_type)
 );
--- ) strict;
--- create storage batteries table
+
 -- only storge units
 create table  storage_units (
 	storage_unit_id integer primary key,
 	name text not null unique,
-	prime_mover text not null references prime_mover_types(prime_mover),
+	prime_mover text not null,
+	fuel_type text not null,
+	max_capacity float not null check (max_capacity > 0),
+	round_trip_efficiency float check (round_trip_efficiency >= 0),
 	balancing_topology text not null references balancing_topologies(name),
 	rating float not null check (rating > 0 ),
 	base_power float not null check (base_power > 0),
-	check (base_power >= rating)
+	scenario text null,
+	check (base_power >= rating),
+	foreign key (prime_mover, fuel_type) references prime_mover_types(prime_mover, fuel_type)
 );
 
+-- create table for technologies
+create table supply_technologies (
+    technology_id integer primary key,
+    prime_mover text not null,
+	fuel_type text not null,
+	technology_class real null,
+    vom_cost float not null check (vom_cost >= 0),
+    fom_cost float not null check (fom_cost >= 0),
+    scenario text null,
+	area text null references areas(name),
+	balancing_topology text null references balancing_topologies(name),
+	foreign key (prime_mover, fuel_type) references prime_mover_types(prime_mover, fuel_type)
+);
 
+-- create table for prime movers
 create table  prime_mover_types (
-	prime_mover text not null unique primary key,
-	description text null
+	prime_mover text not null,
+	fuel_type text not null,
+	description text null,
+	primary key (prime_mover, fuel_type)
 );
 
+-- create table for balancing topologies
 create table balancing_topologies (
 	name text not null primary key,
 	area text null references areas(name),
+	participation_factor float default 1.0 not null check (participation_factor >= 0 and participation_factor <= 1),
 	description text null
 );
 
-
+-- change to planning regions
 create table  areas (
 	name text not null primary key,
 	description text null
@@ -54,18 +82,32 @@ create table  areas (
 
 -- electrical information of the lines
 create table  transmission_lines (
-	area_from text not null references balancing_topologies(name),
-	area_to text not null references balancing_topologies(name),
-	rating_up float not null check(rating_up >= 0),
-	rating_down float not null check (rating_down >=0)
+	balancing_topology_from text references balancing_topologies(name),
+	balancing_topology_to text references balancing_topologies(name),
+	area_from text references areas(name),
+	area_to text references areas(name),
+	continuous_rating float not null check(continuous_rating >= 0),
+	ste_rating float not null check (ste_rating >=0),
+	lte_rating float not null check (lte_rating >=0),
+	line_length float not null check (line_length >= 0)
 );
+
+
 -- ) strict;
 -- flow between two regions
 create table  transmission_interchange (
-	balancing_topology_from text not null references balancing_topologies(name),
-	balancing_topology_to text not null references balancing_topologies(name),
+	area_from text not null references areas(name),
+	area_to text not null references areas(name),
 	max_flow_from float not null,
 	max_flow_to float not null
+);
+
+-- create load input table, at some point need to add the growth rate
+create table  demand_requirements (
+	entity_attribute_id integer primary key,
+	peak_load float not null,
+	area text references areas(name),
+	balancing_topology text references balancing_topologies(name)
 );
 
 -- create entity-attribute table
@@ -77,7 +119,6 @@ create table attributes (
 	value any null,
 	data_type text not null references data_types(name),
 	foreign key (entity_type) references table_names(name),
-    -- primary key (entity_id, entity_type, attribute_name),
     check (name != 'entity_id')
 );
 
@@ -87,11 +128,15 @@ create table data_types(
 	description text null
 );
 
+-- Create function data table
+
 insert into data_types (name, validation_query) values
 ('integer', 'cast(? as integer) is not null'),
 ('real', 'cast(? as real) is not null'),
 ('text', 'cast(? as text) is not null'),
-('time_series', '? is null');
+('time_series', '? is null'),
+('piecewise_linear', '? is null');
+-- Create a new data type for function data here
 
 -- triggers
 -- we might need a better way of doing this. but we can not get more information where
@@ -107,16 +152,28 @@ begin
             raise(fail, 'invalid data type for attribute value. expected real.')  -- noqa: PRS
         when new.data_type = 'text' and typeof(new.value) != 'text' then
             raise(fail, 'invalid data type for attribute value. expected text.')  -- noqa: PRS
+		when new.data_type = 'piecewise_linear' and typeof(new.value) != null then
+			raise(fail, 'invalid data type for attribute value. expected real.')  -- noqa: PRS
     -- add more conditions for other data types as needed
     end;
-end
-;
+end;
 
 
 create table time_series(
 	entity_attribute_id integer references attributes(entity_attribute_id),
-	timestamp int not null,
-	value real not null
+    time_series_blob blob,
+    timestamp int as (time_series_blob ->> 'timestamp'),
+    value float as (time_series_blob ->> 'value')
+);
+
+
+create table piecewise_linear(
+	entity_attribute_id integer references attributes(entity_attribute_id),
+	piecewise_linear_blob blob,
+	from_x float as (piecewise_linear_blob ->> 'from_x'),
+	to_x float as (piecewise_linear_blob ->> 'to_x'),
+	from_y float as (piecewise_linear_blob ->> 'from_y'),
+	to_y float as (piecewise_linear_blob ->> 'to_y')
 );
 
 create view unit_attributes as
@@ -140,16 +197,3 @@ from generation_units u
 join attributes a on u.unit_id = a.entity_id
 join time_series ts on a.entity_attribute_id = ts.entity_attribute_id
 where a.entity_type = 'generation_units' and a.data_type = "time_series";
-
--- .print ''
--- .print 'available tables:'
--- .print ''
--- .table
---
--- .print ''
--- .print 'available views:'
--- .print ''
--- select name
--- from sqlite_schema
--- where type = 'view';
-
