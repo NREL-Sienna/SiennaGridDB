@@ -6,6 +6,7 @@ drop view if exists unit_time_series;
 drop table if exists prime_mover_types;
 drop table if exists balancing_topologies;
 drop table if exists supply_technologies;
+drop table if exists storage_technologies;
 drop table if exists transmission_lines;
 drop table if exists demand_requirements;
 drop table if exists areas;
@@ -14,6 +15,10 @@ drop table if exists data_types;
 drop table if exists time_series;
 drop table if exists piecewise_linear;
 drop table if exists transmission_interchange;
+drop table if exists entities;
+drop table if exists linkages;
+drop table if exists reserves;
+drop table if exists operational_data;
 
 -- only generation units
 create table  generation_units (
@@ -22,6 +27,7 @@ create table  generation_units (
 	prime_mover text not null,
 	fuel_type text not null,
 	balancing_topology text not null references balancing_topologies(name),
+	start_year integer not null check (start_year >= 0),
 	rating float not null check (rating > 0 ),
 	base_power float not null check (base_power > 0),
 	check (base_power >= rating),
@@ -35,28 +41,53 @@ create table  storage_units (
 	prime_mover text not null,
 	fuel_type text not null,
 	max_capacity float not null check (max_capacity > 0),
-	round_trip_efficiency float check (round_trip_efficiency >= 0),
 	balancing_topology text not null references balancing_topologies(name),
+	charging_efficiency float not null check (charging_efficiency > 0),
+	discharge_efficiency float not null check (discharge_efficiency > 0),
+	start_year integer not null check (start_year >= 0),
 	rating float not null check (rating > 0 ),
 	base_power float not null check (base_power > 0),
-	scenario text null,
 	check (base_power >= rating),
 	foreign key (prime_mover, fuel_type) references prime_mover_types(prime_mover, fuel_type)
 );
 
--- create table for technologies
+-- create table for technologies, perhaps change the name to investment_technologies
 create table supply_technologies (
     technology_id integer primary key,
     prime_mover text not null,
 	fuel_type text not null,
 	technology_class real null,
-    vom_cost float not null check (vom_cost >= 0),
-    fom_cost float not null check (fom_cost >= 0),
     scenario text null,
 	area text null references areas(name),
 	balancing_topology text null references balancing_topologies(name),
 	foreign key (prime_mover, fuel_type) references prime_mover_types(prime_mover, fuel_type)
 );
+
+create table storage_technologies (
+	storage_unit_id integer primary key,
+	name text not null unique,
+	prime_mover text not null,
+	fuel_type text not null,
+	scenario text null,
+	area text null references areas(name),
+	balancing_topology text null references balancing_topologies(name),
+	foreign key (prime_mover, fuel_type) references prime_mover_types(prime_mover, fuel_type)
+);
+
+
+create table operational_data (
+	unit_id references generation_units(unit_id),
+	fom_cost float not null check (fom_cost >= 0),
+	vom_cost float not null check (vom_cost >=0),
+	outage float not null,
+	startup_cost float not null check (startup_cost >= 0),
+	min_stable_level float not null check (min_stable_level >= 0),
+	mttr integer not null check (mttr >= 0),
+	startup_fuel_mmbtu_per_mw float not null check (startup_fuel_mmbtu_per_mw >= 0),
+	plant_uptime float not null check (plant_uptime >= 0),
+	plant_downtime float not null check (plant_downtime >= 0)
+);
+
 
 -- create table for prime movers
 create table  prime_mover_types (
@@ -117,6 +148,7 @@ create table attributes (
 	entity_type text not null,
 	name text not null,
 	value any null,
+	Type text null,
 	data_type text not null references data_types(name),
 	foreign key (entity_type) references table_names(name),
     check (name != 'entity_id')
@@ -128,10 +160,65 @@ create table data_types(
 	description text null
 );
 
+create table reserves(
+    id integer primary key,
+    time_frame float not null,
+    requirement float not null,
+    direction text not null
+);
+
+-- Entities gets populated automatically once there is an insert on the core tables.
+create table entities(
+	id integer primary key,
+	entity_type text not null references table_names(name),
+	entity_id integer not null
+);
+
+create table linkages(
+	id integer primary key,
+	entity_id_1 integer not null,
+	entity_id_2 integer not null,
+	foreign key(entity_id_1) references entities(id),
+	foreign key(entity_id_2) references entities(id)
+);
+
+
+
+CREATE TRIGGER IF NOT EXISTS autofill_supply
+AFTER INSERT ON supply_technologies
+BEGIN
+    INSERT INTO entities(entity_type, entity_id) VALUES("supply_technologies", new.technology_id);
+END;
+
+CREATE TRIGGER IF NOT EXISTS autofill_generation_units
+AFTER INSERT ON generation_units
+BEGIN
+	INSERT INTO entities(entity_type, entity_id) VALUES("generation_units", new.unit_id);
+END;
+
+CREATE TRIGGER IF NOT EXISTS autofill_storage_units
+AFTER INSERT ON storage_units
+BEGIN
+	INSERT INTO entities(entity_type, entity_id) VALUES("storage_units", new.storage_unit_id);
+END;
+
+CREATE TRIGGER IF NOT EXISTS autofill_storage_technologies
+AFTER INSERT ON storage_technologies
+BEGIN
+	INSERT INTO entities(entity_type, entity_id) VALUES("storage_technologies", new.storage_unit_id);
+END;
+
+CREATE TRIGGER IF NOT EXISTS autofill_reserves
+AFTER INSERT ON reserves
+BEGIN
+    INSERT INTO entities(entity_type, entity_id) VALUES("reserves", new.id);
+END;
+
 -- Create function data table
 
 insert into data_types (name, validation_query) values
 ('integer', 'cast(? as integer) is not null'),
+('float', 'cast(? as float) is not null'),
 ('real', 'cast(? as real) is not null'),
 ('text', 'cast(? as text) is not null'),
 ('time_series', '? is null'),
@@ -166,6 +253,13 @@ create table time_series(
     value float as (time_series_blob ->> 'value')
 );
 
+create table time_series_entity_test(
+	entity_attribute_id integer references entities(id),
+	time_series_blob blob,
+	timestamp int as (time_series_blob ->> 'timestamp'),
+	value float as (time_series_blob ->> 'value')
+);
+
 
 create table piecewise_linear(
 	entity_attribute_id integer references attributes(entity_attribute_id),
@@ -173,7 +267,18 @@ create table piecewise_linear(
 	from_x float as (piecewise_linear_blob ->> 'from_x'),
 	to_x float as (piecewise_linear_blob ->> 'to_x'),
 	from_y float as (piecewise_linear_blob ->> 'from_y'),
-	to_y float as (piecewise_linear_blob ->> 'to_y')
+	to_y float as (piecewise_linear_blob ->> 'to_y'),
+	description text null
+);
+
+create table piecewise_linear_entity_test(
+	entity_attribute_id integer references entities(id),
+	piecewise_linear_blob blob,
+	from_x float as (piecewise_linear_blob ->> 'from_x'),
+	to_x float as (piecewise_linear_blob ->> 'to_x'),
+	from_y float as (piecewise_linear_blob ->> 'from_y'),
+	to_y float as (piecewise_linear_blob ->> 'to_y'),
+	description text null
 );
 
 create view unit_attributes as
