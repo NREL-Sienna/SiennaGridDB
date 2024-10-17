@@ -148,7 +148,6 @@ create table attributes (
 	entity_type text not null,
 	name text not null,
 	value any null,
-	Type text null,
 	data_type text not null references data_types(name),
 	foreign key (entity_type) references table_names(name),
     check (name != 'entity_id')
@@ -221,8 +220,7 @@ insert into data_types (name, validation_query) values
 ('float', 'cast(? as float) is not null'),
 ('real', 'cast(? as real) is not null'),
 ('text', 'cast(? as text) is not null'),
-('time_series', '? is null'),
-('piecewise_linear', '? is null');
+('json', 'json_valid(?) is 1');
 -- Create a new data type for function data here
 
 -- triggers
@@ -235,50 +233,22 @@ begin
     select case
         when new.data_type = 'integer' and typeof(new.value) != 'integer' then
             raise(fail, 'invalid data type for attribute value. expected integer.')  -- noqa: PRS
-        when new.data_type = 'time_series' and typeof(new.value) != null then
-            raise(fail, 'invalid data type for attribute value. expected real.')  -- noqa: PRS
         when new.data_type = 'text' and typeof(new.value) != 'text' then
             raise(fail, 'invalid data type for attribute value. expected text.')  -- noqa: PRS
-		when new.data_type = 'piecewise_linear' and typeof(new.value) != null then
-			raise(fail, 'invalid data type for attribute value. expected real.')  -- noqa: PRS
+		when new.data_type = 'float' and typeof(new.value) != 'float' then
+			raise(fail, 'invalid data type for attribute value. expected float.')  -- noqa: PRS
+		when new.data_type = 'json' and json_valid(new.value) != 1 then
+            raise(fail, 'invalid data type for attribute value. expected valid JSON.') -- noqa: PRS
     -- add more conditions for other data types as needed
     end;
 end;
 
 
 create table time_series(
-	entity_attribute_id integer references attributes(entity_attribute_id),
-    time_series_blob blob,
-    timestamp int as (time_series_blob ->> 'timestamp'),
-    value float as (time_series_blob ->> 'value')
-);
-
-create table time_series_entity_test(
 	entity_attribute_id integer references entities(id),
 	time_series_blob blob,
 	timestamp int as (time_series_blob ->> 'timestamp'),
 	value float as (time_series_blob ->> 'value')
-);
-
-
-create table piecewise_linear(
-	entity_attribute_id integer references attributes(entity_attribute_id),
-	piecewise_linear_blob blob,
-	from_x float as (piecewise_linear_blob ->> 'from_x'),
-	to_x float as (piecewise_linear_blob ->> 'to_x'),
-	from_y float as (piecewise_linear_blob ->> 'from_y'),
-	to_y float as (piecewise_linear_blob ->> 'to_y'),
-	description text null
-);
-
-create table piecewise_linear_entity_test(
-	entity_attribute_id integer references entities(id),
-	piecewise_linear_blob blob,
-	from_x float as (piecewise_linear_blob ->> 'from_x'),
-	to_x float as (piecewise_linear_blob ->> 'to_x'),
-	from_y float as (piecewise_linear_blob ->> 'from_y'),
-	to_y float as (piecewise_linear_blob ->> 'to_y'),
-	description text null
 );
 
 create view unit_attributes as
