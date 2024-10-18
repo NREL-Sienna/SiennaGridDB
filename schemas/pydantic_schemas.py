@@ -8,7 +8,14 @@
 """
 
 from enum import StrEnum
-from pydantic import BaseModel, Field, PositiveInt, model_validator, validator
+from pydantic import (
+    BaseModel,
+    Field,
+    PositiveInt,
+    model_validator,
+)
+from pydantic.json_schema import GenerateJsonSchema
+
 from typing import Any, ClassVar, Annotated, get_type_hints
 from sqlalchemy import Double, ForeignKey, Table, Column, Integer, Text
 
@@ -29,6 +36,51 @@ class FromTo(BaseModel):
 class UpDown(BaseModel):
     up: float
     down: float
+
+
+def get_column_from_annotation(type_hint, name: str):
+    if not hasattr(type_hint, "__metadata__"):
+        return None
+    for annotation in type_hint.__metadata__:
+        if isinstance(annotation, Column):
+            annotation = annotation.copy()
+            if annotation.name is None:
+                annotation.name = name
+            return annotation
+    return None
+
+
+def create_table(cls, metadata_obj):
+    return Table(cls._table_name, metadata_obj, *cls.get_columns())
+
+
+class SerializableColumn(BaseModel):
+    name: str
+    type: str
+    nullable: bool
+    unique: bool
+    primary_key: bool
+
+    @classmethod
+    def from_column(cls, col: Column):
+        return cls(
+            name=col.name,
+            type=str(col.type),
+            nullable=col.nullable,
+            unique=col.unique if col.unique is not None else False,
+            primary_key=col.primary_key,
+        )
+
+
+class GenerateJSONSchemaWithSQLInfo(GenerateJsonSchema):
+    def generate(self, schema, mode="validation"):
+        json_schema = super().generate(schema, mode=mode)
+        json_schema["table_name"] = schema["schema"]["cls"]._table_name
+        json_schema["columns"] = [
+            SerializableColumn.from_column(c).model_dump()
+            for c in schema["schema"]["cls"].get_columns()
+        ]
+        return json_schema
 
 
 class ObjModel(BaseModel):
@@ -95,27 +147,10 @@ class TransmissionLine(ObjModel):
     _table_name: ClassVar[Table] = "transmission_line"
 
 
-def get_column_from_annotation(type_hint, name: str):
-    if not hasattr(type_hint, "__metadata__"):
-        return None
-    for annotation in type_hint.__metadata__:
-        if isinstance(annotation, Column):
-            annotation = annotation.copy()
-            if annotation.name is None:
-                annotation.name = name
-            return annotation
-    return None
-
-
-def create_table(cls, metadata_obj):
-    return Table(cls._table_name, metadata_obj, *cls.get_columns())
-
-
 class AreaInterchange(ObjModel):
     pass
 
 
-# How do you declare optional fields in pydantic
 class ACBus(BalancingTopology):
     number: PositiveInt = 0
     bustype: ACBusTypes = ACBusTypes.PQ

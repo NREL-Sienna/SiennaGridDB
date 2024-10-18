@@ -1,6 +1,12 @@
 from sqlalchemy import Connection, create_engine, insert, select
 from .sqlalchemy_schemas import metadata_obj, balancing_topology, attributes
-from .pydantic_schemas import OBJ_SUBCLASSES, ObjModel, ACBus
+from .pydantic_schemas import (
+    OBJ_SUBCLASSES,
+    GenerateJSONSchemaWithSQLInfo,
+    GenerationUnit,
+    ObjModel,
+    ACBus,
+)
 
 engine = create_engine("sqlite:///:memory:")
 metadata_obj.create_all(engine)
@@ -64,3 +70,5 @@ with engine.begin() as conn:
     acbus2 = load_from_db(conn, balancing_topology, 0)
 
     assert acbus == acbus2
+
+print(GenerationUnit.model_json_schema(schema_generator=GenerateJSONSchemaWithSQLInfo))
