@@ -1,0 +1,516 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "ThermalGenerationCost": {
+            "description": "Cost representation for thermal generation units",
+            "type": "object",
+            "properties": {
+                "variable": {
+                    "$ref": "#/definitions/ProductionVariableCostCurve"
+                },
+                "fixed": {
+                    "description": "Fixed cost of keeping the unit online. For some cost represenations this field can be duplicative",
+                    "type": "number"
+                },
+                "start_up": {
+                    "oneOf": [
+                        {
+                            "type": "number"
+                        },
+                        {
+                            "$ref": "#/definitions/StartUpStages"
+                        }
+                    ],
+                    "description": "Start-up cost can take linear or multi-stage cost",
+                },
+                "shut_down": {
+                    "description": "Cost to turn the unit off",
+                    "type": "number"
+                }
+            },
+            "required": [
+                "variable",
+                "fixed",
+                "start_up",
+                "shut_down"
+            ]
+        },
+        "StartUpStages": {
+            "type": "object",
+            "title": "StartUpStages",
+            "properties": {
+                "hot": {
+                    "type": "number"
+                },
+                "warm": {
+                    "type": "number"
+                },
+                "cold": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "hot",
+                "warm",
+                "cold"
+            ]
+        },
+        "UnitSystem": {
+            "type": "string",
+            "enum": [
+                "SYSTEM_BASE",
+                "DEVICE_BASE",
+                "NATURAL_UNITS"
+            ]
+        },
+        "ProductionVariableCostCurve": {
+            "oneOf": [
+                {
+                    "$ref": "#/definitions/CostCurve"
+                },
+                {
+                    "$ref": "#/definitions/FuelCurve"
+                }
+            ]
+        },
+        "CostCurve": {
+            "properties": {
+                "value_curve": {
+                    "$ref": "#/definitions/ValueCurve"
+                },
+                "power_units": {
+                    "$ref": "#/definitions/UnitSystem"
+                },
+                "vom_cost": {
+                    "$ref": "#/definitions/InputOutputCurve",
+                    "default": {
+                        "function_data": {
+                            "proportional_term": 0,
+                            "constant_term": 0
+                        },
+                        "input_at_zero": 0
+                    }
+                }
+            },
+            "required": [
+                "value_curve",
+                "power_units",
+                "vom_cost"
+            ],
+            "type": "object"
+        },
+        "FuelCurve": {
+            "properties": {
+                "value_curve": {
+                    "$ref": "#/definitions/ValueCurve"
+                },
+                "power_units": {
+                    "$ref": "#/definitions/UnitSystem"
+                },
+                "fuel_cost": {
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "number"
+                        }
+                    ]
+                },
+                "vom_cost": {
+                    "$ref": "#/definitions/InputOutputCurve",
+                    "default": {
+                        "function_data": {
+                            "proportional_term": 0,
+                            "constant_term": 0
+                        },
+                        "input_at_zero": 0
+                    }
+                }
+            },
+            "required": [
+                "value_curve",
+                "power_units",
+                "fuel_cost",
+                "vom_cost"
+            ],
+            "type": "object"
+        },
+        "ValueCurve": {
+            "oneOf": [
+                {
+                    "$ref": "#/definitions/InputOutputCurve"
+                },
+                {
+                    "$ref": "#/definitions/IncrementalCurve"
+                },
+                {
+                    "$ref": "#/definitions/AverageRateCurve"
+                }
+            ]
+        },
+        "FunctionData": {
+            "oneOf": [
+                {
+                    "$ref": "#/definitions/LinearFunctionData"
+                },
+                {
+                    "$ref": "#/definitions/QuadraticFunctionData"
+                },
+                {
+                    "$ref": "#/definitions/PiecewiseLinearData"
+                },
+                {
+                    "$ref": "#/definitions/PiecewiseStepData"
+                }
+            ]
+        },
+        "LinearFunctionData": {
+            "properties": {
+                "proportional_term": {
+                    "type": "number"
+                },
+                "constant_term": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "proportional_term",
+                "constant_term"
+            ],
+            "type": "object"
+        },
+        "QuadraticFunctionData": {
+            "properties": {
+                "quadratic_term": {
+                    "type": "number"
+                },
+                "proportional_term": {
+                    "type": "number"
+                },
+                "constant_term": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "quadratic_term",
+                "proportional_term",
+                "constant_term"
+            ],
+            "type": "object"
+        },
+        "XY_Coords": {
+            "type": "object",
+            "properties": {
+                "x": {
+                    "type": "number"
+                },
+                "y": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "x",
+                "y"
+            ]
+        },
+        "PiecewiseLinearData": {
+            "type": "object",
+            "properties": {
+                "points": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/XY_Coords"
+                    }
+                }
+            },
+            "required": [
+                "points"
+            ]
+        },
+        "PiecewiseStepData": {
+            "type": "object",
+            "properties": {
+                "x_coords": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                "y_coords": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                }
+            },
+            "required": [
+                "x_coords",
+                "y_coords"
+            ]
+        },
+        "InputOutputCurve": {
+            "type": "object",
+            "properties": {
+                "function_data": {
+                    "oneOf": [
+                        {
+                            "$ref": "#/definitions/QuadraticFunctionData"
+                        },
+                        {
+                            "$ref": "#/definitions/LinearFunctionData"
+                        },
+                        {
+                            "$ref": "#/definitions/PiecewiseLinearData"
+                        }
+                    ]
+                },
+                "input_at_zero": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "function_data"
+            ]
+        },
+        "IncrementalCurve": {
+            "type": "object",
+            "properties": {
+                "function_data": {
+                    "oneOf": [
+                        {
+                            "$ref": "#/definitions/LinearFunctionData"
+                        },
+                        {
+                            "$ref": "#/definitions/PiecewiseStepData"
+                        }
+                    ]
+                },
+                "initial_input": {
+                    "type": "number"
+                },
+                "input_at_zero": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "function_data"
+            ]
+        },
+        "AverageRateCurve": {
+            "type": "object",
+            "properties": {
+                "function_data": {
+                    "oneOf": [
+                        {
+                            "$ref": "#/definitions/LinearFunctionData"
+                        },
+                        {
+                            "$ref": "#/definitions/QuadraticFunctionData"
+                        },
+                        {
+                            "$ref": "#/definitions/PiecewiseLinearData"
+                        }
+                    ]
+                },
+                "initial_input": {
+                    "type": "number"
+                },
+                "input_at_zero": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "function_data"
+            ]
+        },
+        "MinMax": {
+            "properties": {
+                "min": {
+                    "title": "Min",
+                    "type": "number"
+                },
+                "max": {
+                    "title": "Max",
+                    "type": "number"
+                }
+            },
+            "required": [
+                "min",
+                "max"
+            ],
+            "title": "MinMax",
+            "type": "object"
+        },
+        "PrimeMovers": {
+            "type": "string",
+            "enum": [
+                "BA",
+                "BT",
+                "CA",
+                "CC",
+                "CE",
+                "CP",
+                "CS",
+                "CT",
+                "ES",
+                "FC",
+                "FW",
+                "GT",
+                "HA",
+                "HB",
+                "HK",
+                "HY",
+                "IC",
+                "PS",
+                "OT",
+                "ST",
+                "PVe",
+                "WT",
+                "WS"
+            ]
+        },
+        "ThermalFuels": {
+            "description": "Thermal fuels that reflect options in the EIA annual energy review.",
+            "enum": [
+                "COAL",
+                "WASTE_COAL",
+                "DISTILLATE_FUEL_OIL",
+                "WASTE_OIL",
+                "PETROLEUM_COKE",
+                "RESIDUAL_FUEL_OIL",
+                "NATURAL_GAS",
+                "OTHER_GAS",
+                "NUCLEAR",
+                "AG_BIPRODUCT",
+                "MUNICIPAL_WASTE",
+                "WOOD_WASTE",
+                "GEOTHERMAL",
+                "OTHER"
+            ],
+            "title": "ThermalFuels",
+            "type": "string"
+        },
+        "UpDown": {
+            "properties": {
+                "up": {
+                    "title": "Up",
+                    "type": "number"
+                },
+                "down": {
+                    "title": "Down",
+                    "type": "number"
+                }
+            },
+            "required": [
+                "up",
+                "down"
+            ],
+            "title": "UpDown",
+            "type": "object"
+        }
+    },
+    "title": "ThermalStandard",
+    "properties": {
+        "id": {
+            "type": "integer"
+        },
+        "name": {
+            "type": "string"
+        },
+        "prime_mover": {
+            "$ref": "#/definitions/PrimeMovers",
+            "default": "OT"
+        },
+        "fuel_type": {
+            "$ref": "#/definitions/ThermalFuels",
+            "default": "OTHER"
+        },
+        "rating": {
+            "default": 0.0,
+            "type": "number"
+        },
+        "base_power": {
+            "default": 0.0,
+            "type": "number"
+        },
+        "available": {
+            "default": true,
+            "type": "boolean"
+        },
+        "status": {
+            "default": true,
+            "type": "boolean"
+        },
+        "active_power": {
+            "default": 0.0,
+            "type": "number"
+        },
+        "reactive_power": {
+            "default": 0.0,
+            "type": "number"
+        },
+        "active_power_limits": {
+            "$ref": "#/definitions/MinMax",
+            "default": {
+                "min": 0.0,
+                "max": 0.0
+            }
+        },
+        "reactive_power_limits": {
+            "anyOf": [
+                {
+                    "$ref": "#/definitions/MinMax"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": null
+        },
+        "ramp_limits": {
+            "anyOf": [
+                {
+                    "$ref": "#/definitions/MinMax"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": {
+                "min": 0.0,
+                "max": 0.0
+            }
+        },
+        "operation_cost": {
+            "$ref": "#/definitions/ThermalGenerationCost"
+        },
+        "time_limits": {
+            "anyOf": [
+                {
+                    "$ref": "#/definitions/UpDown"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": null
+        },
+        "must_run": {
+            "default": false,
+            "title": "Must Run",
+            "type": "boolean"
+        },
+        "bus_id": {
+            "title": "Bus Id",
+            "type": "integer"
+        }
+    },
+    "required": [
+        "id",
+        "name",
+        "operation_cost",
+        "bus_id"
+    ],
+    "type": "object"
+}
