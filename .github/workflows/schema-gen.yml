@@ -22,8 +22,7 @@ jobs:
           miniforge-version: latest
       - name: Installing python dependencies
         run: |
-          pip install datamodel-code-generator==0.26
-          pip install pydantic==2
+          pip install datamodel-code-generator
           pip install '.[dev]'  # pytest primarily
         shell: bash -l {0}
       - name: Run datamodel-generation
