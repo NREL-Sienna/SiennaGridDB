@@ -37,7 +37,6 @@ docs = ["sphinx>=7", "myst-parser", "sphinx_math_dollar", "nbsphinx"]
 include-package-data = true
 
 [tool.setuptools.packages.find]
-where = ["src"]
 include = ["sienna_database_gen"]
 
 # Setuptools configuration
