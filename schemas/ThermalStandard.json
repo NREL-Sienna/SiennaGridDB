@@ -1,0 +1,83 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "ThermalStandard",
+    "properties": {
+        "id": {
+            "type": "integer"
+        },
+        "name": {
+            "type": "string"
+        },
+        "prime_mover": {
+            "$ref": "common.json#/definitions/PrimeMovers",
+            "default": "OT"
+        },
+        "fuel_type": {
+            "$ref": "common.json#/definitions/ThermalFuels",
+            "default": "OTHER"
+        },
+        "rating": {
+            "default": 0.0,
+            "type": "number"
+        },
+        "base_power": {
+            "default": 0.0,
+            "type": "number"
+        },
+        "available": {
+            "default": true,
+            "type": "boolean"
+        },
+        "status": {
+            "default": true,
+            "type": "boolean"
+        },
+        "active_power": {
+            "default": 0.0,
+            "type": "number"
+        },
+        "reactive_power": {
+            "default": 0.0,
+            "type": "number"
+        },
+        "active_power_limits": {
+            "$ref": "common.json#/definitions/MinMax"
+        },
+        "reactive_power_limits": {
+            "$ref": "common.json#/definitions/MinMax"
+        },
+        "ramp_limits": {
+            "$ref": "common.json#/definitions/MinMax"
+        },
+        "operation_cost": {
+            "$ref": "common.json#/definitions/ThermalGenerationCost"
+        },
+        "time_limits": {
+            "oneOf": [
+                {
+                    "$ref": "common.json#/definitions/UpDown"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": null
+        },
+        "must_run": {
+            "default": false,
+            "title": "Must Run",
+            "type": "boolean"
+        },
+        "bus_id": {
+            "title": "Bus Id",
+            "type": "integer"
+        }
+    },
+    "required": [
+        "id",
+        "name",
+        "operation_cost",
+        "bus_id"
+    ],
+    "type": "object"
+}
