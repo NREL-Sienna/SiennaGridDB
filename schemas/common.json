@@ -411,6 +411,16 @@
             ],
             "title": "UpDown",
             "type": "object"
+        },
+        "ACBusType": {
+            "type": "string",
+            "enum": [
+                "PQ",
+                "PV",
+                "REF",
+                "ISOLATED",
+                "SLACK"
+            ]
         }
     }
 }

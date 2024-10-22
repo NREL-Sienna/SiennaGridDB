@@ -54,5 +54,11 @@
             ],
             "default": null
         }
-    }
+    },
+    "required": [
+        "id",
+        "name",
+        "number",
+        "bustype"
+    ]
 }
