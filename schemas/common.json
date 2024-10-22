@@ -22,7 +22,7 @@
                             "$ref": "#/definitions/StartUpStages"
                         }
                     ],
-                    "description": "Start-up cost can take linear or multi-stage cost",
+                    "description": "Start-up cost can take linear or multi-stage cost"
                 },
                 "shut_down": {
                     "description": "Cost to turn the unit off",
@@ -72,10 +72,22 @@
                 {
                     "$ref": "#/definitions/FuelCurve"
                 }
-            ]
+            ],
+            "discriminator": {
+                "propertyName": "variable_cost_type",
+                "mapping": {
+                    "COST": "#/definitions/CostCurve",
+                    "FUEL": "#/definitions/FuelCurve"
+                }
+            }
         },
         "CostCurve": {
+            "title": "CostCurve",
             "properties": {
+                "variable_cost_type": {
+                    "type": "string",
+                    "const": "COST"
+                },
                 "value_curve": {
                     "$ref": "#/definitions/ValueCurve"
                 },
@@ -83,14 +95,7 @@
                     "$ref": "#/definitions/UnitSystem"
                 },
                 "vom_cost": {
-                    "$ref": "#/definitions/InputOutputCurve",
-                    "default": {
-                        "function_data": {
-                            "proportional_term": 0,
-                            "constant_term": 0
-                        },
-                        "input_at_zero": 0
-                    }
+                    "$ref": "#/definitions/InputOutputCurve"
                 }
             },
             "required": [
@@ -101,7 +106,12 @@
             "type": "object"
         },
         "FuelCurve": {
+            "title": "FuelCurve",
             "properties": {
+                "variable_cost_type": {
+                    "type": "string",
+                    "const": "FUEL"
+                },
                 "value_curve": {
                     "$ref": "#/definitions/ValueCurve"
                 },
@@ -119,14 +129,7 @@
                     ]
                 },
                 "vom_cost": {
-                    "$ref": "#/definitions/InputOutputCurve",
-                    "default": {
-                        "function_data": {
-                            "proportional_term": 0,
-                            "constant_term": 0
-                        },
-                        "input_at_zero": 0
-                    }
+                    "$ref": "#/definitions/InputOutputCurve"
                 }
             },
             "required": [
@@ -148,7 +151,15 @@
                 {
                     "$ref": "#/definitions/AverageRateCurve"
                 }
-            ]
+            ],
+            "discriminator": {
+                "propertyName": "curve_type",
+                "mapping": {
+                    "INPUT_OUTPUT": "#/definitions/InputOutputCurve",
+                    "INCREMENTAL": "#/definitions/IncrementalCurve",
+                    "AVERAGE_RATE": "#/definitions/AverageRateCurve"
+                }
+            }
         },
         "FunctionData": {
             "oneOf": [
@@ -164,10 +175,24 @@
                 {
                     "$ref": "#/definitions/PiecewiseStepData"
                 }
-            ]
+            ],
+            "discriminator": {
+                "propertyName": "function_type",
+                "mapping": {
+                    "LINEAR": "#/definitions/LinearFunctionData",
+                    "QUADRATIC": "#/definitions/QuadraticFunctionData",
+                    "PIECEWISE_LINEAR": "#/definitions/PiecewiseLinearData",
+                    "PIECEWISE_STEP": "#/definitions/PiecewiseStepData"
+                }
+            }
         },
         "LinearFunctionData": {
+            "title": "LinearFunctionData",
             "properties": {
+                "function_type": {
+                    "type": "string",
+                    "const": "LINEAR"
+                },
                 "proportional_term": {
                     "type": "number"
                 },
@@ -182,7 +207,12 @@
             "type": "object"
         },
         "QuadraticFunctionData": {
+            "title": "QuadraticFunctionData",
             "properties": {
+                "function_type": {
+                    "type": "string",
+                    "const": "QUADRATIC"
+                },
                 "quadratic_term": {
                     "type": "number"
                 },
@@ -216,8 +246,13 @@
             ]
         },
         "PiecewiseLinearData": {
+            "title": "PiecewiseLinearData",
             "type": "object",
             "properties": {
+                "function_type": {
+                    "type": "string",
+                    "const": "PIECEWISE_LINEAR"
+                },
                 "points": {
                     "type": "array",
                     "items": {
@@ -230,8 +265,13 @@
             ]
         },
         "PiecewiseStepData": {
+            "title": "PiecewiseStepData",
             "type": "object",
             "properties": {
+                "function_type": {
+                    "type": "string",
+                    "const": "PIECEWISE_STEP"
+                },
                 "x_coords": {
                     "type": "array",
                     "items": {
@@ -251,8 +291,13 @@
             ]
         },
         "InputOutputCurve": {
+            "title": "InputOutputCurve",
             "type": "object",
             "properties": {
+                "curve_type": {
+                    "type": "string",
+                    "const": "INPUT_OUTPUT"
+                },
                 "function_data": {
                     "oneOf": [
                         {
@@ -264,7 +309,15 @@
                         {
                             "$ref": "#/definitions/PiecewiseLinearData"
                         }
-                    ]
+                    ],
+                    "discriminator": {
+                        "propertyName": "function_type",
+                        "mapping": {
+                            "QUADRATIC": "#/definitions/QuadraticFunctionData",
+                            "LINEAR": "#/definitions/LinearFunctionData",
+                            "PIECEWISE_LINEAR": "#/definitions/PiecewiseLinearData"
+                        }
+                    }
                 },
                 "input_at_zero": {
                     "type": "number"
@@ -272,11 +325,23 @@
             },
             "required": [
                 "function_data"
-            ]
+            ],
+            "default": {
+                "function_data": {
+                    "proportional_term": 0,
+                    "constant_term": 0
+                },
+                "input_at_zero": 0
+            }
         },
         "IncrementalCurve": {
+            "title": "IncrementalCurve",
             "type": "object",
             "properties": {
+                "curve_type": {
+                    "type": "string",
+                    "const": "INCREMENTAL"
+                },
                 "function_data": {
                     "oneOf": [
                         {
@@ -299,8 +364,13 @@
             ]
         },
         "AverageRateCurve": {
+            "title": "AverageRateCurve",
             "type": "object",
             "properties": {
+                "curve_type": {
+                    "type": "string",
+                    "const": "AVERAGE_RATE"
+                },
                 "function_data": {
                     "oneOf": [
                         {
@@ -312,7 +382,15 @@
                         {
                             "$ref": "#/definitions/PiecewiseLinearData"
                         }
-                    ]
+                    ],
+                    "discriminator": {
+                        "propertyName": "function_type",
+                        "mapping": {
+                            "LINEAR": "#/definitions/LinearFunctionData",
+                            "QUADRATIC": "#/definitions/QuadraticFunctionData",
+                            "PIECEWISE_LINEAR": "#/definitions/PiecewiseLinearData"
+                        }
+                    }
                 },
                 "initial_input": {
                     "type": "number"
@@ -326,6 +404,8 @@
             ]
         },
         "MinMax": {
+            "title": "MinMax",
+            "type": "object",
             "properties": {
                 "min": {
                     "title": "Min",
@@ -341,9 +421,7 @@
                         "number"
                     ]
                 }
-            },
-            "title": "MinMax",
-            "type": "object"
+            }
         },
         "PrimeMovers": {
             "type": "string",

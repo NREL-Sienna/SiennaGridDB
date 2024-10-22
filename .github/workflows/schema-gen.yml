@@ -31,3 +31,19 @@ jobs:
         run: |
           datamodel-codegen --input schemas --input-file-type jsonschema --output python_models --output-model pydantic_v2.BaseModel
           PYTHONPATH=. pytest test/load_models.py
+      - name: Run openapi-generation for python
+        shell: bash -l {0}
+        run: |
+          docker run --rm \
+          -v ${PWD}:/local openapitools/openapi-generator-cli generate \
+          -i /local/openapi.json \
+          -g python \
+          -o /local/out/python
+      - name: Run openapi-generation for python
+        shell: bash -l {0}
+        run: |
+          docker run --rm \
+          -v ${PWD}:/local openapitools/openapi-generator-cli generate \
+          -i /local/openapi.json \
+          -g julia-server \
+          -o /local/out/julia

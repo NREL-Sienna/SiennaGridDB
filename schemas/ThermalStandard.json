@@ -41,42 +41,19 @@
             "type": "number"
         },
         "active_power_limits": {
-            "$ref": "common.json#/definitions/MinMax",
-            "default": {
-                "min": 0.0,
-                "max": 0.0
-            }
+            "$ref": "common.json#/definitions/MinMax"
         },
         "reactive_power_limits": {
-            "anyOf": [
-                {
-                    "$ref": "common.json#/definitions/MinMax"
-                },
-                {
-                    "type": "null"
-                }
-            ],
-            "default": null
+            "$ref": "common.json#/definitions/MinMax"
         },
         "ramp_limits": {
-            "anyOf": [
-                {
-                    "$ref": "common.json#/definitions/MinMax"
-                },
-                {
-                    "type": "null"
-                }
-            ],
-            "default": {
-                "min": 0.0,
-                "max": 0.0
-            }
+            "$ref": "common.json#/definitions/MinMax"
         },
         "operation_cost": {
             "$ref": "common.json#/definitions/ThermalGenerationCost"
         },
         "time_limits": {
-            "anyOf": [
+            "oneOf": [
                 {
                     "$ref": "common.json#/definitions/UpDown"
                 },
