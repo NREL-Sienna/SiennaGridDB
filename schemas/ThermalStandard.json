@@ -47,21 +47,13 @@
             "$ref": "common.json#/definitions/MinMax"
         },
         "ramp_limits": {
-            "$ref": "common.json#/definitions/MinMax"
+            "$ref": "common.json#/definitions/UpDown"
         },
         "operation_cost": {
             "$ref": "common.json#/definitions/ThermalGenerationCost"
         },
         "time_limits": {
-            "oneOf": [
-                {
-                    "$ref": "common.json#/definitions/UpDown"
-                },
-                {
-                    "type": "null"
-                }
-            ],
-            "default": null
+            "$ref": "common.json#/definitions/UpDown"
         },
         "must_run": {
             "default": false,

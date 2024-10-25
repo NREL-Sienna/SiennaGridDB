@@ -409,17 +409,11 @@
             "properties": {
                 "min": {
                     "title": "Min",
-                    "type": [
-                        "null",
-                        "number"
-                    ]
+                    "type": "number"
                 },
                 "max": {
                     "title": "Max",
-                    "type": [
-                        "null",
-                        "number"
-                    ]
+                    "type": "number"
                 }
             }
         },
