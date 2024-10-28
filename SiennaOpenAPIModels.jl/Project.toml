@@ -1,0 +1,10 @@
+name = "SiennaOpenAPIModels"
+uuid = "6f904ddb-d94b-53ea-97a4-b251110faebf"
+authors = ["Joseph McKinsey <joseph.mckinsey@nrel.gov>"]
+version = "0.1.0"
+
+
+[deps]
+OpenAPI = "d5e62ea6-ddf3-4d43-8e4c-ad5e6c8bfd7d"
+PowerSystems = "bcd98974-b02a-5e2f-9ee0-a103f5c450dd"
+StructHelpers = "4093c41a-2008-41fd-82b8-e3f9d02b504f"

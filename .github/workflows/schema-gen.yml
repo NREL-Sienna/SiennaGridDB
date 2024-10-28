@@ -4,6 +4,10 @@
 name: Schema Generation
 
 on:
+  push:
+    branches:
+      - main
+    tags: ["*"]
   pull_request:
     branches:
       - main
@@ -46,3 +50,4 @@ jobs:
           -i /local/openapi.json \
           -g julia-server \
           -o /local/out/julia
+          diff SiennaOpenAPIModels.jl/src/models out/julia/src/models

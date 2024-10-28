@@ -2,20 +2,22 @@
 
 Schema for the SQL database for Sienna Applications
 
-
 ## Set pre-commit environment
 
 Install a virtual environment
+
 ```console
 python -m venv .venv
 ```
 
 Setup the python environment
+
 ```console
 python -m pip install -r requirements.txt
 ```
 
 Setup pre-commit to run automatically on each commit.
+
 ```console
 pre-commit install
 ```
