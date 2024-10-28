@@ -26,7 +26,7 @@ jobs:
           miniforge-version: latest
       - name: Installing python dependencies
         run: |
-          pip install datamodel-code-generator
+          pip install datamodel-code-generator pre-commit
           pip install '.[dev]'  # pytest primarily
         shell: bash -l {0}
       - name: Run datamodel-generation
@@ -50,4 +50,5 @@ jobs:
           -i /local/openapi.json \
           -g julia-server \
           -o /local/out/julia
+          pre-commit run -a
           diff SiennaOpenAPIModels.jl/src/models out/julia/src/models
