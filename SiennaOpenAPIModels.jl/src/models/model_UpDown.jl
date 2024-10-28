@@ -5,32 +5,32 @@
 @doc raw"""UpDown
 
     UpDown(;
-        up=nothing,
         down=nothing,
+        up=nothing,
     )
 
-    - up::Float64
     - down::Float64
+    - up::Float64
 """
 Base.@kwdef mutable struct UpDown <: OpenAPI.APIModel
-    up::Union{Nothing,Float64} = nothing
     down::Union{Nothing,Float64} = nothing
+    up::Union{Nothing,Float64} = nothing
 
-    function UpDown(up, down)
-        OpenAPI.validate_property(UpDown, Symbol("up"), up)
+    function UpDown(down, up)
         OpenAPI.validate_property(UpDown, Symbol("down"), down)
-        return new(up, down)
+        OpenAPI.validate_property(UpDown, Symbol("up"), up)
+        return new(down, up)
     end
 end # type UpDown
 
 const _property_types_UpDown =
-    Dict{Symbol,String}(Symbol("up") => "Float64", Symbol("down") => "Float64")
+    Dict{Symbol,String}(Symbol("down") => "Float64", Symbol("up") => "Float64")
 OpenAPI.property_type(::Type{UpDown}, name::Symbol) =
     Union{Nothing,eval(Base.Meta.parse(_property_types_UpDown[name]))}
 
 function check_required(o::UpDown)
-    o.up === nothing && (return false)
     o.down === nothing && (return false)
+    o.up === nothing && (return false)
     true
 end
 

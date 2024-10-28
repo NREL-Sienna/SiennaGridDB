@@ -6,30 +6,30 @@
 Cost representation for thermal generation units
 
     ThermalStandardOperationCost(;
-        variable=nothing,
         fixed=nothing,
-        start_up=nothing,
         shut_down=nothing,
+        start_up=nothing,
+        variable=nothing,
     )
 
-    - variable::ThermalStandardOperationCostVariable
     - fixed::Float64 : Fixed cost of keeping the unit online. For some cost represenations this field can be duplicative
-    - start_up::ThermalStandardOperationCostStartUp
     - shut_down::Float64 : Cost to turn the unit off
+    - start_up::ThermalStandardOperationCostStartUp
+    - variable::ThermalStandardOperationCostVariable
 """
 Base.@kwdef mutable struct ThermalStandardOperationCost <: OpenAPI.APIModel
-    variable = nothing # spec type: Union{ Nothing, ThermalStandardOperationCostVariable }
     fixed::Union{Nothing,Float64} = nothing
-    start_up = nothing # spec type: Union{ Nothing, ThermalStandardOperationCostStartUp }
     shut_down::Union{Nothing,Float64} = nothing
+    start_up = nothing # spec type: Union{ Nothing, ThermalStandardOperationCostStartUp }
+    variable = nothing # spec type: Union{ Nothing, ThermalStandardOperationCostVariable }
 
-    function ThermalStandardOperationCost(variable, fixed, start_up, shut_down)
+    function ThermalStandardOperationCost(fixed, shut_down, start_up, variable)
+        OpenAPI.validate_property(ThermalStandardOperationCost, Symbol("fixed"), fixed)
         OpenAPI.validate_property(
             ThermalStandardOperationCost,
-            Symbol("variable"),
-            variable,
+            Symbol("shut_down"),
+            shut_down,
         )
-        OpenAPI.validate_property(ThermalStandardOperationCost, Symbol("fixed"), fixed)
         OpenAPI.validate_property(
             ThermalStandardOperationCost,
             Symbol("start_up"),
@@ -37,27 +37,27 @@ Base.@kwdef mutable struct ThermalStandardOperationCost <: OpenAPI.APIModel
         )
         OpenAPI.validate_property(
             ThermalStandardOperationCost,
-            Symbol("shut_down"),
-            shut_down,
+            Symbol("variable"),
+            variable,
         )
-        return new(variable, fixed, start_up, shut_down)
+        return new(fixed, shut_down, start_up, variable)
     end
 end # type ThermalStandardOperationCost
 
 const _property_types_ThermalStandardOperationCost = Dict{Symbol,String}(
-    Symbol("variable") => "ThermalStandardOperationCostVariable",
     Symbol("fixed") => "Float64",
-    Symbol("start_up") => "ThermalStandardOperationCostStartUp",
     Symbol("shut_down") => "Float64",
+    Symbol("start_up") => "ThermalStandardOperationCostStartUp",
+    Symbol("variable") => "ThermalStandardOperationCostVariable",
 )
 OpenAPI.property_type(::Type{ThermalStandardOperationCost}, name::Symbol) =
     Union{Nothing,eval(Base.Meta.parse(_property_types_ThermalStandardOperationCost[name]))}
 
 function check_required(o::ThermalStandardOperationCost)
-    o.variable === nothing && (return false)
     o.fixed === nothing && (return false)
-    o.start_up === nothing && (return false)
     o.shut_down === nothing && (return false)
+    o.start_up === nothing && (return false)
+    o.variable === nothing && (return false)
     true
 end
 
