@@ -16,5 +16,5 @@ using JSON: JSON
         SiennaOpenAPIModels.ThermalStandard,
         JSON.parse(OpenAPI.to_json(test_convert)),
     )
-    @test test_convert == post_json "Conversion test failed"
+    @test test_convert == post_json
 end
