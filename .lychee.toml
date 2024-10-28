@@ -1,0 +1,11 @@
+exclude = [
+  "@ref",
+  "^https://github.com/.*/releases/tag/v.*$",
+  "^https://doi.org/FIXME$",
+  "^https://NREL-Sienna.github.io/SiennaGridDB/stable$",
+  "zenodo.org/badge/DOI/FIXME$"
+]
+
+exclude_path = [
+  "docs/build"
+]
