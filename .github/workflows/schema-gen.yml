@@ -42,7 +42,8 @@ jobs:
           -i /local/openapi.json \
           -g python \
           -o /local/out/python
-      - name: Run openapi-generation for python
+      - uses: julia-actions/cache@v2
+      - name: Run openapi-generation for julia
         shell: bash -l {0}
         run: |
           docker run --rm \
@@ -50,5 +51,6 @@ jobs:
           -i /local/openapi.json \
           -g julia-server \
           -o /local/out/julia
-          pre-commit run -a
+          julia  -e 'import Pkg; Pkg.add("JuliaFormatter")'
+          julia  -e 'using JuliaFormatter; format("out/julia")'
           diff SiennaOpenAPIModels.jl/src/models out/julia/src/models
