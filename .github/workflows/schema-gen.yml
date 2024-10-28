@@ -37,7 +37,7 @@ jobs:
       - name: Run openapi-generation for python
         shell: bash -l {0}
         run: |
-          docker run --rm \
+          docker run --rm --user $(id -u):$(id -g) \
           -v ${PWD}:/local openapitools/openapi-generator-cli generate \
           -i /local/openapi.json \
           -g python \
@@ -46,7 +46,7 @@ jobs:
       - name: Run openapi-generation for julia
         shell: bash -l {0}
         run: |
-          docker run --rm \
+          docker run --rm --user $(id -u):$(id -g) \
           -v ${PWD}:/local openapitools/openapi-generator-cli generate \
           -i /local/openapi.json \
           -g julia-server \
