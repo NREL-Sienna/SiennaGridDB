@@ -246,7 +246,7 @@ end;
 
 create table time_series(
 	entity_id integer references entities(id),
-	timestamp int not null,
+	timestamp not null,
 	value float not null
 );
 
