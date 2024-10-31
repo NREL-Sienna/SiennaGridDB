@@ -245,10 +245,9 @@ end;
 
 
 create table time_series(
-	entity_attribute_id integer references entities(id),
-	time_series_blob blob,
-	timestamp int as (time_series_blob ->> 'timestamp'),
-	value float as (time_series_blob ->> 'value')
+	entity_id integer references entities(id),
+	timestamp int not null,
+	value float not null
 );
 
 create view unit_attributes as
