@@ -13,7 +13,6 @@ drop table if exists areas;
 drop table if exists attributes;
 drop table if exists data_types;
 drop table if exists time_series;
-drop table if exists piecewise_linear;
 drop table if exists transmission_interchange;
 drop table if exists entities;
 drop table if exists linkages;
@@ -45,7 +44,7 @@ create table  storage_units (
 	charging_efficiency float not null check (charging_efficiency > 0),
 	discharge_efficiency float not null check (discharge_efficiency > 0),
 	start_year integer not null check (start_year >= 0),
-	rating float not null check (rating > 0 ),
+	rating float not null default 1 check (rating > 0 ),
 	base_power float not null check (base_power > 0),
 	check (base_power >= rating),
 	foreign key (prime_mover, fuel_type) references prime_mover_types(prime_mover, fuel_type)
@@ -79,13 +78,13 @@ create table operational_data (
 	unit_id references generation_units(unit_id),
 	fom_cost float not null check (fom_cost >= 0),
 	vom_cost float not null check (vom_cost >=0),
-	outage float not null,
+	forced_outage float not null,
 	startup_cost float not null check (startup_cost >= 0),
 	min_stable_level float not null check (min_stable_level >= 0),
 	mttr integer not null check (mttr >= 0),
 	startup_fuel_mmbtu_per_mw float not null check (startup_fuel_mmbtu_per_mw >= 0),
-	plant_uptime float not null check (plant_uptime >= 0),
-	plant_downtime float not null check (plant_downtime >= 0)
+	uptime float not null check (plant_uptime >= 0),
+	downtime float not null check (plant_downtime >= 0)
 );
 
 
@@ -171,14 +170,6 @@ create table entities(
 	id integer primary key,
 	entity_type text not null references table_names(name),
 	entity_id integer not null
-);
-
-create table linkages(
-	id integer primary key,
-	entity_id_1 integer not null,
-	entity_id_2 integer not null,
-	foreign key(entity_id_1) references entities(id),
-	foreign key(entity_id_2) references entities(id)
 );
 
 
