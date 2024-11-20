@@ -83,8 +83,8 @@ create table operational_data (
 	min_stable_level float not null check (min_stable_level >= 0),
 	mttr integer not null check (mttr >= 0),
 	startup_fuel_mmbtu_per_mw float not null check (startup_fuel_mmbtu_per_mw >= 0),
-	uptime float not null check (plant_uptime >= 0),
-	downtime float not null check (plant_downtime >= 0)
+	uptime float not null check (uptime >= 0),
+	downtime float not null check (downtime >= 0)
 );
 
 
