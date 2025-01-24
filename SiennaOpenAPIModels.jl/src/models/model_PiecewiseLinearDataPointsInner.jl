@@ -40,4 +40,7 @@ function OpenAPI.validate_property(
     ::Type{PiecewiseLinearDataPointsInner},
     name::Symbol,
     val,
-) end
+)
+
+
+end

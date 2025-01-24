@@ -6,7 +6,7 @@
 
     QuadraticFunctionData(;
         constant_term=nothing,
-        function_type=nothing,
+        function_type="QUADRATIC",
         proportional_term=nothing,
         quadratic_term=nothing,
     )
@@ -18,7 +18,7 @@
 """
 Base.@kwdef mutable struct QuadraticFunctionData <: OpenAPI.APIModel
     constant_term::Union{Nothing,Float64} = nothing
-    function_type::Union{Nothing,String} = nothing
+    function_type::Union{Nothing,String} = "QUADRATIC"
     proportional_term::Union{Nothing,Float64} = nothing
     quadratic_term::Union{Nothing,Float64} = nothing
 
@@ -63,13 +63,19 @@ OpenAPI.property_type(::Type{QuadraticFunctionData}, name::Symbol) =
 
 function check_required(o::QuadraticFunctionData)
     o.constant_term === nothing && (return false)
+    o.function_type === nothing && (return false)
     o.proportional_term === nothing && (return false)
     o.quadratic_term === nothing && (return false)
     true
 end
 
 function OpenAPI.validate_property(::Type{QuadraticFunctionData}, name::Symbol, val)
+
+
     if name === Symbol("function_type")
         OpenAPI.validate_param(name, "QuadraticFunctionData", :enum, val, ["QUADRATIC"])
     end
+
+
+
 end

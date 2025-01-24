@@ -3,18 +3,18 @@
 
 
 
-@doc raw"""ThermalStandard_operation_cost_variable
+@doc raw"""ProductionVariableCostCurve
 
-    ThermalStandardOperationCostVariable(; value=nothing)
+    ProductionVariableCostCurve(; value=nothing)
 """
-mutable struct ThermalStandardOperationCostVariable <: OpenAPI.OneOfAPIModel
+mutable struct ProductionVariableCostCurve <: OpenAPI.OneOfAPIModel
     value::Any # Union{ CostCurve, FuelCurve }
-    ThermalStandardOperationCostVariable() = new()
-    ThermalStandardOperationCostVariable(value) = new(value)
-end # type ThermalStandardOperationCostVariable
+    ProductionVariableCostCurve() = new()
+    ProductionVariableCostCurve(value) = new(value)
+end # type ProductionVariableCostCurve
 
 function OpenAPI.property_type(
-    ::Type{ThermalStandardOperationCostVariable},
+    ::Type{ProductionVariableCostCurve},
     name::Symbol,
     json::Dict{String,Any},
 )
@@ -26,7 +26,7 @@ function OpenAPI.property_type(
     end
     throw(
         OpenAPI.ValidationException(
-            "Invalid discriminator value: $discriminator for ThermalStandardOperationCostVariable",
+            "Invalid discriminator value: $discriminator for ProductionVariableCostCurve",
         ),
     )
 end
