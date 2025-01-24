@@ -19,9 +19,9 @@ include("modelincludes.jl")
 
 @batteries MinMax
 @batteries UpDown
-@batteries ThermalStandardOperationCostStartUp
+@batteries ThermalGenerationCostStartUp
 @batteries StartUpStages
-@batteries ThermalStandardOperationCostVariable
+@batteries ProductionVariableCostCurve
 @batteries CostCurve
 @batteries CostCurveValueCurve
 @batteries FuelCurve
@@ -38,7 +38,7 @@ include("modelincludes.jl")
 @batteries PiecewiseLinearDataPointsInner
 @batteries PiecewiseStepData
 @batteries ThermalStandard
-@batteries ThermalStandardOperationCost
+@batteries ThermalGenerationCost
 
 include("sienna_struct_conversion.jl")
 
