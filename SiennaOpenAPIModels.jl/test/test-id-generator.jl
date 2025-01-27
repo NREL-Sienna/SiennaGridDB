@@ -12,4 +12,7 @@
     @test getid!(id_generator, component) == 3
     @test getid!(id_generator, component) == 3
     @test getid!(id_generator, component.bus) == 4
+
+    @test isnothing(component.bus.area)
+    @test isnothing(getid!(id_generator, component.bus.area))
 end

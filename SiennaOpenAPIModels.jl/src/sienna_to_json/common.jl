@@ -169,3 +169,7 @@ end
 function getid!(idgen::IDGenerator, component::PSY.Component)
     getid!(idgen, PSY.InfrastructureSystems.get_uuid(component))
 end
+
+function getid!(::IDGenerator, ::Nothing)
+    nothing
+end
