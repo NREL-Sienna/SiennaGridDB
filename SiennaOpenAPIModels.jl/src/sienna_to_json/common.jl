@@ -1,7 +1,4 @@
-using PowerSystems: PowerSystems
-const PSY = PowerSystems
-
-using OpenAPI: OpenAPI
+import UUIDs: UUID
 
 function get_min_max(min_max::NamedTuple{(:min, :max),Tuple{Float64,Float64}})
     MinMax(min = min_max.min, max = min_max.max)
@@ -137,7 +134,7 @@ function get_variable_cost(variable::PSY.FuelCurve)
     )
 end
 
-function convert(cost::PSY.ThermalGenerationCost)
+function get_thermal_cost(cost::PSY.ThermalGenerationCost)
     ThermalGenerationCost(
         start_up = get_startup(cost.start_up),
         shut_down = cost.shut_down,
@@ -146,25 +143,29 @@ function convert(cost::PSY.ThermalGenerationCost)
     )
 end
 
-function convert(thermal_standard::PSY.ThermalStandard)
-    ThermalStandard(
-        id = 1,
-        name = thermal_standard.name,
-        prime_mover = string(thermal_standard.prime_mover_type),
-        fuel_type = string(thermal_standard.fuel),
-        rating = thermal_standard.rating,
-        base_power = thermal_standard.base_power,
-        available = thermal_standard.available,
-        status = thermal_standard.status,
-        time_at_status = thermal_standard.time_at_status,
-        active_power = thermal_standard.active_power,
-        reactive_power = thermal_standard.reactive_power,
-        active_power_limits = get_min_max(thermal_standard.active_power_limits),
-        reactive_power_limits = get_min_max(thermal_standard.reactive_power_limits),
-        ramp_limits = get_up_down(thermal_standard.ramp_limits),
-        operation_cost = convert(thermal_standard.operation_cost),
-        time_limits = get_up_down(thermal_standard.time_limits),
-        must_run = thermal_standard.must_run,
-        bus = 4,
-    )
+mutable struct IDGenerator
+    nextid::Int64
+    uuid2int::Dict{UUID,Int64}
+end
+
+function IDGenerator(nextid = 1)
+    IDGenerator(nextid, Dict{UUID,Int64}())
+end
+
+"""
+Get id from the id generator. If the UUID/Component is not in the dictionary, add it
+and increments internal id counter.
+"""
+function getid!(idgen::IDGenerator, uuid::UUID)
+    if haskey(idgen.uuid2int, uuid)
+        return idgen.uuid2int[uuid]
+    else
+        idgen.uuid2int[uuid] = idgen.nextid
+        idgen.nextid += 1
+        return idgen.uuid2int[uuid]
+    end
+end
+
+function getid!(idgen::IDGenerator, component::PSY.Component)
+    getid!(idgen, PSY.InfrastructureSystems.get_uuid(component))
 end
