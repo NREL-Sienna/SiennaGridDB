@@ -78,4 +78,13 @@ end
         @test isnothing(test_convert.area)
         @test isnothing(test_convert.load_zone)
     end
+    @testset "Arc to JSON" begin
+        arc = first(PSY.get_components(PSY.Arc, c_sys5))
+        @test isa(arc, PSY.Arc)
+        test_convert = SiennaOpenAPIModels.psy2openapi(arc, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.Arc, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.from == 2
+        @test test_convert.to == 3
+    end
 end

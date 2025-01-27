@@ -46,6 +46,7 @@ include("modelincludes.jl")
 @batteries ThermalStandard
 @batteries ThermalGenerationCost
 @batteries ACBus
+@batteries Arc
 
 include("sienna_to_json/common.jl")
 include("sienna_to_json/static_injections.jl")
