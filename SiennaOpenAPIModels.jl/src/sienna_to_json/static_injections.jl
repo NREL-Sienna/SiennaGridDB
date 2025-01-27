@@ -14,7 +14,7 @@ function psy2openapi(thermal_standard::PSY.ThermalStandard, ids::IDGenerator)
         active_power_limits = get_min_max(thermal_standard.active_power_limits),
         reactive_power_limits = get_min_max(thermal_standard.reactive_power_limits),
         ramp_limits = get_up_down(thermal_standard.ramp_limits),
-        operation_cost = convert(thermal_standard.operation_cost),
+        operation_cost = get_thermal_cost(thermal_standard.operation_cost),
         time_limits = get_up_down(thermal_standard.time_limits),
         must_run = thermal_standard.must_run,
         bus = getid!(ids, thermal_standard.bus),

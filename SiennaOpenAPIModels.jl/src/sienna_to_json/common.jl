@@ -134,7 +134,7 @@ function get_variable_cost(variable::PSY.FuelCurve)
     )
 end
 
-function convert(cost::PSY.ThermalGenerationCost)
+function get_thermal_cost(cost::PSY.ThermalGenerationCost)
     ThermalGenerationCost(
         start_up = get_startup(cost.start_up),
         shut_down = cost.shut_down,
@@ -160,10 +160,9 @@ function getid!(idgen::IDGenerator, uuid::UUID)
     if haskey(idgen.uuid2int, uuid)
         return idgen.uuid2int[uuid]
     else
-        new_id = idgen.nextid
-        idgen.uuid2int[uuid] = new_id
+        idgen.uuid2int[uuid] = idgen.nextid
         idgen.nextid += 1
-        return new_id
+        return idgen.uuid2int[uuid]
     end
 end
 

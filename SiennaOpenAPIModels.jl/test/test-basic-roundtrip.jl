@@ -54,7 +54,7 @@ end
     thermal_standard = PSY.get_component(PSY.ThermalStandard, sys, "Solitude")
 
     ids = IDGenerator()
-    test_convert = SiennaOpenAPIModels.convert(thermal_standard, ids)
+    test_convert = SiennaOpenAPIModels.psy2openapi(thermal_standard, ids)
     post_json = OpenAPI.from_json(
         SiennaOpenAPIModels.ThermalStandard,
         JSON.parse(OpenAPI.to_json(test_convert)),
