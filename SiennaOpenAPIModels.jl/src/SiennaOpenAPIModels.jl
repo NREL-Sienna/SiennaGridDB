@@ -17,6 +17,10 @@ using PowerSystems
 const PSY = PowerSystems
 const API_VERSION = "1.0.0"
 
+export convert
+export IDGenerator
+export getid!
+
 include("modelincludes.jl")
 
 @batteries MinMax
@@ -44,7 +48,6 @@ include("modelincludes.jl")
 
 include("sienna_to_json/common.jl")
 include("sienna_to_json/static_injections.jl")
-include("sienna_to_json/topology.jl")
 
 """
 Register handlers for all APIs in this module in the supplied `Router` instance.

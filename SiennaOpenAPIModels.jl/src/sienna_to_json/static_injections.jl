@@ -1,6 +1,6 @@
-function convert(thermal_standard::PSY.ThermalStandard)
+function convert(thermal_standard::PSY.ThermalStandard, ids::IDGenerator)
     ThermalStandard(
-        id = 1,
+        id = getid!(ids, thermal_standard),
         name = thermal_standard.name,
         prime_mover = string(thermal_standard.prime_mover_type),
         fuel_type = string(thermal_standard.fuel),
@@ -17,6 +17,6 @@ function convert(thermal_standard::PSY.ThermalStandard)
         operation_cost = convert(thermal_standard.operation_cost),
         time_limits = get_up_down(thermal_standard.time_limits),
         must_run = thermal_standard.must_run,
-        bus = 4,
+        bus = getid!(ids, thermal_standard.bus),
     )
 end

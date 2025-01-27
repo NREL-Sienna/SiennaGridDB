@@ -1,3 +1,5 @@
+import UUIDs: UUID
+
 function get_min_max(min_max::NamedTuple{(:min, :max),Tuple{Float64,Float64}})
     MinMax(min = min_max.min, max = min_max.max)
 end
@@ -139,4 +141,32 @@ function convert(cost::PSY.ThermalGenerationCost)
         fixed = cost.fixed,
         variable = get_variable_cost(cost.variable),
     )
+end
+
+mutable struct IDGenerator
+    nextid::Int64
+    uuid2int::Dict{UUID,Int64}
+end
+
+function IDGenerator(nextid = 1)
+    IDGenerator(nextid, Dict{UUID,Int64}())
+end
+
+"""
+Get id from the id generator. If the UUID/Component is not in the dictionary, add it
+and increments internal id counter.
+"""
+function getid!(idgen::IDGenerator, uuid::UUID)
+    if haskey(idgen.uuid2int, uuid)
+        return idgen.uuid2int[uuid]
+    else
+        new_id = idgen.nextid
+        idgen.uuid2int[uuid] = new_id
+        idgen.nextid += 1
+        return new_id
+    end
+end
+
+function getid!(idgen::IDGenerator, component::PSY.Component)
+    getid!(idgen, PSY.InfrastructureSystems.get_uuid(component))
 end
