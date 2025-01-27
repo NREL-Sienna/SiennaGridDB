@@ -1,4 +1,4 @@
-function convert(thermal_standard::PSY.ThermalStandard, ids::IDGenerator)
+function psy2openapi(thermal_standard::PSY.ThermalStandard, ids::IDGenerator)
     ThermalStandard(
         id = getid!(ids, thermal_standard),
         name = thermal_standard.name,
