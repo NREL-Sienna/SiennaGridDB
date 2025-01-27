@@ -1,8 +1,3 @@
-using PowerSystems: PowerSystems
-const PSY = PowerSystems
-
-using OpenAPI: OpenAPI
-
 function get_min_max(min_max::NamedTuple{(:min, :max),Tuple{Float64,Float64}})
     MinMax(min = min_max.min, max = min_max.max)
 end
@@ -143,28 +138,5 @@ function convert(cost::PSY.ThermalGenerationCost)
         shut_down = cost.shut_down,
         fixed = cost.fixed,
         variable = get_variable_cost(cost.variable),
-    )
-end
-
-function convert(thermal_standard::PSY.ThermalStandard)
-    ThermalStandard(
-        id = 1,
-        name = thermal_standard.name,
-        prime_mover = string(thermal_standard.prime_mover_type),
-        fuel_type = string(thermal_standard.fuel),
-        rating = thermal_standard.rating,
-        base_power = thermal_standard.base_power,
-        available = thermal_standard.available,
-        status = thermal_standard.status,
-        time_at_status = thermal_standard.time_at_status,
-        active_power = thermal_standard.active_power,
-        reactive_power = thermal_standard.reactive_power,
-        active_power_limits = get_min_max(thermal_standard.active_power_limits),
-        reactive_power_limits = get_min_max(thermal_standard.reactive_power_limits),
-        ramp_limits = get_up_down(thermal_standard.ramp_limits),
-        operation_cost = convert(thermal_standard.operation_cost),
-        time_limits = get_up_down(thermal_standard.time_limits),
-        must_run = thermal_standard.must_run,
-        bus = 4,
     )
 end
