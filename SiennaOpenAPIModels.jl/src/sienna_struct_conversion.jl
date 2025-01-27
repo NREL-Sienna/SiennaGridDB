@@ -1,7 +1,6 @@
 using PowerSystems: PowerSystems
 const PSY = PowerSystems
 
-
 using OpenAPI: OpenAPI
 
 function get_min_max(min_max::NamedTuple{(:min, :max),Tuple{Float64,Float64}})
@@ -17,11 +16,11 @@ end
 get_up_down(::Nothing) = nothing
 
 function get_startup(startup::Float64)
-    return ThermalStandardOperationCostStartUp(startup)
+    return ThermalGenerationCostStartUp(startup)
 end
 
 function get_startup(startup::@NamedTuple{hot::Float64, warm::Float64, cold::Float64})
-    ThermalStandardOperationCostStartUp(
+    ThermalGenerationCostStartUp(
         StartUpStages(hot = startup.hot, warm = startup.warm, cold = startup.cold),
     )
 end
@@ -116,7 +115,7 @@ function get_incremental_curve(curve::PSY.IncrementalCurve)
 end
 
 function get_variable_cost(variable::PSY.CostCurve)
-    ThermalStandardOperationCostVariable(
+    ProductionVariableCostCurve(
         CostCurve(
             variable_cost_type = "COST",
             value_curve = get_cost_value_curve(variable.value_curve),
@@ -127,17 +126,19 @@ function get_variable_cost(variable::PSY.CostCurve)
 end
 
 function get_variable_cost(variable::PSY.FuelCurve)
-    FuelCurve(
-        variable_cost_type = "FUEL",
-        value_curve = get_cost_value_curve(variable.value_curve),
-        power_units = string(variable.power_units),
-        fuel_cost = FuelCurveFuelCost(variable.fuel_cost),
-        vom_cost = get_input_output_curve(variable.vom_cost),
+    ProductionVariableCostCurve(
+        FuelCurve(
+            variable_cost_type = "FUEL",
+            value_curve = get_cost_value_curve(variable.value_curve),
+            power_units = string(variable.power_units),
+            fuel_cost = FuelCurveFuelCost(variable.fuel_cost),
+            vom_cost = get_input_output_curve(variable.vom_cost),
+        ),
     )
 end
 
 function convert(cost::PSY.ThermalGenerationCost)
-    ThermalStandardOperationCost(
+    ThermalGenerationCost(
         start_up = get_startup(cost.start_up),
         shut_down = cost.shut_down,
         fixed = cost.fixed,
@@ -155,6 +156,7 @@ function convert(thermal_standard::PSY.ThermalStandard)
         base_power = thermal_standard.base_power,
         available = thermal_standard.available,
         status = thermal_standard.status,
+        time_at_status = thermal_standard.time_at_status,
         active_power = thermal_standard.active_power,
         reactive_power = thermal_standard.reactive_power,
         active_power_limits = get_min_max(thermal_standard.active_power_limits),
@@ -163,6 +165,6 @@ function convert(thermal_standard::PSY.ThermalStandard)
         operation_cost = convert(thermal_standard.operation_cost),
         time_limits = get_up_down(thermal_standard.time_limits),
         must_run = thermal_standard.must_run,
-        bus_id = 4,
+        bus = 4,
     )
 end

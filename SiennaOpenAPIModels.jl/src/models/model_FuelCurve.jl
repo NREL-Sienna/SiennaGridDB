@@ -8,7 +8,7 @@
         fuel_cost=nothing,
         power_units=nothing,
         value_curve=nothing,
-        variable_cost_type=nothing,
+        variable_cost_type="FUEL",
         vom_cost=nothing,
     )
 
@@ -22,7 +22,7 @@ Base.@kwdef mutable struct FuelCurve <: OpenAPI.APIModel
     fuel_cost = nothing # spec type: Union{ Nothing, FuelCurveFuelCost }
     power_units::Union{Nothing,String} = nothing
     value_curve = nothing # spec type: Union{ Nothing, CostCurveValueCurve }
-    variable_cost_type::Union{Nothing,String} = nothing
+    variable_cost_type::Union{Nothing,String} = "FUEL"
     vom_cost = nothing # spec type: Union{ Nothing, InputOutputCurve }
 
     function FuelCurve(fuel_cost, power_units, value_curve, variable_cost_type, vom_cost)
@@ -53,11 +53,14 @@ function check_required(o::FuelCurve)
     o.fuel_cost === nothing && (return false)
     o.power_units === nothing && (return false)
     o.value_curve === nothing && (return false)
+    o.variable_cost_type === nothing && (return false)
     o.vom_cost === nothing && (return false)
     true
 end
 
 function OpenAPI.validate_property(::Type{FuelCurve}, name::Symbol, val)
+
+
     if name === Symbol("power_units")
         OpenAPI.validate_param(
             name,
@@ -67,7 +70,12 @@ function OpenAPI.validate_property(::Type{FuelCurve}, name::Symbol, val)
             ["SYSTEM_BASE", "DEVICE_BASE", "NATURAL_UNITS"],
         )
     end
+
+
+
     if name === Symbol("variable_cost_type")
         OpenAPI.validate_param(name, "FuelCurve", :enum, val, ["FUEL"])
     end
+
+
 end

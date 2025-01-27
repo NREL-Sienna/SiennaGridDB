@@ -5,7 +5,7 @@
 @doc raw"""InputOutputCurve
 
     InputOutputCurve(;
-        curve_type=nothing,
+        curve_type="INPUT_OUTPUT",
         function_data=nothing,
         input_at_zero=nothing,
     )
@@ -15,7 +15,7 @@
     - input_at_zero::Float64
 """
 Base.@kwdef mutable struct InputOutputCurve <: OpenAPI.APIModel
-    curve_type::Union{Nothing,String} = nothing
+    curve_type::Union{Nothing,String} = "INPUT_OUTPUT"
     function_data = nothing # spec type: Union{ Nothing, InputOutputCurveFunctionData }
     input_at_zero::Union{Nothing,Float64} = nothing
 
@@ -36,12 +36,17 @@ OpenAPI.property_type(::Type{InputOutputCurve}, name::Symbol) =
     Union{Nothing,eval(Base.Meta.parse(_property_types_InputOutputCurve[name]))}
 
 function check_required(o::InputOutputCurve)
+    o.curve_type === nothing && (return false)
     o.function_data === nothing && (return false)
     true
 end
 
 function OpenAPI.validate_property(::Type{InputOutputCurve}, name::Symbol, val)
+
     if name === Symbol("curve_type")
         OpenAPI.validate_param(name, "InputOutputCurve", :enum, val, ["INPUT_OUTPUT"])
     end
+
+
+
 end

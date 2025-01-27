@@ -6,7 +6,7 @@
 
     LinearFunctionData(;
         constant_term=nothing,
-        function_type=nothing,
+        function_type="LINEAR",
         proportional_term=nothing,
     )
 
@@ -16,7 +16,7 @@
 """
 Base.@kwdef mutable struct LinearFunctionData <: OpenAPI.APIModel
     constant_term::Union{Nothing,Float64} = nothing
-    function_type::Union{Nothing,String} = nothing
+    function_type::Union{Nothing,String} = "LINEAR"
     proportional_term::Union{Nothing,Float64} = nothing
 
     function LinearFunctionData(constant_term, function_type, proportional_term)
@@ -49,12 +49,17 @@ OpenAPI.property_type(::Type{LinearFunctionData}, name::Symbol) =
 
 function check_required(o::LinearFunctionData)
     o.constant_term === nothing && (return false)
+    o.function_type === nothing && (return false)
     o.proportional_term === nothing && (return false)
     true
 end
 
 function OpenAPI.validate_property(::Type{LinearFunctionData}, name::Symbol, val)
+
+
     if name === Symbol("function_type")
         OpenAPI.validate_param(name, "LinearFunctionData", :enum, val, ["LINEAR"])
     end
+
+
 end

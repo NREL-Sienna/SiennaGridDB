@@ -42,4 +42,8 @@ function check_required(o::StartUpStages)
     true
 end
 
-function OpenAPI.validate_property(::Type{StartUpStages}, name::Symbol, val) end
+function OpenAPI.validate_property(::Type{StartUpStages}, name::Symbol, val)
+
+
+
+end

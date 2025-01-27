@@ -7,7 +7,7 @@
     CostCurve(;
         power_units=nothing,
         value_curve=nothing,
-        variable_cost_type=nothing,
+        variable_cost_type="COST",
         vom_cost=nothing,
     )
 
@@ -19,7 +19,7 @@
 Base.@kwdef mutable struct CostCurve <: OpenAPI.APIModel
     power_units::Union{Nothing,String} = nothing
     value_curve = nothing # spec type: Union{ Nothing, CostCurveValueCurve }
-    variable_cost_type::Union{Nothing,String} = nothing
+    variable_cost_type::Union{Nothing,String} = "COST"
     vom_cost = nothing # spec type: Union{ Nothing, InputOutputCurve }
 
     function CostCurve(power_units, value_curve, variable_cost_type, vom_cost)
@@ -47,11 +47,13 @@ OpenAPI.property_type(::Type{CostCurve}, name::Symbol) =
 function check_required(o::CostCurve)
     o.power_units === nothing && (return false)
     o.value_curve === nothing && (return false)
+    o.variable_cost_type === nothing && (return false)
     o.vom_cost === nothing && (return false)
     true
 end
 
 function OpenAPI.validate_property(::Type{CostCurve}, name::Symbol, val)
+
     if name === Symbol("power_units")
         OpenAPI.validate_param(
             name,
@@ -61,7 +63,12 @@ function OpenAPI.validate_property(::Type{CostCurve}, name::Symbol, val)
             ["SYSTEM_BASE", "DEVICE_BASE", "NATURAL_UNITS"],
         )
     end
+
+
+
     if name === Symbol("variable_cost_type")
         OpenAPI.validate_param(name, "CostCurve", :enum, val, ["COST"])
     end
+
+
 end

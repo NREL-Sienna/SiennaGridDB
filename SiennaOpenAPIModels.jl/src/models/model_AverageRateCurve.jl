@@ -5,7 +5,7 @@
 @doc raw"""AverageRateCurve
 
     AverageRateCurve(;
-        curve_type=nothing,
+        curve_type="AVERAGE_RATE",
         function_data=nothing,
         initial_input=nothing,
         input_at_zero=nothing,
@@ -17,7 +17,7 @@
     - input_at_zero::Float64
 """
 Base.@kwdef mutable struct AverageRateCurve <: OpenAPI.APIModel
-    curve_type::Union{Nothing,String} = nothing
+    curve_type::Union{Nothing,String} = "AVERAGE_RATE"
     function_data = nothing # spec type: Union{ Nothing, AverageRateCurveFunctionData }
     initial_input::Union{Nothing,Float64} = nothing
     input_at_zero::Union{Nothing,Float64} = nothing
@@ -41,12 +41,18 @@ OpenAPI.property_type(::Type{AverageRateCurve}, name::Symbol) =
     Union{Nothing,eval(Base.Meta.parse(_property_types_AverageRateCurve[name]))}
 
 function check_required(o::AverageRateCurve)
+    o.curve_type === nothing && (return false)
     o.function_data === nothing && (return false)
     true
 end
 
 function OpenAPI.validate_property(::Type{AverageRateCurve}, name::Symbol, val)
+
     if name === Symbol("curve_type")
         OpenAPI.validate_param(name, "AverageRateCurve", :enum, val, ["AVERAGE_RATE"])
     end
+
+
+
+
 end

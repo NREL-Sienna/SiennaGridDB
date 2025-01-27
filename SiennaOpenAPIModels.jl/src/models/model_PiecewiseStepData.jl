@@ -5,7 +5,7 @@
 @doc raw"""PiecewiseStepData
 
     PiecewiseStepData(;
-        function_type=nothing,
+        function_type="PIECEWISE_STEP",
         x_coords=nothing,
         y_coords=nothing,
     )
@@ -15,7 +15,7 @@
     - y_coords::Vector{Float64}
 """
 Base.@kwdef mutable struct PiecewiseStepData <: OpenAPI.APIModel
-    function_type::Union{Nothing,String} = nothing
+    function_type::Union{Nothing,String} = "PIECEWISE_STEP"
     x_coords::Union{Nothing,Vector{Float64}} = nothing
     y_coords::Union{Nothing,Vector{Float64}} = nothing
 
@@ -36,13 +36,18 @@ OpenAPI.property_type(::Type{PiecewiseStepData}, name::Symbol) =
     Union{Nothing,eval(Base.Meta.parse(_property_types_PiecewiseStepData[name]))}
 
 function check_required(o::PiecewiseStepData)
+    o.function_type === nothing && (return false)
     o.x_coords === nothing && (return false)
     o.y_coords === nothing && (return false)
     true
 end
 
 function OpenAPI.validate_property(::Type{PiecewiseStepData}, name::Symbol, val)
+
     if name === Symbol("function_type")
         OpenAPI.validate_param(name, "PiecewiseStepData", :enum, val, ["PIECEWISE_STEP"])
     end
+
+
+
 end

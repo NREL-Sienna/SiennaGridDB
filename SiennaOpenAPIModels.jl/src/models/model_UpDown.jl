@@ -34,4 +34,7 @@ function check_required(o::UpDown)
     true
 end
 
-function OpenAPI.validate_property(::Type{UpDown}, name::Symbol, val) end
+function OpenAPI.validate_property(::Type{UpDown}, name::Symbol, val)
+
+
+end
