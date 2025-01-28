@@ -29,7 +29,7 @@ include("modelincludes.jl")
 @batteries StartUpStages
 @batteries ProductionVariableCostCurve
 @batteries CostCurve
-@batteries CostCurveValueCurve
+@batteries ValueCurve
 @batteries FuelCurve
 @batteries FuelCurveFuelCost
 @batteries InputOutputCurve
