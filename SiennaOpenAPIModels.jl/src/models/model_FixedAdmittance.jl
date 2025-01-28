@@ -17,7 +17,7 @@
     - id::Int64
     - available::Bool
     - bus::Int64
-    - Y::FixedAdmittanceY
+    - Y::ComplexNumber
     - dynamic_injector::Any
 """
 Base.@kwdef mutable struct FixedAdmittance <: OpenAPI.APIModel
@@ -25,7 +25,7 @@ Base.@kwdef mutable struct FixedAdmittance <: OpenAPI.APIModel
     id::Union{Nothing,Int64} = nothing
     available::Union{Nothing,Bool} = nothing
     bus::Union{Nothing,Int64} = nothing
-    Y = nothing # spec type: Union{ Nothing, FixedAdmittanceY }
+    Y = nothing # spec type: Union{ Nothing, ComplexNumber }
     dynamic_injector::Union{Nothing,Any} = nothing
 
     function FixedAdmittance(name, id, available, bus, Y, dynamic_injector)
@@ -48,7 +48,7 @@ const _property_types_FixedAdmittance = Dict{Symbol,String}(
     Symbol("id") => "Int64",
     Symbol("available") => "Bool",
     Symbol("bus") => "Int64",
-    Symbol("Y") => "FixedAdmittanceY",
+    Symbol("Y") => "ComplexNumber",
     Symbol("dynamic_injector") => "Any",
 )
 OpenAPI.property_type(::Type{FixedAdmittance}, name::Symbol) =

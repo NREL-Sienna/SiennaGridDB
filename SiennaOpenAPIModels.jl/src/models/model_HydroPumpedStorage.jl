@@ -48,7 +48,7 @@
     - initial_storage::UpDown
     - name::String
     - outflow::Float64
-    - operation_cost::HydroEnergyReservoirOperationCost
+    - operation_cost::OperationCost
     - prime_mover_type::String
     - pump_efficiency::Float64
     - ramp_limits::UpDown
@@ -79,7 +79,7 @@ Base.@kwdef mutable struct HydroPumpedStorage <: OpenAPI.APIModel
     initial_storage = nothing # spec type: Union{ Nothing, UpDown }
     name::Union{Nothing,String} = nothing
     outflow::Union{Nothing,Float64} = nothing
-    operation_cost = nothing # spec type: Union{ Nothing, HydroEnergyReservoirOperationCost }
+    operation_cost = nothing # spec type: Union{ Nothing, OperationCost }
     prime_mover_type::Union{Nothing,String} = "OT"
     pump_efficiency::Union{Nothing,Float64} = 1.0
     ramp_limits = nothing # spec type: Union{ Nothing, UpDown }
@@ -268,7 +268,7 @@ const _property_types_HydroPumpedStorage = Dict{Symbol,String}(
     Symbol("initial_storage") => "UpDown",
     Symbol("name") => "String",
     Symbol("outflow") => "Float64",
-    Symbol("operation_cost") => "HydroEnergyReservoirOperationCost",
+    Symbol("operation_cost") => "OperationCost",
     Symbol("prime_mover_type") => "String",
     Symbol("pump_efficiency") => "Float64",
     Symbol("ramp_limits") => "UpDown",

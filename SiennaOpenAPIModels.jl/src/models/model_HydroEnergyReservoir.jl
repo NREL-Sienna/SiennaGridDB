@@ -39,7 +39,7 @@
     - inflow::Float64
     - initial_storage::Float64
     - name::String
-    - operation_cost::HydroEnergyReservoirOperationCost
+    - operation_cost::OperationCost
     - prime_mover_type::String
     - ramp_limits::UpDown
     - rating::Float64
@@ -63,7 +63,7 @@ Base.@kwdef mutable struct HydroEnergyReservoir <: OpenAPI.APIModel
     inflow::Union{Nothing,Float64} = nothing
     initial_storage::Union{Nothing,Float64} = nothing
     name::Union{Nothing,String} = nothing
-    operation_cost = nothing # spec type: Union{ Nothing, HydroEnergyReservoirOperationCost }
+    operation_cost = nothing # spec type: Union{ Nothing, OperationCost }
     prime_mover_type::Union{Nothing,String} = "OT"
     ramp_limits = nothing # spec type: Union{ Nothing, UpDown }
     rating::Union{Nothing,Float64} = nothing
@@ -208,7 +208,7 @@ const _property_types_HydroEnergyReservoir = Dict{Symbol,String}(
     Symbol("inflow") => "Float64",
     Symbol("initial_storage") => "Float64",
     Symbol("name") => "String",
-    Symbol("operation_cost") => "HydroEnergyReservoirOperationCost",
+    Symbol("operation_cost") => "OperationCost",
     Symbol("prime_mover_type") => "String",
     Symbol("ramp_limits") => "UpDown",
     Symbol("rating") => "Float64",

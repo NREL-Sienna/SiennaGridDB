@@ -3,21 +3,17 @@
 
 
 
-@doc raw"""CostCurve_value_curve
+@doc raw"""ValueCurve
 
-    CostCurveValueCurve(; value=nothing)
+    ValueCurve(; value=nothing)
 """
-mutable struct CostCurveValueCurve <: OpenAPI.OneOfAPIModel
+mutable struct ValueCurve <: OpenAPI.OneOfAPIModel
     value::Any # Union{ AverageRateCurve, IncrementalCurve, InputOutputCurve }
-    CostCurveValueCurve() = new()
-    CostCurveValueCurve(value) = new(value)
-end # type CostCurveValueCurve
+    ValueCurve() = new()
+    ValueCurve(value) = new(value)
+end # type ValueCurve
 
-function OpenAPI.property_type(
-    ::Type{CostCurveValueCurve},
-    name::Symbol,
-    json::Dict{String,Any},
-)
+function OpenAPI.property_type(::Type{ValueCurve}, name::Symbol, json::Dict{String,Any})
     discriminator = json["curve_type"]
     if discriminator == "AVERAGE_RATE"
         return eval(Base.Meta.parse("AverageRateCurve"))
@@ -28,7 +24,7 @@ function OpenAPI.property_type(
     end
     throw(
         OpenAPI.ValidationException(
-            "Invalid discriminator value: $discriminator for CostCurveValueCurve",
+            "Invalid discriminator value: $discriminator for ValueCurve",
         ),
     )
 end

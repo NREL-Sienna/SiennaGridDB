@@ -29,7 +29,7 @@
     - bus::Int64
     - id::Int64
     - name::String
-    - operation_cost::HydroDispatchOperationCost
+    - operation_cost::HydroGenerationCost
     - prime_mover_type::String
     - ramp_limits::UpDown
     - rating::Float64
@@ -46,7 +46,7 @@ Base.@kwdef mutable struct HydroDispatch <: OpenAPI.APIModel
     bus::Union{Nothing,Int64} = nothing
     id::Union{Nothing,Int64} = nothing
     name::Union{Nothing,String} = nothing
-    operation_cost = nothing # spec type: Union{ Nothing, HydroDispatchOperationCost }
+    operation_cost = nothing # spec type: Union{ Nothing, HydroGenerationCost }
     prime_mover_type::Union{Nothing,String} = "OT"
     ramp_limits = nothing # spec type: Union{ Nothing, UpDown }
     rating::Union{Nothing,Float64} = nothing
@@ -131,7 +131,7 @@ const _property_types_HydroDispatch = Dict{Symbol,String}(
     Symbol("bus") => "Int64",
     Symbol("id") => "Int64",
     Symbol("name") => "String",
-    Symbol("operation_cost") => "HydroDispatchOperationCost",
+    Symbol("operation_cost") => "HydroGenerationCost",
     Symbol("prime_mover_type") => "String",
     Symbol("ramp_limits") => "UpDown",
     Symbol("rating") => "Float64",

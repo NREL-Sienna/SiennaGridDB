@@ -20,7 +20,7 @@
     - active_power_limits_from::MinMax
     - active_power_limits_to::MinMax
     - active_power_flow::Float64
-    - arc::LineArc
+    - arc::Int64
     - available::Bool
     - c::Float64
     - id::Int64
@@ -32,7 +32,7 @@ Base.@kwdef mutable struct TModelHVDCLine <: OpenAPI.APIModel
     active_power_limits_from = nothing # spec type: Union{ Nothing, MinMax }
     active_power_limits_to = nothing # spec type: Union{ Nothing, MinMax }
     active_power_flow::Union{Nothing,Float64} = nothing
-    arc = nothing # spec type: Union{ Nothing, LineArc }
+    arc::Union{Nothing,Int64} = nothing
     available::Union{Nothing,Bool} = nothing
     c::Union{Nothing,Float64} = nothing
     id::Union{Nothing,Int64} = nothing
@@ -93,7 +93,7 @@ const _property_types_TModelHVDCLine = Dict{Symbol,String}(
     Symbol("active_power_limits_from") => "MinMax",
     Symbol("active_power_limits_to") => "MinMax",
     Symbol("active_power_flow") => "Float64",
-    Symbol("arc") => "LineArc",
+    Symbol("arc") => "Int64",
     Symbol("available") => "Bool",
     Symbol("c") => "Float64",
     Symbol("id") => "Int64",

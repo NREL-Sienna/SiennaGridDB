@@ -20,7 +20,7 @@ Name | Type | Description | Notes
 **output_active_power_limits** | [***MinMax**](MinMax.md) |  | [default to nothing]
 **efficiency** | [***EnergyReservoirStorageEfficiency**](EnergyReservoirStorageEfficiency.md) |  | [default to nothing]
 **reactive_power_limits** | [***MinMax**](MinMax.md) |  | [optional] [default to nothing]
-**operation_cost** | [***EnergyReservoirStorageOperationCost**](EnergyReservoirStorageOperationCost.md) |  | [optional] [default to nothing]
+**operation_cost** | [***StorageCost**](StorageCost.md) |  | [optional] [default to nothing]
 **conversion_factor** | **Float64** |  | [optional] [default to 1.0]
 **storage_target** | **Float64** |  | [optional] [default to 0.0]
 **cycle_limits** | **Int64** |  | [optional] [default to 10000]

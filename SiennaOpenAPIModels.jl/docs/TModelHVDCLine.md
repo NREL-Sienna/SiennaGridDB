@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 **active_power_limits_from** | [***MinMax**](MinMax.md) |  | [default to nothing]
 **active_power_limits_to** | [***MinMax**](MinMax.md) |  | [default to nothing]
 **active_power_flow** | **Float64** |  | [default to nothing]
-**arc** | [***LineArc**](LineArc.md) |  | [default to nothing]
+**arc** | **Int64** |  | [default to nothing]
 **available** | **Bool** |  | [default to nothing]
 **c** | **Float64** |  | [default to nothing]
 **id** | **Int64** |  | [default to nothing]

@@ -1,4 +1,4 @@
-# FixedAdmittanceY
+# ComplexNumber
 
 ## Properties
 

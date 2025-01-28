@@ -27,7 +27,7 @@
     - max_active_power::Float64
     - max_reactive_power::Float64
     - base_power::Float64
-    - operation_cost::InterruptiblePowerLoadOperationCost
+    - operation_cost::LoadCost
     - dynamic_injector::Any
 """
 Base.@kwdef mutable struct InterruptiblePowerLoad <: OpenAPI.APIModel
@@ -40,7 +40,7 @@ Base.@kwdef mutable struct InterruptiblePowerLoad <: OpenAPI.APIModel
     max_active_power::Union{Nothing,Float64} = nothing
     max_reactive_power::Union{Nothing,Float64} = nothing
     base_power::Union{Nothing,Float64} = nothing
-    operation_cost = nothing # spec type: Union{ Nothing, InterruptiblePowerLoadOperationCost }
+    operation_cost = nothing # spec type: Union{ Nothing, LoadCost }
     dynamic_injector::Union{Nothing,Any} = nothing
 
     function InterruptiblePowerLoad(
@@ -117,7 +117,7 @@ const _property_types_InterruptiblePowerLoad = Dict{Symbol,String}(
     Symbol("max_active_power") => "Float64",
     Symbol("max_reactive_power") => "Float64",
     Symbol("base_power") => "Float64",
-    Symbol("operation_cost") => "InterruptiblePowerLoadOperationCost",
+    Symbol("operation_cost") => "LoadCost",
     Symbol("dynamic_injector") => "Any",
 )
 OpenAPI.property_type(::Type{InterruptiblePowerLoad}, name::Symbol) =

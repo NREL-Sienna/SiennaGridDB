@@ -12,13 +12,13 @@
     )
 
     - power_units::String
-    - value_curve::CostCurveValueCurve
+    - value_curve::ValueCurve
     - variable_cost_type::String
     - vom_cost::InputOutputCurve
 """
 Base.@kwdef mutable struct CostCurve <: OpenAPI.APIModel
     power_units::Union{Nothing,String} = nothing
-    value_curve = nothing # spec type: Union{ Nothing, CostCurveValueCurve }
+    value_curve = nothing # spec type: Union{ Nothing, ValueCurve }
     variable_cost_type::Union{Nothing,String} = "COST"
     vom_cost = nothing # spec type: Union{ Nothing, InputOutputCurve }
 
@@ -37,7 +37,7 @@ end # type CostCurve
 
 const _property_types_CostCurve = Dict{Symbol,String}(
     Symbol("power_units") => "String",
-    Symbol("value_curve") => "CostCurveValueCurve",
+    Symbol("value_curve") => "ValueCurve",
     Symbol("variable_cost_type") => "String",
     Symbol("vom_cost") => "InputOutputCurve",
 )
