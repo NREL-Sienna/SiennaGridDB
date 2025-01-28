@@ -47,10 +47,12 @@ include("modelincludes.jl")
 @batteries ThermalGenerationCost
 @batteries ACBus
 @batteries Arc
+@batteries Line
 
 include("sienna_to_json/common.jl")
 include("sienna_to_json/static_injections.jl")
 include("sienna_to_json/topology.jl")
+include("sienna_to_json/branch.jl")
 
 """
 Register handlers for all APIs in this module in the supplied `Router` instance.

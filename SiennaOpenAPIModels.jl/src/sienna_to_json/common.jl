@@ -12,6 +12,10 @@ end
 
 get_up_down(::Nothing) = nothing
 
+function get_from_to(from_to::NamedTuple{(:from, :to),Tuple{Float64,Float64}})
+    FromTo(from = from_to.from, to = from_to.to)
+end
+
 function get_startup(startup::Float64)
     return ThermalGenerationCostStartUp(startup)
 end
@@ -173,3 +177,12 @@ end
 function getid!(::IDGenerator, ::Nothing)
     nothing
 end
+
+"""
+Multiply both values of all NamedTuple by a scalar
+"""
+function scale(nt::NamedTuple{T,Tuple{Float64,Float64}}, scalar::Float64) where {T}
+    NamedTuple{T,Tuple{Float64,Float64}}(nt[1] * scalar, nt[2] * scalar)
+end
+
+scale(::Nothing, ::Float64) = nothing

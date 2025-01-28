@@ -87,4 +87,12 @@ end
         @test test_convert.from == 2
         @test test_convert.to == 3
     end
+    @testset "Line to JSON" begin
+        line = first(PSY.get_components(PSY.Line, c_sys5))
+        @test isa(line, PSY.Line)
+        test_convert = SiennaOpenAPIModels.psy2openapi(line, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.Line, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.arc == 2
+    end
 end
