@@ -33,3 +33,18 @@ function psy2openapi(thermal_standard::PSY.ThermalStandard, ids::IDGenerator)
         bus = getid!(ids, thermal_standard.bus),
     )
 end
+
+function psy2openapi(power_load::PSY.PowerLoad, ids::IDGenerator)
+    PowerLoad(
+        id = getid!(ids, power_load),
+        name = power_load.name,
+        available = power_load.available,
+        bus = getid!(ids, power_load.bus),
+        active_power = power_load.active_power * PSY.get_base_power(power_load),
+        reactive_power = power_load.reactive_power * PSY.get_base_power(power_load),
+        base_power = power_load.base_power,
+        max_active_power = power_load.max_active_power * PSY.get_base_power(power_load),
+        max_reactive_power = power_load.max_reactive_power * PSY.get_base_power(power_load),
+        dynamic_injector = getid!(ids, power_load.dynamic_injector),
+    )
+end
