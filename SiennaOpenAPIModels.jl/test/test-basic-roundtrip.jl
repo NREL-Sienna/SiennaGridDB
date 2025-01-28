@@ -5,7 +5,7 @@ import PowerSystems
 const PSY = PowerSystems
 using JSON
 
-function jsondiff(j1::S, j2::S) where {S<:Union{String,Int64,Float64,Bool}}
+function jsondiff(j1::S, j2::S) where {S <: Union{String, Int64, Float64, Bool}}
     if j1 == j2
         return true
     else
@@ -18,12 +18,12 @@ function jsondiff(j1::S, j2::S) where {S}
     error("Unsuported type $S")
 end
 
-function jsondiff(j1::S, j2::T) where {S,T}
+function jsondiff(j1::S, j2::T) where {S, T}
     @warn "Type $j1 :: $S does not match $j2 :: $T"
     return false
 end
 
-function jsondiff(j1::AbstractDict{K,S}, j2::AbstractDict{K,T}) where {K,S,T}
+function jsondiff(j1::AbstractDict{K, S}, j2::AbstractDict{K, T}) where {K, S, T}
     if keys(j1) != keys(j2)
         k1_sub_k2 = setdiff(keys(j1), keys(j2))
         k2_sub_k1 = setdiff(keys(j2), keys(j1))
@@ -36,7 +36,7 @@ function jsondiff(j1::AbstractDict{K,S}, j2::AbstractDict{K,T}) where {K,S,T}
     return true
 end
 
-function jsondiff(j1::AbstractArray{S}, j2::AbstractArray{T}) where {S,T}
+function jsondiff(j1::AbstractArray{S}, j2::AbstractArray{T}) where {S, T}
     if length(j1) != length(j2)
         @warn "Length $j1 does not match $j2"
         return false
@@ -109,12 +109,12 @@ end
     end
     @testset "StandardLoad to JSON" begin
         standard_load = PSY.StandardLoad(
-            name = "standard_load",
-            available = true,
-            bus = PSY.get_bus(c_sys5, 2),
-            base_power = 32.0,
-            constant_active_power = 0.5,
-            max_constant_active_power = 0.75,
+            name="standard_load",
+            available=true,
+            bus=PSY.get_bus(c_sys5, 2),
+            base_power=32.0,
+            constant_active_power=0.5,
+            max_constant_active_power=0.75,
         )
         PSY.add_component!(c_sys5, standard_load)
         @test isa(standard_load, PSY.StandardLoad)
@@ -125,5 +125,16 @@ end
         @test test_convert.bus == 2
         @test test_convert.constant_active_power == 16.0
         @test test_convert.max_constant_active_power == 24.0
+    end
+    @testset "RenewableDispatch to JSON" begin
+        renewable_dispatch = PSY.get_component(PSY.RenewableDispatch, c_sys5, "PVBus5")
+        @test isa(renewable_dispatch, PSY.RenewableDispatch)
+        test_convert = SiennaOpenAPIModels.psy2openapi(renewable_dispatch, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.RenewableDispatch, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.available
+        @test test_convert.bus == 2
+        @test test_convert.active_power == 0.0
+        @test test_convert.rating == 384.0
     end
 end
