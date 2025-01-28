@@ -49,6 +49,7 @@ include("modelincludes.jl")
 @batteries Arc
 @batteries Line
 @batteries FromTo
+@batteries PowerLoad
 
 include("sienna_to_json/common.jl")
 include("sienna_to_json/static_injections.jl")

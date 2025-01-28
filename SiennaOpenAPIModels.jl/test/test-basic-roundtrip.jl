@@ -98,4 +98,13 @@ end
         @test test_convert.arc == 2
         @test test_convert.rating == 1114.8
     end
+    @testset "PowerLoad to JSON" begin
+        power_load = PSY.get_component(PSY.PowerLoad, c_sys5, "Bus2")
+        @test isa(power_load, PSY.PowerLoad)
+        test_convert = SiennaOpenAPIModels.psy2openapi(power_load, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.PowerLoad, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.bus == 2
+        @test test_convert.max_active_power == 369.0024868749973
+    end
 end
