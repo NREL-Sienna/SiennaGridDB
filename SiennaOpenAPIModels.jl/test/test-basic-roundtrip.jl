@@ -67,6 +67,7 @@ end
         test_roundtrip(SiennaOpenAPIModels.ThermalStandard, test_convert)
         @test test_convert.id == 1
         @test test_convert.bus == 2
+        @test test_convert.active_power == 520.0  # test units
     end
     @testset "ACBus to JSON" begin
         acbus = PSY.get_bus(c_sys5, 1)
@@ -77,6 +78,7 @@ end
         @test test_convert.number == 1
         @test isnothing(test_convert.area)
         @test isnothing(test_convert.load_zone)
+        @test test_convert.magnitude == 1.0
     end
     @testset "Arc to JSON" begin
         arc = first(PSY.get_components(PSY.Arc, c_sys5))
@@ -88,11 +90,12 @@ end
         @test test_convert.to == 3
     end
     @testset "Line to JSON" begin
-        line = first(PSY.get_components(PSY.Line, c_sys5))
+        line = PSY.get_component(PSY.Line, c_sys5, "4")
         @test isa(line, PSY.Line)
         test_convert = SiennaOpenAPIModels.psy2openapi(line, IDGenerator())
         test_roundtrip(SiennaOpenAPIModels.Line, test_convert)
         @test test_convert.id == 1
         @test test_convert.arc == 2
+        @test test_convert.rating == 1114.8
     end
 end
