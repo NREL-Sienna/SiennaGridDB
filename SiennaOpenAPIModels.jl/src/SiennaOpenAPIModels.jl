@@ -29,7 +29,7 @@ include("modelincludes.jl")
 @batteries StartUpStages
 @batteries ProductionVariableCostCurve
 @batteries CostCurve
-@batteries CostCurveValueCurve
+@batteries ValueCurve
 @batteries FuelCurve
 @batteries FuelCurveFuelCost
 @batteries InputOutputCurve
@@ -41,7 +41,7 @@ include("modelincludes.jl")
 @batteries LinearFunctionData
 @batteries QuadraticFunctionData
 @batteries PiecewiseLinearData
-@batteries PiecewiseLinearDataPointsInner
+@batteries XYCoords
 @batteries PiecewiseStepData
 @batteries ThermalStandard
 @batteries ThermalGenerationCost

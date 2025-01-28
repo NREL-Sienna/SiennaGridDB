@@ -18,7 +18,7 @@
     )
 
     - active_power_flow::Float64
-    - arc::LineArc
+    - arc::Int64
     - available::Bool
     - id::Int64
     - name::String
@@ -30,7 +30,7 @@
 """
 Base.@kwdef mutable struct Transformer2W <: OpenAPI.APIModel
     active_power_flow::Union{Nothing,Float64} = nothing
-    arc = nothing # spec type: Union{ Nothing, LineArc }
+    arc::Union{Nothing,Int64} = nothing
     available::Union{Nothing,Bool} = nothing
     id::Union{Nothing,Int64} = nothing
     name::Union{Nothing,String} = nothing
@@ -87,7 +87,7 @@ end # type Transformer2W
 
 const _property_types_Transformer2W = Dict{Symbol,String}(
     Symbol("active_power_flow") => "Float64",
-    Symbol("arc") => "LineArc",
+    Symbol("arc") => "Int64",
     Symbol("available") => "Bool",
     Symbol("id") => "Int64",
     Symbol("name") => "String",

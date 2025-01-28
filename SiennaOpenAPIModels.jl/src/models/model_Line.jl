@@ -21,7 +21,7 @@
 
     - active_power_flow::Float64
     - angle_limits::MinMax
-    - arc::LineArc
+    - arc::Int64
     - available::Bool
     - b::FromTo
     - g::FromTo
@@ -35,7 +35,7 @@
 Base.@kwdef mutable struct Line <: OpenAPI.APIModel
     active_power_flow::Union{Nothing,Float64} = nothing
     angle_limits = nothing # spec type: Union{ Nothing, MinMax }
-    arc = nothing # spec type: Union{ Nothing, LineArc }
+    arc::Union{Nothing,Int64} = nothing
     available::Union{Nothing,Bool} = nothing
     b = nothing # spec type: Union{ Nothing, FromTo }
     g = nothing # spec type: Union{ Nothing, FromTo }
@@ -92,7 +92,7 @@ end # type Line
 const _property_types_Line = Dict{Symbol,String}(
     Symbol("active_power_flow") => "Float64",
     Symbol("angle_limits") => "MinMax",
-    Symbol("arc") => "LineArc",
+    Symbol("arc") => "Int64",
     Symbol("available") => "Bool",
     Symbol("b") => "FromTo",
     Symbol("g") => "FromTo",

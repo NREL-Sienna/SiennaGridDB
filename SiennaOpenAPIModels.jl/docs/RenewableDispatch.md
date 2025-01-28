@@ -14,7 +14,7 @@ Name | Type | Description | Notes
 **prime_mover_type** | **String** |  | [default to "OT"]
 **reactive_power_limits** | [***MinMax**](MinMax.md) |  | [optional] [default to nothing]
 **power_factor** | **Float64** |  | [default to nothing]
-**operation_cost** | [***RenewableDispatchOperationCost**](RenewableDispatchOperationCost.md) |  | [default to nothing]
+**operation_cost** | [***RenewableGenerationCost**](RenewableGenerationCost.md) |  | [default to nothing]
 **base_power** | **Float64** |  | [default to nothing]
 **dynamic_injector** | **Any** |  | [optional] [default to nothing]
 

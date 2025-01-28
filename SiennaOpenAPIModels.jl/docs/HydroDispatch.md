@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 **bus** | **Int64** |  | [default to nothing]
 **id** | **Int64** |  | [default to nothing]
 **name** | **String** |  | [default to nothing]
-**operation_cost** | [***HydroDispatchOperationCost**](HydroDispatchOperationCost.md) |  | [optional] [default to nothing]
+**operation_cost** | [***HydroGenerationCost**](HydroGenerationCost.md) |  | [optional] [default to nothing]
 **prime_mover_type** | **String** |  | [default to "OT"]
 **ramp_limits** | [***UpDown**](UpDown.md) |  | [optional] [default to nothing]
 **rating** | **Float64** |  | [default to nothing]

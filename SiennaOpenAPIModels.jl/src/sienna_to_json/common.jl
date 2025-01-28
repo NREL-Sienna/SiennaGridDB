@@ -31,15 +31,15 @@ function get_cost_value_curve(curve::T) where {T<:PSY.ValueCurve}
 end
 
 function get_cost_value_curve(curve::PSY.InputOutputCurve)
-    CostCurveValueCurve(get_input_output_curve(curve))
+    ValueCurve(get_input_output_curve(curve))
 end
 
 function get_cost_value_curve(curve::PSY.AverageRateCurve)
-    CostCurveValueCurve(get_average_rate_curve(curve))
+    ValueCurve(get_average_rate_curve(curve))
 end
 
 function get_cost_value_curve(curve::PSY.IncrementalCurve)
-    CostCurveValueCurve(get_incremental_curve(curve))
+    ValueCurve(get_incremental_curve(curve))
 end
 
 
@@ -61,7 +61,7 @@ function get_function_data(function_data::PSY.QuadraticFunctionData)
 end
 
 function get_xy_coords(nt::@NamedTuple{x::Float64, y::Float64})
-    PiecewiseLinearDataPointsInner(x = nt.x, y = nt.y)
+    XYCoords(x = nt.x, y = nt.y)
 end
 
 function get_function_data(function_data::PSY.PiecewiseLinearData)

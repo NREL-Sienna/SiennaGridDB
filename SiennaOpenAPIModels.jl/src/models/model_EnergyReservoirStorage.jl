@@ -45,7 +45,7 @@
     - output_active_power_limits::MinMax
     - efficiency::EnergyReservoirStorageEfficiency
     - reactive_power_limits::MinMax
-    - operation_cost::EnergyReservoirStorageOperationCost
+    - operation_cost::StorageCost
     - conversion_factor::Float64
     - storage_target::Float64
     - cycle_limits::Int64
@@ -69,7 +69,7 @@ Base.@kwdef mutable struct EnergyReservoirStorage <: OpenAPI.APIModel
     output_active_power_limits = nothing # spec type: Union{ Nothing, MinMax }
     efficiency = nothing # spec type: Union{ Nothing, EnergyReservoirStorageEfficiency }
     reactive_power_limits = nothing # spec type: Union{ Nothing, MinMax }
-    operation_cost = nothing # spec type: Union{ Nothing, EnergyReservoirStorageOperationCost }
+    operation_cost = nothing # spec type: Union{ Nothing, StorageCost }
     conversion_factor::Union{Nothing,Float64} = 1.0
     storage_target::Union{Nothing,Float64} = 0.0
     cycle_limits::Union{Nothing,Int64} = 10000
@@ -226,7 +226,7 @@ const _property_types_EnergyReservoirStorage = Dict{Symbol,String}(
     Symbol("output_active_power_limits") => "MinMax",
     Symbol("efficiency") => "EnergyReservoirStorageEfficiency",
     Symbol("reactive_power_limits") => "MinMax",
-    Symbol("operation_cost") => "EnergyReservoirStorageOperationCost",
+    Symbol("operation_cost") => "StorageCost",
     Symbol("conversion_factor") => "Float64",
     Symbol("storage_target") => "Float64",
     Symbol("cycle_limits") => "Int64",

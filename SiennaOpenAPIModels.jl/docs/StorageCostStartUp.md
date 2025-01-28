@@ -1,10 +1,9 @@
-# InterruptiblePowerLoadOperationCost
+# StorageCostStartUp
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**fixed** | **Float64** |  | [optional] [default to 0.0]
-**variable** | [***CostCurve**](CostCurve.md) |  | [default to nothing]
+**value** | This is a oneOf model. The value must be exactly one of the following types: Float64, StorageCostStartUpOneOf |  | [optional]
 
 [[Back to Model list]](../README.md#models) [[Back to API list]](../README.md#api-endpoints) [[Back to README]](../README.md)

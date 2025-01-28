@@ -22,7 +22,7 @@
 
     - active_power_flow::Float64
     - angle_limits::MinMax
-    - arc::LineArc
+    - arc::Int64
     - available::Bool
     - b::FromTo
     - flow_limits::FromToToFrom
@@ -37,7 +37,7 @@
 Base.@kwdef mutable struct MonitoredLine <: OpenAPI.APIModel
     active_power_flow::Union{Nothing,Float64} = nothing
     angle_limits = nothing # spec type: Union{ Nothing, MinMax }
-    arc = nothing # spec type: Union{ Nothing, LineArc }
+    arc::Union{Nothing,Int64} = nothing
     available::Union{Nothing,Bool} = nothing
     b = nothing # spec type: Union{ Nothing, FromTo }
     flow_limits = nothing # spec type: Union{ Nothing, FromToToFrom }
@@ -106,7 +106,7 @@ end # type MonitoredLine
 const _property_types_MonitoredLine = Dict{Symbol,String}(
     Symbol("active_power_flow") => "Float64",
     Symbol("angle_limits") => "MinMax",
-    Symbol("arc") => "LineArc",
+    Symbol("arc") => "Int64",
     Symbol("available") => "Bool",
     Symbol("b") => "FromTo",
     Symbol("flow_limits") => "FromToToFrom",

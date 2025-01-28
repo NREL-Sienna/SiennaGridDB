@@ -30,7 +30,7 @@
     - prime_mover_type::String
     - reactive_power_limits::MinMax
     - power_factor::Float64
-    - operation_cost::RenewableDispatchOperationCost
+    - operation_cost::RenewableGenerationCost
     - base_power::Float64
     - dynamic_injector::Any
 """
@@ -45,7 +45,7 @@ Base.@kwdef mutable struct RenewableDispatch <: OpenAPI.APIModel
     prime_mover_type::Union{Nothing,String} = "OT"
     reactive_power_limits = nothing # spec type: Union{ Nothing, MinMax }
     power_factor::Union{Nothing,Float64} = nothing
-    operation_cost = nothing # spec type: Union{ Nothing, RenewableDispatchOperationCost }
+    operation_cost = nothing # spec type: Union{ Nothing, RenewableGenerationCost }
     base_power::Union{Nothing,Float64} = nothing
     dynamic_injector::Union{Nothing,Any} = nothing
 
@@ -126,7 +126,7 @@ const _property_types_RenewableDispatch = Dict{Symbol,String}(
     Symbol("prime_mover_type") => "String",
     Symbol("reactive_power_limits") => "MinMax",
     Symbol("power_factor") => "Float64",
-    Symbol("operation_cost") => "RenewableDispatchOperationCost",
+    Symbol("operation_cost") => "RenewableGenerationCost",
     Symbol("base_power") => "Float64",
     Symbol("dynamic_injector") => "Any",
 )

@@ -19,9 +19,9 @@
     - id::Int64
     - available::Bool
     - bus::Int64
-    - Y::FixedAdmittanceY
+    - Y::ComplexNumber
     - number_of_steps::Int64
-    - Y_increase::FixedAdmittanceY
+    - Y_increase::ComplexNumber
     - dynamic_injector::Any
 """
 Base.@kwdef mutable struct SwitchedAdmittance <: OpenAPI.APIModel
@@ -29,9 +29,9 @@ Base.@kwdef mutable struct SwitchedAdmittance <: OpenAPI.APIModel
     id::Union{Nothing,Int64} = nothing
     available::Union{Nothing,Bool} = nothing
     bus::Union{Nothing,Int64} = nothing
-    Y = nothing # spec type: Union{ Nothing, FixedAdmittanceY }
+    Y = nothing # spec type: Union{ Nothing, ComplexNumber }
     number_of_steps::Union{Nothing,Int64} = 0
-    Y_increase = nothing # spec type: Union{ Nothing, FixedAdmittanceY }
+    Y_increase = nothing # spec type: Union{ Nothing, ComplexNumber }
     dynamic_injector::Union{Nothing,Any} = nothing
 
     function SwitchedAdmittance(
@@ -78,9 +78,9 @@ const _property_types_SwitchedAdmittance = Dict{Symbol,String}(
     Symbol("id") => "Int64",
     Symbol("available") => "Bool",
     Symbol("bus") => "Int64",
-    Symbol("Y") => "FixedAdmittanceY",
+    Symbol("Y") => "ComplexNumber",
     Symbol("number_of_steps") => "Int64",
-    Symbol("Y_increase") => "FixedAdmittanceY",
+    Symbol("Y_increase") => "ComplexNumber",
     Symbol("dynamic_injector") => "Any",
 )
 OpenAPI.property_type(::Type{SwitchedAdmittance}, name::Symbol) =

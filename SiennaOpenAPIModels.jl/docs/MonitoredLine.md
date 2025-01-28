@@ -6,7 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **active_power_flow** | **Float64** |  | [default to nothing]
 **angle_limits** | [***MinMax**](MinMax.md) |  | [default to nothing]
-**arc** | [***LineArc**](LineArc.md) |  | [default to nothing]
+**arc** | **Int64** |  | [default to nothing]
 **available** | **Bool** |  | [default to nothing]
 **b** | [***FromTo**](FromTo.md) |  | [default to nothing]
 **flow_limits** | [***FromToToFrom**](FromToToFrom.md) |  | [default to nothing]

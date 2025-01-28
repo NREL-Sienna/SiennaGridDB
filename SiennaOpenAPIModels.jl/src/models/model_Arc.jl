@@ -11,13 +11,13 @@
     )
 
     - id::Int64
-    - from::Float64
-    - to::Float64
+    - from::Int64
+    - to::Int64
 """
 Base.@kwdef mutable struct Arc <: OpenAPI.APIModel
     id::Union{Nothing,Int64} = nothing
-    from::Union{Nothing,Float64} = nothing
-    to::Union{Nothing,Float64} = nothing
+    from::Union{Nothing,Int64} = nothing
+    to::Union{Nothing,Int64} = nothing
 
     function Arc(id, from, to)
         OpenAPI.validate_property(Arc, Symbol("id"), id)
@@ -29,8 +29,8 @@ end # type Arc
 
 const _property_types_Arc = Dict{Symbol,String}(
     Symbol("id") => "Int64",
-    Symbol("from") => "Float64",
-    Symbol("to") => "Float64",
+    Symbol("from") => "Int64",
+    Symbol("to") => "Int64",
 )
 OpenAPI.property_type(::Type{Arc}, name::Symbol) =
     Union{Nothing,eval(Base.Meta.parse(_property_types_Arc[name]))}
