@@ -182,7 +182,7 @@ end
 Multiply both values of all NamedTuple by a scalar
 """
 function scale(nt::NamedTuple{T,Tuple{Float64,Float64}}, scalar::Float64) where {T}
-    NamedTuple{T,Tuple{Float64,Float64}}(nt[1] * scalar, nt[2] * scalar)
+    NamedTuple{T,Tuple{Float64,Float64}}((nt[1] * scalar, nt[2] * scalar))
 end
 
 scale(::Nothing, ::Float64) = nothing
