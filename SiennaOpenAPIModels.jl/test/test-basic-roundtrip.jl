@@ -1,7 +1,7 @@
 using SiennaOpenAPIModels
-using OpenAPI: OpenAPI
-using PowerSystemCaseBuilder: PowerSystemCaseBuilder
-using PowerSystems: PowerSystems
+using OpenAPI
+using PowerSystemCaseBuilder
+import PowerSystems
 const PSY = PowerSystems
 using JSON
 
@@ -47,24 +47,35 @@ function jsondiff(j1::AbstractArray{S}, j2::AbstractArray{T}) where {S,T}
     return true
 end
 
-@testset "c_sys5_pjm ThermalStandard to JSON" begin
-    sys =
-        PowerSystemCaseBuilder.build_system(PowerSystemCaseBuilder.PSISystems, "c_sys5_pjm")
-
-    thermal_standard = PSY.get_component(PSY.ThermalStandard, sys, "Solitude")
-
-    ids = IDGenerator()
-    test_convert = SiennaOpenAPIModels.psy2openapi(thermal_standard, ids)
-    post_json = OpenAPI.from_json(
-        SiennaOpenAPIModels.ThermalStandard,
-        JSON.parse(OpenAPI.to_json(test_convert)),
-    )
-    @test typeof(test_convert) == typeof(post_json)
+function test_roundtrip(openapi_model, data)
+    post_json = OpenAPI.from_json(openapi_model, JSON.parse(OpenAPI.to_json(data)))
+    @test typeof(data) == typeof(post_json)
+    @test data == post_json
     @test jsondiff(
-        JSON.parse(OpenAPI.to_json(test_convert)),
+        JSON.parse(OpenAPI.to_json(data)),
         JSON.parse(OpenAPI.to_json(post_json)),
     )
-    @test test_convert == post_json
-    @test test_convert.id == 1
-    @test test_convert.bus == 2
+end
+
+@testset "c_sys5_pjm RoundTrip to JSON" begin
+    c_sys5 =
+        PowerSystemCaseBuilder.build_system(PowerSystemCaseBuilder.PSISystems, "c_sys5_pjm")
+    @testset "ThermalStandard to JSON" begin
+        thermal_standard = PSY.get_component(PSY.ThermalStandard, c_sys5, "Solitude")
+
+        test_convert = SiennaOpenAPIModels.psy2openapi(thermal_standard, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.ThermalStandard, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.bus == 2
+    end
+    @testset "ACBus to JSON" begin
+        acbus = PSY.get_bus(c_sys5, 1)
+        @test isa(acbus, PSY.ACBus)
+        test_convert = SiennaOpenAPIModels.psy2openapi(acbus, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.ACBus, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.number == 1
+        @test isnothing(test_convert.area)
+        @test isnothing(test_convert.load_zone)
+    end
 end

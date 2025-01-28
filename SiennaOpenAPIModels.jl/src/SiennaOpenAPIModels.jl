@@ -45,9 +45,11 @@ include("modelincludes.jl")
 @batteries PiecewiseStepData
 @batteries ThermalStandard
 @batteries ThermalGenerationCost
+@batteries ACBus
 
 include("sienna_to_json/common.jl")
 include("sienna_to_json/static_injections.jl")
+include("sienna_to_json/topology.jl")
 
 """
 Register handlers for all APIs in this module in the supplied `Router` instance.
