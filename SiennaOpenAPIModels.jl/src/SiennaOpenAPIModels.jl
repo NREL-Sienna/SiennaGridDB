@@ -41,7 +41,7 @@ include("modelincludes.jl")
 @batteries LinearFunctionData
 @batteries QuadraticFunctionData
 @batteries PiecewiseLinearData
-@batteries PiecewiseLinearDataPointsInner
+@batteries XYCoords
 @batteries PiecewiseStepData
 @batteries ThermalStandard
 @batteries ThermalGenerationCost

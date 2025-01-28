@@ -61,7 +61,7 @@ function get_function_data(function_data::PSY.QuadraticFunctionData)
 end
 
 function get_xy_coords(nt::@NamedTuple{x::Float64, y::Float64})
-    PiecewiseLinearDataPointsInner(x = nt.x, y = nt.y)
+    XYCoords(x = nt.x, y = nt.y)
 end
 
 function get_function_data(function_data::PSY.PiecewiseLinearData)
