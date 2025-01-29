@@ -9,9 +9,7 @@ description = ''
 readme = "README.md"
 requires-python = ">=3.8"
 keywords = []
-authors = [
-  { name = "Joseph McKinsey", email = "joseph.mckinsey@nrel.gov" },
-]
+authors = [{ name = "Joseph McKinsey", email = "joseph.mckinsey@nrel.gov" }]
 classifiers = [
   "Development Status :: 4 - Beta",
   "Programming Language :: Python",
@@ -23,14 +21,14 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
-dependencies = [
-  "pydantic>=2,<3",
-  "sqlalchemy>=2,<3",
-]
+dependencies = ["pydantic>=2,<3", "sqlalchemy>=2,<3"]
 
 [project.optional-dependencies]
 dev = ["pytest>=7.2.1", "pytest-cov", "ruff", "pre-commit"]
 docs = ["sphinx>=7", "myst-parser", "sphinx_math_dollar", "nbsphinx"]
+
+[project.scripts]
+sienna_sqlite = "sienna_database_gen.gen_database:print_sqlite"
 
 # Setuptools configuration
 [tool.setuptools]
