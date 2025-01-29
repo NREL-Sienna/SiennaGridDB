@@ -8,6 +8,8 @@ from .pydantic_schemas import (
     BalancingTopology,
     Area,
     Transmission,
+    Arc,
+    Load,
 )
 
 sqlite_dialect = SQLiteDialect_pysqlite()
@@ -30,5 +32,7 @@ def print_schemas():
         BalancingTopology,
         Area,
         Transmission,
+        Arc,
+        Load,
     ]:
         print(schemas.model_json_schema(schema_generator=GenerateJSONSchemaWithSQLInfo))

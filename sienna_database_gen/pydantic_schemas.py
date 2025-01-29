@@ -138,6 +138,9 @@ class GenerationUnit(ObjModel):
     fuel_type: Annotated[ThermalFuels | None, Column(Text, nullable=True)]
     rating: Annotated[float, Column(Double, nullable=False)]
     base_power: Annotated[float, Column(Double, nullable=False)]
+    balancing_id: Annotated[
+        int, Column(Integer, ForeignKey("balancing_topology.id"), nullable=False)
+    ]
     _table_name: ClassVar[str] = "generation_unit"
 
 
@@ -178,3 +181,12 @@ class Transmission(ObjModel):
     ]
     rating: Annotated[float, Column(Double, nullable=False)]
     _table_name: ClassVar[Table] = "transmission"
+
+
+class Load(ObjModel):
+    balancing_id: Annotated[
+        int, Column(Integer, ForeignKey("balancing_topology.id"), nullable=False)
+    ]
+    rating: Annotated[float, Column(Double, nullable=False)]
+    base_power: Annotated[float, Column(Double, nullable=False)]
+    _table_name: ClassVar[Table] = "load"
