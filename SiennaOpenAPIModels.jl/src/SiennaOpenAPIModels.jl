@@ -12,7 +12,7 @@ module SiennaOpenAPIModels
 
 using OpenAPI
 using StructHelpers: @batteries
-using PowerSystems
+import PowerSystems
 
 const PSY = PowerSystems
 const API_VERSION = "1.0.0"
@@ -46,10 +46,14 @@ include("modelincludes.jl")
 @batteries ThermalStandard
 @batteries ThermalGenerationCost
 @batteries ACBus
+@batteries Arc
+@batteries Line
+@batteries FromTo
 
 include("sienna_to_json/common.jl")
 include("sienna_to_json/static_injections.jl")
 include("sienna_to_json/topology.jl")
+include("sienna_to_json/branch.jl")
 
 """
 Register handlers for all APIs in this module in the supplied `Router` instance.
