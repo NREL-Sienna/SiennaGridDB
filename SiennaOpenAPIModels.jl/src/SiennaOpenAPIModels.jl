@@ -58,7 +58,7 @@ include("sienna_to_json/static_injections.jl")
 include("sienna_to_json/topology.jl")
 include("sienna_to_json/branch.jl")
 
-include("dbinterface/make_sqlite.jl")
+include("dbinterface/sqlite.jl")
 
 """
 Register handlers for all APIs in this module in the supplied `Router` instance.
