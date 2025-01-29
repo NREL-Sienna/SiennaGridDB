@@ -10,16 +10,60 @@
 from enum import StrEnum
 from pydantic import (
     BaseModel,
-    Field,
     model_validator,
 )
 from pydantic.json_schema import GenerateJsonSchema
 
-from typing import Any, ClassVar, Annotated, get_type_hints
+from typing import ClassVar, Annotated, get_type_hints
 from sqlalchemy import Double, ForeignKey, Table, Column, Integer, Text
 
-from R2X_schemas.enums import ACBusTypes, PrimeMoversType, ThermalFuels
-from R2X_schemas.units import ApparentPower, Voltage
+
+class PrimeMoversType(StrEnum):
+    """EIA prime mover codes."""
+
+    BA = "BA"
+    BT = "BT"
+    CA = "CA"
+    CC = "CC"
+    CE = "CE"
+    CP = "CP"
+    CS = "CSV"
+    CT = "CT"
+    ES = "ES"
+    FC = "FC"
+    FW = "FW"
+    GT = "GT"
+    HA = "HA"
+    HB = "HB"
+    HK = "HK"
+    HY = "HY"
+    IC = "IC"
+    PS = "PS"
+    OT = "OT"
+    ST = "ST"
+    PV = "PV"
+    WT = "WT"
+    WS = "WS"
+    RTPV = "RTPV"
+
+
+class ThermalFuels(StrEnum):
+    """Thermal fuels that reflect options in the EIA annual energy review."""
+
+    COAL = "COAL"
+    WASTE_COAL = "WASTE_COAL"
+    DISTILLATE_FUEL_OIL = "DISTILLATE_FUEL_OIL"
+    WASTE_OIL = "WASTE_OIL"
+    PETROLEUM_COKE = "PETROLEUM_COKE"
+    RESIDUAL_FUEL_OIL = "RESIDUAL_FUEL_OIL"
+    NATURAL_GAS = "NATURAL_GAS"
+    OTHER_GAS = "OTHER_GAS"
+    NUCLEAR = "NUCLEAR"
+    AG_BIOPRODUCT = "AG_BIOPRODUCT"
+    MUNICIPAL_WASTE = "MUNICIPAL_WASTE"
+    WOOD_WASTE = "WOOD_WASTE"
+    GEOTHERMAL = "GEOTHERMAL"
+    OTHER = "OTHER"
 
 
 def get_column_from_annotation(type_hint, name: str):
@@ -92,17 +136,15 @@ class ObjModel(BaseModel):
 class GenerationUnit(ObjModel):
     prime_mover: Annotated[PrimeMoversType | None, Column(Text, nullable=True)]
     fuel_type: Annotated[ThermalFuels | None, Column(Text, nullable=True)]
-    rating: Annotated[ApparentPower, Column(Double, nullable=False)]
-    base_power: Annotated[ApparentPower, Column(Double, nullable=False)]
+    rating: Annotated[float, Column(Double, nullable=False)]
+    base_power: Annotated[float, Column(Double, nullable=False)]
     _table_name: ClassVar[str] = "generation_unit"
 
 
 class SupplyTechnology(ObjModel):
     prime_mover: Annotated[PrimeMoversType | None, Column(Text, nullable=True)]
     fuel_type: Annotated[ThermalFuels | None, Column(Text, nullable=True)]
-    area_id: Annotated[
-        int | None, Column(Integer, ForeignKey("area.id"), nullable=True)
-    ]
+    area_id: Annotated[int | None, Column(Integer, ForeignKey("area.id"), nullable=True)]
     balancing_id: Annotated[
         int | None, Column(Integer, ForeignKey("balancing_topology.id"), nullable=True)
     ]
@@ -120,12 +162,19 @@ class Area(ObjModel):
     _table_name: ClassVar[Table] = "area"
 
 
-class TransmissionLine(ObjModel):
+class Arc(ObjModel):
     from_id: Annotated[
-        int | None, Column(Integer, ForeignKey("balancing_topology.id"), nullable=False)
+        int, Column(Integer, ForeignKey("balancing_topology.id"), nullable=False)
     ]
     to_id: Annotated[
-        int | None, Column(Integer, ForeignKey("balancing_topology.id"), nullable=False)
+        int, Column(Integer, ForeignKey("balancing_topology.id"), nullable=False)
+    ]
+    _table_name: ClassVar[Table] = "transmission_line"
+
+
+class Transmission(ObjModel):
+    arc_id: Annotated[
+        int, Column(Integer, ForeignKey("balancing_topology.id"), nullable=False)
     ]
     rating: Annotated[float, Column(Double, nullable=False)]
-    _table_name: ClassVar[Table] = "transmission_line"
+    _table_name: ClassVar[Table] = "transmission"

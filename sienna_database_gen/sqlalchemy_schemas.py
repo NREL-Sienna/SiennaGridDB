@@ -6,7 +6,7 @@ from .pydantic_schemas import (
     SupplyTechnology,
     BalancingTopology,
     Area,
-    TransmissionLine,
+    Transmission,
 )
 
 metadata_obj = MetaData()
@@ -14,7 +14,7 @@ generation_unit = create_table(GenerationUnit, metadata_obj)
 supply_technology = create_table(SupplyTechnology, metadata_obj)
 balancing_topology = create_table(BalancingTopology, metadata_obj)
 area = create_table(Area, metadata_obj)
-transmission_line = create_table(TransmissionLine, metadata_obj)
+transmission_line = create_table(Transmission, metadata_obj)
 attributes = Table(
     "attributes",
     metadata_obj,

@@ -10,14 +10,13 @@ engine = create_engine("sqlite:///:memory:")
 metadata_obj.create_all(engine)
 
 
-
 def load_to_db(conn: Connection, data):
     # Parse data to JSON
     # Ascertain type
     # Pack into main row
     # Create attribute JSON
     # Insert into database
-    return inserted_id
+    pass
 
 
 def load_from_db(conn: Connection, table, id):
@@ -31,7 +30,6 @@ def load_from_db(conn: Connection, table, id):
             attributes.c.entity_id == id, attributes.c.entity_type == table.name
         )
     ).fetchall()
-
 
     full_json = {
         **{key: value for key, value in zip(entity_result.keys(), row)},
