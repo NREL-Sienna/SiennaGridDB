@@ -33,3 +33,53 @@ function psy2openapi(thermal_standard::PSY.ThermalStandard, ids::IDGenerator)
         bus = getid!(ids, thermal_standard.bus),
     )
 end
+
+function psy2openapi(power_load::PSY.PowerLoad, ids::IDGenerator)
+    PowerLoad(
+        id = getid!(ids, power_load),
+        name = power_load.name,
+        available = power_load.available,
+        bus = getid!(ids, power_load.bus),
+        active_power = power_load.active_power * PSY.get_base_power(power_load),
+        reactive_power = power_load.reactive_power * PSY.get_base_power(power_load),
+        base_power = power_load.base_power,
+        max_active_power = power_load.max_active_power * PSY.get_base_power(power_load),
+        max_reactive_power = power_load.max_reactive_power * PSY.get_base_power(power_load),
+        dynamic_injector = getid!(ids, power_load.dynamic_injector),
+    )
+end
+
+function psy2openapi(standard_load::PSY.StandardLoad, ids::IDGenerator)
+    StandardLoad(
+        id = getid!(ids, standard_load),
+        name = standard_load.name,
+        available = standard_load.available,
+        bus = getid!(ids, standard_load.bus),
+        constant_active_power = standard_load.constant_active_power *
+                                PSY.get_base_power(standard_load),
+        constant_reactive_power = standard_load.constant_reactive_power *
+                                  PSY.get_base_power(standard_load),
+        impedance_active_power = standard_load.impedance_active_power *
+                                 PSY.get_base_power(standard_load),
+        impedance_reactive_power = standard_load.impedance_reactive_power *
+                                   PSY.get_base_power(standard_load),
+        current_active_power = standard_load.current_active_power *
+                               PSY.get_base_power(standard_load),
+        current_reactive_power = standard_load.current_reactive_power *
+                                 PSY.get_base_power(standard_load),
+        max_constant_active_power = standard_load.max_constant_active_power *
+                                    PSY.get_base_power(standard_load),
+        max_constant_reactive_power = standard_load.max_constant_reactive_power *
+                                      PSY.get_base_power(standard_load),
+        max_impedance_active_power = standard_load.max_impedance_active_power *
+                                     PSY.get_base_power(standard_load),
+        max_impedance_reactive_power = standard_load.max_impedance_reactive_power *
+                                       PSY.get_base_power(standard_load),
+        max_current_active_power = standard_load.max_current_active_power *
+                                   PSY.get_base_power(standard_load),
+        max_current_reactive_power = standard_load.max_current_reactive_power *
+                                     PSY.get_base_power(standard_load),
+        base_power = standard_load.base_power,
+        dynamic_injector = getid!(ids, standard_load.dynamic_injector),
+    )
+end
