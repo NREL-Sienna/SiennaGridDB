@@ -99,3 +99,17 @@ end
         @test test_convert.rating == 1114.8
     end
 end
+
+@testset "c_sys14 RoundTrip to JSON" begin
+    sys_14_bus = 
+        PowerSystemCaseBuilder.build_system(PowerSystemCaseBuilder.PSIDSystems, "14 Bus Base Case")
+    @testset "Transformer2W to JSON" begin
+        transformer2w = PSY.get_component(PSY.Transformer2W, c_sys14, "4")
+        @test isa(transformer2w, PSY.Transformer2W)
+        test_convert = SiennaOpenAPIModels.psy2openapi(transformer2w, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.Transformer2W, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.arc == 2
+        @test test_convert.primary_shunt == 1114.8
+    end
+end
