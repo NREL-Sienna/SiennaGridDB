@@ -7,10 +7,18 @@ import SQLite
 import DBInterface
 import Tables
 
+function parse_sqlite_json(s::String)
+    return JSON.parse(s)
+end
+
+function parse_sqlite_json(s)
+    s
+end
+
 function attributes_to_dict(column_table)
     d = Dict()
     for row in Tables.rows(column_table)
-        d[row.key] = row.value
+        d[row.key] = parse_sqlite_json(row.value)
     end
     return d
 end
@@ -29,7 +37,12 @@ end
         rows = Tables.rowtable(DBInterface.execute(db, "SELECT * FROM balancing_topology"))
         @test length(rows) == 1
         @test isequal(first(rows), (id=1, name="nodeA", obj_type="ACBus", area_id=missing))
-        attributes = Tables.columntable(DBInterface.execute(db, "SELECT * FROM attributes"))
+        attributes = Tables.columntable(
+            DBInterface.execute(
+                db,
+                "SELECT id, entity_id, entity_type, key, json(value) as value FROM attributes",
+            ),
+        )
         @test length(attributes.id) == 6
         @test length(unique(attributes.id)) == 6
         @test all(attributes.entity_type .== "")
@@ -42,5 +55,16 @@ end
             "angle" => 0.0,
             "bustype" => "PV",
         )
+    end
+    @testset "Full sys to DB" begin
+        db = SQLite.DB()
+        SiennaOpenAPIModels.make_sqlite!(db)
+        SiennaOpenAPIModels.sys2db!(db, c_sys5, IDGenerator())
+        acbuses =
+            Tables.columntable(DBInterface.execute(db, "SELECT * FROM balancing_topology"))
+        @test sort(acbuses.id) == [1, 2, 3, 4, 5]
+        loads = Tables.columntable(DBInterface.execute(db, "SELECT * FROM load"))
+        @test length(loads.id) == 3
+        @test length(unique(loads.id)) == 3
     end
 end
