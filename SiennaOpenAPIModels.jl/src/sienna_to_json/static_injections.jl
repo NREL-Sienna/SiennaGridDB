@@ -111,11 +111,36 @@ function psy2openapi(renewnondispatch::PSY.RenewableNonDispatch, ids::IDGenerato
         available=renewnondispatch.available,
         bus=getid!(ids, renewnondispatch.bus),
         active_power=renewnondispatch.active_power * PSY.get_base_power(renewnondispatch),
-        reactive_power=renewnondispatch.reactive_power * PSY.get_base_power(renewnondispatch),
+        reactive_power=renewnondispatch.reactive_power *
+                       PSY.get_base_power(renewnondispatch),
         rating=renewnondispatch.rating * PSY.get_base_power(renewnondispatch),
         prime_mover_type=string(renewnondispatch.prime_mover_type),
         power_factor=renewnondispatch.power_factor,
         base_power=renewnondispatch.base_power,
         dynamic_injector=getid!(ids, renewnondispatch.dynamic_injector),
+    )
+end
+
+function psy2openapi(hydro::PSY.HydroDispatch, ids::IDGenerator)
+    HydroDispatch(
+        id=getid!(ids, hydro),
+        name=hydro.name,
+        available=hydro.available,
+        bus=getid!(ids, hydro.bus),
+        active_power=hydro.active_power * PSY.get_base_power(hydro),
+        reactive_power=hydro.reactive_power * PSY.get_base_power(hydro),
+        active_power_limits=get_min_max(
+            scale(hydro.active_power_limits, PSY.get_base_power(hydro)),
+        ),
+        reactive_power_limits=get_min_max(
+            scale(hydro.reactive_power_limits, PSY.get_base_power(hydro)),
+        ),
+        prime_mover_type=string(hydro.prime_mover_type),
+        ramp_limits=get_up_down(scale(hydro.ramp_limits, PSY.get_base_power(hydro))),
+        operation_cost=get_hydro_cost(hydro.operation_cost),
+        rating=hydro.rating * PSY.get_base_power(hydro),
+        base_power=hydro.base_power,
+        time_limits=get_up_down(hydro.time_limits),
+        dynamic_injector=getid!(ids, hydro.dynamic_injector),
     )
 end
