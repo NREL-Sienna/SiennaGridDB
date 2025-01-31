@@ -10,11 +10,11 @@ Cost representation for renewable generation units
         variable=nothing,
     )
 
-    - curtailment_cost::CostCurve1
+    - curtailment_cost::CostCurve
     - variable::CostCurve
 """
 Base.@kwdef mutable struct RenewableGenerationCost <: OpenAPI.APIModel
-    curtailment_cost = nothing # spec type: Union{ Nothing, CostCurve1 }
+    curtailment_cost = nothing # spec type: Union{ Nothing, CostCurve }
     variable = nothing # spec type: Union{ Nothing, CostCurve }
 
     function RenewableGenerationCost(curtailment_cost, variable)
@@ -29,7 +29,7 @@ Base.@kwdef mutable struct RenewableGenerationCost <: OpenAPI.APIModel
 end # type RenewableGenerationCost
 
 const _property_types_RenewableGenerationCost = Dict{Symbol,String}(
-    Symbol("curtailment_cost") => "CostCurve1",
+    Symbol("curtailment_cost") => "CostCurve",
     Symbol("variable") => "CostCurve",
 )
 OpenAPI.property_type(::Type{RenewableGenerationCost}, name::Symbol) =
