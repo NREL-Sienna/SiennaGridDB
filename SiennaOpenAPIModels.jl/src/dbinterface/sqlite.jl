@@ -9,6 +9,16 @@ CREATE TABLE area (
 )
 """,
     """
+    CREATE TABLE arc (
+        id INTEGER NOT NULL,
+        from_id INTEGER NOT NULL,
+        to_id INTEGER NOT NULL,
+        PRIMARY KEY (id),
+        FOREIGN KEY(from_id) REFERENCES balancing_topology (id),
+        FOREIGN KEY(to_id) REFERENCES balancing_topology (id)
+    )
+    """,
+    """
     CREATE TABLE attributes (
     	id INTEGER NOT NULL,
     	entity_id INTEGER NOT NULL,
@@ -27,19 +37,6 @@ CREATE TABLE area (
     	PRIMARY KEY (id),
     	UNIQUE (name),
     	FOREIGN KEY(area_id) REFERENCES area (id)
-    )
-    """,
-    """
-    CREATE TABLE transmission_line (
-    	id INTEGER NOT NULL,
-    	name TEXT NOT NULL,
-    	obj_type TEXT NOT NULL,
-    	from_id INTEGER NOT NULL,
-    	to_id INTEGER NOT NULL,
-    	PRIMARY KEY (id),
-    	UNIQUE (name),
-    	FOREIGN KEY(from_id) REFERENCES balancing_topology (id),
-    	FOREIGN KEY(to_id) REFERENCES balancing_topology (id)
     )
     """,
     """
@@ -81,7 +78,7 @@ CREATE TABLE area (
     	rating DOUBLE NOT NULL,
     	PRIMARY KEY (id),
     	UNIQUE (name),
-    	FOREIGN KEY(arc_id) REFERENCES balancing_topology (id)
+    	FOREIGN KEY(arc_id) REFERENCES arc (id)
     )
     """,
     """
@@ -90,7 +87,6 @@ CREATE TABLE area (
     	name TEXT NOT NULL,
     	obj_type TEXT NOT NULL,
     	balancing_id INTEGER NOT NULL,
-    	rating DOUBLE NOT NULL,
     	base_power DOUBLE NOT NULL,
     	PRIMARY KEY (id),
     	UNIQUE (name),
@@ -127,11 +123,23 @@ const COLUMNS = Dict(
     "load" => ["id", "name", "obj_type", "balancing_id", "rating", "base_power"],
 )
 
-const OPENAPI_FIELDS_TO_DB =
-    Dict("area" => "area_id", "bus" => "balancing_id", "from" => "from_id", "to" => "to_id")
+const OPENAPI_FIELDS_TO_DB = Dict(
+    "arc" => "arc_id",
+    "area" => "area_id",
+    "bus" => "balancing_id",
+    "prime_mover_type" => "prime_mover",
+)
 
 const DB_TO_OPENAPI_FIELDS = Dict(t => s for (s, t) in OPENAPI_FIELDS_TO_DB)
 
+const ALL_PSY_TYPES = [
+    PSY.ACBus,
+    PSY.Arc,
+    PSY.ThermalStandard,
+    PSY.RenewableDispatch,
+    PSY.Line,
+    PSY.PowerLoad,
+]
 const ALL_TYPES =
     [ACBus, Arc, ThermalStandard, RenewableDispatch, Line, PowerLoad, StandardLoad]
 
@@ -140,10 +148,10 @@ const TYPE_TO_TABLE = Dict(
     ACBus => "balancing_topology",
     Arc => "arc",
     ThermalStandard => "generation_unit",
-    RenewableDispatch => "supply_technology",
+    RenewableDispatch => "generation_unit",
     Line => "transmission",
-    PowerLoad => "area",
-    StandardLoad => "area",
+    PowerLoad => "load",
+    StandardLoad => "load",
 )
 
 import SQLite
@@ -154,6 +162,12 @@ function make_sqlite!(db)
     for table in SQLITE_CREATE_STR
         DBInterface.execute(db, table)
     end
+end
+
+function load_to_db!(db, data::Arc)
+    stmt_str = "INSERT INTO arc (id, from_id, to_id)
+        VALUES (?, ?, ?)"
+    DBInterface.execute(db, stmt_str, [data.id, data.from, data.to])
 end
 
 function load_to_db!(db, data)
@@ -178,19 +192,26 @@ function load_to_db!(db, data)
             attributes[k] = v
         end
     end
-    println(column_names)
-    println(main_row)
-    println(attributes)
     stmt_str = "INSERT INTO $table_name ($(join(column_names, ", ")))
         VALUES ($(join(repeat("?", length(column_names)), ", ")))"
-    println(stmt_str)
     DBInterface.execute(db, stmt_str, main_row)
     for (k, v) in attributes
+        # Add a row for each attributes.
+        # SQLite requires converting to JSON manually, since SQLite.jl
+        # does not do JSON serialization.
         DBInterface.execute(
             db,
             "INSERT INTO attributes (entity_id, entity_type, key, value)
-VALUES (?, ?, ?, ?)",
-            [data["id"], "", k, v],
+VALUES (?, ?, ?, jsonb(?))",
+            [data["id"], "", k, JSON.json(v)],
         )
+    end
+end
+
+function sys2db!(db, sys::PSY.System, ids::IDGenerator)
+    for T in ALL_PSY_TYPES
+        for c in PSY.get_components(T, sys)
+            load_to_db!(db, psy2openapi(c, ids))
+        end
     end
 end

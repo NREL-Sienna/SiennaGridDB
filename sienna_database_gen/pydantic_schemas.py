@@ -165,19 +165,29 @@ class Area(ObjModel):
     _table_name: ClassVar[Table] = "area"
 
 
-class Arc(ObjModel):
+class Arc(BaseModel):
+    id: Annotated[int, Column(Integer, primary_key=True)]
     from_id: Annotated[
         int, Column(Integer, ForeignKey("balancing_topology.id"), nullable=False)
     ]
     to_id: Annotated[
         int, Column(Integer, ForeignKey("balancing_topology.id"), nullable=False)
     ]
-    _table_name: ClassVar[Table] = "transmission_line"
+    _table_name: ClassVar[Table] = "arc"
+
+    @classmethod
+    def get_columns(cls):
+        cols = [
+            get_column_from_annotation(value, key)
+            for key, value in get_type_hints(cls, include_extras=True).items()
+        ]
+        return list(filter(lambda x: x is not None, cols))
+
 
 
 class Transmission(ObjModel):
     arc_id: Annotated[
-        int, Column(Integer, ForeignKey("balancing_topology.id"), nullable=False)
+        int, Column(Integer, ForeignKey("arc.id"), nullable=False)
     ]
     rating: Annotated[float, Column(Double, nullable=False)]
     _table_name: ClassVar[Table] = "transmission"
@@ -187,6 +197,5 @@ class Load(ObjModel):
     balancing_id: Annotated[
         int, Column(Integer, ForeignKey("balancing_topology.id"), nullable=False)
     ]
-    rating: Annotated[float, Column(Double, nullable=False)]
     base_power: Annotated[float, Column(Double, nullable=False)]
     _table_name: ClassVar[Table] = "load"
