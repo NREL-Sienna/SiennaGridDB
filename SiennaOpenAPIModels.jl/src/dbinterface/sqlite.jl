@@ -192,14 +192,13 @@ function load_to_db!(db, data)
             attributes[k] = v
         end
     end
-    println(column_names)
-    println(main_row)
-    println(attributes)
     stmt_str = "INSERT INTO $table_name ($(join(column_names, ", ")))
         VALUES ($(join(repeat("?", length(column_names)), ", ")))"
-    println(stmt_str)
     DBInterface.execute(db, stmt_str, main_row)
     for (k, v) in attributes
+        # Add a row for each attributes.
+        # SQLite requires converting to JSON manually, since SQLite.jl
+        # does not do JSON serialization.
         DBInterface.execute(
             db,
             "INSERT INTO attributes (entity_id, entity_type, key, value)
