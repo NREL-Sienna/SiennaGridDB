@@ -51,6 +51,7 @@ include("modelincludes.jl")
 @batteries FromTo
 @batteries PowerLoad
 @batteries StandardLoad
+@batteries Transformer2W
 
 include("sienna_to_json/common.jl")
 include("sienna_to_json/static_injections.jl")

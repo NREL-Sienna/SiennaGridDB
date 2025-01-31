@@ -15,7 +15,7 @@ function psy2openapi(line::PSY.Line, ids::IDGenerator)
     )
 end
 
-function psy2openapi(transformer2w::PSY.transformer2w, ids::IDGenerator)
+function psy2openapi(transformer2w::PSY.Transformer2W, ids::IDGenerator)
     Transformer2W(
         id = getid!(ids, transformer2w),
         name = transformer2w.name,
@@ -26,7 +26,7 @@ function psy2openapi(transformer2w::PSY.transformer2w, ids::IDGenerator)
         r = transformer2w.r,
         x = transformer2w.x,
         rating = transformer2w.rating * PSY.get_base_power(transformer2w),
-        primary_shunt = PSY.get_primary_shunt(transformer2w.primary_shunt),
+        primary_shunt = transformer2w.primary_shunt,
     )
 end
 

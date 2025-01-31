@@ -4,6 +4,7 @@ using PowerSystemCaseBuilder
 import PowerSystems
 const PSY = PowerSystems
 using JSON
+using Test
 
 function jsondiff(j1::S, j2::S) where {S<:Union{String,Int64,Float64,Bool}}
     if j1 == j2
@@ -128,16 +129,16 @@ end
     end
 end
 
-@testset "c_sys14 RoundTrip to JSON" begin
+@testset "sys_14_bus RoundTrip to JSON" begin
     sys_14_bus = 
         PowerSystemCaseBuilder.build_system(PowerSystemCaseBuilder.PSIDSystems, "14 Bus Base Case")
     @testset "Transformer2W to JSON" begin
-        transformer2w = PSY.get_component(PSY.Transformer2W, c_sys14, "4")
+        transformer2w = PSY.get_component(PSY.Transformer2W, sys_14_bus, "BUS 08-BUS 07-i_1")
         @test isa(transformer2w, PSY.Transformer2W)
         test_convert = SiennaOpenAPIModels.psy2openapi(transformer2w, IDGenerator())
         test_roundtrip(SiennaOpenAPIModels.Transformer2W, test_convert)
         @test test_convert.id == 1
-        @test test_convert.arc == 2
-        @test test_convert.primary_shunt == 1114.8
+        @test test_convert.r == 0.0
+        @test test_convert.primary_shunt == 0.0
     end
 end
