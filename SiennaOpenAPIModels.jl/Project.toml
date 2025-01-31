@@ -6,8 +6,12 @@ version = "0.1.0"
 [deps]
 OpenAPI = "d5e62ea6-ddf3-4d43-8e4c-ad5e6c8bfd7d"
 PowerSystems = "bcd98974-b02a-5e2f-9ee0-a103f5c450dd"
+Revise = "295af30f-e4ad-537b-8983-00126c2a3abe"
 StructHelpers = "4093c41a-2008-41fd-82b8-e3f9d02b504f"
+TestEnv = "1e6cf692-eddd-4d53-88a5-2d735e33781b"
 UUIDs = "cf7118a7-6976-5b1a-9a39-7adc72f591a4"
 
 [compat]
+Revise = "3.7.1"
+TestEnv = "1.102.0"
 UUIDs = "1.11.0"

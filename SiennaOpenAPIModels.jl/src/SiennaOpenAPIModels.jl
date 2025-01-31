@@ -60,13 +60,13 @@ include("modelincludes.jl")
 @batteries PowerLoad
 @batteries ProductionVariableCostCurve
 @batteries QuadraticFunctionData
-@batteries RenewableNonDispatch
+#@batteries RenewableNonDispatch
 @batteries RenewableDispatch
 @batteries RenewableGenerationCost
 @batteries Source
 @batteries StandardLoad
 @batteries StartUpStages
-@batteries Switched Admittance
+#@batteries Switched Admittance
 @batteries TapTransformer
 @batteries ThermalGenerationCost
 @batteries ThermalGenerationCostStartUp
