@@ -37,8 +37,8 @@ end
         )
         @test length(attributes.id) == 6
         @test length(unique(attributes.id)) == 6
-        @test all(attributes.entity_type .== "")
         @test all(attributes.entity_id .== 1)
+        @test all(attributes.entity_type .== "balancing_topology")
         @test attributes_to_dict(attributes) == Dict(
             "voltage_limits" => Dict{String, Any}("max" => 1.05, "min" => 0.9),
             "base_voltage" => 230.0,
@@ -58,5 +58,9 @@ end
         loads = Tables.columntable(DBInterface.execute(db, "SELECT * FROM load"))
         @test length(loads.id) == 3
         @test length(unique(loads.id)) == 3
+        loads_attribute = Tables.columntable(
+            DBInterface.execute(db, "SELECT * FROM attributes where entity_id=1"),
+        )
+        @test all(loads_attribute.entity_type .== "balancing_topology")
     end
 end
