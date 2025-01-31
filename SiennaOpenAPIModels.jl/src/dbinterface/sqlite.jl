@@ -203,7 +203,7 @@ function load_to_db!(db, data)
             db,
             "INSERT INTO attributes (entity_id, entity_type, key, value)
 VALUES (?, ?, ?, jsonb(?))",
-            [data["id"], "", k, JSON.json(v)],
+            [data["id"], table_name, k, JSON.json(v)],
         )
     end
 end
