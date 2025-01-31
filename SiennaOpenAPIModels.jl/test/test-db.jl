@@ -7,18 +7,10 @@ import SQLite
 import DBInterface
 import Tables
 
-function parse_sqlite_json(s::String)
-    return JSON.parse(s)
-end
-
-function parse_sqlite_json(s)
-    s
-end
-
 function attributes_to_dict(column_table)
     d = Dict()
     for row in Tables.rows(column_table)
-        d[row.key] = parse_sqlite_json(row.value)
+        d[row.key] = JSON.parse(row.value)
     end
     return d
 end
