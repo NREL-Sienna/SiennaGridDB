@@ -4,7 +4,6 @@ using PowerSystemCaseBuilder
 import PowerSystems
 const PSY = PowerSystems
 using JSON
-using Test
 
 function jsondiff(j1::S, j2::S) where {S<:Union{String,Int64,Float64,Bool}}
     if j1 == j2
