@@ -23,35 +23,64 @@ export getid!
 
 include("modelincludes.jl")
 
-@batteries MinMax
-@batteries UpDown
-@batteries ThermalGenerationCostStartUp
-@batteries StartUpStages
-@batteries ProductionVariableCostCurve
-@batteries CostCurve
-@batteries ValueCurve
-@batteries FuelCurve
-@batteries FuelCurveFuelCost
-@batteries InputOutputCurve
-@batteries InputOutputCurveFunctionData
+@batteries ACBus
+@batteries AGC
+@batteries Arc
+@batteries Area
+@batteries AreaInterchange
 @batteries AverageRateCurve
 @batteries AverageRateCurveFunctionData
+@batteries ConstantReserve
+@batteries ConstantReserveGroup
+@batteries ConstantReserveNonSpinning
+@batteries CostCurve
+@batteries DCBus
+@batteries EnergyReservoirStorage
+@batteries ExponentialLoad
+@batteries FixedAdmittance
+@batteries FromTo
+@batteries FuelCurve
+@batteries FuelCurveFuelCost
+@batteries HydroDispatch
+@batteries HydroEnergyReservoir
+@batteries HydroPumpedStorage
 @batteries IncrementalCurve
 @batteries IncrementalCurveFunctionData
-@batteries LinearFunctionData
-@batteries QuadraticFunctionData
-@batteries PiecewiseLinearData
-@batteries XYCoords
-@batteries PiecewiseStepData
-@batteries ThermalStandard
-@batteries ThermalGenerationCost
-@batteries ACBus
-@batteries Arc
+@batteries InterconnectingConverter
+@batteries InterruptiblePowerLoad
+@batteries InputOutputCurve
+@batteries InputOutputCurveFunctionData
 @batteries Line
-@batteries FromTo
+@batteries LinearFunctionData
+@batteries LoadZone
+@batteries MinMax
+@batteries MonitoredLine
+@batteries PhaseShiftingTransformer
+@batteries PiecewiseLinearData
+@batteries PiecewiseStepData
 @batteries PowerLoad
+@batteries ProductionVariableCostCurve
+@batteries QuadraticFunctionData
+#@batteries RenewableNonDispatch
+@batteries RenewableDispatch
+@batteries RenewableGenerationCost
+@batteries Source
 @batteries StandardLoad
+@batteries StartUpStages
+#@batteries Switched Admittance
+@batteries TapTransformer
+@batteries ThermalGenerationCost
+@batteries ThermalGenerationCostStartUp
+@batteries ThermalMultiStart
+@batteries ThermalStandard
+@batteries TModelHVDCLine
 @batteries Transformer2W
+@batteries TwoTerminalVSCDCLine
+@batteries UpDown
+@batteries ValueCurve
+@batteries VariableReserve
+@batteries VariableReserveNonSpinning
+@batteries XYCoords
 
 include("sienna_to_json/common.jl")
 include("sienna_to_json/static_injections.jl")
