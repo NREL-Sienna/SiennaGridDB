@@ -23,12 +23,15 @@ end
         test_convert = SiennaOpenAPIModels.psy2openapi(acbus, IDGenerator())
         db = SQLite.DB()
         SiennaOpenAPIModels.make_sqlite!(db)
-        @test collect(DBInterface.execute(db, "SELECT * FROM balancing_topology")) == []
+        @test collect(DBInterface.execute(db, "SELECT * FROM bus")) == []
         SiennaOpenAPIModels.load_to_db!(db, test_convert)
 
-        rows = Tables.rowtable(DBInterface.execute(db, "SELECT * FROM balancing_topology"))
+        rows = Tables.rowtable(DBInterface.execute(db, "SELECT * FROM bus"))
         @test length(rows) == 1
-        @test isequal(first(rows), (id=1, name="nodeA", obj_type="ACBus", area_id=missing))
+        @test isequal(
+            first(rows),
+            (id=1, name="nodeA", obj_type="ACBus", area_id=missing, loadzone_id=missing),
+        )
         attributes = Tables.columntable(
             DBInterface.execute(
                 db,
@@ -38,7 +41,7 @@ end
         @test length(attributes.id) == 6
         @test length(unique(attributes.id)) == 6
         @test all(attributes.entity_id .== 1)
-        @test all(attributes.entity_type .== "balancing_topology")
+        @test all(attributes.entity_type .== "bus")
         @test attributes_to_dict(attributes) == Dict(
             "voltage_limits" => Dict{String, Any}("max" => 1.05, "min" => 0.9),
             "base_voltage" => 230.0,
@@ -52,8 +55,7 @@ end
         db = SQLite.DB()
         SiennaOpenAPIModels.make_sqlite!(db)
         SiennaOpenAPIModels.sys2db!(db, c_sys5, IDGenerator())
-        acbuses =
-            Tables.columntable(DBInterface.execute(db, "SELECT * FROM balancing_topology"))
+        acbuses = Tables.columntable(DBInterface.execute(db, "SELECT * FROM bus"))
         @test sort(acbuses.id) == [1, 2, 3, 4, 5]
         loads = Tables.columntable(DBInterface.execute(db, "SELECT * FROM load"))
         @test length(loads.id) == 3
@@ -61,6 +63,6 @@ end
         loads_attribute = Tables.columntable(
             DBInterface.execute(db, "SELECT * FROM attributes where entity_id=1"),
         )
-        @test all(loads_attribute.entity_type .== "balancing_topology")
+        @test all(loads_attribute.entity_type .== "bus")
     end
 end

@@ -1,21 +1,24 @@
+import SQLite
+import DBInterface
+import JSON
+
 const SQLITE_CREATE_STR = [
     """
-CREATE TABLE area (
-	id INTEGER NOT NULL,
-	name TEXT NOT NULL,
-	obj_type TEXT NOT NULL,
-	PRIMARY KEY (id),
-	UNIQUE (name)
-)
-""",
-    """
-    CREATE TABLE arc (
+    CREATE TABLE area (
         id INTEGER NOT NULL,
-        from_id INTEGER NOT NULL,
-        to_id INTEGER NOT NULL,
+        name TEXT NOT NULL,
+        obj_type TEXT NOT NULL,
         PRIMARY KEY (id),
-        FOREIGN KEY(from_id) REFERENCES balancing_topology (id),
-        FOREIGN KEY(to_id) REFERENCES balancing_topology (id)
+        UNIQUE (name)
+    )
+    """,
+    """
+    CREATE TABLE loadzone (
+    	id INTEGER NOT NULL,
+    	name TEXT NOT NULL,
+    	obj_type TEXT NOT NULL,
+    	PRIMARY KEY (id),
+    	UNIQUE (name)
     )
     """,
     """
@@ -29,14 +32,26 @@ CREATE TABLE area (
     )
     """,
     """
-    CREATE TABLE balancing_topology (
+    CREATE TABLE bus (
     	id INTEGER NOT NULL,
     	name TEXT NOT NULL,
     	obj_type TEXT NOT NULL,
     	area_id INTEGER,
+    	loadzone_id INTEGER,
     	PRIMARY KEY (id),
     	UNIQUE (name),
-    	FOREIGN KEY(area_id) REFERENCES area (id)
+    	FOREIGN KEY(area_id) REFERENCES area (id),
+    	FOREIGN KEY(loadzone_id) REFERENCES loadzone (id)
+    )
+    """,
+    """
+    CREATE TABLE arc (
+    	id INTEGER NOT NULL,
+    	from_id INTEGER NOT NULL,
+    	to_id INTEGER NOT NULL,
+    	PRIMARY KEY (id),
+    	FOREIGN KEY(from_id) REFERENCES bus (id),
+    	FOREIGN KEY(to_id) REFERENCES bus (id)
     )
     """,
     """
@@ -48,10 +63,10 @@ CREATE TABLE area (
     	fuel_type TEXT,
     	rating DOUBLE NOT NULL,
     	base_power DOUBLE NOT NULL,
-    	balancing_id INTEGER NOT NULL,
+    	bus_id INTEGER NOT NULL,
     	PRIMARY KEY (id),
     	UNIQUE (name),
-    	FOREIGN KEY(balancing_id) REFERENCES balancing_topology (id)
+    	FOREIGN KEY(bus_id) REFERENCES bus (id)
     )
     """,
     """
@@ -62,11 +77,23 @@ CREATE TABLE area (
     	prime_mover TEXT,
     	fuel_type TEXT,
     	area_id INTEGER,
-    	balancing_id INTEGER,
+    	bus_id INTEGER,
     	PRIMARY KEY (id),
     	UNIQUE (name),
     	FOREIGN KEY(area_id) REFERENCES area (id),
-    	FOREIGN KEY(balancing_id) REFERENCES balancing_topology (id)
+    	FOREIGN KEY(bus_id) REFERENCES bus (id)
+    )
+    """,
+    """
+    CREATE TABLE load (
+    	id INTEGER NOT NULL,
+    	name TEXT NOT NULL,
+    	obj_type TEXT NOT NULL,
+    	bus_id INTEGER NOT NULL,
+    	base_power DOUBLE NOT NULL,
+    	PRIMARY KEY (id),
+    	UNIQUE (name),
+    	FOREIGN KEY(bus_id) REFERENCES bus (id)
     )
     """,
     """
@@ -81,18 +108,6 @@ CREATE TABLE area (
     	FOREIGN KEY(arc_id) REFERENCES arc (id)
     )
     """,
-    """
-    CREATE TABLE load (
-    	id INTEGER NOT NULL,
-    	name TEXT NOT NULL,
-    	obj_type TEXT NOT NULL,
-    	balancing_id INTEGER NOT NULL,
-    	base_power DOUBLE NOT NULL,
-    	PRIMARY KEY (id),
-    	UNIQUE (name),
-    	FOREIGN KEY(balancing_id) REFERENCES balancing_topology (id)
-    )
-    """,
 ]
 
 const COLUMNS = Dict(
@@ -100,15 +115,16 @@ const COLUMNS = Dict(
         "id",
         "name",
         "obj_type",
-        "balancing_id",
+        "bus_id",
         "prime_mover",
         "fuel_type",
         "rating",
         "base_power",
     ],
     "area" => ["id", "name", "obj_type"],
+    "loadzone" => ["id", "name", "obj_type"],
     "attributes" => ["id", "entity_id", "entity_type", "key", "value"],
-    "balancing_topology" => ["id", "name", "obj_type", "area_id"],
+    "bus" => ["id", "name", "obj_type", "area_id", "loadzone_id"],
     "supply_technology" => [
         "id",
         "name",
@@ -120,13 +136,13 @@ const COLUMNS = Dict(
     ],
     "transmission" => ["id", "name", "obj_type", "arc_id", "rating"],
     "arc" => ["id", "name", "obj_type", "from_id", "to_id"],
-    "load" => ["id", "name", "obj_type", "balancing_id", "rating", "base_power"],
+    "load" => ["id", "name", "obj_type", "bus_id", "rating", "base_power"],
 )
 
 const OPENAPI_FIELDS_TO_DB = Dict(
     "arc" => "arc_id",
     "area" => "area_id",
-    "bus" => "balancing_id",
+    "bus" => "bus_id",
     "prime_mover_type" => "prime_mover",
 )
 
@@ -145,7 +161,7 @@ const ALL_TYPES =
 
 const TYPE_NAMES = Dict(string(t) => t for t in ALL_TYPES)
 const TYPE_TO_TABLE = Dict(
-    ACBus => "balancing_topology",
+    ACBus => "bus",
     Arc => "arc",
     ThermalStandard => "generation_unit",
     RenewableDispatch => "generation_unit",
@@ -153,10 +169,6 @@ const TYPE_TO_TABLE = Dict(
     PowerLoad => "load",
     StandardLoad => "load",
 )
-
-import SQLite
-import DBInterface
-import JSON
 
 function make_sqlite!(db)
     for table in SQLITE_CREATE_STR

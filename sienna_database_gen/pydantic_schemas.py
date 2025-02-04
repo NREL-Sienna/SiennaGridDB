@@ -138,9 +138,7 @@ class GenerationUnit(ObjModel):
     fuel_type: Annotated[ThermalFuels | None, Column(Text, nullable=True)]
     rating: Annotated[float, Column(Double, nullable=False)]
     base_power: Annotated[float, Column(Double, nullable=False)]
-    balancing_id: Annotated[
-        int, Column(Integer, ForeignKey("balancing_topology.id"), nullable=False)
-    ]
+    bus_id: Annotated[int, Column(Integer, ForeignKey("bus.id"), nullable=False)]
     _table_name: ClassVar[str] = "generation_unit"
 
 
@@ -148,31 +146,32 @@ class SupplyTechnology(ObjModel):
     prime_mover: Annotated[PrimeMoversType | None, Column(Text, nullable=True)]
     fuel_type: Annotated[ThermalFuels | None, Column(Text, nullable=True)]
     area_id: Annotated[int | None, Column(Integer, ForeignKey("area.id"), nullable=True)]
-    balancing_id: Annotated[
-        int | None, Column(Integer, ForeignKey("balancing_topology.id"), nullable=True)
-    ]
+    bus_id: Annotated[int | None, Column(Integer, ForeignKey("bus.id"), nullable=True)]
     _table_name: ClassVar[Table] = "supply_technology"
-
-
-class BalancingTopology(ObjModel):
-    area_id: Annotated[
-        int | None, Column(Integer, ForeignKey("area.id"), nullable=True)
-    ] = None
-    _table_name: ClassVar[Table] = "balancing_topology"
 
 
 class Area(ObjModel):
     _table_name: ClassVar[Table] = "area"
 
 
+class LoadZone(ObjModel):
+    _table_name: ClassVar[Table] = "loadzone"
+
+
+class Bus(ObjModel):
+    area_id: Annotated[
+        int | None, Column(Integer, ForeignKey("area.id"), nullable=True)
+    ] = None
+    loadzone_id: Annotated[
+        int | None, Column(Integer, ForeignKey("loadzone.id"), nullable=True)
+    ] = None
+    _table_name: ClassVar[Table] = "bus"
+
+
 class Arc(BaseModel):
     id: Annotated[int, Column(Integer, primary_key=True)]
-    from_id: Annotated[
-        int, Column(Integer, ForeignKey("balancing_topology.id"), nullable=False)
-    ]
-    to_id: Annotated[
-        int, Column(Integer, ForeignKey("balancing_topology.id"), nullable=False)
-    ]
+    from_id: Annotated[int, Column(Integer, ForeignKey("bus.id"), nullable=False)]
+    to_id: Annotated[int, Column(Integer, ForeignKey("bus.id"), nullable=False)]
     _table_name: ClassVar[Table] = "arc"
 
     @classmethod
@@ -184,18 +183,13 @@ class Arc(BaseModel):
         return list(filter(lambda x: x is not None, cols))
 
 
-
 class Transmission(ObjModel):
-    arc_id: Annotated[
-        int, Column(Integer, ForeignKey("arc.id"), nullable=False)
-    ]
+    arc_id: Annotated[int, Column(Integer, ForeignKey("arc.id"), nullable=False)]
     rating: Annotated[float, Column(Double, nullable=False)]
     _table_name: ClassVar[Table] = "transmission"
 
 
 class Load(ObjModel):
-    balancing_id: Annotated[
-        int, Column(Integer, ForeignKey("balancing_topology.id"), nullable=False)
-    ]
+    bus_id: Annotated[int, Column(Integer, ForeignKey("bus.id"), nullable=False)]
     base_power: Annotated[float, Column(Double, nullable=False)]
     _table_name: ClassVar[Table] = "load"
