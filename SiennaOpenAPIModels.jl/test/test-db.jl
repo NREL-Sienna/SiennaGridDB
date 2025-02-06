@@ -66,3 +66,13 @@ end
         @test all(loads_attribute.entity_type .== "bus")
     end
 end
+
+@testset "118_bus to DB" begin
+    # Get 118_bus_rt.json from directory of this file
+    sys = PSY.System(joinpath(dirname(@__FILE__), "118_bus.json"))
+    db = SQLite.DB()
+    SiennaOpenAPIModels.make_sqlite!(db)
+    SiennaOpenAPIModels.sys2db!(db, sys, IDGenerator())
+    acbuses = Tables.columntable(DBInterface.execute(db, "SELECT * FROM bus"))
+    @test length(acbuses.id) == 118
+end

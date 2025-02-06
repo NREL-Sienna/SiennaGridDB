@@ -4,6 +4,9 @@ import JSON
 
 const SQLITE_CREATE_STR = [
     """
+    PRAGMA foreign_keys = ON
+    """,
+    """
     CREATE TABLE area (
         id INTEGER NOT NULL,
         name TEXT NOT NULL,
@@ -154,10 +157,20 @@ const ALL_PSY_TYPES = [
     PSY.ThermalStandard,
     PSY.RenewableDispatch,
     PSY.Line,
+    PSY.Transformer2W,
     PSY.PowerLoad,
+    PSY.StandardLoad,
 ]
-const ALL_TYPES =
-    [ACBus, Arc, ThermalStandard, RenewableDispatch, Line, PowerLoad, StandardLoad]
+const ALL_TYPES = [
+    ACBus,
+    Arc,
+    ThermalStandard,
+    RenewableDispatch,
+    Line,
+    Transformer2W,
+    PowerLoad,
+    StandardLoad,
+]
 
 const TYPE_NAMES = Dict(string(t) => t for t in ALL_TYPES)
 const TYPE_TO_TABLE = Dict(
@@ -166,6 +179,7 @@ const TYPE_TO_TABLE = Dict(
     ThermalStandard => "generation_unit",
     RenewableDispatch => "generation_unit",
     Line => "transmission",
+    Transformer2W => "transmission",
     PowerLoad => "load",
     StandardLoad => "load",
 )
@@ -214,7 +228,7 @@ function load_to_db!(db, data)
         DBInterface.execute(
             db,
             "INSERT INTO attributes (entity_id, entity_type, key, value)
-VALUES (?, ?, ?, jsonb(?))",
+VALUES (?, ?, ?, json(?))",
             [data["id"], table_name, k, JSON.json(v)],
         )
     end
