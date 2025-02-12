@@ -35,103 +35,40 @@
     - dynamic_injector::Any
 """
 Base.@kwdef mutable struct RenewableDispatch <: OpenAPI.APIModel
-    id::Union{Nothing,Int64} = nothing
-    name::Union{Nothing,String} = nothing
-    available::Union{Nothing,Bool} = nothing
-    bus::Union{Nothing,Int64} = nothing
-    active_power::Union{Nothing,Float64} = nothing
-    reactive_power::Union{Nothing,Float64} = nothing
-    rating::Union{Nothing,Float64} = nothing
-    prime_mover_type::Union{Nothing,String} = "OT"
+    id::Union{Nothing, Int64} = nothing
+    name::Union{Nothing, String} = nothing
+    available::Union{Nothing, Bool} = nothing
+    bus::Union{Nothing, Int64} = nothing
+    active_power::Union{Nothing, Float64} = nothing
+    reactive_power::Union{Nothing, Float64} = nothing
+    rating::Union{Nothing, Float64} = nothing
+    prime_mover_type::Union{Nothing, String} = "OT"
     reactive_power_limits = nothing # spec type: Union{ Nothing, MinMax }
-    power_factor::Union{Nothing,Float64} = nothing
+    power_factor::Union{Nothing, Float64} = nothing
     operation_cost = nothing # spec type: Union{ Nothing, RenewableGenerationCost }
-    base_power::Union{Nothing,Float64} = nothing
-    dynamic_injector::Union{Nothing,Any} = nothing
+    base_power::Union{Nothing, Float64} = nothing
+    dynamic_injector::Union{Nothing, Any} = nothing
 
-    function RenewableDispatch(
-        id,
-        name,
-        available,
-        bus,
-        active_power,
-        reactive_power,
-        rating,
-        prime_mover_type,
-        reactive_power_limits,
-        power_factor,
-        operation_cost,
-        base_power,
-        dynamic_injector,
-    )
+    function RenewableDispatch(id, name, available, bus, active_power, reactive_power, rating, prime_mover_type, reactive_power_limits, power_factor, operation_cost, base_power, dynamic_injector, )
         OpenAPI.validate_property(RenewableDispatch, Symbol("id"), id)
         OpenAPI.validate_property(RenewableDispatch, Symbol("name"), name)
         OpenAPI.validate_property(RenewableDispatch, Symbol("available"), available)
         OpenAPI.validate_property(RenewableDispatch, Symbol("bus"), bus)
         OpenAPI.validate_property(RenewableDispatch, Symbol("active_power"), active_power)
-        OpenAPI.validate_property(
-            RenewableDispatch,
-            Symbol("reactive_power"),
-            reactive_power,
-        )
+        OpenAPI.validate_property(RenewableDispatch, Symbol("reactive_power"), reactive_power)
         OpenAPI.validate_property(RenewableDispatch, Symbol("rating"), rating)
-        OpenAPI.validate_property(
-            RenewableDispatch,
-            Symbol("prime_mover_type"),
-            prime_mover_type,
-        )
-        OpenAPI.validate_property(
-            RenewableDispatch,
-            Symbol("reactive_power_limits"),
-            reactive_power_limits,
-        )
+        OpenAPI.validate_property(RenewableDispatch, Symbol("prime_mover_type"), prime_mover_type)
+        OpenAPI.validate_property(RenewableDispatch, Symbol("reactive_power_limits"), reactive_power_limits)
         OpenAPI.validate_property(RenewableDispatch, Symbol("power_factor"), power_factor)
-        OpenAPI.validate_property(
-            RenewableDispatch,
-            Symbol("operation_cost"),
-            operation_cost,
-        )
+        OpenAPI.validate_property(RenewableDispatch, Symbol("operation_cost"), operation_cost)
         OpenAPI.validate_property(RenewableDispatch, Symbol("base_power"), base_power)
-        OpenAPI.validate_property(
-            RenewableDispatch,
-            Symbol("dynamic_injector"),
-            dynamic_injector,
-        )
-        return new(
-            id,
-            name,
-            available,
-            bus,
-            active_power,
-            reactive_power,
-            rating,
-            prime_mover_type,
-            reactive_power_limits,
-            power_factor,
-            operation_cost,
-            base_power,
-            dynamic_injector,
-        )
+        OpenAPI.validate_property(RenewableDispatch, Symbol("dynamic_injector"), dynamic_injector)
+        return new(id, name, available, bus, active_power, reactive_power, rating, prime_mover_type, reactive_power_limits, power_factor, operation_cost, base_power, dynamic_injector, )
     end
 end # type RenewableDispatch
 
-const _property_types_RenewableDispatch = Dict{Symbol,String}(
-    Symbol("id") => "Int64",
-    Symbol("name") => "String",
-    Symbol("available") => "Bool",
-    Symbol("bus") => "Int64",
-    Symbol("active_power") => "Float64",
-    Symbol("reactive_power") => "Float64",
-    Symbol("rating") => "Float64",
-    Symbol("prime_mover_type") => "String",
-    Symbol("reactive_power_limits") => "MinMax",
-    Symbol("power_factor") => "Float64",
-    Symbol("operation_cost") => "RenewableGenerationCost",
-    Symbol("base_power") => "Float64",
-    Symbol("dynamic_injector") => "Any",
-)
-OpenAPI.property_type(::Type{RenewableDispatch}, name::Symbol) =
-    Union{Nothing,eval(Base.Meta.parse(_property_types_RenewableDispatch[name]))}
+const _property_types_RenewableDispatch = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("name")=>"String", Symbol("available")=>"Bool", Symbol("bus")=>"Int64", Symbol("active_power")=>"Float64", Symbol("reactive_power")=>"Float64", Symbol("rating")=>"Float64", Symbol("prime_mover_type")=>"String", Symbol("reactive_power_limits")=>"MinMax", Symbol("power_factor")=>"Float64", Symbol("operation_cost")=>"RenewableGenerationCost", Symbol("base_power")=>"Float64", Symbol("dynamic_injector")=>"Any", )
+OpenAPI.property_type(::Type{ RenewableDispatch }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_RenewableDispatch[name]))}
 
 function check_required(o::RenewableDispatch)
     o.id === nothing && (return false)
@@ -148,7 +85,7 @@ function check_required(o::RenewableDispatch)
     true
 end
 
-function OpenAPI.validate_property(::Type{RenewableDispatch}, name::Symbol, val)
+function OpenAPI.validate_property(::Type{ RenewableDispatch }, name::Symbol, val)
 
 
 
@@ -158,37 +95,7 @@ function OpenAPI.validate_property(::Type{RenewableDispatch}, name::Symbol, val)
 
 
     if name === Symbol("prime_mover_type")
-        OpenAPI.validate_param(
-            name,
-            "RenewableDispatch",
-            :enum,
-            val,
-            [
-                "BA",
-                "BT",
-                "CA",
-                "CC",
-                "CE",
-                "CP",
-                "CS",
-                "CT",
-                "ES",
-                "FC",
-                "FW",
-                "GT",
-                "HA",
-                "HB",
-                "HK",
-                "HY",
-                "IC",
-                "PS",
-                "OT",
-                "ST",
-                "PVe",
-                "WT",
-                "WS",
-            ],
-        )
+        OpenAPI.validate_param(name, "RenewableDispatch", :enum, val, ["BA", "BT", "CA", "CC", "CE", "CP", "CS", "CT", "ES", "FC", "FW", "GT", "HA", "HB", "HK", "HY", "IC", "PS", "OT", "ST", "PVe", "WT", "WS"])
     end
 
 

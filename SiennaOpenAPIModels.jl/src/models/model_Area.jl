@@ -19,31 +19,24 @@
     - peak_reactive_power::Float64
 """
 Base.@kwdef mutable struct Area <: OpenAPI.APIModel
-    id::Union{Nothing,Int64} = nothing
-    load_response::Union{Nothing,Float64} = 0.0
-    name::Union{Nothing,String} = nothing
-    peak_active_power::Union{Nothing,Float64} = 0.0
-    peak_reactive_power::Union{Nothing,Float64} = 0.0
+    id::Union{Nothing, Int64} = nothing
+    load_response::Union{Nothing, Float64} = 0.0
+    name::Union{Nothing, String} = nothing
+    peak_active_power::Union{Nothing, Float64} = 0.0
+    peak_reactive_power::Union{Nothing, Float64} = 0.0
 
-    function Area(id, load_response, name, peak_active_power, peak_reactive_power)
+    function Area(id, load_response, name, peak_active_power, peak_reactive_power, )
         OpenAPI.validate_property(Area, Symbol("id"), id)
         OpenAPI.validate_property(Area, Symbol("load_response"), load_response)
         OpenAPI.validate_property(Area, Symbol("name"), name)
         OpenAPI.validate_property(Area, Symbol("peak_active_power"), peak_active_power)
         OpenAPI.validate_property(Area, Symbol("peak_reactive_power"), peak_reactive_power)
-        return new(id, load_response, name, peak_active_power, peak_reactive_power)
+        return new(id, load_response, name, peak_active_power, peak_reactive_power, )
     end
 end # type Area
 
-const _property_types_Area = Dict{Symbol,String}(
-    Symbol("id") => "Int64",
-    Symbol("load_response") => "Float64",
-    Symbol("name") => "String",
-    Symbol("peak_active_power") => "Float64",
-    Symbol("peak_reactive_power") => "Float64",
-)
-OpenAPI.property_type(::Type{Area}, name::Symbol) =
-    Union{Nothing,eval(Base.Meta.parse(_property_types_Area[name]))}
+const _property_types_Area = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("load_response")=>"Float64", Symbol("name")=>"String", Symbol("peak_active_power")=>"Float64", Symbol("peak_reactive_power")=>"Float64", )
+OpenAPI.property_type(::Type{ Area }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_Area[name]))}
 
 function check_required(o::Area)
     o.id === nothing && (return false)
@@ -51,7 +44,7 @@ function check_required(o::Area)
     true
 end
 
-function OpenAPI.validate_property(::Type{Area}, name::Symbol, val)
+function OpenAPI.validate_property(::Type{ Area }, name::Symbol, val)
 
 
 

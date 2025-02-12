@@ -21,38 +21,26 @@
     - dynamic_injector::Any
 """
 Base.@kwdef mutable struct FixedAdmittance <: OpenAPI.APIModel
-    name::Union{Nothing,String} = nothing
-    id::Union{Nothing,Int64} = nothing
-    available::Union{Nothing,Bool} = nothing
-    bus::Union{Nothing,Int64} = nothing
+    name::Union{Nothing, String} = nothing
+    id::Union{Nothing, Int64} = nothing
+    available::Union{Nothing, Bool} = nothing
+    bus::Union{Nothing, Int64} = nothing
     Y = nothing # spec type: Union{ Nothing, ComplexNumber }
-    dynamic_injector::Union{Nothing,Any} = nothing
+    dynamic_injector::Union{Nothing, Any} = nothing
 
-    function FixedAdmittance(name, id, available, bus, Y, dynamic_injector)
+    function FixedAdmittance(name, id, available, bus, Y, dynamic_injector, )
         OpenAPI.validate_property(FixedAdmittance, Symbol("name"), name)
         OpenAPI.validate_property(FixedAdmittance, Symbol("id"), id)
         OpenAPI.validate_property(FixedAdmittance, Symbol("available"), available)
         OpenAPI.validate_property(FixedAdmittance, Symbol("bus"), bus)
         OpenAPI.validate_property(FixedAdmittance, Symbol("Y"), Y)
-        OpenAPI.validate_property(
-            FixedAdmittance,
-            Symbol("dynamic_injector"),
-            dynamic_injector,
-        )
-        return new(name, id, available, bus, Y, dynamic_injector)
+        OpenAPI.validate_property(FixedAdmittance, Symbol("dynamic_injector"), dynamic_injector)
+        return new(name, id, available, bus, Y, dynamic_injector, )
     end
 end # type FixedAdmittance
 
-const _property_types_FixedAdmittance = Dict{Symbol,String}(
-    Symbol("name") => "String",
-    Symbol("id") => "Int64",
-    Symbol("available") => "Bool",
-    Symbol("bus") => "Int64",
-    Symbol("Y") => "ComplexNumber",
-    Symbol("dynamic_injector") => "Any",
-)
-OpenAPI.property_type(::Type{FixedAdmittance}, name::Symbol) =
-    Union{Nothing,eval(Base.Meta.parse(_property_types_FixedAdmittance[name]))}
+const _property_types_FixedAdmittance = Dict{Symbol,String}(Symbol("name")=>"String", Symbol("id")=>"Int64", Symbol("available")=>"Bool", Symbol("bus")=>"Int64", Symbol("Y")=>"ComplexNumber", Symbol("dynamic_injector")=>"Any", )
+OpenAPI.property_type(::Type{ FixedAdmittance }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_FixedAdmittance[name]))}
 
 function check_required(o::FixedAdmittance)
     o.name === nothing && (return false)
@@ -63,7 +51,7 @@ function check_required(o::FixedAdmittance)
     true
 end
 
-function OpenAPI.validate_property(::Type{FixedAdmittance}, name::Symbol, val)
+function OpenAPI.validate_property(::Type{ FixedAdmittance }, name::Symbol, val)
 
 
 

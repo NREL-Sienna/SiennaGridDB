@@ -29,34 +29,19 @@
     - x::Float64
 """
 Base.@kwdef mutable struct Transformer2W <: OpenAPI.APIModel
-    active_power_flow::Union{Nothing,Float64} = nothing
-    arc::Union{Nothing,Int64} = nothing
-    available::Union{Nothing,Bool} = nothing
-    id::Union{Nothing,Int64} = nothing
-    name::Union{Nothing,String} = nothing
-    primary_shunt::Union{Nothing,Float64} = nothing
-    r::Union{Nothing,Float64} = nothing
-    rating::Union{Nothing,Float64} = nothing
-    reactive_power_flow::Union{Nothing,Float64} = nothing
-    x::Union{Nothing,Float64} = nothing
+    active_power_flow::Union{Nothing, Float64} = nothing
+    arc::Union{Nothing, Int64} = nothing
+    available::Union{Nothing, Bool} = nothing
+    id::Union{Nothing, Int64} = nothing
+    name::Union{Nothing, String} = nothing
+    primary_shunt::Union{Nothing, Float64} = nothing
+    r::Union{Nothing, Float64} = nothing
+    rating::Union{Nothing, Float64} = nothing
+    reactive_power_flow::Union{Nothing, Float64} = nothing
+    x::Union{Nothing, Float64} = nothing
 
-    function Transformer2W(
-        active_power_flow,
-        arc,
-        available,
-        id,
-        name,
-        primary_shunt,
-        r,
-        rating,
-        reactive_power_flow,
-        x,
-    )
-        OpenAPI.validate_property(
-            Transformer2W,
-            Symbol("active_power_flow"),
-            active_power_flow,
-        )
+    function Transformer2W(active_power_flow, arc, available, id, name, primary_shunt, r, rating, reactive_power_flow, x, )
+        OpenAPI.validate_property(Transformer2W, Symbol("active_power_flow"), active_power_flow)
         OpenAPI.validate_property(Transformer2W, Symbol("arc"), arc)
         OpenAPI.validate_property(Transformer2W, Symbol("available"), available)
         OpenAPI.validate_property(Transformer2W, Symbol("id"), id)
@@ -64,41 +49,14 @@ Base.@kwdef mutable struct Transformer2W <: OpenAPI.APIModel
         OpenAPI.validate_property(Transformer2W, Symbol("primary_shunt"), primary_shunt)
         OpenAPI.validate_property(Transformer2W, Symbol("r"), r)
         OpenAPI.validate_property(Transformer2W, Symbol("rating"), rating)
-        OpenAPI.validate_property(
-            Transformer2W,
-            Symbol("reactive_power_flow"),
-            reactive_power_flow,
-        )
+        OpenAPI.validate_property(Transformer2W, Symbol("reactive_power_flow"), reactive_power_flow)
         OpenAPI.validate_property(Transformer2W, Symbol("x"), x)
-        return new(
-            active_power_flow,
-            arc,
-            available,
-            id,
-            name,
-            primary_shunt,
-            r,
-            rating,
-            reactive_power_flow,
-            x,
-        )
+        return new(active_power_flow, arc, available, id, name, primary_shunt, r, rating, reactive_power_flow, x, )
     end
 end # type Transformer2W
 
-const _property_types_Transformer2W = Dict{Symbol,String}(
-    Symbol("active_power_flow") => "Float64",
-    Symbol("arc") => "Int64",
-    Symbol("available") => "Bool",
-    Symbol("id") => "Int64",
-    Symbol("name") => "String",
-    Symbol("primary_shunt") => "Float64",
-    Symbol("r") => "Float64",
-    Symbol("rating") => "Float64",
-    Symbol("reactive_power_flow") => "Float64",
-    Symbol("x") => "Float64",
-)
-OpenAPI.property_type(::Type{Transformer2W}, name::Symbol) =
-    Union{Nothing,eval(Base.Meta.parse(_property_types_Transformer2W[name]))}
+const _property_types_Transformer2W = Dict{Symbol,String}(Symbol("active_power_flow")=>"Float64", Symbol("arc")=>"Int64", Symbol("available")=>"Bool", Symbol("id")=>"Int64", Symbol("name")=>"String", Symbol("primary_shunt")=>"Float64", Symbol("r")=>"Float64", Symbol("rating")=>"Float64", Symbol("reactive_power_flow")=>"Float64", Symbol("x")=>"Float64", )
+OpenAPI.property_type(::Type{ Transformer2W }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_Transformer2W[name]))}
 
 function check_required(o::Transformer2W)
     o.active_power_flow === nothing && (return false)
@@ -113,7 +71,7 @@ function check_required(o::Transformer2W)
     true
 end
 
-function OpenAPI.validate_property(::Type{Transformer2W}, name::Symbol, val)
+function OpenAPI.validate_property(::Type{ Transformer2W }, name::Symbol, val)
 
 
 

@@ -13,26 +13,24 @@
     - to_from::Float64
 """
 Base.@kwdef mutable struct FromToToFrom <: OpenAPI.APIModel
-    from_to::Union{Nothing,Float64} = nothing
-    to_from::Union{Nothing,Float64} = nothing
+    from_to::Union{Nothing, Float64} = nothing
+    to_from::Union{Nothing, Float64} = nothing
 
-    function FromToToFrom(from_to, to_from)
+    function FromToToFrom(from_to, to_from, )
         OpenAPI.validate_property(FromToToFrom, Symbol("from_to"), from_to)
         OpenAPI.validate_property(FromToToFrom, Symbol("to_from"), to_from)
-        return new(from_to, to_from)
+        return new(from_to, to_from, )
     end
 end # type FromToToFrom
 
-const _property_types_FromToToFrom =
-    Dict{Symbol,String}(Symbol("from_to") => "Float64", Symbol("to_from") => "Float64")
-OpenAPI.property_type(::Type{FromToToFrom}, name::Symbol) =
-    Union{Nothing,eval(Base.Meta.parse(_property_types_FromToToFrom[name]))}
+const _property_types_FromToToFrom = Dict{Symbol,String}(Symbol("from_to")=>"Float64", Symbol("to_from")=>"Float64", )
+OpenAPI.property_type(::Type{ FromToToFrom }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_FromToToFrom[name]))}
 
 function check_required(o::FromToToFrom)
     true
 end
 
-function OpenAPI.validate_property(::Type{FromToToFrom}, name::Symbol, val)
+function OpenAPI.validate_property(::Type{ FromToToFrom }, name::Symbol, val)
 
 
 end

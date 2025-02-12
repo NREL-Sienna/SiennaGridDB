@@ -17,28 +17,22 @@
     - input_at_zero::Float64
 """
 Base.@kwdef mutable struct AverageRateCurve <: OpenAPI.APIModel
-    curve_type::Union{Nothing,String} = "AVERAGE_RATE"
+    curve_type::Union{Nothing, String} = "AVERAGE_RATE"
     function_data = nothing # spec type: Union{ Nothing, AverageRateCurveFunctionData }
-    initial_input::Union{Nothing,Float64} = nothing
-    input_at_zero::Union{Nothing,Float64} = nothing
+    initial_input::Union{Nothing, Float64} = nothing
+    input_at_zero::Union{Nothing, Float64} = nothing
 
-    function AverageRateCurve(curve_type, function_data, initial_input, input_at_zero)
+    function AverageRateCurve(curve_type, function_data, initial_input, input_at_zero, )
         OpenAPI.validate_property(AverageRateCurve, Symbol("curve_type"), curve_type)
         OpenAPI.validate_property(AverageRateCurve, Symbol("function_data"), function_data)
         OpenAPI.validate_property(AverageRateCurve, Symbol("initial_input"), initial_input)
         OpenAPI.validate_property(AverageRateCurve, Symbol("input_at_zero"), input_at_zero)
-        return new(curve_type, function_data, initial_input, input_at_zero)
+        return new(curve_type, function_data, initial_input, input_at_zero, )
     end
 end # type AverageRateCurve
 
-const _property_types_AverageRateCurve = Dict{Symbol,String}(
-    Symbol("curve_type") => "String",
-    Symbol("function_data") => "AverageRateCurveFunctionData",
-    Symbol("initial_input") => "Float64",
-    Symbol("input_at_zero") => "Float64",
-)
-OpenAPI.property_type(::Type{AverageRateCurve}, name::Symbol) =
-    Union{Nothing,eval(Base.Meta.parse(_property_types_AverageRateCurve[name]))}
+const _property_types_AverageRateCurve = Dict{Symbol,String}(Symbol("curve_type")=>"String", Symbol("function_data")=>"AverageRateCurveFunctionData", Symbol("initial_input")=>"Float64", Symbol("input_at_zero")=>"Float64", )
+OpenAPI.property_type(::Type{ AverageRateCurve }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_AverageRateCurve[name]))}
 
 function check_required(o::AverageRateCurve)
     o.curve_type === nothing && (return false)
@@ -46,7 +40,7 @@ function check_required(o::AverageRateCurve)
     true
 end
 
-function OpenAPI.validate_property(::Type{AverageRateCurve}, name::Symbol, val)
+function OpenAPI.validate_property(::Type{ AverageRateCurve }, name::Symbol, val)
 
     if name === Symbol("curve_type")
         OpenAPI.validate_param(name, "AverageRateCurve", :enum, val, ["AVERAGE_RATE"])

@@ -27,75 +27,32 @@
     - time_frame::Float64
 """
 Base.@kwdef mutable struct ConstantReserve <: OpenAPI.APIModel
-    available::Union{Nothing,Bool} = nothing
-    deployed_fraction::Union{Nothing,Float64} = 0.0
-    id::Union{Nothing,Int64} = nothing
-    max_output_fraction::Union{Nothing,Float64} = 1.0
-    max_participation_factor::Union{Nothing,Float64} = 1.0
-    name::Union{Nothing,String} = nothing
-    requirement::Union{Nothing,Float64} = nothing
-    sustained_time::Union{Nothing,Float64} = 3600.0
-    time_frame::Union{Nothing,Float64} = nothing
+    available::Union{Nothing, Bool} = nothing
+    deployed_fraction::Union{Nothing, Float64} = 0.0
+    id::Union{Nothing, Int64} = nothing
+    max_output_fraction::Union{Nothing, Float64} = 1.0
+    max_participation_factor::Union{Nothing, Float64} = 1.0
+    name::Union{Nothing, String} = nothing
+    requirement::Union{Nothing, Float64} = nothing
+    sustained_time::Union{Nothing, Float64} = 3600.0
+    time_frame::Union{Nothing, Float64} = nothing
 
-    function ConstantReserve(
-        available,
-        deployed_fraction,
-        id,
-        max_output_fraction,
-        max_participation_factor,
-        name,
-        requirement,
-        sustained_time,
-        time_frame,
-    )
+    function ConstantReserve(available, deployed_fraction, id, max_output_fraction, max_participation_factor, name, requirement, sustained_time, time_frame, )
         OpenAPI.validate_property(ConstantReserve, Symbol("available"), available)
-        OpenAPI.validate_property(
-            ConstantReserve,
-            Symbol("deployed_fraction"),
-            deployed_fraction,
-        )
+        OpenAPI.validate_property(ConstantReserve, Symbol("deployed_fraction"), deployed_fraction)
         OpenAPI.validate_property(ConstantReserve, Symbol("id"), id)
-        OpenAPI.validate_property(
-            ConstantReserve,
-            Symbol("max_output_fraction"),
-            max_output_fraction,
-        )
-        OpenAPI.validate_property(
-            ConstantReserve,
-            Symbol("max_participation_factor"),
-            max_participation_factor,
-        )
+        OpenAPI.validate_property(ConstantReserve, Symbol("max_output_fraction"), max_output_fraction)
+        OpenAPI.validate_property(ConstantReserve, Symbol("max_participation_factor"), max_participation_factor)
         OpenAPI.validate_property(ConstantReserve, Symbol("name"), name)
         OpenAPI.validate_property(ConstantReserve, Symbol("requirement"), requirement)
         OpenAPI.validate_property(ConstantReserve, Symbol("sustained_time"), sustained_time)
         OpenAPI.validate_property(ConstantReserve, Symbol("time_frame"), time_frame)
-        return new(
-            available,
-            deployed_fraction,
-            id,
-            max_output_fraction,
-            max_participation_factor,
-            name,
-            requirement,
-            sustained_time,
-            time_frame,
-        )
+        return new(available, deployed_fraction, id, max_output_fraction, max_participation_factor, name, requirement, sustained_time, time_frame, )
     end
 end # type ConstantReserve
 
-const _property_types_ConstantReserve = Dict{Symbol,String}(
-    Symbol("available") => "Bool",
-    Symbol("deployed_fraction") => "Float64",
-    Symbol("id") => "Int64",
-    Symbol("max_output_fraction") => "Float64",
-    Symbol("max_participation_factor") => "Float64",
-    Symbol("name") => "String",
-    Symbol("requirement") => "Float64",
-    Symbol("sustained_time") => "Float64",
-    Symbol("time_frame") => "Float64",
-)
-OpenAPI.property_type(::Type{ConstantReserve}, name::Symbol) =
-    Union{Nothing,eval(Base.Meta.parse(_property_types_ConstantReserve[name]))}
+const _property_types_ConstantReserve = Dict{Symbol,String}(Symbol("available")=>"Bool", Symbol("deployed_fraction")=>"Float64", Symbol("id")=>"Int64", Symbol("max_output_fraction")=>"Float64", Symbol("max_participation_factor")=>"Float64", Symbol("name")=>"String", Symbol("requirement")=>"Float64", Symbol("sustained_time")=>"Float64", Symbol("time_frame")=>"Float64", )
+OpenAPI.property_type(::Type{ ConstantReserve }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_ConstantReserve[name]))}
 
 function check_required(o::ConstantReserve)
     o.available === nothing && (return false)
@@ -106,7 +63,7 @@ function check_required(o::ConstantReserve)
     true
 end
 
-function OpenAPI.validate_property(::Type{ConstantReserve}, name::Symbol, val)
+function OpenAPI.validate_property(::Type{ ConstantReserve }, name::Symbol, val)
 
 
 

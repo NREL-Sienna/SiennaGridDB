@@ -13,7 +13,7 @@ mutable struct ValueCurve <: OpenAPI.OneOfAPIModel
     ValueCurve(value) = new(value)
 end # type ValueCurve
 
-function OpenAPI.property_type(::Type{ValueCurve}, name::Symbol, json::Dict{String,Any})
+function OpenAPI.property_type(::Type{ ValueCurve }, name::Symbol, json::Dict{String,Any})
     discriminator = json["curve_type"]
     if discriminator == "AVERAGE_RATE"
         return eval(Base.Meta.parse("AverageRateCurve"))
@@ -22,9 +22,5 @@ function OpenAPI.property_type(::Type{ValueCurve}, name::Symbol, json::Dict{Stri
     elseif discriminator == "INPUT_OUTPUT"
         return eval(Base.Meta.parse("InputOutputCurve"))
     end
-    throw(
-        OpenAPI.ValidationException(
-            "Invalid discriminator value: $discriminator for ValueCurve",
-        ),
-    )
+    throw(OpenAPI.ValidationException("Invalid discriminator value: $discriminator for ValueCurve"))
 end

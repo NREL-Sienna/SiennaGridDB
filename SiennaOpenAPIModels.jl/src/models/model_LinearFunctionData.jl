@@ -15,37 +15,20 @@
     - proportional_term::Float64
 """
 Base.@kwdef mutable struct LinearFunctionData <: OpenAPI.APIModel
-    constant_term::Union{Nothing,Float64} = nothing
-    function_type::Union{Nothing,String} = "LINEAR"
-    proportional_term::Union{Nothing,Float64} = nothing
+    constant_term::Union{Nothing, Float64} = nothing
+    function_type::Union{Nothing, String} = "LINEAR"
+    proportional_term::Union{Nothing, Float64} = nothing
 
-    function LinearFunctionData(constant_term, function_type, proportional_term)
-        OpenAPI.validate_property(
-            LinearFunctionData,
-            Symbol("constant_term"),
-            constant_term,
-        )
-        OpenAPI.validate_property(
-            LinearFunctionData,
-            Symbol("function_type"),
-            function_type,
-        )
-        OpenAPI.validate_property(
-            LinearFunctionData,
-            Symbol("proportional_term"),
-            proportional_term,
-        )
-        return new(constant_term, function_type, proportional_term)
+    function LinearFunctionData(constant_term, function_type, proportional_term, )
+        OpenAPI.validate_property(LinearFunctionData, Symbol("constant_term"), constant_term)
+        OpenAPI.validate_property(LinearFunctionData, Symbol("function_type"), function_type)
+        OpenAPI.validate_property(LinearFunctionData, Symbol("proportional_term"), proportional_term)
+        return new(constant_term, function_type, proportional_term, )
     end
 end # type LinearFunctionData
 
-const _property_types_LinearFunctionData = Dict{Symbol,String}(
-    Symbol("constant_term") => "Float64",
-    Symbol("function_type") => "String",
-    Symbol("proportional_term") => "Float64",
-)
-OpenAPI.property_type(::Type{LinearFunctionData}, name::Symbol) =
-    Union{Nothing,eval(Base.Meta.parse(_property_types_LinearFunctionData[name]))}
+const _property_types_LinearFunctionData = Dict{Symbol,String}(Symbol("constant_term")=>"Float64", Symbol("function_type")=>"String", Symbol("proportional_term")=>"Float64", )
+OpenAPI.property_type(::Type{ LinearFunctionData }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_LinearFunctionData[name]))}
 
 function check_required(o::LinearFunctionData)
     o.constant_term === nothing && (return false)
@@ -54,7 +37,7 @@ function check_required(o::LinearFunctionData)
     true
 end
 
-function OpenAPI.validate_property(::Type{LinearFunctionData}, name::Symbol, val)
+function OpenAPI.validate_property(::Type{ LinearFunctionData }, name::Symbol, val)
 
 
     if name === Symbol("function_type")

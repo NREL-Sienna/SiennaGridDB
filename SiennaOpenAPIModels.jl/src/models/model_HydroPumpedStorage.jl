@@ -67,227 +67,72 @@
     - dynamic_injector::Any
 """
 Base.@kwdef mutable struct HydroPumpedStorage <: OpenAPI.APIModel
-    active_power::Union{Nothing,Float64} = nothing
+    active_power::Union{Nothing, Float64} = nothing
     active_power_limits = nothing # spec type: Union{ Nothing, MinMax }
     active_power_limits_pump = nothing # spec type: Union{ Nothing, MinMax }
-    available::Union{Nothing,Bool} = nothing
-    base_power::Union{Nothing,Float64} = nothing
-    bus::Union{Nothing,Int64} = nothing
-    conversion_factor::Union{Nothing,Float64} = 1.0
-    id::Union{Nothing,Int64} = nothing
-    inflow::Union{Nothing,Float64} = nothing
+    available::Union{Nothing, Bool} = nothing
+    base_power::Union{Nothing, Float64} = nothing
+    bus::Union{Nothing, Int64} = nothing
+    conversion_factor::Union{Nothing, Float64} = 1.0
+    id::Union{Nothing, Int64} = nothing
+    inflow::Union{Nothing, Float64} = nothing
     initial_storage = nothing # spec type: Union{ Nothing, UpDown }
-    name::Union{Nothing,String} = nothing
-    outflow::Union{Nothing,Float64} = nothing
+    name::Union{Nothing, String} = nothing
+    outflow::Union{Nothing, Float64} = nothing
     operation_cost = nothing # spec type: Union{ Nothing, OperationCost }
-    prime_mover_type::Union{Nothing,String} = "OT"
-    pump_efficiency::Union{Nothing,Float64} = 1.0
+    prime_mover_type::Union{Nothing, String} = "OT"
+    pump_efficiency::Union{Nothing, Float64} = 1.0
     ramp_limits = nothing # spec type: Union{ Nothing, UpDown }
     ramp_limits_pump = nothing # spec type: Union{ Nothing, UpDown }
-    rating::Union{Nothing,Float64} = nothing
-    rating_pump::Union{Nothing,Float64} = nothing
-    reactive_power::Union{Nothing,Float64} = nothing
+    rating::Union{Nothing, Float64} = nothing
+    rating_pump::Union{Nothing, Float64} = nothing
+    reactive_power::Union{Nothing, Float64} = nothing
     reactive_power_limits = nothing # spec type: Union{ Nothing, MinMax }
     reactive_power_limits_pump = nothing # spec type: Union{ Nothing, MinMax }
-    status::Union{Nothing,String} = "OFF"
+    status::Union{Nothing, String} = "OFF"
     storage_capacity = nothing # spec type: Union{ Nothing, UpDown }
     storage_target = nothing # spec type: Union{ Nothing, UpDown }
-    time_at_status::Union{Nothing,Float64} = 10000.0
+    time_at_status::Union{Nothing, Float64} = 10000.0
     time_limits = nothing # spec type: Union{ Nothing, UpDown }
     time_limits_pump = nothing # spec type: Union{ Nothing, UpDown }
-    dynamic_injector::Union{Nothing,Any} = nothing
+    dynamic_injector::Union{Nothing, Any} = nothing
 
-    function HydroPumpedStorage(
-        active_power,
-        active_power_limits,
-        active_power_limits_pump,
-        available,
-        base_power,
-        bus,
-        conversion_factor,
-        id,
-        inflow,
-        initial_storage,
-        name,
-        outflow,
-        operation_cost,
-        prime_mover_type,
-        pump_efficiency,
-        ramp_limits,
-        ramp_limits_pump,
-        rating,
-        rating_pump,
-        reactive_power,
-        reactive_power_limits,
-        reactive_power_limits_pump,
-        status,
-        storage_capacity,
-        storage_target,
-        time_at_status,
-        time_limits,
-        time_limits_pump,
-        dynamic_injector,
-    )
+    function HydroPumpedStorage(active_power, active_power_limits, active_power_limits_pump, available, base_power, bus, conversion_factor, id, inflow, initial_storage, name, outflow, operation_cost, prime_mover_type, pump_efficiency, ramp_limits, ramp_limits_pump, rating, rating_pump, reactive_power, reactive_power_limits, reactive_power_limits_pump, status, storage_capacity, storage_target, time_at_status, time_limits, time_limits_pump, dynamic_injector, )
         OpenAPI.validate_property(HydroPumpedStorage, Symbol("active_power"), active_power)
-        OpenAPI.validate_property(
-            HydroPumpedStorage,
-            Symbol("active_power_limits"),
-            active_power_limits,
-        )
-        OpenAPI.validate_property(
-            HydroPumpedStorage,
-            Symbol("active_power_limits_pump"),
-            active_power_limits_pump,
-        )
+        OpenAPI.validate_property(HydroPumpedStorage, Symbol("active_power_limits"), active_power_limits)
+        OpenAPI.validate_property(HydroPumpedStorage, Symbol("active_power_limits_pump"), active_power_limits_pump)
         OpenAPI.validate_property(HydroPumpedStorage, Symbol("available"), available)
         OpenAPI.validate_property(HydroPumpedStorage, Symbol("base_power"), base_power)
         OpenAPI.validate_property(HydroPumpedStorage, Symbol("bus"), bus)
-        OpenAPI.validate_property(
-            HydroPumpedStorage,
-            Symbol("conversion_factor"),
-            conversion_factor,
-        )
+        OpenAPI.validate_property(HydroPumpedStorage, Symbol("conversion_factor"), conversion_factor)
         OpenAPI.validate_property(HydroPumpedStorage, Symbol("id"), id)
         OpenAPI.validate_property(HydroPumpedStorage, Symbol("inflow"), inflow)
-        OpenAPI.validate_property(
-            HydroPumpedStorage,
-            Symbol("initial_storage"),
-            initial_storage,
-        )
+        OpenAPI.validate_property(HydroPumpedStorage, Symbol("initial_storage"), initial_storage)
         OpenAPI.validate_property(HydroPumpedStorage, Symbol("name"), name)
         OpenAPI.validate_property(HydroPumpedStorage, Symbol("outflow"), outflow)
-        OpenAPI.validate_property(
-            HydroPumpedStorage,
-            Symbol("operation_cost"),
-            operation_cost,
-        )
-        OpenAPI.validate_property(
-            HydroPumpedStorage,
-            Symbol("prime_mover_type"),
-            prime_mover_type,
-        )
-        OpenAPI.validate_property(
-            HydroPumpedStorage,
-            Symbol("pump_efficiency"),
-            pump_efficiency,
-        )
+        OpenAPI.validate_property(HydroPumpedStorage, Symbol("operation_cost"), operation_cost)
+        OpenAPI.validate_property(HydroPumpedStorage, Symbol("prime_mover_type"), prime_mover_type)
+        OpenAPI.validate_property(HydroPumpedStorage, Symbol("pump_efficiency"), pump_efficiency)
         OpenAPI.validate_property(HydroPumpedStorage, Symbol("ramp_limits"), ramp_limits)
-        OpenAPI.validate_property(
-            HydroPumpedStorage,
-            Symbol("ramp_limits_pump"),
-            ramp_limits_pump,
-        )
+        OpenAPI.validate_property(HydroPumpedStorage, Symbol("ramp_limits_pump"), ramp_limits_pump)
         OpenAPI.validate_property(HydroPumpedStorage, Symbol("rating"), rating)
         OpenAPI.validate_property(HydroPumpedStorage, Symbol("rating_pump"), rating_pump)
-        OpenAPI.validate_property(
-            HydroPumpedStorage,
-            Symbol("reactive_power"),
-            reactive_power,
-        )
-        OpenAPI.validate_property(
-            HydroPumpedStorage,
-            Symbol("reactive_power_limits"),
-            reactive_power_limits,
-        )
-        OpenAPI.validate_property(
-            HydroPumpedStorage,
-            Symbol("reactive_power_limits_pump"),
-            reactive_power_limits_pump,
-        )
+        OpenAPI.validate_property(HydroPumpedStorage, Symbol("reactive_power"), reactive_power)
+        OpenAPI.validate_property(HydroPumpedStorage, Symbol("reactive_power_limits"), reactive_power_limits)
+        OpenAPI.validate_property(HydroPumpedStorage, Symbol("reactive_power_limits_pump"), reactive_power_limits_pump)
         OpenAPI.validate_property(HydroPumpedStorage, Symbol("status"), status)
-        OpenAPI.validate_property(
-            HydroPumpedStorage,
-            Symbol("storage_capacity"),
-            storage_capacity,
-        )
-        OpenAPI.validate_property(
-            HydroPumpedStorage,
-            Symbol("storage_target"),
-            storage_target,
-        )
-        OpenAPI.validate_property(
-            HydroPumpedStorage,
-            Symbol("time_at_status"),
-            time_at_status,
-        )
+        OpenAPI.validate_property(HydroPumpedStorage, Symbol("storage_capacity"), storage_capacity)
+        OpenAPI.validate_property(HydroPumpedStorage, Symbol("storage_target"), storage_target)
+        OpenAPI.validate_property(HydroPumpedStorage, Symbol("time_at_status"), time_at_status)
         OpenAPI.validate_property(HydroPumpedStorage, Symbol("time_limits"), time_limits)
-        OpenAPI.validate_property(
-            HydroPumpedStorage,
-            Symbol("time_limits_pump"),
-            time_limits_pump,
-        )
-        OpenAPI.validate_property(
-            HydroPumpedStorage,
-            Symbol("dynamic_injector"),
-            dynamic_injector,
-        )
-        return new(
-            active_power,
-            active_power_limits,
-            active_power_limits_pump,
-            available,
-            base_power,
-            bus,
-            conversion_factor,
-            id,
-            inflow,
-            initial_storage,
-            name,
-            outflow,
-            operation_cost,
-            prime_mover_type,
-            pump_efficiency,
-            ramp_limits,
-            ramp_limits_pump,
-            rating,
-            rating_pump,
-            reactive_power,
-            reactive_power_limits,
-            reactive_power_limits_pump,
-            status,
-            storage_capacity,
-            storage_target,
-            time_at_status,
-            time_limits,
-            time_limits_pump,
-            dynamic_injector,
-        )
+        OpenAPI.validate_property(HydroPumpedStorage, Symbol("time_limits_pump"), time_limits_pump)
+        OpenAPI.validate_property(HydroPumpedStorage, Symbol("dynamic_injector"), dynamic_injector)
+        return new(active_power, active_power_limits, active_power_limits_pump, available, base_power, bus, conversion_factor, id, inflow, initial_storage, name, outflow, operation_cost, prime_mover_type, pump_efficiency, ramp_limits, ramp_limits_pump, rating, rating_pump, reactive_power, reactive_power_limits, reactive_power_limits_pump, status, storage_capacity, storage_target, time_at_status, time_limits, time_limits_pump, dynamic_injector, )
     end
 end # type HydroPumpedStorage
 
-const _property_types_HydroPumpedStorage = Dict{Symbol,String}(
-    Symbol("active_power") => "Float64",
-    Symbol("active_power_limits") => "MinMax",
-    Symbol("active_power_limits_pump") => "MinMax",
-    Symbol("available") => "Bool",
-    Symbol("base_power") => "Float64",
-    Symbol("bus") => "Int64",
-    Symbol("conversion_factor") => "Float64",
-    Symbol("id") => "Int64",
-    Symbol("inflow") => "Float64",
-    Symbol("initial_storage") => "UpDown",
-    Symbol("name") => "String",
-    Symbol("outflow") => "Float64",
-    Symbol("operation_cost") => "OperationCost",
-    Symbol("prime_mover_type") => "String",
-    Symbol("pump_efficiency") => "Float64",
-    Symbol("ramp_limits") => "UpDown",
-    Symbol("ramp_limits_pump") => "UpDown",
-    Symbol("rating") => "Float64",
-    Symbol("rating_pump") => "Float64",
-    Symbol("reactive_power") => "Float64",
-    Symbol("reactive_power_limits") => "MinMax",
-    Symbol("reactive_power_limits_pump") => "MinMax",
-    Symbol("status") => "String",
-    Symbol("storage_capacity") => "UpDown",
-    Symbol("storage_target") => "UpDown",
-    Symbol("time_at_status") => "Float64",
-    Symbol("time_limits") => "UpDown",
-    Symbol("time_limits_pump") => "UpDown",
-    Symbol("dynamic_injector") => "Any",
-)
-OpenAPI.property_type(::Type{HydroPumpedStorage}, name::Symbol) =
-    Union{Nothing,eval(Base.Meta.parse(_property_types_HydroPumpedStorage[name]))}
+const _property_types_HydroPumpedStorage = Dict{Symbol,String}(Symbol("active_power")=>"Float64", Symbol("active_power_limits")=>"MinMax", Symbol("active_power_limits_pump")=>"MinMax", Symbol("available")=>"Bool", Symbol("base_power")=>"Float64", Symbol("bus")=>"Int64", Symbol("conversion_factor")=>"Float64", Symbol("id")=>"Int64", Symbol("inflow")=>"Float64", Symbol("initial_storage")=>"UpDown", Symbol("name")=>"String", Symbol("outflow")=>"Float64", Symbol("operation_cost")=>"OperationCost", Symbol("prime_mover_type")=>"String", Symbol("pump_efficiency")=>"Float64", Symbol("ramp_limits")=>"UpDown", Symbol("ramp_limits_pump")=>"UpDown", Symbol("rating")=>"Float64", Symbol("rating_pump")=>"Float64", Symbol("reactive_power")=>"Float64", Symbol("reactive_power_limits")=>"MinMax", Symbol("reactive_power_limits_pump")=>"MinMax", Symbol("status")=>"String", Symbol("storage_capacity")=>"UpDown", Symbol("storage_target")=>"UpDown", Symbol("time_at_status")=>"Float64", Symbol("time_limits")=>"UpDown", Symbol("time_limits_pump")=>"UpDown", Symbol("dynamic_injector")=>"Any", )
+OpenAPI.property_type(::Type{ HydroPumpedStorage }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_HydroPumpedStorage[name]))}
 
 function check_required(o::HydroPumpedStorage)
     o.active_power === nothing && (return false)
@@ -309,7 +154,7 @@ function check_required(o::HydroPumpedStorage)
     true
 end
 
-function OpenAPI.validate_property(::Type{HydroPumpedStorage}, name::Symbol, val)
+function OpenAPI.validate_property(::Type{ HydroPumpedStorage }, name::Symbol, val)
 
 
 
@@ -325,37 +170,7 @@ function OpenAPI.validate_property(::Type{HydroPumpedStorage}, name::Symbol, val
 
 
     if name === Symbol("prime_mover_type")
-        OpenAPI.validate_param(
-            name,
-            "HydroPumpedStorage",
-            :enum,
-            val,
-            [
-                "BA",
-                "BT",
-                "CA",
-                "CC",
-                "CE",
-                "CP",
-                "CS",
-                "CT",
-                "ES",
-                "FC",
-                "FW",
-                "GT",
-                "HA",
-                "HB",
-                "HK",
-                "HY",
-                "IC",
-                "PS",
-                "OT",
-                "ST",
-                "PVe",
-                "WT",
-                "WS",
-            ],
-        )
+        OpenAPI.validate_param(name, "HydroPumpedStorage", :enum, val, ["BA", "BT", "CA", "CC", "CE", "CP", "CS", "CT", "ES", "FC", "FW", "GT", "HA", "HB", "HK", "HY", "IC", "PS", "OT", "ST", "PVe", "WT", "WS"])
     end
 
 
@@ -368,13 +183,7 @@ function OpenAPI.validate_property(::Type{HydroPumpedStorage}, name::Symbol, val
 
 
     if name === Symbol("status")
-        OpenAPI.validate_param(
-            name,
-            "HydroPumpedStorage",
-            :enum,
-            val,
-            ["PUMP", "GEN", "OFF"],
-        )
+        OpenAPI.validate_param(name, "HydroPumpedStorage", :enum, val, ["PUMP", "GEN", "OFF"])
     end
 
 

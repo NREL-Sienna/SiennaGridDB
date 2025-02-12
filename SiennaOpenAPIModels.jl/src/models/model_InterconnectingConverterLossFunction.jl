@@ -13,12 +13,8 @@ mutable struct InterconnectingConverterLossFunction <: OpenAPI.OneOfAPIModel
     InterconnectingConverterLossFunction(value) = new(value)
 end # type InterconnectingConverterLossFunction
 
-function OpenAPI.property_type(
-    ::Type{InterconnectingConverterLossFunction},
-    name::Symbol,
-    json::Dict{String,Any},
-)
-
+function OpenAPI.property_type(::Type{ InterconnectingConverterLossFunction }, name::Symbol, json::Dict{String,Any})
+    
     # no discriminator specified, can't determine the exact type
     return fieldtype(InterconnectingConverterLossFunction, name)
 end

@@ -14,12 +14,8 @@ mutable struct ThermalGenerationCostStartUp <: OpenAPI.OneOfAPIModel
     ThermalGenerationCostStartUp(value) = new(value)
 end # type ThermalGenerationCostStartUp
 
-function OpenAPI.property_type(
-    ::Type{ThermalGenerationCostStartUp},
-    name::Symbol,
-    json::Dict{String,Any},
-)
-
+function OpenAPI.property_type(::Type{ ThermalGenerationCostStartUp }, name::Symbol, json::Dict{String,Any})
+    
     # no discriminator specified, can't determine the exact type
     return fieldtype(ThermalGenerationCostStartUp, name)
 end

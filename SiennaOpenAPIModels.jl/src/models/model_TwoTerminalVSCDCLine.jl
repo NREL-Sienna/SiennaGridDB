@@ -31,101 +31,36 @@
     - rectifier_xrc::Float64
 """
 Base.@kwdef mutable struct TwoTerminalVSCDCLine <: OpenAPI.APIModel
-    active_power_flow::Union{Nothing,Float64} = nothing
-    arc::Union{Nothing,Int64} = nothing
-    available::Union{Nothing,Bool} = nothing
-    id::Union{Nothing,Int64} = nothing
+    active_power_flow::Union{Nothing, Float64} = nothing
+    arc::Union{Nothing, Int64} = nothing
+    available::Union{Nothing, Bool} = nothing
+    id::Union{Nothing, Int64} = nothing
     inverter_extinction_angle = nothing # spec type: Union{ Nothing, MinMax }
     inverter_tap_limits = nothing # spec type: Union{ Nothing, MinMax }
-    inverter_xrc::Union{Nothing,Float64} = nothing
-    name::Union{Nothing,String} = nothing
+    inverter_xrc::Union{Nothing, Float64} = nothing
+    name::Union{Nothing, String} = nothing
     rectifier_firing_angle = nothing # spec type: Union{ Nothing, MinMax }
     rectifier_tap_limits = nothing # spec type: Union{ Nothing, MinMax }
-    rectifier_xrc::Union{Nothing,Float64} = nothing
+    rectifier_xrc::Union{Nothing, Float64} = nothing
 
-    function TwoTerminalVSCDCLine(
-        active_power_flow,
-        arc,
-        available,
-        id,
-        inverter_extinction_angle,
-        inverter_tap_limits,
-        inverter_xrc,
-        name,
-        rectifier_firing_angle,
-        rectifier_tap_limits,
-        rectifier_xrc,
-    )
-        OpenAPI.validate_property(
-            TwoTerminalVSCDCLine,
-            Symbol("active_power_flow"),
-            active_power_flow,
-        )
+    function TwoTerminalVSCDCLine(active_power_flow, arc, available, id, inverter_extinction_angle, inverter_tap_limits, inverter_xrc, name, rectifier_firing_angle, rectifier_tap_limits, rectifier_xrc, )
+        OpenAPI.validate_property(TwoTerminalVSCDCLine, Symbol("active_power_flow"), active_power_flow)
         OpenAPI.validate_property(TwoTerminalVSCDCLine, Symbol("arc"), arc)
         OpenAPI.validate_property(TwoTerminalVSCDCLine, Symbol("available"), available)
         OpenAPI.validate_property(TwoTerminalVSCDCLine, Symbol("id"), id)
-        OpenAPI.validate_property(
-            TwoTerminalVSCDCLine,
-            Symbol("inverter_extinction_angle"),
-            inverter_extinction_angle,
-        )
-        OpenAPI.validate_property(
-            TwoTerminalVSCDCLine,
-            Symbol("inverter_tap_limits"),
-            inverter_tap_limits,
-        )
-        OpenAPI.validate_property(
-            TwoTerminalVSCDCLine,
-            Symbol("inverter_xrc"),
-            inverter_xrc,
-        )
+        OpenAPI.validate_property(TwoTerminalVSCDCLine, Symbol("inverter_extinction_angle"), inverter_extinction_angle)
+        OpenAPI.validate_property(TwoTerminalVSCDCLine, Symbol("inverter_tap_limits"), inverter_tap_limits)
+        OpenAPI.validate_property(TwoTerminalVSCDCLine, Symbol("inverter_xrc"), inverter_xrc)
         OpenAPI.validate_property(TwoTerminalVSCDCLine, Symbol("name"), name)
-        OpenAPI.validate_property(
-            TwoTerminalVSCDCLine,
-            Symbol("rectifier_firing_angle"),
-            rectifier_firing_angle,
-        )
-        OpenAPI.validate_property(
-            TwoTerminalVSCDCLine,
-            Symbol("rectifier_tap_limits"),
-            rectifier_tap_limits,
-        )
-        OpenAPI.validate_property(
-            TwoTerminalVSCDCLine,
-            Symbol("rectifier_xrc"),
-            rectifier_xrc,
-        )
-        return new(
-            active_power_flow,
-            arc,
-            available,
-            id,
-            inverter_extinction_angle,
-            inverter_tap_limits,
-            inverter_xrc,
-            name,
-            rectifier_firing_angle,
-            rectifier_tap_limits,
-            rectifier_xrc,
-        )
+        OpenAPI.validate_property(TwoTerminalVSCDCLine, Symbol("rectifier_firing_angle"), rectifier_firing_angle)
+        OpenAPI.validate_property(TwoTerminalVSCDCLine, Symbol("rectifier_tap_limits"), rectifier_tap_limits)
+        OpenAPI.validate_property(TwoTerminalVSCDCLine, Symbol("rectifier_xrc"), rectifier_xrc)
+        return new(active_power_flow, arc, available, id, inverter_extinction_angle, inverter_tap_limits, inverter_xrc, name, rectifier_firing_angle, rectifier_tap_limits, rectifier_xrc, )
     end
 end # type TwoTerminalVSCDCLine
 
-const _property_types_TwoTerminalVSCDCLine = Dict{Symbol,String}(
-    Symbol("active_power_flow") => "Float64",
-    Symbol("arc") => "Int64",
-    Symbol("available") => "Bool",
-    Symbol("id") => "Int64",
-    Symbol("inverter_extinction_angle") => "MinMax",
-    Symbol("inverter_tap_limits") => "MinMax",
-    Symbol("inverter_xrc") => "Float64",
-    Symbol("name") => "String",
-    Symbol("rectifier_firing_angle") => "MinMax",
-    Symbol("rectifier_tap_limits") => "MinMax",
-    Symbol("rectifier_xrc") => "Float64",
-)
-OpenAPI.property_type(::Type{TwoTerminalVSCDCLine}, name::Symbol) =
-    Union{Nothing,eval(Base.Meta.parse(_property_types_TwoTerminalVSCDCLine[name]))}
+const _property_types_TwoTerminalVSCDCLine = Dict{Symbol,String}(Symbol("active_power_flow")=>"Float64", Symbol("arc")=>"Int64", Symbol("available")=>"Bool", Symbol("id")=>"Int64", Symbol("inverter_extinction_angle")=>"MinMax", Symbol("inverter_tap_limits")=>"MinMax", Symbol("inverter_xrc")=>"Float64", Symbol("name")=>"String", Symbol("rectifier_firing_angle")=>"MinMax", Symbol("rectifier_tap_limits")=>"MinMax", Symbol("rectifier_xrc")=>"Float64", )
+OpenAPI.property_type(::Type{ TwoTerminalVSCDCLine }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_TwoTerminalVSCDCLine[name]))}
 
 function check_required(o::TwoTerminalVSCDCLine)
     o.active_power_flow === nothing && (return false)
@@ -142,7 +77,7 @@ function check_required(o::TwoTerminalVSCDCLine)
     true
 end
 
-function OpenAPI.validate_property(::Type{TwoTerminalVSCDCLine}, name::Symbol, val)
+function OpenAPI.validate_property(::Type{ TwoTerminalVSCDCLine }, name::Symbol, val)
 
 
 

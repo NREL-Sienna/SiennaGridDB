@@ -13,20 +13,18 @@
     - y::Float64
 """
 Base.@kwdef mutable struct XYCoords <: OpenAPI.APIModel
-    x::Union{Nothing,Float64} = nothing
-    y::Union{Nothing,Float64} = nothing
+    x::Union{Nothing, Float64} = nothing
+    y::Union{Nothing, Float64} = nothing
 
-    function XYCoords(x, y)
+    function XYCoords(x, y, )
         OpenAPI.validate_property(XYCoords, Symbol("x"), x)
         OpenAPI.validate_property(XYCoords, Symbol("y"), y)
-        return new(x, y)
+        return new(x, y, )
     end
 end # type XYCoords
 
-const _property_types_XYCoords =
-    Dict{Symbol,String}(Symbol("x") => "Float64", Symbol("y") => "Float64")
-OpenAPI.property_type(::Type{XYCoords}, name::Symbol) =
-    Union{Nothing,eval(Base.Meta.parse(_property_types_XYCoords[name]))}
+const _property_types_XYCoords = Dict{Symbol,String}(Symbol("x")=>"Float64", Symbol("y")=>"Float64", )
+OpenAPI.property_type(::Type{ XYCoords }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_XYCoords[name]))}
 
 function check_required(o::XYCoords)
     o.x === nothing && (return false)
@@ -34,7 +32,7 @@ function check_required(o::XYCoords)
     true
 end
 
-function OpenAPI.validate_property(::Type{XYCoords}, name::Symbol, val)
+function OpenAPI.validate_property(::Type{ XYCoords }, name::Symbol, val)
 
 
 end

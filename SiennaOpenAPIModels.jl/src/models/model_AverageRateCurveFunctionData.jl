@@ -13,11 +13,7 @@ mutable struct AverageRateCurveFunctionData <: OpenAPI.OneOfAPIModel
     AverageRateCurveFunctionData(value) = new(value)
 end # type AverageRateCurveFunctionData
 
-function OpenAPI.property_type(
-    ::Type{AverageRateCurveFunctionData},
-    name::Symbol,
-    json::Dict{String,Any},
-)
+function OpenAPI.property_type(::Type{ AverageRateCurveFunctionData }, name::Symbol, json::Dict{String,Any})
     discriminator = json["function_type"]
     if discriminator == "LINEAR"
         return eval(Base.Meta.parse("LinearFunctionData"))
@@ -26,9 +22,5 @@ function OpenAPI.property_type(
     elseif discriminator == "QUADRATIC"
         return eval(Base.Meta.parse("QuadraticFunctionData"))
     end
-    throw(
-        OpenAPI.ValidationException(
-            "Invalid discriminator value: $discriminator for AverageRateCurveFunctionData",
-        ),
-    )
+    throw(OpenAPI.ValidationException("Invalid discriminator value: $discriminator for AverageRateCurveFunctionData"))
 end
