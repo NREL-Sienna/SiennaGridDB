@@ -29,29 +29,18 @@
     - voltage_limits::MinMax
 """
 Base.@kwdef mutable struct ACBus <: OpenAPI.APIModel
-    angle::Union{Nothing,Float64} = nothing
-    area::Union{Nothing,Int64} = nothing
-    base_voltage::Union{Nothing,Float64} = nothing
-    bustype::Union{Nothing,String} = nothing
-    id::Union{Nothing,Int64} = nothing
-    load_zone::Union{Nothing,Int64} = nothing
-    magnitude::Union{Nothing,Float64} = nothing
-    name::Union{Nothing,String} = nothing
-    number::Union{Nothing,Int64} = nothing
+    angle::Union{Nothing, Float64} = nothing
+    area::Union{Nothing, Int64} = nothing
+    base_voltage::Union{Nothing, Float64} = nothing
+    bustype::Union{Nothing, String} = nothing
+    id::Union{Nothing, Int64} = nothing
+    load_zone::Union{Nothing, Int64} = nothing
+    magnitude::Union{Nothing, Float64} = nothing
+    name::Union{Nothing, String} = nothing
+    number::Union{Nothing, Int64} = nothing
     voltage_limits = nothing # spec type: Union{ Nothing, MinMax }
 
-    function ACBus(
-        angle,
-        area,
-        base_voltage,
-        bustype,
-        id,
-        load_zone,
-        magnitude,
-        name,
-        number,
-        voltage_limits,
-    )
+    function ACBus(angle, area, base_voltage, bustype, id, load_zone, magnitude, name, number, voltage_limits, )
         OpenAPI.validate_property(ACBus, Symbol("angle"), angle)
         OpenAPI.validate_property(ACBus, Symbol("area"), area)
         OpenAPI.validate_property(ACBus, Symbol("base_voltage"), base_voltage)
@@ -62,35 +51,12 @@ Base.@kwdef mutable struct ACBus <: OpenAPI.APIModel
         OpenAPI.validate_property(ACBus, Symbol("name"), name)
         OpenAPI.validate_property(ACBus, Symbol("number"), number)
         OpenAPI.validate_property(ACBus, Symbol("voltage_limits"), voltage_limits)
-        return new(
-            angle,
-            area,
-            base_voltage,
-            bustype,
-            id,
-            load_zone,
-            magnitude,
-            name,
-            number,
-            voltage_limits,
-        )
+        return new(angle, area, base_voltage, bustype, id, load_zone, magnitude, name, number, voltage_limits, )
     end
 end # type ACBus
 
-const _property_types_ACBus = Dict{Symbol,String}(
-    Symbol("angle") => "Float64",
-    Symbol("area") => "Int64",
-    Symbol("base_voltage") => "Float64",
-    Symbol("bustype") => "String",
-    Symbol("id") => "Int64",
-    Symbol("load_zone") => "Int64",
-    Symbol("magnitude") => "Float64",
-    Symbol("name") => "String",
-    Symbol("number") => "Int64",
-    Symbol("voltage_limits") => "MinMax",
-)
-OpenAPI.property_type(::Type{ACBus}, name::Symbol) =
-    Union{Nothing,eval(Base.Meta.parse(_property_types_ACBus[name]))}
+const _property_types_ACBus = Dict{Symbol,String}(Symbol("angle")=>"Float64", Symbol("area")=>"Int64", Symbol("base_voltage")=>"Float64", Symbol("bustype")=>"String", Symbol("id")=>"Int64", Symbol("load_zone")=>"Int64", Symbol("magnitude")=>"Float64", Symbol("name")=>"String", Symbol("number")=>"Int64", Symbol("voltage_limits")=>"MinMax", )
+OpenAPI.property_type(::Type{ ACBus }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_ACBus[name]))}
 
 function check_required(o::ACBus)
     o.bustype === nothing && (return false)
@@ -100,19 +66,13 @@ function check_required(o::ACBus)
     true
 end
 
-function OpenAPI.validate_property(::Type{ACBus}, name::Symbol, val)
+function OpenAPI.validate_property(::Type{ ACBus }, name::Symbol, val)
 
 
 
 
     if name === Symbol("bustype")
-        OpenAPI.validate_param(
-            name,
-            "ACBus",
-            :enum,
-            val,
-            ["PQ", "PV", "REF", "ISOLATED", "SLACK"],
-        )
+        OpenAPI.validate_param(name, "ACBus", :enum, val, ["PQ", "PV", "REF", "ISOLATED", "SLACK"])
     end
 
 

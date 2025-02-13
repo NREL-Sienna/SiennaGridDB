@@ -53,188 +53,58 @@
     - dynamic_injector::Any
 """
 Base.@kwdef mutable struct EnergyReservoirStorage <: OpenAPI.APIModel
-    id::Union{Nothing,Int64} = nothing
-    name::Union{Nothing,String} = nothing
-    available::Union{Nothing,Bool} = nothing
-    bus::Union{Nothing,Int64} = nothing
-    active_power::Union{Nothing,Float64} = nothing
-    reactive_power::Union{Nothing,Float64} = nothing
-    rating::Union{Nothing,Float64} = nothing
-    prime_mover_type::Union{Nothing,String} = "OT"
-    storage_technology_type::Union{Nothing,String} = nothing
-    storage_capacity::Union{Nothing,Float64} = nothing
+    id::Union{Nothing, Int64} = nothing
+    name::Union{Nothing, String} = nothing
+    available::Union{Nothing, Bool} = nothing
+    bus::Union{Nothing, Int64} = nothing
+    active_power::Union{Nothing, Float64} = nothing
+    reactive_power::Union{Nothing, Float64} = nothing
+    rating::Union{Nothing, Float64} = nothing
+    prime_mover_type::Union{Nothing, String} = "OT"
+    storage_technology_type::Union{Nothing, String} = nothing
+    storage_capacity::Union{Nothing, Float64} = nothing
     storage_level_limits = nothing # spec type: Union{ Nothing, MinMax }
-    initial_storage_capacity_level::Union{Nothing,Float64} = nothing
+    initial_storage_capacity_level::Union{Nothing, Float64} = nothing
     input_active_power_limits = nothing # spec type: Union{ Nothing, MinMax }
     output_active_power_limits = nothing # spec type: Union{ Nothing, MinMax }
     efficiency = nothing # spec type: Union{ Nothing, EnergyReservoirStorageEfficiency }
     reactive_power_limits = nothing # spec type: Union{ Nothing, MinMax }
     operation_cost = nothing # spec type: Union{ Nothing, StorageCost }
-    conversion_factor::Union{Nothing,Float64} = 1.0
-    storage_target::Union{Nothing,Float64} = 0.0
-    cycle_limits::Union{Nothing,Int64} = 10000
-    base_power::Union{Nothing,Float64} = nothing
-    dynamic_injector::Union{Nothing,Any} = nothing
+    conversion_factor::Union{Nothing, Float64} = 1.0
+    storage_target::Union{Nothing, Float64} = 0.0
+    cycle_limits::Union{Nothing, Int64} = 10000
+    base_power::Union{Nothing, Float64} = nothing
+    dynamic_injector::Union{Nothing, Any} = nothing
 
-    function EnergyReservoirStorage(
-        id,
-        name,
-        available,
-        bus,
-        active_power,
-        reactive_power,
-        rating,
-        prime_mover_type,
-        storage_technology_type,
-        storage_capacity,
-        storage_level_limits,
-        initial_storage_capacity_level,
-        input_active_power_limits,
-        output_active_power_limits,
-        efficiency,
-        reactive_power_limits,
-        operation_cost,
-        conversion_factor,
-        storage_target,
-        cycle_limits,
-        base_power,
-        dynamic_injector,
-    )
+    function EnergyReservoirStorage(id, name, available, bus, active_power, reactive_power, rating, prime_mover_type, storage_technology_type, storage_capacity, storage_level_limits, initial_storage_capacity_level, input_active_power_limits, output_active_power_limits, efficiency, reactive_power_limits, operation_cost, conversion_factor, storage_target, cycle_limits, base_power, dynamic_injector, )
         OpenAPI.validate_property(EnergyReservoirStorage, Symbol("id"), id)
         OpenAPI.validate_property(EnergyReservoirStorage, Symbol("name"), name)
         OpenAPI.validate_property(EnergyReservoirStorage, Symbol("available"), available)
         OpenAPI.validate_property(EnergyReservoirStorage, Symbol("bus"), bus)
-        OpenAPI.validate_property(
-            EnergyReservoirStorage,
-            Symbol("active_power"),
-            active_power,
-        )
-        OpenAPI.validate_property(
-            EnergyReservoirStorage,
-            Symbol("reactive_power"),
-            reactive_power,
-        )
+        OpenAPI.validate_property(EnergyReservoirStorage, Symbol("active_power"), active_power)
+        OpenAPI.validate_property(EnergyReservoirStorage, Symbol("reactive_power"), reactive_power)
         OpenAPI.validate_property(EnergyReservoirStorage, Symbol("rating"), rating)
-        OpenAPI.validate_property(
-            EnergyReservoirStorage,
-            Symbol("prime_mover_type"),
-            prime_mover_type,
-        )
-        OpenAPI.validate_property(
-            EnergyReservoirStorage,
-            Symbol("storage_technology_type"),
-            storage_technology_type,
-        )
-        OpenAPI.validate_property(
-            EnergyReservoirStorage,
-            Symbol("storage_capacity"),
-            storage_capacity,
-        )
-        OpenAPI.validate_property(
-            EnergyReservoirStorage,
-            Symbol("storage_level_limits"),
-            storage_level_limits,
-        )
-        OpenAPI.validate_property(
-            EnergyReservoirStorage,
-            Symbol("initial_storage_capacity_level"),
-            initial_storage_capacity_level,
-        )
-        OpenAPI.validate_property(
-            EnergyReservoirStorage,
-            Symbol("input_active_power_limits"),
-            input_active_power_limits,
-        )
-        OpenAPI.validate_property(
-            EnergyReservoirStorage,
-            Symbol("output_active_power_limits"),
-            output_active_power_limits,
-        )
+        OpenAPI.validate_property(EnergyReservoirStorage, Symbol("prime_mover_type"), prime_mover_type)
+        OpenAPI.validate_property(EnergyReservoirStorage, Symbol("storage_technology_type"), storage_technology_type)
+        OpenAPI.validate_property(EnergyReservoirStorage, Symbol("storage_capacity"), storage_capacity)
+        OpenAPI.validate_property(EnergyReservoirStorage, Symbol("storage_level_limits"), storage_level_limits)
+        OpenAPI.validate_property(EnergyReservoirStorage, Symbol("initial_storage_capacity_level"), initial_storage_capacity_level)
+        OpenAPI.validate_property(EnergyReservoirStorage, Symbol("input_active_power_limits"), input_active_power_limits)
+        OpenAPI.validate_property(EnergyReservoirStorage, Symbol("output_active_power_limits"), output_active_power_limits)
         OpenAPI.validate_property(EnergyReservoirStorage, Symbol("efficiency"), efficiency)
-        OpenAPI.validate_property(
-            EnergyReservoirStorage,
-            Symbol("reactive_power_limits"),
-            reactive_power_limits,
-        )
-        OpenAPI.validate_property(
-            EnergyReservoirStorage,
-            Symbol("operation_cost"),
-            operation_cost,
-        )
-        OpenAPI.validate_property(
-            EnergyReservoirStorage,
-            Symbol("conversion_factor"),
-            conversion_factor,
-        )
-        OpenAPI.validate_property(
-            EnergyReservoirStorage,
-            Symbol("storage_target"),
-            storage_target,
-        )
-        OpenAPI.validate_property(
-            EnergyReservoirStorage,
-            Symbol("cycle_limits"),
-            cycle_limits,
-        )
+        OpenAPI.validate_property(EnergyReservoirStorage, Symbol("reactive_power_limits"), reactive_power_limits)
+        OpenAPI.validate_property(EnergyReservoirStorage, Symbol("operation_cost"), operation_cost)
+        OpenAPI.validate_property(EnergyReservoirStorage, Symbol("conversion_factor"), conversion_factor)
+        OpenAPI.validate_property(EnergyReservoirStorage, Symbol("storage_target"), storage_target)
+        OpenAPI.validate_property(EnergyReservoirStorage, Symbol("cycle_limits"), cycle_limits)
         OpenAPI.validate_property(EnergyReservoirStorage, Symbol("base_power"), base_power)
-        OpenAPI.validate_property(
-            EnergyReservoirStorage,
-            Symbol("dynamic_injector"),
-            dynamic_injector,
-        )
-        return new(
-            id,
-            name,
-            available,
-            bus,
-            active_power,
-            reactive_power,
-            rating,
-            prime_mover_type,
-            storage_technology_type,
-            storage_capacity,
-            storage_level_limits,
-            initial_storage_capacity_level,
-            input_active_power_limits,
-            output_active_power_limits,
-            efficiency,
-            reactive_power_limits,
-            operation_cost,
-            conversion_factor,
-            storage_target,
-            cycle_limits,
-            base_power,
-            dynamic_injector,
-        )
+        OpenAPI.validate_property(EnergyReservoirStorage, Symbol("dynamic_injector"), dynamic_injector)
+        return new(id, name, available, bus, active_power, reactive_power, rating, prime_mover_type, storage_technology_type, storage_capacity, storage_level_limits, initial_storage_capacity_level, input_active_power_limits, output_active_power_limits, efficiency, reactive_power_limits, operation_cost, conversion_factor, storage_target, cycle_limits, base_power, dynamic_injector, )
     end
 end # type EnergyReservoirStorage
 
-const _property_types_EnergyReservoirStorage = Dict{Symbol,String}(
-    Symbol("id") => "Int64",
-    Symbol("name") => "String",
-    Symbol("available") => "Bool",
-    Symbol("bus") => "Int64",
-    Symbol("active_power") => "Float64",
-    Symbol("reactive_power") => "Float64",
-    Symbol("rating") => "Float64",
-    Symbol("prime_mover_type") => "String",
-    Symbol("storage_technology_type") => "String",
-    Symbol("storage_capacity") => "Float64",
-    Symbol("storage_level_limits") => "MinMax",
-    Symbol("initial_storage_capacity_level") => "Float64",
-    Symbol("input_active_power_limits") => "MinMax",
-    Symbol("output_active_power_limits") => "MinMax",
-    Symbol("efficiency") => "EnergyReservoirStorageEfficiency",
-    Symbol("reactive_power_limits") => "MinMax",
-    Symbol("operation_cost") => "StorageCost",
-    Symbol("conversion_factor") => "Float64",
-    Symbol("storage_target") => "Float64",
-    Symbol("cycle_limits") => "Int64",
-    Symbol("base_power") => "Float64",
-    Symbol("dynamic_injector") => "Any",
-)
-OpenAPI.property_type(::Type{EnergyReservoirStorage}, name::Symbol) =
-    Union{Nothing,eval(Base.Meta.parse(_property_types_EnergyReservoirStorage[name]))}
+const _property_types_EnergyReservoirStorage = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("name")=>"String", Symbol("available")=>"Bool", Symbol("bus")=>"Int64", Symbol("active_power")=>"Float64", Symbol("reactive_power")=>"Float64", Symbol("rating")=>"Float64", Symbol("prime_mover_type")=>"String", Symbol("storage_technology_type")=>"String", Symbol("storage_capacity")=>"Float64", Symbol("storage_level_limits")=>"MinMax", Symbol("initial_storage_capacity_level")=>"Float64", Symbol("input_active_power_limits")=>"MinMax", Symbol("output_active_power_limits")=>"MinMax", Symbol("efficiency")=>"EnergyReservoirStorageEfficiency", Symbol("reactive_power_limits")=>"MinMax", Symbol("operation_cost")=>"StorageCost", Symbol("conversion_factor")=>"Float64", Symbol("storage_target")=>"Float64", Symbol("cycle_limits")=>"Int64", Symbol("base_power")=>"Float64", Symbol("dynamic_injector")=>"Any", )
+OpenAPI.property_type(::Type{ EnergyReservoirStorage }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_EnergyReservoirStorage[name]))}
 
 function check_required(o::EnergyReservoirStorage)
     o.id === nothing && (return false)
@@ -256,7 +126,7 @@ function check_required(o::EnergyReservoirStorage)
     true
 end
 
-function OpenAPI.validate_property(::Type{EnergyReservoirStorage}, name::Symbol, val)
+function OpenAPI.validate_property(::Type{ EnergyReservoirStorage }, name::Symbol, val)
 
 
 
@@ -266,60 +136,12 @@ function OpenAPI.validate_property(::Type{EnergyReservoirStorage}, name::Symbol,
 
 
     if name === Symbol("prime_mover_type")
-        OpenAPI.validate_param(
-            name,
-            "EnergyReservoirStorage",
-            :enum,
-            val,
-            [
-                "BA",
-                "BT",
-                "CA",
-                "CC",
-                "CE",
-                "CP",
-                "CS",
-                "CT",
-                "ES",
-                "FC",
-                "FW",
-                "GT",
-                "HA",
-                "HB",
-                "HK",
-                "HY",
-                "IC",
-                "PS",
-                "OT",
-                "ST",
-                "PVe",
-                "WT",
-                "WS",
-            ],
-        )
+        OpenAPI.validate_param(name, "EnergyReservoirStorage", :enum, val, ["BA", "BT", "CA", "CC", "CE", "CP", "CS", "CT", "ES", "FC", "FW", "GT", "HA", "HB", "HK", "HY", "IC", "PS", "OT", "ST", "PVe", "WT", "WS"])
     end
 
 
     if name === Symbol("storage_technology_type")
-        OpenAPI.validate_param(
-            name,
-            "EnergyReservoirStorage",
-            :enum,
-            val,
-            [
-                "PTES",
-                "LIB",
-                "LAB",
-                "FLWB",
-                "SIB",
-                "ZIB",
-                "HGS",
-                "LAES",
-                "OTHER_CHEM",
-                "OTHER_MECH",
-                "OTHER_THERM",
-            ],
-        )
+        OpenAPI.validate_param(name, "EnergyReservoirStorage", :enum, val, ["PTES", "LIB", "LAB", "FLWB", "SIB", "ZIB", "HGS", "LAES", "OTHER_CHEM", "OTHER_MECH", "OTHER_THERM"])
     end
 
 

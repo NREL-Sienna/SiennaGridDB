@@ -14,29 +14,25 @@ Cost representation for hydro gen units
     - variable::ProductionVariableCostCurve
 """
 Base.@kwdef mutable struct HydroGenerationCost <: OpenAPI.APIModel
-    fixed::Union{Nothing,Float64} = 0.0
+    fixed::Union{Nothing, Float64} = 0.0
     variable = nothing # spec type: Union{ Nothing, ProductionVariableCostCurve }
 
-    function HydroGenerationCost(fixed, variable)
+    function HydroGenerationCost(fixed, variable, )
         OpenAPI.validate_property(HydroGenerationCost, Symbol("fixed"), fixed)
         OpenAPI.validate_property(HydroGenerationCost, Symbol("variable"), variable)
-        return new(fixed, variable)
+        return new(fixed, variable, )
     end
 end # type HydroGenerationCost
 
-const _property_types_HydroGenerationCost = Dict{Symbol,String}(
-    Symbol("fixed") => "Float64",
-    Symbol("variable") => "ProductionVariableCostCurve",
-)
-OpenAPI.property_type(::Type{HydroGenerationCost}, name::Symbol) =
-    Union{Nothing,eval(Base.Meta.parse(_property_types_HydroGenerationCost[name]))}
+const _property_types_HydroGenerationCost = Dict{Symbol,String}(Symbol("fixed")=>"Float64", Symbol("variable")=>"ProductionVariableCostCurve", )
+OpenAPI.property_type(::Type{ HydroGenerationCost }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_HydroGenerationCost[name]))}
 
 function check_required(o::HydroGenerationCost)
     o.variable === nothing && (return false)
     true
 end
 
-function OpenAPI.validate_property(::Type{HydroGenerationCost}, name::Symbol, val)
+function OpenAPI.validate_property(::Type{ HydroGenerationCost }, name::Symbol, val)
 
 
 end

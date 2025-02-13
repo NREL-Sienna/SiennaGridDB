@@ -13,12 +13,8 @@ mutable struct StorageCostStartUp <: OpenAPI.OneOfAPIModel
     StorageCostStartUp(value) = new(value)
 end # type StorageCostStartUp
 
-function OpenAPI.property_type(
-    ::Type{StorageCostStartUp},
-    name::Symbol,
-    json::Dict{String,Any},
-)
-
+function OpenAPI.property_type(::Type{ StorageCostStartUp }, name::Symbol, json::Dict{String,Any})
+    
     # no discriminator specified, can't determine the exact type
     return fieldtype(StorageCostStartUp, name)
 end

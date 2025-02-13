@@ -13,26 +13,24 @@
     - imag::Float64
 """
 Base.@kwdef mutable struct ComplexNumber <: OpenAPI.APIModel
-    real::Union{Nothing,Float64} = nothing
-    imag::Union{Nothing,Float64} = nothing
+    real::Union{Nothing, Float64} = nothing
+    imag::Union{Nothing, Float64} = nothing
 
-    function ComplexNumber(real, imag)
+    function ComplexNumber(real, imag, )
         OpenAPI.validate_property(ComplexNumber, Symbol("real"), real)
         OpenAPI.validate_property(ComplexNumber, Symbol("imag"), imag)
-        return new(real, imag)
+        return new(real, imag, )
     end
 end # type ComplexNumber
 
-const _property_types_ComplexNumber =
-    Dict{Symbol,String}(Symbol("real") => "Float64", Symbol("imag") => "Float64")
-OpenAPI.property_type(::Type{ComplexNumber}, name::Symbol) =
-    Union{Nothing,eval(Base.Meta.parse(_property_types_ComplexNumber[name]))}
+const _property_types_ComplexNumber = Dict{Symbol,String}(Symbol("real")=>"Float64", Symbol("imag")=>"Float64", )
+OpenAPI.property_type(::Type{ ComplexNumber }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_ComplexNumber[name]))}
 
 function check_required(o::ComplexNumber)
     true
 end
 
-function OpenAPI.validate_property(::Type{ComplexNumber}, name::Symbol, val)
+function OpenAPI.validate_property(::Type{ ComplexNumber }, name::Symbol, val)
 
 
 end

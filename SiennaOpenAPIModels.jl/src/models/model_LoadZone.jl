@@ -17,32 +17,22 @@
     - peak_reactive_power::Float64
 """
 Base.@kwdef mutable struct LoadZone <: OpenAPI.APIModel
-    id::Union{Nothing,Int64} = nothing
-    name::Union{Nothing,String} = nothing
-    peak_active_power::Union{Nothing,Float64} = nothing
-    peak_reactive_power::Union{Nothing,Float64} = nothing
+    id::Union{Nothing, Int64} = nothing
+    name::Union{Nothing, String} = nothing
+    peak_active_power::Union{Nothing, Float64} = nothing
+    peak_reactive_power::Union{Nothing, Float64} = nothing
 
-    function LoadZone(id, name, peak_active_power, peak_reactive_power)
+    function LoadZone(id, name, peak_active_power, peak_reactive_power, )
         OpenAPI.validate_property(LoadZone, Symbol("id"), id)
         OpenAPI.validate_property(LoadZone, Symbol("name"), name)
         OpenAPI.validate_property(LoadZone, Symbol("peak_active_power"), peak_active_power)
-        OpenAPI.validate_property(
-            LoadZone,
-            Symbol("peak_reactive_power"),
-            peak_reactive_power,
-        )
-        return new(id, name, peak_active_power, peak_reactive_power)
+        OpenAPI.validate_property(LoadZone, Symbol("peak_reactive_power"), peak_reactive_power)
+        return new(id, name, peak_active_power, peak_reactive_power, )
     end
 end # type LoadZone
 
-const _property_types_LoadZone = Dict{Symbol,String}(
-    Symbol("id") => "Int64",
-    Symbol("name") => "String",
-    Symbol("peak_active_power") => "Float64",
-    Symbol("peak_reactive_power") => "Float64",
-)
-OpenAPI.property_type(::Type{LoadZone}, name::Symbol) =
-    Union{Nothing,eval(Base.Meta.parse(_property_types_LoadZone[name]))}
+const _property_types_LoadZone = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("name")=>"String", Symbol("peak_active_power")=>"Float64", Symbol("peak_reactive_power")=>"Float64", )
+OpenAPI.property_type(::Type{ LoadZone }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_LoadZone[name]))}
 
 function check_required(o::LoadZone)
     o.id === nothing && (return false)
@@ -52,7 +42,7 @@ function check_required(o::LoadZone)
     true
 end
 
-function OpenAPI.validate_property(::Type{LoadZone}, name::Symbol, val)
+function OpenAPI.validate_property(::Type{ LoadZone }, name::Symbol, val)
 
 
 

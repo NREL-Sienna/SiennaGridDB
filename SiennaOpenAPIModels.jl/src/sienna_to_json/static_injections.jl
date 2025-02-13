@@ -103,3 +103,19 @@ function psy2openapi(renewable::PSY.RenewableDispatch, ids::IDGenerator)
         dynamic_injector=getid!(ids, renewable.dynamic_injector),
     )
 end
+
+function psy2openapi(renewnondispatch::PSY.RenewableNonDispatch, ids::IDGenerator)
+    RenewableNonDispatch(
+        id=getid!(ids, renewnondispatch),
+        name=renewnondispatch.name,
+        available=renewnondispatch.available,
+        bus=getid!(ids, renewnondispatch.bus),
+        active_power=renewnondispatch.active_power * PSY.get_base_power(renewnondispatch),
+        reactive_power=renewnondispatch.reactive_power * PSY.get_base_power(renewnondispatch),
+        rating=renewnondispatch.rating * PSY.get_base_power(renewnondispatch),
+        prime_mover_type=string(renewnondispatch.prime_mover_type),
+        power_factor=renewnondispatch.power_factor,
+        base_power=renewnondispatch.base_power,
+        dynamic_injector=getid!(ids, renewnondispatch.dynamic_injector),
+    )
+end

@@ -152,3 +152,17 @@ end
         @test test_convert.primary_shunt == 0.0
     end
 end
+
+@testset "RTS_GMLC_RT_sys RoundTrip to JSON" begin
+    RTS_GMLC_RT_sys = 
+        PowerSystemCaseBuilder.build_system(PowerSystemCaseBuilder.PSISystems, "RTS_GMLC_RT_sys")
+    @testset "RenewableNonDispatch to JSON" begin
+        renewnondispatch = PSY.get_component(PSY.RenewableNonDispatch, RTS_GMLC_RT_sys, "313_RTPV_1")
+        @test isa(renewnondispatch, PSY.RenewableNonDispatch)
+        test_convert = SiennaOpenAPIModels.psy2openapi(renewnondispatch, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.RenewableNonDispatch, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.power_factor == 1.0
+        @test test_convert.base_power == 101.7
+    end
+end

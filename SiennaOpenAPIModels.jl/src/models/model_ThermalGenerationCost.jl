@@ -18,28 +18,22 @@ Cost representation for thermal generation units
     - variable::ProductionVariableCostCurve
 """
 Base.@kwdef mutable struct ThermalGenerationCost <: OpenAPI.APIModel
-    fixed::Union{Nothing,Float64} = nothing
-    shut_down::Union{Nothing,Float64} = nothing
+    fixed::Union{Nothing, Float64} = nothing
+    shut_down::Union{Nothing, Float64} = nothing
     start_up = nothing # spec type: Union{ Nothing, ThermalGenerationCostStartUp }
     variable = nothing # spec type: Union{ Nothing, ProductionVariableCostCurve }
 
-    function ThermalGenerationCost(fixed, shut_down, start_up, variable)
+    function ThermalGenerationCost(fixed, shut_down, start_up, variable, )
         OpenAPI.validate_property(ThermalGenerationCost, Symbol("fixed"), fixed)
         OpenAPI.validate_property(ThermalGenerationCost, Symbol("shut_down"), shut_down)
         OpenAPI.validate_property(ThermalGenerationCost, Symbol("start_up"), start_up)
         OpenAPI.validate_property(ThermalGenerationCost, Symbol("variable"), variable)
-        return new(fixed, shut_down, start_up, variable)
+        return new(fixed, shut_down, start_up, variable, )
     end
 end # type ThermalGenerationCost
 
-const _property_types_ThermalGenerationCost = Dict{Symbol,String}(
-    Symbol("fixed") => "Float64",
-    Symbol("shut_down") => "Float64",
-    Symbol("start_up") => "ThermalGenerationCostStartUp",
-    Symbol("variable") => "ProductionVariableCostCurve",
-)
-OpenAPI.property_type(::Type{ThermalGenerationCost}, name::Symbol) =
-    Union{Nothing,eval(Base.Meta.parse(_property_types_ThermalGenerationCost[name]))}
+const _property_types_ThermalGenerationCost = Dict{Symbol,String}(Symbol("fixed")=>"Float64", Symbol("shut_down")=>"Float64", Symbol("start_up")=>"ThermalGenerationCostStartUp", Symbol("variable")=>"ProductionVariableCostCurve", )
+OpenAPI.property_type(::Type{ ThermalGenerationCost }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_ThermalGenerationCost[name]))}
 
 function check_required(o::ThermalGenerationCost)
     o.fixed === nothing && (return false)
@@ -49,7 +43,7 @@ function check_required(o::ThermalGenerationCost)
     true
 end
 
-function OpenAPI.validate_property(::Type{ThermalGenerationCost}, name::Symbol, val)
+function OpenAPI.validate_property(::Type{ ThermalGenerationCost }, name::Symbol, val)
 
 
 

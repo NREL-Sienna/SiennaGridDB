@@ -33,33 +33,20 @@
     - x::Float64
 """
 Base.@kwdef mutable struct Line <: OpenAPI.APIModel
-    active_power_flow::Union{Nothing,Float64} = nothing
+    active_power_flow::Union{Nothing, Float64} = nothing
     angle_limits = nothing # spec type: Union{ Nothing, MinMax }
-    arc::Union{Nothing,Int64} = nothing
-    available::Union{Nothing,Bool} = nothing
+    arc::Union{Nothing, Int64} = nothing
+    available::Union{Nothing, Bool} = nothing
     b = nothing # spec type: Union{ Nothing, FromTo }
     g = nothing # spec type: Union{ Nothing, FromTo }
-    id::Union{Nothing,Int64} = nothing
-    name::Union{Nothing,String} = nothing
-    r::Union{Nothing,Float64} = nothing
-    rating::Union{Nothing,Float64} = nothing
-    reactive_power_flow::Union{Nothing,Float64} = nothing
-    x::Union{Nothing,Float64} = nothing
+    id::Union{Nothing, Int64} = nothing
+    name::Union{Nothing, String} = nothing
+    r::Union{Nothing, Float64} = nothing
+    rating::Union{Nothing, Float64} = nothing
+    reactive_power_flow::Union{Nothing, Float64} = nothing
+    x::Union{Nothing, Float64} = nothing
 
-    function Line(
-        active_power_flow,
-        angle_limits,
-        arc,
-        available,
-        b,
-        g,
-        id,
-        name,
-        r,
-        rating,
-        reactive_power_flow,
-        x,
-    )
+    function Line(active_power_flow, angle_limits, arc, available, b, g, id, name, r, rating, reactive_power_flow, x, )
         OpenAPI.validate_property(Line, Symbol("active_power_flow"), active_power_flow)
         OpenAPI.validate_property(Line, Symbol("angle_limits"), angle_limits)
         OpenAPI.validate_property(Line, Symbol("arc"), arc)
@@ -72,39 +59,12 @@ Base.@kwdef mutable struct Line <: OpenAPI.APIModel
         OpenAPI.validate_property(Line, Symbol("rating"), rating)
         OpenAPI.validate_property(Line, Symbol("reactive_power_flow"), reactive_power_flow)
         OpenAPI.validate_property(Line, Symbol("x"), x)
-        return new(
-            active_power_flow,
-            angle_limits,
-            arc,
-            available,
-            b,
-            g,
-            id,
-            name,
-            r,
-            rating,
-            reactive_power_flow,
-            x,
-        )
+        return new(active_power_flow, angle_limits, arc, available, b, g, id, name, r, rating, reactive_power_flow, x, )
     end
 end # type Line
 
-const _property_types_Line = Dict{Symbol,String}(
-    Symbol("active_power_flow") => "Float64",
-    Symbol("angle_limits") => "MinMax",
-    Symbol("arc") => "Int64",
-    Symbol("available") => "Bool",
-    Symbol("b") => "FromTo",
-    Symbol("g") => "FromTo",
-    Symbol("id") => "Int64",
-    Symbol("name") => "String",
-    Symbol("r") => "Float64",
-    Symbol("rating") => "Float64",
-    Symbol("reactive_power_flow") => "Float64",
-    Symbol("x") => "Float64",
-)
-OpenAPI.property_type(::Type{Line}, name::Symbol) =
-    Union{Nothing,eval(Base.Meta.parse(_property_types_Line[name]))}
+const _property_types_Line = Dict{Symbol,String}(Symbol("active_power_flow")=>"Float64", Symbol("angle_limits")=>"MinMax", Symbol("arc")=>"Int64", Symbol("available")=>"Bool", Symbol("b")=>"FromTo", Symbol("g")=>"FromTo", Symbol("id")=>"Int64", Symbol("name")=>"String", Symbol("r")=>"Float64", Symbol("rating")=>"Float64", Symbol("reactive_power_flow")=>"Float64", Symbol("x")=>"Float64", )
+OpenAPI.property_type(::Type{ Line }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_Line[name]))}
 
 function check_required(o::Line)
     o.active_power_flow === nothing && (return false)
@@ -120,7 +80,7 @@ function check_required(o::Line)
     true
 end
 
-function OpenAPI.validate_property(::Type{Line}, name::Symbol, val)
+function OpenAPI.validate_property(::Type{ Line }, name::Symbol, val)
 
 
 

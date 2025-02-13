@@ -33,33 +33,20 @@
     - dynamic_injector::Any
 """
 Base.@kwdef mutable struct Source <: OpenAPI.APIModel
-    name::Union{Nothing,String} = nothing
-    id::Union{Nothing,Int64} = nothing
-    available::Union{Nothing,Bool} = nothing
-    bus::Union{Nothing,Int64} = nothing
-    active_power::Union{Nothing,Float64} = nothing
-    reactive_power::Union{Nothing,Float64} = nothing
-    R_th::Union{Nothing,Float64} = nothing
-    X_th::Union{Nothing,Float64} = nothing
-    internal_voltage::Union{Nothing,Float64} = 1.0
-    internal_angle::Union{Nothing,Float64} = 0.0
-    base_power::Union{Nothing,Float64} = 100.0
-    dynamic_injector::Union{Nothing,Any} = nothing
+    name::Union{Nothing, String} = nothing
+    id::Union{Nothing, Int64} = nothing
+    available::Union{Nothing, Bool} = nothing
+    bus::Union{Nothing, Int64} = nothing
+    active_power::Union{Nothing, Float64} = nothing
+    reactive_power::Union{Nothing, Float64} = nothing
+    R_th::Union{Nothing, Float64} = nothing
+    X_th::Union{Nothing, Float64} = nothing
+    internal_voltage::Union{Nothing, Float64} = 1.0
+    internal_angle::Union{Nothing, Float64} = 0.0
+    base_power::Union{Nothing, Float64} = 100.0
+    dynamic_injector::Union{Nothing, Any} = nothing
 
-    function Source(
-        name,
-        id,
-        available,
-        bus,
-        active_power,
-        reactive_power,
-        R_th,
-        X_th,
-        internal_voltage,
-        internal_angle,
-        base_power,
-        dynamic_injector,
-    )
+    function Source(name, id, available, bus, active_power, reactive_power, R_th, X_th, internal_voltage, internal_angle, base_power, dynamic_injector, )
         OpenAPI.validate_property(Source, Symbol("name"), name)
         OpenAPI.validate_property(Source, Symbol("id"), id)
         OpenAPI.validate_property(Source, Symbol("available"), available)
@@ -72,39 +59,12 @@ Base.@kwdef mutable struct Source <: OpenAPI.APIModel
         OpenAPI.validate_property(Source, Symbol("internal_angle"), internal_angle)
         OpenAPI.validate_property(Source, Symbol("base_power"), base_power)
         OpenAPI.validate_property(Source, Symbol("dynamic_injector"), dynamic_injector)
-        return new(
-            name,
-            id,
-            available,
-            bus,
-            active_power,
-            reactive_power,
-            R_th,
-            X_th,
-            internal_voltage,
-            internal_angle,
-            base_power,
-            dynamic_injector,
-        )
+        return new(name, id, available, bus, active_power, reactive_power, R_th, X_th, internal_voltage, internal_angle, base_power, dynamic_injector, )
     end
 end # type Source
 
-const _property_types_Source = Dict{Symbol,String}(
-    Symbol("name") => "String",
-    Symbol("id") => "Int64",
-    Symbol("available") => "Bool",
-    Symbol("bus") => "Int64",
-    Symbol("active_power") => "Float64",
-    Symbol("reactive_power") => "Float64",
-    Symbol("R_th") => "Float64",
-    Symbol("X_th") => "Float64",
-    Symbol("internal_voltage") => "Float64",
-    Symbol("internal_angle") => "Float64",
-    Symbol("base_power") => "Float64",
-    Symbol("dynamic_injector") => "Any",
-)
-OpenAPI.property_type(::Type{Source}, name::Symbol) =
-    Union{Nothing,eval(Base.Meta.parse(_property_types_Source[name]))}
+const _property_types_Source = Dict{Symbol,String}(Symbol("name")=>"String", Symbol("id")=>"Int64", Symbol("available")=>"Bool", Symbol("bus")=>"Int64", Symbol("active_power")=>"Float64", Symbol("reactive_power")=>"Float64", Symbol("R_th")=>"Float64", Symbol("X_th")=>"Float64", Symbol("internal_voltage")=>"Float64", Symbol("internal_angle")=>"Float64", Symbol("base_power")=>"Float64", Symbol("dynamic_injector")=>"Any", )
+OpenAPI.property_type(::Type{ Source }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_Source[name]))}
 
 function check_required(o::Source)
     o.name === nothing && (return false)
@@ -118,7 +78,7 @@ function check_required(o::Source)
     true
 end
 
-function OpenAPI.validate_property(::Type{Source}, name::Symbol, val)
+function OpenAPI.validate_property(::Type{ Source }, name::Symbol, val)
 
 
 

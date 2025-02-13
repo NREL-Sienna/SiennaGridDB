@@ -15,29 +15,20 @@
     - constant_term::Float64
 """
 Base.@kwdef mutable struct QuadraticCurve <: OpenAPI.APIModel
-    quadratic_term::Union{Nothing,Float64} = nothing
-    proportional_term::Union{Nothing,Float64} = nothing
-    constant_term::Union{Nothing,Float64} = nothing
+    quadratic_term::Union{Nothing, Float64} = nothing
+    proportional_term::Union{Nothing, Float64} = nothing
+    constant_term::Union{Nothing, Float64} = nothing
 
-    function QuadraticCurve(quadratic_term, proportional_term, constant_term)
+    function QuadraticCurve(quadratic_term, proportional_term, constant_term, )
         OpenAPI.validate_property(QuadraticCurve, Symbol("quadratic_term"), quadratic_term)
-        OpenAPI.validate_property(
-            QuadraticCurve,
-            Symbol("proportional_term"),
-            proportional_term,
-        )
+        OpenAPI.validate_property(QuadraticCurve, Symbol("proportional_term"), proportional_term)
         OpenAPI.validate_property(QuadraticCurve, Symbol("constant_term"), constant_term)
-        return new(quadratic_term, proportional_term, constant_term)
+        return new(quadratic_term, proportional_term, constant_term, )
     end
 end # type QuadraticCurve
 
-const _property_types_QuadraticCurve = Dict{Symbol,String}(
-    Symbol("quadratic_term") => "Float64",
-    Symbol("proportional_term") => "Float64",
-    Symbol("constant_term") => "Float64",
-)
-OpenAPI.property_type(::Type{QuadraticCurve}, name::Symbol) =
-    Union{Nothing,eval(Base.Meta.parse(_property_types_QuadraticCurve[name]))}
+const _property_types_QuadraticCurve = Dict{Symbol,String}(Symbol("quadratic_term")=>"Float64", Symbol("proportional_term")=>"Float64", Symbol("constant_term")=>"Float64", )
+OpenAPI.property_type(::Type{ QuadraticCurve }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_QuadraticCurve[name]))}
 
 function check_required(o::QuadraticCurve)
     o.quadratic_term === nothing && (return false)
@@ -46,7 +37,7 @@ function check_required(o::QuadraticCurve)
     true
 end
 
-function OpenAPI.validate_property(::Type{QuadraticCurve}, name::Symbol, val)
+function OpenAPI.validate_property(::Type{ QuadraticCurve }, name::Symbol, val)
 
 
 

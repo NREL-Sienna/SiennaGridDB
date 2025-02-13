@@ -13,8 +13,8 @@ mutable struct OperationCost <: OpenAPI.OneOfAPIModel
     OperationCost(value) = new(value)
 end # type OperationCost
 
-function OpenAPI.property_type(::Type{OperationCost}, name::Symbol, json::Dict{String,Any})
-
+function OpenAPI.property_type(::Type{ OperationCost }, name::Symbol, json::Dict{String,Any})
+    
     # no discriminator specified, can't determine the exact type
     return fieldtype(OperationCost, name)
 end

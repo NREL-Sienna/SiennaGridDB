@@ -13,12 +13,8 @@ mutable struct FuelCurveFuelCost <: OpenAPI.OneOfAPIModel
     FuelCurveFuelCost(value) = new(value)
 end # type FuelCurveFuelCost
 
-function OpenAPI.property_type(
-    ::Type{FuelCurveFuelCost},
-    name::Symbol,
-    json::Dict{String,Any},
-)
-
+function OpenAPI.property_type(::Type{ FuelCurveFuelCost }, name::Symbol, json::Dict{String,Any})
+    
     # no discriminator specified, can't determine the exact type
     return fieldtype(FuelCurveFuelCost, name)
 end

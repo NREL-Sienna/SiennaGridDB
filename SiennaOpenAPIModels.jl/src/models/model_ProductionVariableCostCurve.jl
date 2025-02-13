@@ -13,20 +13,12 @@ mutable struct ProductionVariableCostCurve <: OpenAPI.OneOfAPIModel
     ProductionVariableCostCurve(value) = new(value)
 end # type ProductionVariableCostCurve
 
-function OpenAPI.property_type(
-    ::Type{ProductionVariableCostCurve},
-    name::Symbol,
-    json::Dict{String,Any},
-)
+function OpenAPI.property_type(::Type{ ProductionVariableCostCurve }, name::Symbol, json::Dict{String,Any})
     discriminator = json["variable_cost_type"]
     if discriminator == "COST"
         return eval(Base.Meta.parse("CostCurve"))
     elseif discriminator == "FUEL"
         return eval(Base.Meta.parse("FuelCurve"))
     end
-    throw(
-        OpenAPI.ValidationException(
-            "Invalid discriminator value: $discriminator for ProductionVariableCostCurve",
-        ),
-    )
+    throw(OpenAPI.ValidationException("Invalid discriminator value: $discriminator for ProductionVariableCostCurve"))
 end

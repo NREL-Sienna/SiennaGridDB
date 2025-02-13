@@ -13,26 +13,24 @@
     - shutdown::Float64
 """
 Base.@kwdef mutable struct StartUpShutDown <: OpenAPI.APIModel
-    startup::Union{Nothing,Float64} = nothing
-    shutdown::Union{Nothing,Float64} = nothing
+    startup::Union{Nothing, Float64} = nothing
+    shutdown::Union{Nothing, Float64} = nothing
 
-    function StartUpShutDown(startup, shutdown)
+    function StartUpShutDown(startup, shutdown, )
         OpenAPI.validate_property(StartUpShutDown, Symbol("startup"), startup)
         OpenAPI.validate_property(StartUpShutDown, Symbol("shutdown"), shutdown)
-        return new(startup, shutdown)
+        return new(startup, shutdown, )
     end
 end # type StartUpShutDown
 
-const _property_types_StartUpShutDown =
-    Dict{Symbol,String}(Symbol("startup") => "Float64", Symbol("shutdown") => "Float64")
-OpenAPI.property_type(::Type{StartUpShutDown}, name::Symbol) =
-    Union{Nothing,eval(Base.Meta.parse(_property_types_StartUpShutDown[name]))}
+const _property_types_StartUpShutDown = Dict{Symbol,String}(Symbol("startup")=>"Float64", Symbol("shutdown")=>"Float64", )
+OpenAPI.property_type(::Type{ StartUpShutDown }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_StartUpShutDown[name]))}
 
 function check_required(o::StartUpShutDown)
     true
 end
 
-function OpenAPI.validate_property(::Type{StartUpShutDown}, name::Symbol, val)
+function OpenAPI.validate_property(::Type{ StartUpShutDown }, name::Symbol, val)
 
 
 end

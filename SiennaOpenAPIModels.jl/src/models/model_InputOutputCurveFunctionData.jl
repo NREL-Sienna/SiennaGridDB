@@ -13,11 +13,7 @@ mutable struct InputOutputCurveFunctionData <: OpenAPI.OneOfAPIModel
     InputOutputCurveFunctionData(value) = new(value)
 end # type InputOutputCurveFunctionData
 
-function OpenAPI.property_type(
-    ::Type{InputOutputCurveFunctionData},
-    name::Symbol,
-    json::Dict{String,Any},
-)
+function OpenAPI.property_type(::Type{ InputOutputCurveFunctionData }, name::Symbol, json::Dict{String,Any})
     discriminator = json["function_type"]
     if discriminator == "LINEAR"
         return eval(Base.Meta.parse("LinearFunctionData"))
@@ -26,9 +22,5 @@ function OpenAPI.property_type(
     elseif discriminator == "QUADRATIC"
         return eval(Base.Meta.parse("QuadraticFunctionData"))
     end
-    throw(
-        OpenAPI.ValidationException(
-            "Invalid discriminator value: $discriminator for InputOutputCurveFunctionData",
-        ),
-    )
+    throw(OpenAPI.ValidationException("Invalid discriminator value: $discriminator for InputOutputCurveFunctionData"))
 end
