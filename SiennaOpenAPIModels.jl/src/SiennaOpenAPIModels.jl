@@ -29,6 +29,7 @@ include("modelincludes.jl")
 @batteries AreaInterchange
 @batteries AverageRateCurve
 @batteries AverageRateCurveFunctionData
+@batteries ComplexNumber
 @batteries ConstantReserve
 @batteries ConstantReserveGroup
 @batteries ConstantReserveNonSpinning

@@ -165,4 +165,13 @@ end
         @test test_convert.power_factor == 1.0
         @test test_convert.base_power == 101.7
     end
+    @testset "FixedAdmittance to JSON" begin
+        fixedadmit = PSY.get_component(PSY.FixedAdmittance, RTS_GMLC_RT_sys, "Camus")
+        @test isa(fixedadmit, PSY.FixedAdmittance)
+        test_convert = SiennaOpenAPIModels.psy2openapi(fixedadmit, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.FixedAdmittance, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.available
+        @test isnothing(test_convert.dynamic_injector)
+    end
 end
