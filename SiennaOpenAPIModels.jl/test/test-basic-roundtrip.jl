@@ -230,3 +230,26 @@ end
         @test test_convert.peak_reactive_power == 100.0 * 0.40
     end
 end
+
+@testset "Pumped Hydro 5-bus c_sys5_phes_ed" begin
+    c_sys5_phes_ed = PowerSystemCaseBuilder.build_system(
+        PowerSystemCaseBuilder.PSITestSystems,
+        "c_sys5_phes_ed",
+    )
+    @testset "PumpedHydroEnergyStorage to JSON" begin
+        pumped_hydro_energy_storage =
+            PSY.get_component(PSY.HydroPumpedStorage, c_sys5_phes_ed, "HydroPumpedStorage")
+        @test isa(pumped_hydro_energy_storage, PSY.HydroPumpedStorage)
+        test_convert =
+            SiennaOpenAPIModels.psy2openapi(pumped_hydro_energy_storage, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.HydroPumpedStorage, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.bus == 2
+        @test test.base_power == 50.0
+        @test test_convert.rating == 50.0
+        @test test_convert.rating_pump == 50.0
+        @test test_convert.storage_capacity.up == 100.0
+        @test test_convert.active_power_limits.max == 50.0
+        @test test_convert.ramp_limits.up == 5.0
+    end
+end

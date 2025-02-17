@@ -144,3 +144,51 @@ function psy2openapi(hydro::PSY.HydroDispatch, ids::IDGenerator)
         dynamic_injector=getid!(ids, hydro.dynamic_injector),
     )
 end
+
+function psy2openapi(hydro::PSY.HydroPumpedStorage, ids::IDGenerator)
+    HydroPumpedStorage(
+        id=getid!(ids, hydro),
+        name=hydro.name,
+        available=hydro.available,
+        bus=getid!(ids, hydro.bus),
+        active_power=hydro.active_power * PSY.get_base_power(hydro),
+        reactive_power=hydro.reactive_power * PSY.get_base_power(hydro),
+        rating=hydro.rating * PSY.get_base_power(hydro),
+        base_power=hydro.base_power,
+        prime_mover_type=string(hydro.prime_mover_type),
+        active_power_limits=get_min_max(
+            scale(hydro.active_power_limits, PSY.get_base_power(hydro)),
+        ),
+        reactive_power_limits=get_min_max(
+            scale(hydro.reactive_power_limits, PSY.get_base_power(hydro)),
+        ),
+        ramp_limits=get_up_down(scale(hydro.ramp_limits, PSY.get_base_power(hydro))),
+        time_limits=get_up_down(hydro.time_limits),
+        rating_pump=hydro.rating_pump * PSY.get_base_power(hydro),
+        active_power_limits_pump=get_min_max(
+            scale(hydro.active_power_limits_pump, PSY.get_base_power(hydro)),
+        ),
+        reactive_power_limits_pump=get_min_max(
+            scale(hydro.reactive_power_limits_pump, PSY.get_base_power(hydro)),
+        ),
+        ramp_limits_pump=get_up_down(
+            scale(hydro.ramp_limits_pump, PSY.get_base_power(hydro)),
+        ),
+        time_limits_pump=get_up_down(hydro.time_limits_pump),
+        storage_capacity=get_up_down(
+            scale(hydro.storage_capacity, PSY.get_base_power(hydro)),
+        ),
+        inflow=hydro.inflow * PSY.get_base_power(hydro),
+        outflow=hydro.outflow,
+        initial_storage=get_up_down(
+            scale(hydro.initial_storage, PSY.get_base_power(hydro)),
+        ),
+        operation_cost=get_hydro_cost(hydro.operation_cost),
+        storage_target=get_up_down(hydro.storage_target),
+        pump_efficiency=hydro.pump_efficiency,
+        conversion_factor=hydro.conversion_factor,
+        status=string(hydro.status),
+        time_at_status=hydro.time_at_status,
+        dynamic_injector=getid!(ids, hydro.dynamic_injector),
+    )
+end
