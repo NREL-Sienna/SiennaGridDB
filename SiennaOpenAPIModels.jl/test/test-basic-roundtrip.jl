@@ -251,3 +251,25 @@ end
         @test test_convert.peak_reactive_power == 100.0 * 0.40
     end
 end
+
+@testset "5_bus_matpower_RT roundtrip" begin
+    sys_5bus_matpower_RT = PowerSystemCaseBuilder.build_system(
+        PowerSystemCaseBuilder.PSISystems,
+        "5_bus_matpower_RT",
+    )
+    @testset "Phase Shifting Transformer" begin
+        phase_shifting_transformer = PSY.get_component(
+            PSY.PhaseShiftingTransformer,
+            sys_5bus_matpower_RT,
+            "bus3-bus4-i_6",
+        )
+        @test isa(phase_shifting_transformer, PSY.PhaseShiftingTransformer)
+        test_convert =
+            SiennaOpenAPIModels.psy2openapi(phase_shifting_transformer, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.PhaseShiftingTransformer, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.arc == 2
+        @test test_convert.x == 0.03274425
+        @test test_convert.rating == 426.0
+    end
+end

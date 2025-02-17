@@ -48,3 +48,22 @@ function psy2openapi(transformer::PSY.TapTransformer, ids::IDGenerator)
         rating=transformer.rating,
     )
 end
+
+function psy2openapi(transformer::PSY.PhaseShiftingTransformer, ids::IDGenerator)
+    PhaseShiftingTransformer(
+        id=getid!(ids, transformer),
+        name=transformer.name,
+        available=transformer.available,
+        active_power_flow=transformer.active_power_flow * PSY.get_base_power(transformer),
+        reactive_power_flow=transformer.reactive_power_flow *
+                            PSY.get_base_power(transformer),
+        arc=getid!(ids, transformer.arc),
+        r=transformer.r,
+        x=transformer.x,
+        primary_shunt=transformer.primary_shunt,
+        tap=transformer.tap,
+        alpha=transformer.α,
+        rating=scale(transformer.rating, PSY.get_base_power(transformer)),
+        phase_angle_limits=get_min_max(transformer.phase_angle_limits),
+    )
+end
