@@ -140,10 +140,13 @@ end
 end
 
 @testset "sys_14_bus RoundTrip to JSON" begin
-    sys_14_bus = 
-        PowerSystemCaseBuilder.build_system(PowerSystemCaseBuilder.PSIDSystems, "14 Bus Base Case")
+    sys_14_bus = PowerSystemCaseBuilder.build_system(
+        PowerSystemCaseBuilder.PSIDSystems,
+        "14 Bus Base Case",
+    )
     @testset "Transformer2W to JSON" begin
-        transformer2w = PSY.get_component(PSY.Transformer2W, sys_14_bus, "BUS 08-BUS 07-i_1")
+        transformer2w =
+            PSY.get_component(PSY.Transformer2W, sys_14_bus, "BUS 08-BUS 07-i_1")
         @test isa(transformer2w, PSY.Transformer2W)
         test_convert = SiennaOpenAPIModels.psy2openapi(transformer2w, IDGenerator())
         test_roundtrip(SiennaOpenAPIModels.Transformer2W, test_convert)
@@ -154,15 +157,46 @@ end
 end
 
 @testset "RTS_GMLC_RT_sys RoundTrip to JSON" begin
-    RTS_GMLC_RT_sys = 
-        PowerSystemCaseBuilder.build_system(PowerSystemCaseBuilder.PSISystems, "RTS_GMLC_RT_sys")
+    RTS_GMLC_RT_sys = PowerSystemCaseBuilder.build_system(
+        PowerSystemCaseBuilder.PSISystems,
+        "RTS_GMLC_RT_sys",
+    )
     @testset "RenewableNonDispatch to JSON" begin
-        renewnondispatch = PSY.get_component(PSY.RenewableNonDispatch, RTS_GMLC_RT_sys, "313_RTPV_1")
+        renewnondispatch =
+            PSY.get_component(PSY.RenewableNonDispatch, RTS_GMLC_RT_sys, "313_RTPV_1")
         @test isa(renewnondispatch, PSY.RenewableNonDispatch)
         test_convert = SiennaOpenAPIModels.psy2openapi(renewnondispatch, IDGenerator())
         test_roundtrip(SiennaOpenAPIModels.RenewableNonDispatch, test_convert)
         @test test_convert.id == 1
         @test test_convert.power_factor == 1.0
         @test test_convert.base_power == 101.7
+    end
+end
+
+@testset "c_sys5_all" begin
+    c_sys5_all = PowerSystemCaseBuilder.build_system(
+        PowerSystemCaseBuilder.PSITestSystems,
+        "c_sys5_all_components",
+    )
+    @testset "StandardLoad to JSON" begin
+        standard_load = PSY.get_component(PSY.StandardLoad, c_sys5_all, "Bus3")
+        @test isa(standard_load, PSY.StandardLoad)
+        test_convert = SiennaOpenAPIModels.psy2openapi(standard_load, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.StandardLoad, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.available
+        @test test_convert.bus == 2
+        @test test_convert.constant_active_power == 300.0
+    end
+    @testset "HydroDispatch to JSON" begin
+        hydro = PSY.get_component(PSY.HydroDispatch, c_sys5_all, "HydroDispatch")
+        @test isa(hydro, PSY.HydroDispatch)
+        test_convert = SiennaOpenAPIModels.psy2openapi(hydro, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.HydroDispatch, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.available
+        @test test_convert.bus == 2
+        @test test_convert.rating == 600.0
+        @test test_convert.prime_mover_type == "HY"
     end
 end
