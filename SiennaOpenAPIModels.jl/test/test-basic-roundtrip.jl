@@ -154,6 +154,18 @@ end
         @test test_convert.r == 0.0
         @test test_convert.primary_shunt == 0.0
     end
+
+    @testset "TapTransformer to JSON" begin
+        taptransformer =
+            PSY.get_component(PowerSystems.TapTransformer, sys_14_bus, "BUS 04-BUS 07-i_1")
+        @test isa(taptransformer, PSY.TapTransformer)
+        test_convert = SiennaOpenAPIModels.psy2openapi(taptransformer, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.TapTransformer, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.rating ≈ 5.786163762803648
+        @test test_convert.primary_shunt == 0.0
+        @test test_convert.x ≈ 0.20912
+    end
 end
 
 @testset "RTS_GMLC_RT_sys RoundTrip to JSON" begin
