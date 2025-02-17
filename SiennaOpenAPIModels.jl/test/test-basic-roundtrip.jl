@@ -200,3 +200,33 @@ end
         @test test_convert.prime_mover_type == "HY"
     end
 end
+
+@testset "3-bus psse parsed system" begin
+    sys = PowerSystemCaseBuilder.build_system(
+        PowerSystemCaseBuilder.PSYTestSystems,
+        "psse_3bus_gen_cls_sys",
+    )
+    @testset "Area to JSON" begin
+        area = PSY.get_component(PSY.Area, sys, "1")
+        @test isa(area, PSY.Area)
+        area.peak_active_power = 1.0
+        area.peak_reactive_power = 2.0
+        test_convert = SiennaOpenAPIModels.psy2openapi(area, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.Area, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.name == "1"
+        @test test_convert.peak_active_power == 100.0
+        @test test_convert.peak_reactive_power == 200.0
+    end
+    @testset "LoadZone to JSON" begin
+        load_zone = PSY.get_component(PSY.LoadZone, sys, "1")
+        @test isa(load_zone, PSY.LoadZone)
+        test_convert = SiennaOpenAPIModels.psy2openapi(load_zone, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.LoadZone, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.name == "1"
+        # Finally a floating point nummber rounding error matters...
+        @test test_convert.peak_active_power == 100.0 * 2.20
+        @test test_convert.peak_reactive_power == 100.0 * 0.40
+    end
+end
