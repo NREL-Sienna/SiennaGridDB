@@ -41,7 +41,7 @@ class PrimeMoversType(StrEnum):
     PS = "PS"
     OT = "OT"
     ST = "ST"
-    PV = "PV"
+    PVe = "PVe"
     WT = "WT"
     WS = "WS"
     RTPV = "RTPV"
