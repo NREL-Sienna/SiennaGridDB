@@ -126,7 +126,7 @@ function psy2openapi(fixedadmit::PSY.FixedAdmittance, ids::IDGenerator)
         name=fixedadmit.name,
         available=fixedadmit.available,
         bus=getid!(ids, fixedadmit.bus),
-        Y=fixedadmit.Y,
+        Y=get_complex_number(fixedadmit.Y),
         dynamic_injector=getid!(ids, fixedadmit.dynamic_injector),
     )
 end
