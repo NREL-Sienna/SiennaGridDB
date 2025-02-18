@@ -4,6 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**cost_type** | **String** |  | [optional] [default to "RENEWABLE"]
 **curtailment_cost** | [***CostCurve**](CostCurve.md) |  | [optional] [default to nothing]
 **variable** | [***CostCurve**](CostCurve.md) |  | [default to nothing]
 

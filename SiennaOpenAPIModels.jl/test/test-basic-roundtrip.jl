@@ -245,7 +245,7 @@ end
         test_roundtrip(SiennaOpenAPIModels.HydroPumpedStorage, test_convert)
         @test test_convert.id == 1
         @test test_convert.bus == 2
-        @test test.base_power == 50.0
+        @test test_convert.base_power == 50.0
         @test test_convert.rating == 50.0
         @test test_convert.rating_pump == 50.0
         @test test_convert.storage_capacity.up == 100.0

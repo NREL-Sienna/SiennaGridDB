@@ -183,7 +183,7 @@ function psy2openapi(hydro::PSY.HydroPumpedStorage, ids::IDGenerator)
         initial_storage=get_up_down(
             scale(hydro.initial_storage, PSY.get_base_power(hydro)),
         ),
-        operation_cost=get_hydro_cost(hydro.operation_cost),
+        operation_cost=get_hydrostorage_cost(hydro.operation_cost),
         storage_target=get_up_down(hydro.storage_target),
         pump_efficiency=hydro.pump_efficiency,
         conversion_factor=hydro.conversion_factor,
