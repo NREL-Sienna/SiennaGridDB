@@ -144,20 +144,3 @@ function psy2openapi(hydro::PSY.HydroDispatch, ids::IDGenerator)
         dynamic_injector=getid!(ids, hydro.dynamic_injector),
     )
 end
-
-function psy2openapi(transformer::PSY.TapTransformer, ids::IDGenerator)
-    TapTransformer(
-        id=getid!(ids, transformer),
-        name=transformer.name,
-        available=transformer.available,
-        active_power_flow=transformer.active_power_flow * PSY.get_base_power(transformer),
-        reactive_power_flow=transformer.reactive_power_flow *
-                            PSY.get_base_power(transformer),
-        arc=getid!(ids, transformer.arc),
-        r=transformer.r,
-        x=transformer.x,
-        primary_shunt=transformer.primary_shunt,
-        tap=transformer.tap,
-        rating=transformer.rating,
-    )
-end
