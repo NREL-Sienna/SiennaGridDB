@@ -147,6 +147,13 @@ function get_renewable_cost(cost::PSY.RenewableGenerationCost)
     )
 end
 
+function get_hydro_cost(cost::PSY.HydroGenerationCost)
+    HydroGenerationCost(
+        variable=ProductionVariableCostCurve(get_variable_cost(cost.variable)),
+        fixed=cost.fixed,
+    )
+end
+
 mutable struct IDGenerator
     nextid::Int64
     uuid2int::Dict{UUID, Int64}

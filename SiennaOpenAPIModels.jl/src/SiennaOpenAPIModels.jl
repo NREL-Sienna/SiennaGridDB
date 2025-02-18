@@ -43,6 +43,7 @@ include("modelincludes.jl")
 @batteries FuelCurveFuelCost
 @batteries HydroDispatch
 @batteries HydroEnergyReservoir
+@batteries HydroGenerationCost
 @batteries HydroPumpedStorage
 @batteries IncrementalCurve
 @batteries IncrementalCurveFunctionData
