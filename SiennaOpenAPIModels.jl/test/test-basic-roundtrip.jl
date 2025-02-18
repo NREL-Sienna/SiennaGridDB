@@ -230,3 +230,21 @@ end
         @test test_convert.peak_reactive_power == 100.0 * 0.40
     end
 end
+
+@testset"Two area pjm" begin
+    two_area_pjm_DA = PowerSystemCaseBuilder.build_system(
+        PowerSystemCaseBuilder.PSISystems,
+        "two_area_pjm_DA",
+    )
+    @testset "AreaInterchange" begin
+        area_interchange =
+            only(collect(PSY.get_components(PSY.AreaInterchange, two_area_pjm_DA)))
+        @test isa(area_interchange, PSY.AreaInterchange)
+        test_convert = SiennaOpenAPIModels.psy2openapi(area_interchange, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.AreaInterchange, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.from_area == 2
+        @test test_convert.to_area == 3
+        @test test_convert.flow_limits.from_to == 150.0
+    end
+end
