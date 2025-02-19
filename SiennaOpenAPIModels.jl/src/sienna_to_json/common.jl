@@ -24,6 +24,10 @@ function get_fromto_tofrom(
     FromToToFrom(from_to=from_to.from_to, to_from=from_to.to_from)
 end
 
+function get_complex_number(complex_number::ComplexF64)
+    ComplexNumber(real=real(complex_number), imag=imag(complex_number))
+end
+
 function get_startup(startup::Float64)
     return ThermalGenerationCostStartUp(startup)
 end
