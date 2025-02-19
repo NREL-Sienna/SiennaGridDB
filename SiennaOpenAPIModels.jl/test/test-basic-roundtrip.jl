@@ -182,6 +182,7 @@ end
         @test test_convert.power_factor == 1.0
         @test test_convert.base_power == 101.7
     end
+
     @testset "FixedAdmittance to JSON" begin
         fixedadmit = PSY.get_component(PSY.FixedAdmittance, RTS_GMLC_RT_sys, "Camus")
         @test isa(fixedadmit, PSY.FixedAdmittance)
@@ -200,6 +201,7 @@ end
         @test test_convert.available
         @test test_convert.active_power_flow == 0.0
     end
+
     @testset "EnergyReservoirStorage to JSON" begin
         energy_res =
             PSY.get_component(PSY.EnergyReservoirStorage, RTS_GMLC_RT_sys, "313_STORAGE_1")
@@ -210,6 +212,19 @@ end
         @test test_convert.prime_mover_type == "BA"
         @test test_convert.base_power == 50.0
         @test test_convert.cycle_limits == 10000
+    end
+
+    @testset "VariableReserve DOWN to JSON" begin
+        reg_down = PSY.get_component(PSY.VariableReserve, RTS_GMLC_RT_sys, "Reg_Down")
+        @test reg_down isa PSY.VariableReserve{PSY.ReserveDown}
+        test_convert = SiennaOpenAPIModels.psy2openapi(reg_down, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.VariableReserve, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.max_output_fraction == 1.0
+        @test test_convert.time_frame == 300.0
+        @test test_convert.requirement == 77.0
+        @test test_convert.reserve_direction == "DOWN"
+        @test test_convert.sustained_time == 3600.0
     end
 end
 
