@@ -154,6 +154,18 @@ end
         @test test_convert.r == 0.0
         @test test_convert.primary_shunt == 0.0
     end
+
+    @testset "TapTransformer to JSON" begin
+        taptransformer =
+            PSY.get_component(PowerSystems.TapTransformer, sys_14_bus, "BUS 04-BUS 07-i_1")
+        @test isa(taptransformer, PSY.TapTransformer)
+        test_convert = SiennaOpenAPIModels.psy2openapi(taptransformer, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.TapTransformer, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.rating ≈ 5.786163762803648
+        @test test_convert.primary_shunt == 0.0
+        @test test_convert.x ≈ 0.20912
+    end
 end
 
 @testset "RTS_GMLC_RT_sys RoundTrip to JSON" begin
@@ -255,5 +267,27 @@ end
         @test test_convert.from_area == 2
         @test test_convert.to_area == 3
         @test test_convert.flow_limits.from_to == 150.0
+    end
+end
+
+@testset "5_bus_matpower_RT roundtrip" begin
+    sys_5bus_matpower_RT = PowerSystemCaseBuilder.build_system(
+        PowerSystemCaseBuilder.PSISystems,
+        "5_bus_matpower_RT",
+    )
+    @testset "Phase Shifting Transformer" begin
+        phase_shifting_transformer = PSY.get_component(
+            PSY.PhaseShiftingTransformer,
+            sys_5bus_matpower_RT,
+            "bus3-bus4-i_6",
+        )
+        @test isa(phase_shifting_transformer, PSY.PhaseShiftingTransformer)
+        test_convert =
+            SiennaOpenAPIModels.psy2openapi(phase_shifting_transformer, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.PhaseShiftingTransformer, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.arc == 2
+        @test test_convert.x == 0.03274425
+        @test test_convert.rating == 426.0
     end
 end

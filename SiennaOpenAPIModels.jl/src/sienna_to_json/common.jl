@@ -201,3 +201,4 @@ function scale(nt::NamedTuple{T, Tuple{Float64, Float64}}, scalar::Float64) wher
 end
 
 scale(::Nothing, ::Float64) = nothing
+scale(x::Float64, scalar::Float64) = scalar * x
