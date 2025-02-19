@@ -39,6 +39,7 @@ include("modelincludes.jl")
 @batteries ExponentialLoad
 @batteries FixedAdmittance
 @batteries FromTo
+@batteries FromToToFrom
 @batteries FuelCurve
 @batteries FuelCurveFuelCost
 @batteries HydroDispatch

@@ -16,6 +16,14 @@ function get_from_to(from_to::NamedTuple{(:from, :to), Tuple{Float64, Float64}})
     FromTo(from=from_to.from, to=from_to.to)
 end
 
+get_fromto_tofrom(::Nothing) = nothing
+
+function get_fromto_tofrom(
+    from_to::NamedTuple{(:from_to, :to_from), Tuple{Float64, Float64}},
+)
+    FromToToFrom(from_to=from_to.from_to, to_from=from_to.to_from)
+end
+
 function get_complex_number(complex_number::ComplexF64)
     ComplexNumber(real=real(complex_number), imag=imag(complex_number))
 end

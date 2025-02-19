@@ -32,6 +32,21 @@ function psy2openapi(transformer2w::PSY.Transformer2W, ids::IDGenerator)
     )
 end
 
+function psy2openapi(area_interchange::PSY.AreaInterchange, ids::IDGenerator)
+    AreaInterchange(
+        id=getid!(ids, area_interchange),
+        name=area_interchange.name,
+        available=area_interchange.available,
+        active_power_flow=area_interchange.active_power_flow *
+                          PSY.get_base_power(area_interchange),
+        flow_limits=get_fromto_tofrom(
+            scale(area_interchange.flow_limits, PSY.get_base_power(area_interchange)),
+        ),
+        from_area=getid!(ids, area_interchange.from_area),
+        to_area=getid!(ids, area_interchange.to_area),
+    )
+end
+
 function psy2openapi(transformer::PSY.TapTransformer, ids::IDGenerator)
     TapTransformer(
         id=getid!(ids, transformer),
