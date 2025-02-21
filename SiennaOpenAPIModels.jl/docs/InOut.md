@@ -1,6 +1,10 @@
 # InOut
 
 
+<<<<<<<< HEAD:SiennaOpenAPIModels.jl/docs/InOut.md
+========
+
+>>>>>>>> 815dc45 (Re-upload these .md docs):SiennaOpenAPIModels.jl/docs/EnergyReservoirStorageEfficiency.md
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
