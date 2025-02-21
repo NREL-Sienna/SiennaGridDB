@@ -16,6 +16,7 @@ function get_from_to(from_to::NamedTuple{(:from, :to), Tuple{Float64, Float64}})
     FromTo(from=from_to.from, to=from_to.to)
 end
 
+<<<<<<< HEAD
 get_fromto_tofrom(::Nothing) = nothing
 
 function get_fromto_tofrom(
@@ -28,6 +29,8 @@ function get_complex_number(complex_number::ComplexF64)
     ComplexNumber(real=real(complex_number), imag=imag(complex_number))
 end
 
+=======
+>>>>>>> 29c8537 (got all tests passing for EnergyReservoirStorage and wrote function get_in_out in common.jl)
 function get_in_out(in_out::NamedTuple{(:in, :out), Tuple{Float64, Float64}})
     InOut(in=in_out.in, out=in_out.out)
 end

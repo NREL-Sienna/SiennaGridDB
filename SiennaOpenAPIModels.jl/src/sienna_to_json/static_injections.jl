@@ -225,9 +225,15 @@ function psy2openapi(energy_res::PSY.EnergyReservoirStorage, ids::IDGenerator)
         output_active_power_limits=get_min_max(
             scale(energy_res.output_active_power_limits, PSY.get_base_power(energy_res)),
         ),
+<<<<<<< HEAD
         efficiency=energy_res.efficiency,
         reactive_power=energy_res.reactive_power * PSY.get_base_power(energy_res),
         reactive_power_limits=get_min_max(
+=======
+        efficiency = get_in_out(energy_res.efficiency),
+        reactive_power = energy_res.reactive_power * PSY.get_base_power(energy_res),
+        reactive_power_limits = get_min_max(
+>>>>>>> 29c8537 (got all tests passing for EnergyReservoirStorage and wrote function get_in_out in common.jl)
             scale(energy_res.reactive_power_limits, PSY.get_base_power(energy_res)),
         ),
         base_power=energy_res.base_power,
