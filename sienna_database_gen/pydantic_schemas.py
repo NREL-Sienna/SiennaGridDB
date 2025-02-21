@@ -7,7 +7,8 @@
 5. Use obj_type when parsing to determine how to parse or separate into attributes
 """
 
-from enum import StrEnum
+from .prime_movers import PrimeMovers
+from .thermal_fuels import ThermalFuels
 from pydantic import (
     BaseModel,
     model_validator,
@@ -16,54 +17,6 @@ from pydantic.json_schema import GenerateJsonSchema
 
 from typing import ClassVar, Annotated, get_type_hints
 from sqlalchemy import Double, ForeignKey, Table, Column, Integer, Text
-
-
-class PrimeMoversType(StrEnum):
-    """EIA prime mover codes."""
-
-    BA = "BA"
-    BT = "BT"
-    CA = "CA"
-    CC = "CC"
-    CE = "CE"
-    CP = "CP"
-    CS = "CSV"
-    CT = "CT"
-    ES = "ES"
-    FC = "FC"
-    FW = "FW"
-    GT = "GT"
-    HA = "HA"
-    HB = "HB"
-    HK = "HK"
-    HY = "HY"
-    IC = "IC"
-    PS = "PS"
-    OT = "OT"
-    ST = "ST"
-    PVe = "PVe"
-    WT = "WT"
-    WS = "WS"
-    RTPV = "RTPV"
-
-
-class ThermalFuels(StrEnum):
-    """Thermal fuels that reflect options in the EIA annual energy review."""
-
-    COAL = "COAL"
-    WASTE_COAL = "WASTE_COAL"
-    DISTILLATE_FUEL_OIL = "DISTILLATE_FUEL_OIL"
-    WASTE_OIL = "WASTE_OIL"
-    PETROLEUM_COKE = "PETROLEUM_COKE"
-    RESIDUAL_FUEL_OIL = "RESIDUAL_FUEL_OIL"
-    NATURAL_GAS = "NATURAL_GAS"
-    OTHER_GAS = "OTHER_GAS"
-    NUCLEAR = "NUCLEAR"
-    AG_BIOPRODUCT = "AG_BIOPRODUCT"
-    MUNICIPAL_WASTE = "MUNICIPAL_WASTE"
-    WOOD_WASTE = "WOOD_WASTE"
-    GEOTHERMAL = "GEOTHERMAL"
-    OTHER = "OTHER"
 
 
 def get_column_from_annotation(type_hint, name: str):
@@ -134,7 +87,7 @@ class ObjModel(BaseModel):
 
 
 class GenerationUnit(ObjModel):
-    prime_mover: Annotated[PrimeMoversType | None, Column(Text, nullable=True)]
+    prime_mover: Annotated[PrimeMovers | None, Column(Text, nullable=True)]
     fuel_type: Annotated[ThermalFuels | None, Column(Text, nullable=True)]
     rating: Annotated[float, Column(Double, nullable=False)]
     base_power: Annotated[float, Column(Double, nullable=False)]
@@ -143,7 +96,7 @@ class GenerationUnit(ObjModel):
 
 
 class SupplyTechnology(ObjModel):
-    prime_mover: Annotated[PrimeMoversType | None, Column(Text, nullable=True)]
+    prime_mover: Annotated[PrimeMovers | None, Column(Text, nullable=True)]
     fuel_type: Annotated[ThermalFuels | None, Column(Text, nullable=True)]
     area_id: Annotated[int | None, Column(Integer, ForeignKey("area.id"), nullable=True)]
     bus_id: Annotated[int | None, Column(Integer, ForeignKey("bus.id"), nullable=True)]
