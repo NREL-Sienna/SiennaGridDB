@@ -154,6 +154,18 @@ end
         @test test_convert.r == 0.0
         @test test_convert.primary_shunt == 0.0
     end
+
+    @testset "TapTransformer to JSON" begin
+        taptransformer =
+            PSY.get_component(PowerSystems.TapTransformer, sys_14_bus, "BUS 04-BUS 07-i_1")
+        @test isa(taptransformer, PSY.TapTransformer)
+        test_convert = SiennaOpenAPIModels.psy2openapi(taptransformer, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.TapTransformer, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.rating ≈ 5.786163762803648
+        @test test_convert.primary_shunt == 0.0
+        @test test_convert.x ≈ 0.20912
+    end
 end
 
 @testset "RTS_GMLC_RT_sys RoundTrip to JSON" begin
@@ -170,6 +182,15 @@ end
         @test test_convert.id == 1
         @test test_convert.power_factor == 1.0
         @test test_convert.base_power == 101.7
+    end
+    @testset "FixedAdmittance to JSON" begin
+        fixedadmit = PSY.get_component(PSY.FixedAdmittance, RTS_GMLC_RT_sys, "Camus")
+        @test isa(fixedadmit, PSY.FixedAdmittance)
+        test_convert = SiennaOpenAPIModels.psy2openapi(fixedadmit, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.FixedAdmittance, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.available
+        @test isnothing(test_convert.dynamic_injector)
     end
 end
 
@@ -251,5 +272,45 @@ end
         @test test_convert.storage_capacity.up == 100.0
         @test test_convert.active_power_limits.max == 50.0
         @test test_convert.ramp_limits.up == 5.0
+    end
+end
+
+@testset"Two area pjm" begin
+    two_area_pjm_DA = PowerSystemCaseBuilder.build_system(
+        PowerSystemCaseBuilder.PSISystems,
+        "two_area_pjm_DA",
+    )
+    @testset "AreaInterchange" begin
+        area_interchange =
+            only(collect(PSY.get_components(PSY.AreaInterchange, two_area_pjm_DA)))
+        @test isa(area_interchange, PSY.AreaInterchange)
+        test_convert = SiennaOpenAPIModels.psy2openapi(area_interchange, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.AreaInterchange, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.from_area == 2
+        @test test_convert.to_area == 3
+        @test test_convert.flow_limits.from_to == 150.0
+    end
+end
+
+@testset "5_bus_matpower_RT roundtrip" begin
+    sys_5bus_matpower_RT = PowerSystemCaseBuilder.build_system(
+        PowerSystemCaseBuilder.PSISystems,
+        "5_bus_matpower_RT",
+    )
+    @testset "Phase Shifting Transformer" begin
+        phase_shifting_transformer = PSY.get_component(
+            PSY.PhaseShiftingTransformer,
+            sys_5bus_matpower_RT,
+            "bus3-bus4-i_6",
+        )
+        @test isa(phase_shifting_transformer, PSY.PhaseShiftingTransformer)
+        test_convert =
+            SiennaOpenAPIModels.psy2openapi(phase_shifting_transformer, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.PhaseShiftingTransformer, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.arc == 2
+        @test test_convert.x == 0.03274425
+        @test test_convert.rating == 426.0
     end
 end

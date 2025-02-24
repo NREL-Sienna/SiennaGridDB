@@ -121,6 +121,17 @@ function psy2openapi(renewnondispatch::PSY.RenewableNonDispatch, ids::IDGenerato
     )
 end
 
+function psy2openapi(fixedadmit::PSY.FixedAdmittance, ids::IDGenerator)
+    FixedAdmittance(
+        id=getid!(ids, fixedadmit),
+        name=fixedadmit.name,
+        available=fixedadmit.available,
+        bus=getid!(ids, fixedadmit.bus),
+        Y=get_complex_number(fixedadmit.Y),
+        dynamic_injector=getid!(ids, fixedadmit.dynamic_injector),
+    )
+end
+
 function psy2openapi(hydro::PSY.HydroDispatch, ids::IDGenerator)
     HydroDispatch(
         id=getid!(ids, hydro),

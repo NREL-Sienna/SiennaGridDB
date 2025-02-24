@@ -29,6 +29,7 @@ include("modelincludes.jl")
 @batteries AreaInterchange
 @batteries AverageRateCurve
 @batteries AverageRateCurveFunctionData
+@batteries ComplexNumber
 @batteries ConstantReserve
 @batteries ConstantReserveGroup
 @batteries ConstantReserveNonSpinning
@@ -38,6 +39,7 @@ include("modelincludes.jl")
 @batteries ExponentialLoad
 @batteries FixedAdmittance
 @batteries FromTo
+@batteries FromToToFrom
 @batteries FuelCurve
 @batteries FuelCurveFuelCost
 @batteries HydroDispatch
