@@ -4,6 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**cost_type** | **String** |  | [optional] [default to "HYDRO"]
 **fixed** | **Float64** |  | [optional] [default to 0.0]
 **variable** | [***ProductionVariableCostCurve**](ProductionVariableCostCurve.md) |  | [default to nothing]
 

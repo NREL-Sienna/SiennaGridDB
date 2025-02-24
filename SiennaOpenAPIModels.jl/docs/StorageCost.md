@@ -4,6 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**cost_type** | **String** |  | [optional] [default to "STORAGE"]
 **charge_variable_cost** | [***CostCurve**](CostCurve.md) |  | [optional] [default to nothing]
 **discharge_variable_cost** | [***CostCurve**](CostCurve.md) |  | [optional] [default to nothing]
 **fixed** | **Float64** |  | [default to 0.0]

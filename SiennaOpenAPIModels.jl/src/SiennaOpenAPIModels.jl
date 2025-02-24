@@ -57,6 +57,7 @@ include("modelincludes.jl")
 @batteries LoadZone
 @batteries MinMax
 @batteries MonitoredLine
+@batteries HydroStorageGenerationCost
 @batteries PhaseShiftingTransformer
 @batteries PiecewiseLinearData
 @batteries PiecewiseStepData
@@ -69,6 +70,9 @@ include("modelincludes.jl")
 @batteries Source
 @batteries StandardLoad
 @batteries StartUpStages
+@batteries StorageCost
+@batteries StorageCostStartUp
+@batteries StorageCostStartUpOneOf
 #@batteries Switched Admittance
 @batteries TapTransformer
 @batteries ThermalGenerationCost

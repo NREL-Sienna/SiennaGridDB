@@ -141,6 +141,7 @@ end
 
 function get_thermal_cost(cost::PSY.ThermalGenerationCost)
     ThermalGenerationCost(
+        cost_type="THERMAL",
         start_up=get_startup(cost.start_up),
         shut_down=cost.shut_down,
         fixed=cost.fixed,
@@ -150,6 +151,7 @@ end
 
 function get_renewable_cost(cost::PSY.RenewableGenerationCost)
     RenewableGenerationCost(
+        cost_type="RENEWABLE",
         curtailment_cost=get_variable_cost(cost.curtailment_cost),
         variable=get_variable_cost(cost.variable),
     )
@@ -157,9 +159,39 @@ end
 
 function get_hydro_cost(cost::PSY.HydroGenerationCost)
     HydroGenerationCost(
+        cost_type="HYDRO",
         variable=ProductionVariableCostCurve(get_variable_cost(cost.variable)),
         fixed=cost.fixed,
     )
+end
+
+function get_storage_startup(x::Float64)
+    StorageCostStartUp(x)
+end
+
+function get_storage_startup(nt::NamedTuple{(:charge, :discharge), Tuple{Float64, Float64}})
+    StorageCostStartUp(StorageCostStartUpOneOf(charge=nt.charge, discharge=nt.discharge))
+end
+
+function get_storage_cost(cost::PSY.StorageCost)
+    StorageCost(
+        cost_type="STORAGE",
+        charge_variable_cost=get_variable_cost(cost.charge_variable_cost),
+        discharge_variable_cost=get_variable_cost(cost.discharge_variable_cost),
+        fixed=cost.fixed,
+        shut_down=cost.shut_down,
+        start_up=get_storage_startup(cost.start_up),
+        energy_shortage_cost=cost.energy_shortage_cost,
+        energy_surplus_cost=cost.energy_surplus_cost,
+    )
+end
+
+function get_hydrostorage_cost(cost::PSY.HydroGenerationCost)
+    HydroStorageGenerationCost(get_hydro_cost(cost))
+end
+
+function get_operation_cost(cost::PSY.StorageCost)
+    HydroStorageGenerationCost(get_storage_cost(cost))
 end
 
 mutable struct IDGenerator

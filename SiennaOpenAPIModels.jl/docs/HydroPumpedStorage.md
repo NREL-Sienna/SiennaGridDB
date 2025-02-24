@@ -16,7 +16,7 @@ Name | Type | Description | Notes
 **initial_storage** | [***UpDown**](UpDown.md) |  | [default to nothing]
 **name** | **String** |  | [default to nothing]
 **outflow** | **Float64** |  | [default to nothing]
-**operation_cost** | [***OperationCost**](OperationCost.md) |  | [optional] [default to nothing]
+**operation_cost** | [***HydroStorageGenerationCost**](HydroStorageGenerationCost.md) |  | [optional] [default to nothing]
 **prime_mover_type** | **String** |  | [default to "OT"]
 **pump_efficiency** | **Float64** |  | [optional] [default to 1.0]
 **ramp_limits** | [***UpDown**](UpDown.md) |  | [optional] [default to nothing]

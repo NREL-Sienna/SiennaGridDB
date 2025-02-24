@@ -4,6 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**cost_type** | **String** |  | [optional] [default to "LOAD"]
 **fixed** | **Float64** |  | [optional] [default to 0.0]
 **variable** | [***CostCurve**](CostCurve.md) |  | [default to nothing]
 
