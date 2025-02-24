@@ -81,6 +81,7 @@ include("modelincludes.jl")
 @batteries ThermalStandard
 @batteries TModelHVDCLine
 @batteries Transformer2W
+@batteries TwoTerminalHVDCLine
 @batteries TwoTerminalVSCDCLine
 @batteries UpDown
 @batteries ValueCurve
