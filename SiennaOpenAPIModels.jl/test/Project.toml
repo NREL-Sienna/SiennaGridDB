@@ -1,6 +1,10 @@
 [deps]
+DBInterface = "a10d1c49-ce27-4219-8d33-6db1a4562965"
 JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
 OpenAPI = "d5e62ea6-ddf3-4d43-8e4c-ad5e6c8bfd7d"
 PowerSystemCaseBuilder = "f00506e0-b84f-492a-93c2-c0a9afc4364e"
 PowerSystems = "bcd98974-b02a-5e2f-9ee0-a103f5c450dd"
+SQLite = "0aa819cd-b072-5ff4-a722-6bc24af294d9"
+SiennaOpenAPIModels = "6f904ddb-d94b-53ea-97a4-b251110faebf"
+Tables = "bd369af6-aec1-5ad0-b16a-f7cc5008161c"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"

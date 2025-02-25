@@ -1,0 +1,41 @@
+{
+  "component_counts": [
+    {
+      "count": 118,
+      "type": "ACBus"
+    },
+    {
+      "count": 179,
+      "type": "Arc"
+    },
+    {
+      "count": 43,
+      "type": "HydroDispatch"
+    },
+    {
+      "count": 175,
+      "type": "Line"
+    },
+    {
+      "count": 118,
+      "type": "PowerLoad"
+    },
+    {
+      "count": 92,
+      "type": "RenewableDispatch"
+    },
+    {
+      "count": 192,
+      "type": "ThermalStandard"
+    },
+    {
+      "count": 11,
+      "type": "Transformer2W"
+    }
+  ],
+  "description": "",
+  "frequency": 60,
+  "name": "",
+  "time_series_counts": [],
+  "time_series_resolutions_milliseconds": []
+}
