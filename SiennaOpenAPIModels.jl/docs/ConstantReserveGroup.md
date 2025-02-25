@@ -1,7 +1,7 @@
 # ConstantReserveGroup
 
-
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **available** | **Bool** |  | [default to nothing]
@@ -10,7 +10,4 @@ Name | Type | Description | Notes
 **requirement** | **Float64** |  | [default to nothing]
 **reserve_direction** | **String** |  | [optional] [default to nothing]
 
-
 [[Back to Model list]](../README.md#models) [[Back to API list]](../README.md#api-endpoints) [[Back to README]](../README.md)
-
-

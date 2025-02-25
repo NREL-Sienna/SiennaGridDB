@@ -1,7 +1,7 @@
 # TModelHVDCLine
 
-
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **active_power_limits_from** | [***MinMax**](MinMax.md) |  | [default to nothing]
@@ -15,7 +15,4 @@ Name | Type | Description | Notes
 **name** | **String** |  | [default to nothing]
 **r** | **Float64** |  | [default to nothing]
 
-
 [[Back to Model list]](../README.md#models) [[Back to API list]](../README.md#api-endpoints) [[Back to README]](../README.md)
-
-

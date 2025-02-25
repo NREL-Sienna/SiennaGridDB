@@ -1,7 +1,7 @@
 # AGC
 
-
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **area** | **Int64** |  | [optional] [default to nothing]
@@ -15,7 +15,4 @@ Name | Type | Description | Notes
 **K_d** | **Float64** |  | [default to nothing]
 **name** | **String** |  | [default to nothing]
 
-
 [[Back to Model list]](../README.md#models) [[Back to API list]](../README.md#api-endpoints) [[Back to README]](../README.md)
-
-
