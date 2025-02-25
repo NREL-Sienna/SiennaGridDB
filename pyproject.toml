@@ -1,0 +1,77 @@
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sienna-griddb"
+dynamic = ["version"]
+description = ''
+readme = "README.md"
+requires-python = ">=3.8"
+keywords = []
+authors = [{ name = "Joseph McKinsey", email = "joseph.mckinsey@nrel.gov" }]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = ["pydantic>=2,<3", "sqlalchemy>=2,<3"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.2.1", "pytest-cov", "ruff", "pre-commit"]
+docs = ["sphinx>=7", "myst-parser", "sphinx_math_dollar", "nbsphinx"]
+
+[project.scripts]
+sienna_sqlite = "sienna_database_gen.gen_database:print_sqlite"
+
+# Setuptools configuration
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+include = ["sienna_database_gen"]
+
+# Setuptools configuration
+[tool.setuptools.dynamic]
+readme = { file = ["README.md"], content-type = "text/markdown" }
+
+[tool.setuptools.package-data]
+"*" = ["*.json", "*.csv", "*.sql"]
+
+# Linter + formatter configuration
+[tool.black]
+line-length = 90
+
+[tool.ruff]
+line-length = 92
+
+[tool.lint]
+select = [
+  "E",   # pycodestyle
+  "TD",  # flake-8 todos
+  "PD",  # pandas vet
+  "RUF", # Ruff rules
+  "N",   # pep8
+  "F",   # pyflakes
+  "UP",  # pyupgrade
+  "D",   # pydocstyle
+]
+
+# Allow unused variables when underscore-prefixed.
+#dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+#exclude = ["tests"]
+
+# Assume Python 3.10.
+target-version = "py39"
+
+[tool.lint.pydocstyle]
+convention = "numpy"
+
+[tool.sqlfluff.core]
+dialect = "postgres"

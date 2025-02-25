@@ -13,6 +13,7 @@ drop table if exists areas;
 drop table if exists attributes;
 drop table if exists data_types;
 drop table if exists time_series;
+drop table if exists piecewise_linear;
 drop table if exists transmission_interchange;
 drop table if exists entities;
 drop table if exists linkages;
@@ -40,12 +41,14 @@ create table  storage_units (
 	prime_mover text not null,
 	fuel_type text not null,
 	max_capacity float not null check (max_capacity > 0),
+	round_trip_efficiency float check (round_trip_efficiency >= 0),
 	balancing_topology text not null references balancing_topologies(name),
 	charging_efficiency float not null check (charging_efficiency > 0),
 	discharge_efficiency float not null check (discharge_efficiency > 0),
 	start_year integer not null check (start_year >= 0),
 	rating float not null default 1 check (rating > 0 ),
 	base_power float not null check (base_power > 0),
+	scenario text null,
 	check (base_power >= rating),
 	foreign key (prime_mover, fuel_type) references prime_mover_types(prime_mover, fuel_type)
 );
@@ -54,12 +57,14 @@ create table  storage_units (
 create table supply_technologies (
     technology_id integer primary key,
     prime_mover text not null,
-	fuel_type text not null,
-	technology_class real null,
+	  fuel_type text not null,
+	  technology_class real null,
+    vom_cost float not null check (vom_cost >= 0),
+    fom_cost float not null check (fom_cost >= 0),
     scenario text null,
-	area text null references areas(name),
-	balancing_topology text null references balancing_topologies(name),
-	foreign key (prime_mover, fuel_type) references prime_mover_types(prime_mover, fuel_type)
+	  area text null references areas(name),
+	  balancing_topology text null references balancing_topologies(name),
+	  foreign key (prime_mover, fuel_type) references prime_mover_types(prime_mover, fuel_type)
 );
 
 create table storage_technologies (
@@ -86,7 +91,6 @@ create table operational_data (
 	uptime float not null check (uptime >= 0),
 	downtime float not null check (downtime >= 0)
 );
-
 
 -- create table for prime movers
 create table  prime_mover_types (
@@ -212,6 +216,8 @@ insert into data_types (name, validation_query) values
 ('real', 'cast(? as real) is not null'),
 ('text', 'cast(? as text) is not null'),
 ('json', 'json_valid(?) is 1');
+('time_series', '? is null'),
+('piecewise_linear', '? is null');
 -- Create a new data type for function data here
 
 -- triggers
