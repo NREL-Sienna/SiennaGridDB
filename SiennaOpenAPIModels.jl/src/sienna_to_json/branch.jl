@@ -83,6 +83,26 @@ function psy2openapi(transformer::PSY.PhaseShiftingTransformer, ids::IDGenerator
     )
 end
 
+function psy2openapi(monitored::PSY.MonitoredLine, ids::IDGenerator)
+    MonitoredLine(
+        id=getid!(ids, monitored),
+        name=monitored.name,
+        available=monitored.available,
+        active_power_flow=monitored.active_power_flow * PSY.get_base_power(monitored),
+        reactive_power_flow=monitored.reactive_power_flow * PSY.get_base_power(monitored),
+        arc=getid!(ids, monitored.arc),
+        r=monitored.r,
+        x=monitored.x,
+        b=get_from_to(monitored.b),
+        flow_limits=get_fromto_tofrom(
+            scale(monitored.flow_limits, PSY.get_base_power(monitored)),
+        ),
+        rating=monitored.rating * PSY.get_base_power(monitored),
+        angle_limits=get_min_max(monitored.angle_limits),
+        g=get_from_to(monitored.g),
+    )
+end
+
 function psy2openapi(hvdc::PSY.TwoTerminalHVDCLine, ids::IDGenerator)
     TwoTerminalHVDCLine(
         id=getid!(ids, hvdc),
