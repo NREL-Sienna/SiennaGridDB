@@ -1,7 +1,7 @@
 # ConstantReserve
 
-## Properties
 
+## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **available** | **Bool** |  | [default to nothing]
@@ -11,7 +11,11 @@ Name | Type | Description | Notes
 **max_participation_factor** | **Float64** |  | [optional] [default to 1.0]
 **name** | **String** |  | [default to nothing]
 **requirement** | **Float64** |  | [default to nothing]
+**reserve_direction** | **String** |  | [optional] [default to nothing]
 **sustained_time** | **Float64** |  | [optional] [default to 3600.0]
 **time_frame** | **Float64** |  | [default to nothing]
 
+
 [[Back to Model list]](../README.md#models) [[Back to API list]](../README.md#api-endpoints) [[Back to README]](../README.md)
+
+

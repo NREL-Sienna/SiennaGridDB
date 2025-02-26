@@ -1,7 +1,7 @@
 # ThermalGenerationCost
 
-## Properties
 
+## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **cost_type** | **String** |  | [optional] [default to "THERMAL"]
@@ -10,4 +10,7 @@ Name | Type | Description | Notes
 **start_up** | [***ThermalGenerationCostStartUp**](ThermalGenerationCostStartUp.md) |  | [default to nothing]
 **variable** | [***ProductionVariableCostCurve**](ProductionVariableCostCurve.md) |  | [default to nothing]
 
+
 [[Back to Model list]](../README.md#models) [[Back to API list]](../README.md#api-endpoints) [[Back to README]](../README.md)
+
+
