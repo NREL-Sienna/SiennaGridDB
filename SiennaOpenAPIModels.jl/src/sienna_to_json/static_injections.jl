@@ -212,10 +212,8 @@ function psy2openapi(energy_res::PSY.EnergyReservoirStorage, ids::IDGenerator)
         bus=getid!(ids, energy_res.bus),
         prime_mover_type=string(energy_res.prime_mover_type),
         storage_technology_type=string(energy_res.storage_technology_type),
-        storage_capacity=energy_res.storage_capacity,
-        storage_level_limits=get_min_max(
-            scale(energy_res.storage_level_limits, PSY.get_base_power(energy_res)),
-        ),
+        storage_capacity=energy_res.storage_capacity * PSY.get_base_power(energy_res),
+        storage_level_limits=get_min_max(energy_res.storage_level_limits),
         initial_storage_capacity_level=energy_res.initial_storage_capacity_level,
         rating=energy_res.rating * PSY.get_base_power(energy_res),
         active_power=energy_res.active_power * PSY.get_base_power(energy_res),
@@ -225,15 +223,9 @@ function psy2openapi(energy_res::PSY.EnergyReservoirStorage, ids::IDGenerator)
         output_active_power_limits=get_min_max(
             scale(energy_res.output_active_power_limits, PSY.get_base_power(energy_res)),
         ),
-<<<<<<< HEAD
-        efficiency=energy_res.efficiency,
+        efficiency=get_in_out(energy_res.efficiency),
         reactive_power=energy_res.reactive_power * PSY.get_base_power(energy_res),
         reactive_power_limits=get_min_max(
-=======
-        efficiency = get_in_out(energy_res.efficiency),
-        reactive_power = energy_res.reactive_power * PSY.get_base_power(energy_res),
-        reactive_power_limits = get_min_max(
->>>>>>> 29c8537 (got all tests passing for EnergyReservoirStorage and wrote function get_in_out in common.jl)
             scale(energy_res.reactive_power_limits, PSY.get_base_power(energy_res)),
         ),
         base_power=energy_res.base_power,
