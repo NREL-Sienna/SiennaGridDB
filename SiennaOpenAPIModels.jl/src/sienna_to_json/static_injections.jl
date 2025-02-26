@@ -203,3 +203,38 @@ function psy2openapi(hydro::PSY.HydroPumpedStorage, ids::IDGenerator)
         dynamic_injector=getid!(ids, hydro.dynamic_injector),
     )
 end
+
+function psy2openapi(energy_res::PSY.EnergyReservoirStorage, ids::IDGenerator)
+    EnergyReservoirStorage(
+        id=getid!(ids, energy_res),
+        name=energy_res.name,
+        available=energy_res.available,
+        bus=getid!(ids, energy_res.bus),
+        prime_mover_type=string(energy_res.prime_mover_type),
+        storage_technology_type=string(energy_res.storage_technology_type),
+        storage_capacity=energy_res.storage_capacity,
+        storage_level_limits=get_min_max(
+            scale(energy_res.storage_level_limits, PSY.get_base_power(energy_res)),
+        ),
+        initial_storage_capacity_level=energy_res.initial_storage_capacity_level,
+        rating=energy_res.rating * PSY.get_base_power(energy_res),
+        active_power=energy_res.active_power * PSY.get_base_power(energy_res),
+        input_active_power_limits=get_min_max(
+            scale(energy_res.input_active_power_limits, PSY.get_base_power(energy_res)),
+        ),
+        output_active_power_limits=get_min_max(
+            scale(energy_res.output_active_power_limits, PSY.get_base_power(energy_res)),
+        ),
+        efficiency=energy_res.efficiency,
+        reactive_power=energy_res.reactive_power * PSY.get_base_power(energy_res),
+        reactive_power_limits=get_min_max(
+            scale(energy_res.reactive_power_limits, PSY.get_base_power(energy_res)),
+        ),
+        base_power=energy_res.base_power,
+        operation_cost=get_storage_cost(energy_res.operation_cost),
+        conversion_factor=energy_res.conversion_factor,
+        storage_target=energy_res.storage_target,
+        cycle_limits=energy_res.cycle_limits,
+        dynamic_injector=getid!(ids, energy_res.dynamic_injector),
+    )
+end
