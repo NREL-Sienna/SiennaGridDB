@@ -88,8 +88,7 @@ function psy2openapi(hvdc::PSY.TwoTerminalHVDCLine, ids::IDGenerator)
         id=getid!(ids, hvdc),
         name=hvdc.name,
         available=hvdc.available,
-        active_power_flow=hvdc.active_power_flow *
-                          PSY.get_base_power(hvdc),
+        active_power_flow=hvdc.active_power_flow * PSY.get_base_power(hvdc),
         arc=getid!(ids, hvdc.arc),
         active_power_limits_from=get_min_max(
             scale(hvdc.active_power_limits_from, PSY.get_base_power(hvdc)),
@@ -103,7 +102,6 @@ function psy2openapi(hvdc::PSY.TwoTerminalHVDCLine, ids::IDGenerator)
         reactive_power_limits_to=get_min_max(
             scale(hvdc.reactive_power_limits_to, PSY.get_base_power(hvdc)),
         ),
-        loss=get_value_curve(hvdc.loss),
+        loss=get_two_terminal_loss(hvdc.loss),
     )
 end
-

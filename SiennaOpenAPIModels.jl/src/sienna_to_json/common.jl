@@ -58,6 +58,14 @@ function get_value_curve(curve::PSY.IncrementalCurve)
     ValueCurve(get_incremental_curve(curve))
 end
 
+function get_two_terminal_loss(curve::PSY.InputOutputCurve)
+    TwoTerminalHVDCLineLoss(get_input_output_curve(curve))
+end
+
+function get_two_terminal_loss(curve::PSY.IncrementalCurve)
+    TwoTerminalHVDCLineLoss(get_incremental_curve(curve))
+end
+
 function get_function_data(function_data::PSY.LinearFunctionData)
     LinearFunctionData(
         function_type="LINEAR",
