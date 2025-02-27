@@ -358,6 +358,6 @@ end
         @test test_convert.id == 1
         @test test_convert.arc == 2
         @test test_convert.r == 0.01
-        @test test_convert.active_power_limits_to.min == -10.0
+        @test test_convert.active_power_limits_to.min == -1000.0
     end
 end
