@@ -125,3 +125,22 @@ function psy2openapi(hvdc::PSY.TwoTerminalHVDCLine, ids::IDGenerator)
         loss=get_two_terminal_loss(hvdc.loss),
     )
 end
+
+function psy2openapi(tmodel::PSY.TModelHVDCLine, ids::IDGenerator)
+    TModelHVDCLine(
+        id=getid!(ids, tmodel),
+        name=tmodel.name,
+        available=tmodel.available,
+        active_power_flow=tmodel.active_power_flow * PSY.get_base_power(tmodel),
+        arc=getid!(ids, tmodel.arc),
+        r=tmodel.r,
+        l=tmodel.l,
+        c=tmodel.c,
+        active_power_limits_from=get_min_max(
+            scale(tmodel.active_power_limits_from, PSY.get_base_power(tmodel)),
+        ),
+        active_power_limits_to=get_min_max(
+            scale(tmodel.active_power_limits_to, PSY.get_base_power(tmodel)),
+        ),
+    )
+end
