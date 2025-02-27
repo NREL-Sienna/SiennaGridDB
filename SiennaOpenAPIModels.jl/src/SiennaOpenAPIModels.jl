@@ -46,6 +46,7 @@ include("modelincludes.jl")
 @batteries HydroEnergyReservoir
 @batteries HydroGenerationCost
 @batteries HydroPumpedStorage
+@batteries InOut
 @batteries IncrementalCurve
 @batteries IncrementalCurveFunctionData
 @batteries InterconnectingConverter

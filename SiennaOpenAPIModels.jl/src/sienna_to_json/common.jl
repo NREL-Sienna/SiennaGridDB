@@ -28,6 +28,10 @@ function get_complex_number(complex_number::ComplexF64)
     ComplexNumber(real=real(complex_number), imag=imag(complex_number))
 end
 
+function get_in_out(in_out::NamedTuple{(:in, :out), Tuple{Float64, Float64}})
+    InOut(in=in_out.in, out=in_out.out)
+end
+
 function get_startup(startup::Float64)
     return ThermalGenerationCostStartUp(startup)
 end
