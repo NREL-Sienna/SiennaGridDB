@@ -211,6 +211,18 @@ end
         @test test_convert.base_power == 50.0
         @test test_convert.cycle_limits == 10000
     end
+    @testset "VariableReserve DOWN to JSON" begin
+        reg_down = PSY.get_component(PSY.VariableReserve, RTS_GMLC_RT_sys, "Reg_Down")
+        @test reg_down isa PSY.VariableReserve{PSY.ReserveDown}
+        test_convert = SiennaOpenAPIModels.psy2openapi(reg_down, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.VariableReserve, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.max_output_fraction == 1.0
+        @test test_convert.time_frame == 300.0
+        @test test_convert.requirement == 77.0
+        @test test_convert.reserve_direction == "DOWN"
+        @test test_convert.sustained_time == 3600.0
+    end
 end
 
 @testset "c_sys5_all" begin
