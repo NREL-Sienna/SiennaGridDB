@@ -82,3 +82,46 @@ function psy2openapi(transformer::PSY.PhaseShiftingTransformer, ids::IDGenerator
         phase_angle_limits=get_min_max(transformer.phase_angle_limits),
     )
 end
+
+function psy2openapi(monitored::PSY.MonitoredLine, ids::IDGenerator)
+    MonitoredLine(
+        id=getid!(ids, monitored),
+        name=monitored.name,
+        available=monitored.available,
+        active_power_flow=monitored.active_power_flow * PSY.get_base_power(monitored),
+        reactive_power_flow=monitored.reactive_power_flow * PSY.get_base_power(monitored),
+        arc=getid!(ids, monitored.arc),
+        r=monitored.r,
+        x=monitored.x,
+        b=get_from_to(monitored.b),
+        flow_limits=get_fromto_tofrom(
+            scale(monitored.flow_limits, PSY.get_base_power(monitored)),
+        ),
+        rating=monitored.rating * PSY.get_base_power(monitored),
+        angle_limits=get_min_max(monitored.angle_limits),
+        g=get_from_to(monitored.g),
+    )
+end
+
+function psy2openapi(hvdc::PSY.TwoTerminalHVDCLine, ids::IDGenerator)
+    TwoTerminalHVDCLine(
+        id=getid!(ids, hvdc),
+        name=hvdc.name,
+        available=hvdc.available,
+        active_power_flow=hvdc.active_power_flow * PSY.get_base_power(hvdc),
+        arc=getid!(ids, hvdc.arc),
+        active_power_limits_from=get_min_max(
+            scale(hvdc.active_power_limits_from, PSY.get_base_power(hvdc)),
+        ),
+        active_power_limits_to=get_min_max(
+            scale(hvdc.active_power_limits_to, PSY.get_base_power(hvdc)),
+        ),
+        reactive_power_limits_from=get_min_max(
+            scale(hvdc.reactive_power_limits_from, PSY.get_base_power(hvdc)),
+        ),
+        reactive_power_limits_to=get_min_max(
+            scale(hvdc.reactive_power_limits_to, PSY.get_base_power(hvdc)),
+        ),
+        loss=get_two_terminal_loss(hvdc.loss),
+    )
+end

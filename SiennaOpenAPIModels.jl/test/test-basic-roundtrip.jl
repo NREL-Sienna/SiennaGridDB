@@ -192,6 +192,15 @@ end
         @test test_convert.available
         @test isnothing(test_convert.dynamic_injector)
     end
+    @testset "TwoTerminalHVDCLine to JSON" begin
+        hvdc = PSY.get_component(PSY.TwoTerminalHVDCLine, RTS_GMLC_RT_sys, "DC1")
+        @test isa(hvdc, PSY.TwoTerminalHVDCLine)
+        test_convert = SiennaOpenAPIModels.psy2openapi(hvdc, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.TwoTerminalHVDCLine, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.available
+        @test test_convert.active_power_flow == 0.0
+    end
 end
 
 @testset "c_sys5_all" begin
@@ -290,6 +299,16 @@ end
         @test test_convert.from_area == 2
         @test test_convert.to_area == 3
         @test test_convert.flow_limits.from_to == 150.0
+    end
+    @testset "MonitoredLine" begin
+        monitored = only(collect(PSY.get_components(PSY.MonitoredLine, two_area_pjm_DA)))
+        @test isa(monitored, PSY.MonitoredLine)
+        test_convert = SiennaOpenAPIModels.psy2openapi(monitored, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.MonitoredLine, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.active_power_flow == 0.0
+        @test test_convert.rating == 1000.0
+        @test test_convert.flow_limits.from_to == 700.0
     end
 end
 

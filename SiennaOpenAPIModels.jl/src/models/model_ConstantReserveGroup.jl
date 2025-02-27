@@ -9,29 +9,33 @@
         id=nothing,
         name=nothing,
         requirement=nothing,
+        reserve_direction=nothing,
     )
 
     - available::Bool
     - id::Int64
     - name::String
     - requirement::Float64
+    - reserve_direction::String
 """
 Base.@kwdef mutable struct ConstantReserveGroup <: OpenAPI.APIModel
     available::Union{Nothing, Bool} = nothing
     id::Union{Nothing, Int64} = nothing
     name::Union{Nothing, String} = nothing
     requirement::Union{Nothing, Float64} = nothing
+    reserve_direction::Union{Nothing, String} = nothing
 
-    function ConstantReserveGroup(available, id, name, requirement, )
+    function ConstantReserveGroup(available, id, name, requirement, reserve_direction, )
         OpenAPI.validate_property(ConstantReserveGroup, Symbol("available"), available)
         OpenAPI.validate_property(ConstantReserveGroup, Symbol("id"), id)
         OpenAPI.validate_property(ConstantReserveGroup, Symbol("name"), name)
         OpenAPI.validate_property(ConstantReserveGroup, Symbol("requirement"), requirement)
-        return new(available, id, name, requirement, )
+        OpenAPI.validate_property(ConstantReserveGroup, Symbol("reserve_direction"), reserve_direction)
+        return new(available, id, name, requirement, reserve_direction, )
     end
 end # type ConstantReserveGroup
 
-const _property_types_ConstantReserveGroup = Dict{Symbol,String}(Symbol("available")=>"Bool", Symbol("id")=>"Int64", Symbol("name")=>"String", Symbol("requirement")=>"Float64", )
+const _property_types_ConstantReserveGroup = Dict{Symbol,String}(Symbol("available")=>"Bool", Symbol("id")=>"Int64", Symbol("name")=>"String", Symbol("requirement")=>"Float64", Symbol("reserve_direction")=>"String", )
 OpenAPI.property_type(::Type{ ConstantReserveGroup }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_ConstantReserveGroup[name]))}
 
 function check_required(o::ConstantReserveGroup)
@@ -46,5 +50,10 @@ function OpenAPI.validate_property(::Type{ ConstantReserveGroup }, name::Symbol,
 
 
 
+
+
+    if name === Symbol("reserve_direction")
+        OpenAPI.validate_param(name, "ConstantReserveGroup", :enum, val, ["UP", "DOWN", "SYMMETRIC"])
+    end
 
 end

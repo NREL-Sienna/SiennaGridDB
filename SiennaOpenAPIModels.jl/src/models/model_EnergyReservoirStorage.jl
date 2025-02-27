@@ -43,7 +43,7 @@
     - initial_storage_capacity_level::Float64
     - input_active_power_limits::MinMax
     - output_active_power_limits::MinMax
-    - efficiency::EnergyReservoirStorageEfficiency
+    - efficiency::InOut
     - reactive_power_limits::MinMax
     - operation_cost::StorageCost
     - conversion_factor::Float64
@@ -67,7 +67,7 @@ Base.@kwdef mutable struct EnergyReservoirStorage <: OpenAPI.APIModel
     initial_storage_capacity_level::Union{Nothing, Float64} = nothing
     input_active_power_limits = nothing # spec type: Union{ Nothing, MinMax }
     output_active_power_limits = nothing # spec type: Union{ Nothing, MinMax }
-    efficiency = nothing # spec type: Union{ Nothing, EnergyReservoirStorageEfficiency }
+    efficiency = nothing # spec type: Union{ Nothing, InOut }
     reactive_power_limits = nothing # spec type: Union{ Nothing, MinMax }
     operation_cost = nothing # spec type: Union{ Nothing, StorageCost }
     conversion_factor::Union{Nothing, Float64} = 1.0
@@ -103,7 +103,7 @@ Base.@kwdef mutable struct EnergyReservoirStorage <: OpenAPI.APIModel
     end
 end # type EnergyReservoirStorage
 
-const _property_types_EnergyReservoirStorage = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("name")=>"String", Symbol("available")=>"Bool", Symbol("bus")=>"Int64", Symbol("active_power")=>"Float64", Symbol("reactive_power")=>"Float64", Symbol("rating")=>"Float64", Symbol("prime_mover_type")=>"String", Symbol("storage_technology_type")=>"String", Symbol("storage_capacity")=>"Float64", Symbol("storage_level_limits")=>"MinMax", Symbol("initial_storage_capacity_level")=>"Float64", Symbol("input_active_power_limits")=>"MinMax", Symbol("output_active_power_limits")=>"MinMax", Symbol("efficiency")=>"EnergyReservoirStorageEfficiency", Symbol("reactive_power_limits")=>"MinMax", Symbol("operation_cost")=>"StorageCost", Symbol("conversion_factor")=>"Float64", Symbol("storage_target")=>"Float64", Symbol("cycle_limits")=>"Int64", Symbol("base_power")=>"Float64", Symbol("dynamic_injector")=>"Any", )
+const _property_types_EnergyReservoirStorage = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("name")=>"String", Symbol("available")=>"Bool", Symbol("bus")=>"Int64", Symbol("active_power")=>"Float64", Symbol("reactive_power")=>"Float64", Symbol("rating")=>"Float64", Symbol("prime_mover_type")=>"String", Symbol("storage_technology_type")=>"String", Symbol("storage_capacity")=>"Float64", Symbol("storage_level_limits")=>"MinMax", Symbol("initial_storage_capacity_level")=>"Float64", Symbol("input_active_power_limits")=>"MinMax", Symbol("output_active_power_limits")=>"MinMax", Symbol("efficiency")=>"InOut", Symbol("reactive_power_limits")=>"MinMax", Symbol("operation_cost")=>"StorageCost", Symbol("conversion_factor")=>"Float64", Symbol("storage_target")=>"Float64", Symbol("cycle_limits")=>"Int64", Symbol("base_power")=>"Float64", Symbol("dynamic_injector")=>"Any", )
 OpenAPI.property_type(::Type{ EnergyReservoirStorage }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_EnergyReservoirStorage[name]))}
 
 function check_required(o::EnergyReservoirStorage)

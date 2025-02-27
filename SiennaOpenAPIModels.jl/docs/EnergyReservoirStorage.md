@@ -1,7 +1,7 @@
 # EnergyReservoirStorage
 
-## Properties
 
+## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **Int64** |  | [default to nothing]
@@ -18,7 +18,7 @@ Name | Type | Description | Notes
 **initial_storage_capacity_level** | **Float64** |  | [default to nothing]
 **input_active_power_limits** | [***MinMax**](MinMax.md) |  | [default to nothing]
 **output_active_power_limits** | [***MinMax**](MinMax.md) |  | [default to nothing]
-**efficiency** | [***EnergyReservoirStorageEfficiency**](EnergyReservoirStorageEfficiency.md) |  | [default to nothing]
+**efficiency** | [***InOut**](InOut.md) |  | [default to nothing]
 **reactive_power_limits** | [***MinMax**](MinMax.md) |  | [optional] [default to nothing]
 **operation_cost** | [***StorageCost**](StorageCost.md) |  | [optional] [default to nothing]
 **conversion_factor** | **Float64** |  | [optional] [default to 1.0]
@@ -27,4 +27,7 @@ Name | Type | Description | Notes
 **base_power** | **Float64** |  | [default to nothing]
 **dynamic_injector** | **Any** |  | [optional] [default to nothing]
 
+
 [[Back to Model list]](../README.md#models) [[Back to API list]](../README.md#api-endpoints) [[Back to README]](../README.md)
+
+
