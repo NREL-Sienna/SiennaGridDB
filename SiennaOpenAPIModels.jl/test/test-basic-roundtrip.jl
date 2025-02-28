@@ -368,7 +368,7 @@ end
         test_convert = SiennaOpenAPIModels.psy2openapi(hydro_res, IDGenerator())
         test_roundtrip(SiennaOpenAPIModels.HydroEnergyReservoir, test_convert)
         @test test_convert.id == 1
-        @test test_convert.bus == 3
+        @test test_convert.bus == 2
         @test test_convert.prime_mover_type == "HY"
         @test test_convert.active_power_limits.max == 700.0
         @test test_convert.ramp_limits.down == 700.0

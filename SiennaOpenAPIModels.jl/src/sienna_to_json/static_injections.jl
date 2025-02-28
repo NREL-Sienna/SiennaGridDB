@@ -264,7 +264,7 @@ function psy2openapi(hydro_res::PSY.HydroEnergyReservoir, ids::IDGenerator)
         operation_cost=get_hydrostorage_cost(hydro_res.operation_cost),
         storage_target=hydro_res.storage_target,
         conversion_factor=hydro_res.conversion_factor,
-        status=string(hydro_res.status),
+        status=hydro_res.status,
         time_at_status=hydro_res.time_at_status,
         dynamic_injector=getid!(ids, hydro_res.dynamic_injector),
     )
