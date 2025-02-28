@@ -355,3 +355,23 @@ end
         @test test_convert.rating == 426.0
     end
 end
+
+@testset "c_sys5_hy_ed roundtrip" begin
+    c_sys5_hy_ed = PowerSystemCaseBuilder.build_system(
+        PowerSystemCaseBuilder.PSITestSystems,
+        "c_sys5_hy_ed",
+    )
+    @testset "Hydro Energy Reservoir" begin
+        hydro_res =
+            only(collect(PSY.get_components(PSY.HydroEnergyReservoir, c_sys5_hy_ed)))
+        @test isa(hydro_res, PSY.HydroEnergyReservoir)
+        test_convert = SiennaOpenAPIModels.psy2openapi(hydro_res, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.HydroEnergyReservoir, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.bus == 3
+        @test test_convert.prime_mover_type == "HY"
+        @test test_convert.active_power_limits.max == 700.0
+        @test test_convert.ramp_limits.down == 700.0
+        @test test_convert.rating == 700.0
+    end
+end
