@@ -154,7 +154,6 @@ end
         @test test_convert.r == 0.0
         @test test_convert.primary_shunt == 0.0
     end
-
     @testset "TapTransformer to JSON" begin
         taptransformer =
             PSY.get_component(PowerSystems.TapTransformer, sys_14_bus, "BUS 04-BUS 07-i_1")
@@ -200,6 +199,29 @@ end
         @test test_convert.id == 1
         @test test_convert.available
         @test test_convert.active_power_flow == 0.0
+    end
+    @testset "EnergyReservoirStorage to JSON" begin
+        energy_res =
+            PSY.get_component(PSY.EnergyReservoirStorage, RTS_GMLC_RT_sys, "313_STORAGE_1")
+        @test isa(energy_res, PSY.EnergyReservoirStorage)
+        test_convert = SiennaOpenAPIModels.psy2openapi(energy_res, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.EnergyReservoirStorage, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.prime_mover_type == "BA"
+        @test test_convert.base_power == 50.0
+        @test test_convert.cycle_limits == 10000
+    end
+    @testset "VariableReserve DOWN to JSON" begin
+        reg_down = PSY.get_component(PSY.VariableReserve, RTS_GMLC_RT_sys, "Reg_Down")
+        @test reg_down isa PSY.VariableReserve{PSY.ReserveDown}
+        test_convert = SiennaOpenAPIModels.psy2openapi(reg_down, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.VariableReserve, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.max_output_fraction == 1.0
+        @test test_convert.time_frame == 300.0
+        @test test_convert.requirement == 77.0
+        @test test_convert.reserve_direction == "DOWN"
+        @test test_convert.sustained_time == 3600.0
     end
 end
 
@@ -348,5 +370,16 @@ end
         @test test_convert.voltage_limits.min == 0.9
         @test test_convert.base_voltage == 500
         @test isnothing(test_convert.area)
+    end
+    @testset "TModelHVDCLine" begin
+        tmodel =
+            PSY.get_component(PSY.TModelHVDCLine, sys10_pjm_ac_dc, "nodeD_DC-nodeD2_DC")
+        @test isa(tmodel, PSY.TModelHVDCLine)
+        test_convert = SiennaOpenAPIModels.psy2openapi(tmodel, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.TModelHVDCLine, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.arc == 2
+        @test test_convert.r == 0.01
+        @test test_convert.active_power_limits_to.min == -1000.0
     end
 end

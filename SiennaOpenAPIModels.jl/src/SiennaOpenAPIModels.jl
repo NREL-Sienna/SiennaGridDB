@@ -46,6 +46,7 @@ include("modelincludes.jl")
 @batteries HydroEnergyReservoir
 @batteries HydroGenerationCost
 @batteries HydroPumpedStorage
+@batteries InOut
 @batteries IncrementalCurve
 @batteries IncrementalCurveFunctionData
 @batteries InterconnectingConverter
@@ -94,6 +95,7 @@ include("sienna_to_json/common.jl")
 include("sienna_to_json/static_injections.jl")
 include("sienna_to_json/topology.jl")
 include("sienna_to_json/branch.jl")
+include("sienna_to_json/service.jl")
 
 include("dbinterface/sqlite.jl")
 
