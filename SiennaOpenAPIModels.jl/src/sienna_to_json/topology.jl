@@ -35,3 +35,16 @@ function psy2openapi(load_zone::PSY.LoadZone, ids::IDGenerator)
         peak_reactive_power=load_zone.peak_reactive_power * PSY.get_base_power(load_zone),
     )
 end
+
+function psy2openapi(dcbus::PSY.DCBus, ids::IDGenerator)
+    DCBus(
+        id=getid!(ids, dcbus),
+        number=dcbus.number,
+        name=dcbus.name,
+        magnitude=dcbus.magnitude,
+        voltage_limits=get_min_max(dcbus.voltage_limits),
+        base_voltage=dcbus.base_voltage,
+        area=getid!(ids, dcbus.area),
+        load_zone=getid!(ids, dcbus.load_zone),
+    )
+end
