@@ -372,6 +372,6 @@ end
         @test test_convert.prime_mover_type == "HY"
         @test test_convert.active_power_limits.max == 700.0
         @test test_convert.ramp_limits.down == 700.0
-        @test test_convert.rating == 700.0
+        @test test_convert.conversion_factor == 1.0
     end
 end
