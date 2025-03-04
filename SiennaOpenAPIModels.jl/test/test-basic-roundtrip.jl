@@ -306,7 +306,7 @@ end
     end
 end
 
-@testset "Two area pjm" begin
+@testset "Two area pjm roundtrip" begin
     two_area_pjm_DA = PowerSystemCaseBuilder.build_system(
         PowerSystemCaseBuilder.PSISystems,
         "two_area_pjm_DA",
@@ -372,5 +372,33 @@ end
         @test test_convert.reactive_power == 0.0
         @test test_convert.max_active_power == 100.0
         #@test test_convert.name == "IloadBus4"
+    end
+end
+
+@testset "sys10_pjm_ac_dc roundtrip" begin
+    sys10_pjm_ac_dc = PowerSystemCaseBuilder.build_system(
+        PowerSystemCaseBuilder.PSISystems,
+        "sys10_pjm_ac_dc",
+    )
+    @testset "DCBus Transformer" begin
+        dcbus = PSY.get_component(PSY.DCBus, sys10_pjm_ac_dc, "nodeD2_DC")
+        @test isa(dcbus, PSY.DCBus)
+        test_convert = SiennaOpenAPIModels.psy2openapi(dcbus, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.DCBus, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.voltage_limits.min == 0.9
+        @test test_convert.base_voltage == 500
+        @test isnothing(test_convert.area)
+    end
+    @testset "TModelHVDCLine" begin
+        tmodel =
+            PSY.get_component(PSY.TModelHVDCLine, sys10_pjm_ac_dc, "nodeD_DC-nodeD2_DC")
+        @test isa(tmodel, PSY.TModelHVDCLine)
+        test_convert = SiennaOpenAPIModels.psy2openapi(tmodel, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.TModelHVDCLine, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.arc == 2
+        @test test_convert.r == 0.01
+        @test test_convert.active_power_limits_to.min == -1000.0
     end
 end
