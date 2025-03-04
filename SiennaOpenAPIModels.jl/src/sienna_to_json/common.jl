@@ -177,6 +177,14 @@ function get_hydro_cost(cost::PSY.HydroGenerationCost)
     )
 end
 
+function get_load_cost(cost::PSY.LoadCost)
+    LoadCost(
+        cost_type="LOAD",
+        variable=CostCurve(get_variable_cost(cost.variable)),
+        fixed=cost.fixed,
+    )
+end
+
 function get_storage_startup(x::Float64)
     StorageCostStartUp(x)
 end

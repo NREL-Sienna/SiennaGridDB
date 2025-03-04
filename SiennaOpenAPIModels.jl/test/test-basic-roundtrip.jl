@@ -356,6 +356,25 @@ end
     end
 end
 
+@testset "c_sys5_hy_ed roundtrip" begin
+    c_sys5_hy_ed = PowerSystemCaseBuilder.build_system(
+        PowerSystemCaseBuilder.PSITestSystems,
+        "c_sys5_hy_ed",
+    )
+    @testset "InterruptiblePowerLoad" begin
+        interrupt =
+            only(collect(PSY.get_components(PSY.InterruptiblePowerLoad, c_sys5_hy_ed)))
+        @test isa(interrupt, PSY.InterruptiblePowerLoad)
+        test_convert = SiennaOpenAPIModels.psy2openapi(interrupt, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.InterruptiblePowerLoad, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.bus == 2
+        @test test_convert.reactive_power == 0.0
+        @test test_convert.max_active_power == 100.0
+        #@test test_convert.name == "IloadBus4"
+    end
+end
+
 @testset "sys10_pjm_ac_dc roundtrip" begin
     sys10_pjm_ac_dc = PowerSystemCaseBuilder.build_system(
         PowerSystemCaseBuilder.PSISystems,
