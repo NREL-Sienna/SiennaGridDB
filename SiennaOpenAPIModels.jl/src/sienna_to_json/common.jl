@@ -32,6 +32,12 @@ function get_in_out(in_out::NamedTuple{(:in, :out), Tuple{Float64, Float64}})
     InOut(in=in_out.in, out=in_out.out)
 end
 
+function get_startup_shutdown(
+    startup_shutdown::NamedTuple{(:startup, :shutdown), Tuple{Float64, Float64}},
+)
+    StartUpShutDown(startup=startup_shutdown.startup, shutdown=startup_shutdown.shutdown)
+end
+
 function get_startup(startup::Float64)
     return ThermalGenerationCostStartUp(startup)
 end
@@ -40,6 +46,12 @@ function get_startup(startup::@NamedTuple{hot::Float64, warm::Float64, cold::Flo
     ThermalGenerationCostStartUp(
         StartUpStages(hot=startup.hot, warm=startup.warm, cold=startup.cold),
     )
+end
+
+function get_startup_stages(
+    startup::@NamedTuple{hot::Float64, warm::Float64, cold::Float64}
+)
+    StartUpStages(hot=startup.hot, warm=startup.warm, cold=startup.cold)
 end
 
 function get_variable_cost(variable::T) where {T <: PSY.ProductionVariableCostCurve}
