@@ -44,7 +44,12 @@ end
 
 function get_startup(startup::@NamedTuple{hot::Float64, warm::Float64, cold::Float64})
     ThermalGenerationCostStartUp(
-        StartUpStages(hot=startup.hot, warm=startup.warm, cold=startup.cold),
+        StartUpStages(
+            hot=startup.hot,
+            warm=startup.warm,
+            cold=startup.cold,
+            startup_stages_type="STAGES",
+        ),
     )
 end
 
