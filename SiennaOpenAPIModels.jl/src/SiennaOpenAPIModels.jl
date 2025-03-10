@@ -70,6 +70,8 @@ include("modelincludes.jl")
 @batteries RenewableGenerationCost
 @batteries Source
 @batteries StandardLoad
+@batteries StartUpNumber
+@batteries StartUpShutDown
 @batteries StartUpStages
 @batteries StorageCost
 @batteries StorageCostStartUp
