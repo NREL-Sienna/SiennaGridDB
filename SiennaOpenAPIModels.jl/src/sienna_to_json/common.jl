@@ -53,6 +53,8 @@ function get_startup(startup::@NamedTuple{hot::Float64, warm::Float64, cold::Flo
     )
 end
 
+get_startup(::Nothing) = nothing
+
 function get_startup_stages(
     startup::@NamedTuple{hot::Float64, warm::Float64, cold::Float64}
 )
