@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 **available** | **Bool** |  | [default to nothing]
 **c** | **Float64** |  | [default to nothing]
 **id** | **Int64** |  | [default to nothing]
-**l** | **Int64** |  | [default to nothing]
+**l** | **Float64** |  | [default to nothing]
 **name** | **String** |  | [default to nothing]
 **r** | **Float64** |  | [default to nothing]
 
