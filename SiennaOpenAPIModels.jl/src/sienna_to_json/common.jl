@@ -39,17 +39,15 @@ function get_startup_shutdown(
 end
 
 function get_startup(startup::Float64)
-    ThermalGenerationCostStartUp(startup)
+    startup
 end
 
 function get_startup(startup::@NamedTuple{hot::Float64, warm::Float64, cold::Float64})
-    #    ThermalGenerationCostStartUp(
     StartUpStages(
         hot=startup.hot,
         warm=startup.warm,
         cold=startup.cold,
         startup_stages_type="STAGES",
-        #        ),
     )
 end
 
@@ -173,7 +171,7 @@ end
 function get_thermal_cost(cost::PSY.ThermalGenerationCost)
     ThermalGenerationCost(
         cost_type="THERMAL",
-        start_up=get_startup(cost.start_up),
+        start_up=ThermalGenerationCostStartUp(get_startup(cost.start_up)),
         shut_down=cost.shut_down,
         fixed=cost.fixed,
         variable=ProductionVariableCostCurve(get_variable_cost(cost.variable)),
