@@ -70,14 +70,6 @@ function get_two_terminal_loss(curve::PSY.IncrementalCurve)
     TwoTerminalHVDCLineLoss(get_incremental_curve(curve))
 end
 
-function get_interconnecting_loss(loss::PSY.LinearCurve)
-    InterconnectingConverterLossFunction(get_linear_curve(loss))
-end
-
-function get_interconnecting_loss(loss::PSY.QuadraticCurve)
-    InterconnectingConverterLossFunction(get_quadratic_curve(loss))
-end
-
 function get_function_data(function_data::PSY.LinearFunctionData)
     LinearFunctionData(
         function_type="LINEAR",
@@ -137,23 +129,6 @@ function get_incremental_curve(curve::PSY.IncrementalCurve)
         function_data=IncrementalCurveFunctionData(get_function_data(curve.function_data)),
         initial_input=curve.initial_input,
         input_at_zero=curve.input_at_zero,
-    )
-end
-
-function get_linear_curve(curve::PSY.LinearCurve)
-    LinearCurve(
-        curve_type="LINEAR",
-        marginal_cost=curve.marginal_cost,
-        no_load_cost=curve.no_load_cost,
-    )
-end
-
-function get_quadratic_curve(curve::PSY.QuadraticCurve)
-    QuadraticCurve(
-        quadratic_term=curve.quadratic_term,
-        proportional_term=curve.proportional_term,
-        constant_term=curve.constant_term,
-        curve_type="QUADRATIC",
     )
 end
 

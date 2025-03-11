@@ -50,12 +50,10 @@ include("modelincludes.jl")
 @batteries IncrementalCurve
 @batteries IncrementalCurveFunctionData
 @batteries InterconnectingConverter
-@batteries InterconnectingConverterLossFunction
 @batteries InterruptiblePowerLoad
 @batteries InputOutputCurve
 @batteries InputOutputCurveFunctionData
 @batteries Line
-@batteries LinearCurve
 @batteries LinearFunctionData
 @batteries LoadZone
 @batteries MinMax
@@ -66,7 +64,6 @@ include("modelincludes.jl")
 @batteries PiecewiseStepData
 @batteries PowerLoad
 @batteries ProductionVariableCostCurve
-@batteries QuadraticCurve
 @batteries QuadraticFunctionData
 @batteries RenewableNonDispatch
 @batteries RenewableDispatch

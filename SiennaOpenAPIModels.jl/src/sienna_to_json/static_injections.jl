@@ -252,7 +252,7 @@ function psy2openapi(inter::PSY.InterconnectingConverter, ids::IDGenerator)
         base_power=inter.base_power,
         dc_current=inter.dc_current,
         max_dc_current=inter.max_dc_current,
-        loss_function=get_interconnecting_loss(inter.loss_function),
+        loss_function=get_input_output_curve(inter.loss_function),
         dynamic_injector=getid!(ids, inter.dynamic_injector),
     )
 end
