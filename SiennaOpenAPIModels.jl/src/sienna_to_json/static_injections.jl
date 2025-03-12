@@ -236,3 +236,36 @@ function psy2openapi(energy_res::PSY.EnergyReservoirStorage, ids::IDGenerator)
         dynamic_injector=getid!(ids, energy_res.dynamic_injector),
     )
 end
+
+function psy2openapi(multi::PSY.ThermalMultiStart, ids::IDGenerator)
+    ThermalMultiStart(
+        id=getid!(ids, multi),
+        name=multi.name,
+        available=multi.available,
+        status=multi.status,
+        bus=getid!(ids, multi.bus),
+        active_power=multi.active_power * PSY.get_base_power(multi),
+        reactive_power=multi.reactive_power * PSY.get_base_power(multi),
+        rating=multi.rating * PSY.get_base_power(multi),
+        prime_mover_type=string(multi.prime_mover_type),
+        fuel=string(multi.fuel),
+        active_power_limits=get_min_max(
+            scale(multi.active_power_limits, PSY.get_base_power(multi)),
+        ),
+        reactive_power_limits=get_min_max(
+            scale(multi.reactive_power_limits, PSY.get_base_power(multi)),
+        ),
+        ramp_limits=get_up_down(scale(multi.ramp_limits, PSY.get_base_power(multi))),
+        power_trajectory=get_startup_shutdown(
+            scale(multi.power_trajectory, PSY.get_base_power(multi)),
+        ),
+        time_limits=get_up_down(multi.time_limits),
+        start_time_limits=get_startup(multi.start_time_limits),
+        start_types=multi.start_types,
+        operation_cost=get_thermal_cost(multi.operation_cost),
+        base_power=multi.base_power,
+        time_at_status=multi.time_at_status,
+        must_run=multi.must_run,
+        dynamic_injector=getid!(ids, multi.dynamic_injector),
+    )
+end

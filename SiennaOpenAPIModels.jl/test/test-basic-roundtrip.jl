@@ -383,3 +383,20 @@ end
         @test test_convert.active_power_limits_to.min == -1000.0
     end
 end
+
+@testset "c_sys5_pglib roundtrip" begin
+    c_sys5_pglib = PowerSystemCaseBuilder.build_system(
+        PowerSystemCaseBuilder.PSITestSystems,
+        "c_sys5_pglib",
+    )
+    @testset "Thermal Multi Start" begin
+        multi = PSY.get_component(PSY.ThermalMultiStart, c_sys5_pglib, "115_STEAM_1")
+        @test isa(multi, PSY.ThermalMultiStart)
+        test_convert = SiennaOpenAPIModels.psy2openapi(multi, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.ThermalMultiStart, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.ramp_limits.up == 0.024
+        @test test_convert.active_power == 5.0
+        @test isnothing(test_convert.dynamic_injector)
+    end
+end
