@@ -1,4 +1,5 @@
-db-name := "example.db"
+db-name := "griddb-example.sqlite"
+query-file := "queries.sql"
 data := "dummy_data.sql"
 sqlite-options := "--table"
 tmpdir := `mktemp -d`
@@ -8,18 +9,23 @@ sqlite-command := "sqlite3"
 assert-sqlite-version:
     @{{sqlite-command}} --version
 
-create-schema: assert-sqlite-version
+create-schema db=db-name: assert-sqlite-version
     @echo "Creating schema"
-    @rm {{db-name}}
-    @{{sqlite-command}} {{db-name}} < schema.sql
+    @rm {{db}}
+    @{{sqlite-command}} {{db}} < schema.sql
 
-load-dummy-data: create-schema
+load-dummy-data db=db-name: create-schema
     @echo "Loading dummy data"
-    @{{sqlite-command}} {{db-name}} < {{data}}
+    @{{sqlite-command}} {{db}} < {{data}}
 
-new-db: load-dummy-data
-    @{{sqlite-command}} {{sqlite-options}} {{db-name}}
+new-db db=db-name: load-dummy-data
+    @{{sqlite-command}} {{sqlite-options}} {{db}}
 
-test: load-dummy-data
-    @echo "Running queries"
-    @{{sqlite-command}} {{sqlite-options}} {{db-name}} < queries.sql
+query db=db-name:
+    @echo "Running query file to {{db}}"
+    @{{sqlite-command}} {{sqlite-options}} {{db}} < {{query-file}}
+
+test db=db-name:
+    @echo "Running test sequence on {{db}}..."
+    @just load-dummy-data {{db}}
+    @just query {{db}}

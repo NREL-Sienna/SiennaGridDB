@@ -8,7 +8,7 @@ INSERT INTO prime_movers (prime_mover, fuel, description) VALUES
 ('PV', NULL, "[P]hoto[V]oltaic");
 --
 -- -- Areas are the higher level aggregation of balancing topologies
-INSERT INTO areas (name, description) VALUES
+INSERT INTO planning_regions (name, description) VALUES
 ('North', 'Northern region'),
 ('South', 'Southern region');
 --
@@ -64,7 +64,7 @@ INSERT INTO supplemental_attributes (type, value) VALUES
     ('geolocation', jsonb("{'lat': 30.5, 'lon': -99.5}"));
 
 -- Add supplemental attribute to some entities
-INSERT INTO attributes_associations(attribute_id, entity_id) values (1, 3);
+INSERT INTO supplemental_attributes_association (attribute_id, entity_id) values (1, 3);
 
 -- Add time series examples
 INSERT INTO time_series (time_series_type, name, initial_timestamp, resolution_ms, horizon, interval, length, metadata)
