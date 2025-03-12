@@ -7,7 +7,7 @@ Start-up cost can take linear or multi-stage cost
     ThermalGenerationCostStartUp(; value=nothing)
 """
 mutable struct ThermalGenerationCostStartUp <: OpenAPI.OneOfAPIModel
-    value::Any # Union{ StartUpNumber, StartUpStages }
+    value::Any # Union{ StartUpStages }
     ThermalGenerationCostStartUp() = new()
     ThermalGenerationCostStartUp(value) = new(value)
 end # type ThermalGenerationCostStartUp
@@ -18,9 +18,7 @@ function OpenAPI.property_type(
     json::Dict{String, Any},
 )
     discriminator = json["startup_stages_type"]
-    if discriminator == "NUMBER"
-        return eval(Base.Meta.parse("StartUpNumber"))
-    elseif discriminator == "STAGES"
+    if discriminator == "STAGES"
         return eval(Base.Meta.parse("StartUpStages"))
     end
     throw(
