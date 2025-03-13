@@ -14,7 +14,7 @@ function get_bustype_enum(bustype::String)
     end
 end
 
-function get_nt_from_min_max(obj::MinMax)
+function get_tuple_min_max(obj::MinMax)
     return (min=obj.min, max=obj.max)
 end
 
