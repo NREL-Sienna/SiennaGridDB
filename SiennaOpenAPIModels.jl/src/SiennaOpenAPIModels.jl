@@ -99,6 +99,9 @@ include("sienna_to_json/topology.jl")
 include("sienna_to_json/branch.jl")
 include("sienna_to_json/service.jl")
 
+include("json_to_sienna/common.jl")
+include("json_to_sienna/topology.jl")
+
 include("dbinterface/sqlite.jl")
 
 """
