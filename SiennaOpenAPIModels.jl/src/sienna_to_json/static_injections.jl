@@ -236,3 +236,34 @@ function psy2openapi(energy_res::PSY.EnergyReservoirStorage, ids::IDGenerator)
         dynamic_injector=getid!(ids, energy_res.dynamic_injector),
     )
 end
+
+function psy2openapi(hybrid::PSY.HybridSystem, ids::IDGenerator)
+    HybridSystem(
+        id=getid!(ids, hybrid),
+        name=hybrid.name,
+        available=hybrid.available,
+        status=hybrid.status,
+        bus=getid!(ids, hybrid.bus),
+        active_power=hybrid.active_power * PSY.get_base_power(hybrid),
+        reactive_power=hybrid.reactive_power * PSY.get_base_power(hybrid),
+        base_power=hybrid.base_power,
+        operation_cost=get_market_bid_cost(hybrid.operation_cost),
+        thermal_unit=getid!(ids, hybrid.thermal_unit),
+        electric_load=getid!(ids, hybrid.electric_load),
+        storage=getid!(ids, hybrid.storage),
+        renewable_unit=getid!(ids, hybrid.renewable_unit),
+        interconnection_impedance=get_complex_number(hybrid.interconnection_impedance),
+        interconnection_rating=hybrid.interconnection_rating * PSY.get_base_power(hybrid),
+        input_active_power_limits=get_min_max(
+            scale(hybrid.input_active_power_limits, PSY.get_base_power(hybrid)),
+        ),
+        output_active_power_limits=get_min_max(
+            scale(hybrid.output_active_power_limits, PSY.get_base_power(hybrid)),
+        ),
+        reactive_power_limits=get_min_max(
+            scale(hybrid.reactive_power_limits, PSY.get_base_power(hybrid)),
+        ),
+        interconnection_efficiency=get_in_out(hybrid.input_active_power_limits),
+        dynamic_injector=getid!(ids, energy_res.dynamic_injector),
+    )
+end
