@@ -108,13 +108,124 @@ function get_tuple_up_down(obj::UpDown)
     return (up=obj.up, down=obj.down)
 end
 
-function get_thermal_cost(cost::ThermalGenerationCost)
+function get_tuple_xy_coords(nt::@NamedTuple{x::Float64, y::Float64})
+    PSY.XYCoords(x=nt.x, y=nt.y)
+end
+
+function get_sienna_thermal_cost(cost::ThermalGenerationCost)
     PSY.ThermalGenerationCost(
         cost_type="THERMAL",
-        start_up=get_startup(cost.start_up),
+        start_up=get_sienna_startup(cost.start_up),
         shut_down=cost.shut_down,
         fixed=cost.fixed,
-        variable=ProductionVariableCostCurve(get_variable_cost(cost.variable)),
+        variable=PSY.ProductionVariableCostCurve(get_sienna_variable_cost(cost.variable)),
+    )
+end
+
+function get_sienna_startup(startup::Float64)
+    return PSY.ThermalGenerationCostStartUp(startup)
+end
+
+function get_sienna_startup(
+    startup::@NamedTuple{hot::Float64, warm::Float64, cold::Float64}
+)
+    PSY.ThermalGenerationCostStartUp(
+        PSY.StartUpStages(hot=startup.hot, warm=startup.warm, cold=startup.cold),
+    )
+end
+
+function get_sienna_variable_cost(variable::CostCurve)
+    PSY.CostCurve(
+        variable_cost_type="COST",
+        value_curve=get_sienna_value_curve(variable.value_curve),
+        vom_cost=get_sienna_input_output_curve(variable.vom_cost),
+        power_units=string(variable.power_units),
+    )
+end
+
+function get_sienna_variable_cost(variable::FuelCurve)
+    PSY.FuelCurve(
+        variable_cost_type="FUEL",
+        value_curve=get_sienna_value_curve(variable.value_curve),
+        power_units=string(variable.power_units),
+        fuel_cost=PSY.FuelCurveFuelCost(variable.fuel_cost),
+        vom_cost=get_sienna_input_output_curve(variable.vom_cost),
+    )
+end
+
+function get_sienna_value_curve(curve::InputOutputCurve)
+    PSY.ValueCurve(get_sienna_input_output_curve(curve))
+end
+
+function get_sienna_value_curve(curve::AverageRateCurve)
+    PSY.ValueCurve(get_sienna_average_rate_curve(curve))
+end
+
+function get_sienna_value_curve(curve::IncrementalCurve)
+    PSY.ValueCurve(get_sienna_incremental_curve(curve))
+end
+
+function get_sienna_input_output_curve(curve::InputOutputCurve)
+    PSY.InputOutputCurve(
+        curve_type="INPUT_OUTPUT",
+        function_data=PSY.InputOutputCurveFunctionData(
+            get_sienna_function_data(curve.function_data),
+        ),
+        input_at_zero=curve.input_at_zero,
+    )
+end
+
+function get_sienna_average_rate_curve(curve::AverageRateCurve)
+    PSY.AverageRateCurve(
+        curve_type="AVERAGE_RATE",
+        function_data=PSY.AverageRateCurveFunctionData(
+            get_sienna_function_data(curve.function_data),
+        ),
+        initial_input=curve.initial_input,
+        input_at_zero=curve.input_at_zero,
+    )
+end
+
+function get_sienna_incremental_curve(curve::IncrementalCurve)
+    PSY.IncrementalCurve(
+        curve_type="INCREMENTAL",
+        function_data=PSY.IncrementalCurveFunctionData(
+            get_sienna_function_data(curve.function_data),
+        ),
+        initial_input=curve.initial_input,
+        input_at_zero=curve.input_at_zero,
+    )
+end
+
+function get_sienna_function_data(function_data::LinearFunctionData)
+    PSY.LinearFunctionData(
+        function_type="LINEAR",
+        proportional_term=function_data.proportional_term,
+        constant_term=function_data.constant_term,
+    )
+end
+
+function get_sienna_function_data(function_data::QuadraticFunctionData)
+    PSY.QuadraticFunctionData(
+        function_type="QUADRATIC",
+        quadratic_term=function_data.quadratic_term,
+        proportional_term=function_data.proportional_term,
+        constant_term=function_data.constant_term,
+    )
+end
+
+function get_sienna_function_data(function_data::PiecewiseLinearData)
+    PSY.PiecewiseLinearData(
+        function_type="PIECEWISE_LINEAR",
+        points=get_tuple_xy_coords.(function_data.points),
+    )
+end
+
+function get_sienna_function_data(function_data::PiecewiseStepData)
+    PSY.PiecewiseStepData(
+        function_type="PIECEWISE_STEP",
+        x_coords=function_data.x_coords,
+        y_coords=function_data.y_coords,
     )
 end
 

@@ -13,7 +13,7 @@ function openapi2psy(thermal::ThermalStandard, resolver::Resolver)
         active_power_limits=get_tuple_from_min_max(thermal.active_power_limits),
         reactive_power_limits=get_tuple_min_max(thermal.reactive_power_limits),
         ramp_limits=get_tuple_up_down(thermal.ramp_limits),
-        operation_cost=get_thermal_cost(thermal.operation_cost),
+        operation_cost=get_sienna_thermal_cost(thermal.operation_cost),
         time_limits=get_tuple_up_down(thermal.time_limits),
         must_run=thermal.must_run,
         bus=resolver(thermal.bus),
