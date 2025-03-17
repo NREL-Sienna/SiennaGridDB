@@ -249,3 +249,13 @@ end
 function (resolve::Resolver)(id::Nothing)
     nothing
 end
+
+"""
+Divide both values of all NamedTuple by a scalar
+"""
+function divide(nt::NamedTuple{T, Tuple{Float64, Float64}}, scalar::Float64) where {T}
+    NamedTuple{T, Tuple{Float64, Float64}}((nt[1] / scalar, nt[2] / scalar))
+end
+
+divide(::Nothing, ::Float64) = nothing
+divide(x::Float64, scalar::Float64) = x / scalar
