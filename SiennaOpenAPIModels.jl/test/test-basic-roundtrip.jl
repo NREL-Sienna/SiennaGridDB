@@ -371,7 +371,7 @@ end
         @test test_convert.bus == 2
         @test test_convert.reactive_power == 0.0
         @test test_convert.max_active_power == 100.0
-        #@test test_convert.name == "IloadBus4"
+        @test test_convert.name == "IloadBus4"
     end
 end
 
