@@ -123,11 +123,11 @@ function get_sienna_thermal_cost(cost::ThermalGenerationCost)
 end
 
 function get_sienna_startup(startup::ThermalGenerationCostStartUp)
-    PSY.ThermalGenerationCostStartUp(value=startup.value)
+    return (value = startup.value)
 end
 
 function get_sienna_startup(startup::ThermalGenerationCostStartUp)
-    PSY.ThermalGenerationCostStartUp(value=get_sienna_stages(startup.value))
+    PSY.ThermalGenerationCostStartUp(get_sienna_stages(startup.value))
 end
 
 function get_sienna_stages(stages::StartUpStages)
