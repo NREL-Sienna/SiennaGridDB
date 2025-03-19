@@ -122,16 +122,16 @@ function get_sienna_thermal_cost(cost::ThermalGenerationCost)
     )
 end
 
-function get_sienna_startup(startup::Float64)
-    return PSY.ThermalGenerationCostStartUp(startup)
+function get_sienna_startup(startup::ThermalGenerationCostStartUp)
+    PSY.ThermalGenerationCostStartUp(value=startup.value)
 end
 
-function get_sienna_startup(
-    startup::@NamedTuple{hot::Float64, warm::Float64, cold::Float64}
-)
-    PSY.ThermalGenerationCostStartUp(
-        PSY.StartUpStages(hot=startup.hot, warm=startup.warm, cold=startup.cold),
-    )
+function get_sienna_startup(startup::ThermalGenerationCostStartUp)
+    PSY.ThermalGenerationCostStartUp(value=get_sienna_stages(startup.value))
+end
+
+function get_sienna_stages(stages::StartUpStages)
+    PSY.StartUpStages(hot=stages.hot, warm=stages.warm, cold=stages.cold)
 end
 
 function get_sienna_variable_cost(variable::CostCurve)
