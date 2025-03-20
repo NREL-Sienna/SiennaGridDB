@@ -402,4 +402,15 @@ end
         @test test_convert.r == 0.01
         @test test_convert.active_power_limits_to.min == -1000.0
     end
+    @testset "InterconnectingConverter" begin
+        inter =
+            PSY.get_component(PSY.InterconnectingConverter, sys10_pjm_ac_dc, "IPC-nodeD2")
+        @test isa(inter, PSY.InterconnectingConverter)
+        test_convert = SiennaOpenAPIModels.psy2openapi(inter, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.InterconnectingConverter, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.rating == 200.0
+        @test test_convert.active_power_limits.max == 100.0
+        @test test_convert.max_dc_current == 100000000.0
+    end
 end

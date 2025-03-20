@@ -237,6 +237,27 @@ function psy2openapi(energy_res::PSY.EnergyReservoirStorage, ids::IDGenerator)
     )
 end
 
+
+function psy2openapi(inter::PSY.InterconnectingConverter, ids::IDGenerator)
+    InterconnectingConverter(
+        id=getid!(ids, inter),
+        name=inter.name,
+        available=inter.available,
+        bus=getid!(ids, inter.bus),
+        dc_bus=getid!(ids, inter.dc_bus),
+        active_power=inter.active_power * PSY.get_base_power(inter),
+        rating=inter.rating * PSY.get_base_power(inter),
+        active_power_limits=get_min_max(
+            scale(inter.active_power_limits, PSY.get_base_power(inter)),
+        ),
+        base_power=inter.base_power,
+        dc_current=inter.dc_current,
+        max_dc_current=inter.max_dc_current,
+        loss_function=get_input_output_curve(inter.loss_function),
+        dynamic_injector=getid!(ids, inter.dynamic_injector),
+    )
+end
+
 function psy2openapi(hydro_res::PSY.HydroEnergyReservoir, ids::IDGenerator)
     HydroEnergyReservoir(
         id=getid!(ids, hydro_res),

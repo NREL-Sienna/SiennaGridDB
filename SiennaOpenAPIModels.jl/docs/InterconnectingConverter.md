@@ -1,7 +1,7 @@
 # InterconnectingConverter
 
-
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **name** | **String** |  | [default to nothing]
@@ -14,11 +14,8 @@ Name | Type | Description | Notes
 **base_power** | **Float64** |  | [default to nothing]
 **dc_current** | **Float64** |  | [optional] [default to 0.0]
 **max_dc_current** | **Float64** |  | [optional] [default to 100000000]
-**loss_function** | [***InterconnectingConverterLossFunction**](InterconnectingConverterLossFunction.md) |  | [optional] [default to nothing]
+**loss_function** | [***InputOutputCurve**](InputOutputCurve.md) |  | [optional] [default to nothing]
 **rating** | **Float64** |  | [default to nothing]
 **dynamic_injector** | **Any** |  | [optional] [default to nothing]
 
-
 [[Back to Model list]](../README.md#models) [[Back to API list]](../README.md#api-endpoints) [[Back to README]](../README.md)
-
-
