@@ -7,7 +7,7 @@ Start-up cost can take linear or multi-stage cost
     ThermalGenerationCostStartUp(; value=nothing)
 """
 mutable struct ThermalGenerationCostStartUp <: OpenAPI.OneOfAPIModel
-    value::Any # Union{ StartUpStages }
+    value::Any # Union{ Float64, StartUpStages }
     ThermalGenerationCostStartUp() = new()
     ThermalGenerationCostStartUp(value) = new(value)
 end # type ThermalGenerationCostStartUp
