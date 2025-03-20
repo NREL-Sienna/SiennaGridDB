@@ -373,6 +373,19 @@ end
         @test test_convert.max_active_power == 100.0
         @test test_convert.name == "IloadBus4"
     end
+    @testset "Hydro Energy Reservoir" begin
+        hydro_res =
+            only(collect(PSY.get_components(PSY.HydroEnergyReservoir, c_sys5_hy_ed)))
+        @test isa(hydro_res, PSY.HydroEnergyReservoir)
+        test_convert = SiennaOpenAPIModels.psy2openapi(hydro_res, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.HydroEnergyReservoir, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.bus == 2
+        @test test_convert.prime_mover_type == "HY"
+        @test test_convert.active_power_limits.max == 700.0
+        @test test_convert.ramp_limits.down == 700.0
+        @test test_convert.conversion_factor == 1.0
+    end
 end
 
 @testset "sys10_pjm_ac_dc roundtrip" begin
@@ -400,5 +413,16 @@ end
         @test test_convert.arc == 2
         @test test_convert.r == 0.01
         @test test_convert.active_power_limits_to.min == -1000.0
+    end
+    @testset "InterconnectingConverter" begin
+        inter =
+            PSY.get_component(PSY.InterconnectingConverter, sys10_pjm_ac_dc, "IPC-nodeD2")
+        @test isa(inter, PSY.InterconnectingConverter)
+        test_convert = SiennaOpenAPIModels.psy2openapi(inter, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.InterconnectingConverter, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.rating == 200.0
+        @test test_convert.active_power_limits.max == 100.0
+        @test test_convert.max_dc_current == 100000000.0
     end
 end
