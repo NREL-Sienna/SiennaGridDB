@@ -32,7 +32,7 @@ function resolver_from_id_generator(idgen::IDGenerator, sys::PSY.System)
 end
 
 function (resolve::Resolver)(id::Int64)
-    PSY.get_component(resolve.sys, resolver.id2uuid(id))
+    PSY.get_component(resolve.sys, resolve.id2uuid(id))
 end
 
 function (resolve::Resolver)(id::Nothing)
