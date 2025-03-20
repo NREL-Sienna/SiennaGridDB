@@ -8,4 +8,5 @@
     resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_generator, sys)
 
     @test resolver(1) == component
+    @test_throws KeyError resolver(2)
 end
