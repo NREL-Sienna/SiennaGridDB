@@ -269,3 +269,56 @@ function psy2openapi(multi::PSY.ThermalMultiStart, ids::IDGenerator)
         dynamic_injector=getid!(ids, multi.dynamic_injector),
     )
 end
+
+function psy2openapi(inter::PSY.InterconnectingConverter, ids::IDGenerator)
+    InterconnectingConverter(
+        id=getid!(ids, inter),
+        name=inter.name,
+        available=inter.available,
+        bus=getid!(ids, inter.bus),
+        dc_bus=getid!(ids, inter.dc_bus),
+        active_power=inter.active_power * PSY.get_base_power(inter),
+        rating=inter.rating * PSY.get_base_power(inter),
+        active_power_limits=get_min_max(
+            scale(inter.active_power_limits, PSY.get_base_power(inter)),
+        ),
+        base_power=inter.base_power,
+        dc_current=inter.dc_current,
+        max_dc_current=inter.max_dc_current,
+        loss_function=get_input_output_curve(inter.loss_function),
+        dynamic_injector=getid!(ids, inter.dynamic_injector),
+    )
+end
+
+function psy2openapi(hydro_res::PSY.HydroEnergyReservoir, ids::IDGenerator)
+    HydroEnergyReservoir(
+        id=getid!(ids, hydro_res),
+        name=hydro_res.name,
+        available=hydro_res.available,
+        bus=getid!(ids, hydro_res.bus),
+        active_power=hydro_res.active_power * PSY.get_base_power(hydro_res),
+        reactive_power=hydro_res.reactive_power * PSY.get_base_power(hydro_res),
+        rating=hydro_res.rating * PSY.get_base_power(hydro_res),
+        prime_mover_type=string(hydro_res.prime_mover_type),
+        active_power_limits=get_min_max(
+            scale(hydro_res.active_power_limits, PSY.get_base_power(hydro_res)),
+        ),
+        reactive_power_limits=get_min_max(
+            scale(hydro_res.reactive_power_limits, PSY.get_base_power(hydro_res)),
+        ),
+        ramp_limits=get_up_down(
+            scale(hydro_res.ramp_limits, PSY.get_base_power(hydro_res)),
+        ),
+        time_limits=get_up_down(hydro_res.time_limits),
+        base_power=hydro_res.base_power,
+        storage_capacity=hydro_res.storage_capacity * PSY.get_base_power(hydro_res),
+        inflow=hydro_res.inflow * PSY.get_base_power(hydro_res),
+        initial_storage=hydro_res.initial_storage * PSY.get_base_power(hydro_res),
+        operation_cost=get_hydrostorage_cost(hydro_res.operation_cost),
+        storage_target=hydro_res.storage_target,
+        conversion_factor=hydro_res.conversion_factor,
+        status=hydro_res.status,
+        time_at_status=hydro_res.time_at_status,
+        dynamic_injector=getid!(ids, hydro_res.dynamic_injector),
+    )
+end
