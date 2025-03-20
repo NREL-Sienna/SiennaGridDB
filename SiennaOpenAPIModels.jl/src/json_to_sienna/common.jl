@@ -114,70 +114,75 @@ end
 
 function get_sienna_thermal_cost(cost::ThermalGenerationCost)
     PSY.ThermalGenerationCost(
-        cost_type="THERMAL",
         start_up=get_sienna_startup(cost.start_up),
         shut_down=cost.shut_down,
         fixed=cost.fixed,
-        variable=PSY.ProductionVariableCostCurve(get_sienna_variable_cost(cost.variable)),
+        variable=get_sienna_variable_cost(cost.variable),
     )
 end
 
 function get_sienna_startup(startup::ThermalGenerationCostStartUp)
-    return (value = startup.value)
-end
-
-function get_sienna_startup(startup::ThermalGenerationCostStartUp)
-    PSY.ThermalGenerationCostStartUp(get_sienna_stages(startup.value))
+    return startup.value
 end
 
 function get_sienna_stages(stages::StartUpStages)
-    PSY.StartUpStages(hot=stages.hot, warm=stages.warm, cold=stages.cold)
+    (hot=stages.hot, warm=stages.warm, cold=stages.cold)
+end
+
+function get_sienna_variable_cost(variable::ProductionVariableCostCurve)
+    get_sienna_variable_cost(variable.value)
+end
+
+function get_sienna_unit_system(units::String)
+    if units == "SYSTEM_BASE"
+        return PSY.UnitSystem.SYSTEM_BASE
+    elseif units == "DEVICE_BASE"
+        return PSY.UnitSystem.DEVICE_BASE
+    elseif units == "NATURAL_UNITS"
+        return PSY.UnitSystem.NATURAL_UNITS
+    else
+        error("Unknown unit setting $units")
+    end
 end
 
 function get_sienna_variable_cost(variable::CostCurve)
     PSY.CostCurve(
-        variable_cost_type="COST",
         value_curve=get_sienna_value_curve(variable.value_curve),
-        vom_cost=get_sienna_input_output_curve(variable.vom_cost),
-        power_units=string(variable.power_units),
+        vom_cost=get_sienna_value_curve(variable.vom_cost),
+        power_units=get_sienna_unit_system(variable.power_units),
     )
 end
 
 function get_sienna_variable_cost(variable::FuelCurve)
     PSY.FuelCurve(
-        variable_cost_type="FUEL",
         value_curve=get_sienna_value_curve(variable.value_curve),
-        power_units=string(variable.power_units),
+        power_units=get_sienna_unit_system(variable.power_units),
         fuel_cost=PSY.FuelCurveFuelCost(variable.fuel_cost),
         vom_cost=get_sienna_input_output_curve(variable.vom_cost),
     )
 end
 
+function get_sienna_value_curve(curve::ValueCurve)
+    get_sienna_value_curve(curve.value)
+end
+
 function get_sienna_value_curve(curve::InputOutputCurve)
-    PSY.ValueCurve(get_sienna_input_output_curve(curve))
-end
-
-function get_sienna_value_curve(curve::AverageRateCurve)
-    PSY.ValueCurve(get_sienna_average_rate_curve(curve))
-end
-
-function get_sienna_value_curve(curve::IncrementalCurve)
-    PSY.ValueCurve(get_sienna_incremental_curve(curve))
-end
-
-function get_sienna_input_output_curve(curve::InputOutputCurve)
     PSY.InputOutputCurve(
-        curve_type="INPUT_OUTPUT",
-        function_data=PSY.InputOutputCurveFunctionData(
-            get_sienna_function_data(curve.function_data),
-        ),
+        function_data=get_sienna_function_data(curve.function_data),
         input_at_zero=curve.input_at_zero,
     )
 end
 
-function get_sienna_average_rate_curve(curve::AverageRateCurve)
+function get_sienna_value_curve(curve::IncrementalCurve)
+    PSY.IncrementalCurve(
+        function_data=get_sienna_function_data(curve.function_data),
+        initial_input=curve.initial_input,
+        input_at_zero=curve.input_at_zero,
+    )
+end
+
+function get_sienna_value_curve(curve::AverageRateCurve)
     PSY.AverageRateCurve(
-        curve_type="AVERAGE_RATE",
         function_data=PSY.AverageRateCurveFunctionData(
             get_sienna_function_data(curve.function_data),
         ),
@@ -186,20 +191,12 @@ function get_sienna_average_rate_curve(curve::AverageRateCurve)
     )
 end
 
-function get_sienna_incremental_curve(curve::IncrementalCurve)
-    PSY.IncrementalCurve(
-        curve_type="INCREMENTAL",
-        function_data=PSY.IncrementalCurveFunctionData(
-            get_sienna_function_data(curve.function_data),
-        ),
-        initial_input=curve.initial_input,
-        input_at_zero=curve.input_at_zero,
-    )
+function get_sienna_function_data(function_data::InputOutputCurveFunctionData)
+    return get_sienna_function_data(function_data.value)
 end
 
 function get_sienna_function_data(function_data::LinearFunctionData)
     PSY.LinearFunctionData(
-        function_type="LINEAR",
         proportional_term=function_data.proportional_term,
         constant_term=function_data.constant_term,
     )
@@ -207,7 +204,6 @@ end
 
 function get_sienna_function_data(function_data::QuadraticFunctionData)
     PSY.QuadraticFunctionData(
-        function_type="QUADRATIC",
         quadratic_term=function_data.quadratic_term,
         proportional_term=function_data.proportional_term,
         constant_term=function_data.constant_term,
@@ -215,18 +211,11 @@ function get_sienna_function_data(function_data::QuadraticFunctionData)
 end
 
 function get_sienna_function_data(function_data::PiecewiseLinearData)
-    PSY.PiecewiseLinearData(
-        function_type="PIECEWISE_LINEAR",
-        points=get_tuple_xy_coords.(function_data.points),
-    )
+    PSY.PiecewiseLinearData(points=get_tuple_xy_coords.(function_data.points))
 end
 
 function get_sienna_function_data(function_data::PiecewiseStepData)
-    PSY.PiecewiseStepData(
-        function_type="PIECEWISE_STEP",
-        x_coords=function_data.x_coords,
-        y_coords=function_data.y_coords,
-    )
+    PSY.PiecewiseStepData(x_coords=function_data.x_coords, y_coords=function_data.y_coords)
 end
 
 mutable struct Resolver
