@@ -270,6 +270,22 @@ function psy2openapi(multi::PSY.ThermalMultiStart, ids::IDGenerator)
     )
 end
 
+function psy2openapi(interrupt::PSY.InterruptiblePowerLoad, ids::IDGenerator)
+    InterruptiblePowerLoad(
+        id=getid!(ids, interrupt),
+        name=interrupt.name,
+        available=interrupt.available,
+        bus=getid!(ids, interrupt.bus),
+        active_power=interrupt.active_power * PSY.get_base_power(interrupt),
+        reactive_power=interrupt.reactive_power * PSY.get_base_power(interrupt),
+        max_active_power=interrupt.max_active_power * PSY.get_base_power(interrupt),
+        max_reactive_power=interrupt.max_reactive_power * PSY.get_base_power(interrupt),
+        base_power=interrupt.base_power,
+        operation_cost=get_load_cost(interrupt.operation_cost),
+        dynamic_injector=getid!(ids, interrupt.dynamic_injector),
+    )
+end
+
 function psy2openapi(inter::PSY.InterconnectingConverter, ids::IDGenerator)
     InterconnectingConverter(
         id=getid!(ids, inter),

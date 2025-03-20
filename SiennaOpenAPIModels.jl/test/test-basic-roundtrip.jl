@@ -361,6 +361,18 @@ end
         PowerSystemCaseBuilder.PSITestSystems,
         "c_sys5_hy_ed",
     )
+    @testset "InterruptiblePowerLoad" begin
+        interrupt =
+            only(collect(PSY.get_components(PSY.InterruptiblePowerLoad, c_sys5_hy_ed)))
+        @test isa(interrupt, PSY.InterruptiblePowerLoad)
+        test_convert = SiennaOpenAPIModels.psy2openapi(interrupt, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.InterruptiblePowerLoad, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.bus == 2
+        @test test_convert.reactive_power == 0.0
+        @test test_convert.max_active_power == 100.0
+        @test test_convert.name == "IloadBus4"
+    end
     @testset "Hydro Energy Reservoir" begin
         hydro_res =
             only(collect(PSY.get_components(PSY.HydroEnergyReservoir, c_sys5_hy_ed)))
