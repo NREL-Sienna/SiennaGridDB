@@ -93,6 +93,77 @@ include("modelincludes.jl")
 @batteries VariableReserveNonSpinning
 @batteries XYCoords
 
+@batteries ACBus
+@batteries AGC
+@batteries Arc
+@batteries Area
+@batteries AreaInterchange
+@batteries PSY.AverageRateCurve
+@batteries PSY.AverageRateCurveFunctionData
+@batteries PSY.ComplexNumber
+@batteries ConstantReserve
+@batteries ConstantReserveGroup
+@batteries ConstantReserveNonSpinning
+@batteries PSY.CostCurve
+@batteries DCBus
+@batteries EnergyReservoirStorage
+@batteries ExponentialLoad
+@batteries FixedAdmittance
+@batteries PSY.FromTo
+@batteries PSY.FromToToFrom
+@batteries PSY.FuelCurve
+@batteries PSY.FuelCurveFuelCost
+@batteries HydroDispatch
+@batteries HydroEnergyReservoir
+@batteries PSY.HydroGenerationCost
+@batteries HydroPumpedStorage
+@batteries PSY.InOut
+@batteries IncrementalCurve
+@batteries IncrementalCurveFunctionData
+@batteries InterconnectingConverter
+@batteries InterruptiblePowerLoad
+@batteries PSY.InputOutputCurve
+@batteries PSY.InputOutputCurveFunctionData
+@batteries Line
+@batteries PSY.LinearFunctionData
+@batteries PSY.LoadCost
+@batteries LoadZone
+@batteries PSY.MinMax
+@batteries MonitoredLine
+@batteries PSY.HydroStorageGenerationCost
+@batteries PhaseShiftingTransformer
+@batteries PSY.PiecewiseLinearData
+@batteries PSY.PiecewiseStepData
+@batteries PowerLoad
+@batteries PSY.ProductionVariableCostCurve
+@batteries PSY.QuadraticFunctionData
+@batteries RenewableNonDispatch
+@batteries RenewableDispatch
+@batteries PSY.RenewableGenerationCost
+@batteries Source
+@batteries StandardLoad
+@batteries PSY.StartUpShutDown
+@batteries PSY.StartUpStages
+@batteries PSY.StorageCost
+@batteries PSY.StorageCostStartUp
+@batteries PSY.StorageCostStartUpOneOf
+#@batteries Switched Admittance
+@batteries TapTransformer
+@batteries PSY.ThermalGenerationCost
+@batteries PSY.ThermalGenerationCostStartUp
+@batteries ThermalMultiStart
+@batteries ThermalStandard
+@batteries TModelHVDCLine
+@batteries Transformer2W
+@batteries TwoTerminalHVDCLine
+@batteries PSY.TwoTerminalHVDCLineLoss
+@batteries TwoTerminalVSCDCLine
+@batteries PSY.UpDown
+@batteries PSY.ValueCurve
+@batteries VariableReserve
+@batteries VariableReserveNonSpinning
+@batteries PSY.XYCoords
+
 include("sienna_to_json/common.jl")
 include("sienna_to_json/static_injections.jl")
 include("sienna_to_json/topology.jl")
