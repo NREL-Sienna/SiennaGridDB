@@ -17,6 +17,7 @@ const PSY = PowerSystems
 const API_VERSION = "1.0.0"
 
 export psy2openapi
+export openapi2psy
 export IDGenerator
 export getid!
 
@@ -79,9 +80,11 @@ include("modelincludes.jl")
 #@batteries Switched Admittance
 @batteries TapTransformer
 @batteries ThermalGenerationCost
+@batteries PSY.ThermalGenerationCost
 @batteries ThermalGenerationCostStartUp
 @batteries ThermalMultiStart
 @batteries ThermalStandard
+@batteries PSY.ThermalStandard
 @batteries TModelHVDCLine
 @batteries Transformer2W
 @batteries TwoTerminalHVDCLine

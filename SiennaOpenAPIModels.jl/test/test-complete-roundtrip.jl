@@ -4,6 +4,7 @@ using PowerSystemCaseBuilder
 import PowerSystems
 const PSY = PowerSystems
 using JSON
+using Infiltrator
 
 @testset "c_sys5_pjm RoundTrip to JSON" begin
     c_sys5 =
@@ -39,6 +40,6 @@ using JSON
         @test thermal.rating == thermal_copy.rating
         @test thermal.active_power_limits == thermal_copy.active_power_limits
         @test thermal.operation_cost == thermal_copy.operation_cost
-        @test thermal.prime_mover_type == thermal_copy.prime_mover
+        @test thermal.prime_mover_type == thermal_copy.prime_mover_type
     end
 end

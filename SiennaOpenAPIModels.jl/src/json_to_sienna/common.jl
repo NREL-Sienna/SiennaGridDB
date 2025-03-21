@@ -108,8 +108,8 @@ function get_tuple_up_down(obj::UpDown)
     return (up=obj.up, down=obj.down)
 end
 
-function get_tuple_xy_coords(nt::@NamedTuple{x::Float64, y::Float64})
-    PSY.XYCoords(x=nt.x, y=nt.y)
+function get_tuple_xy_coords(obj::XYCoords)
+    return (x=nt.x, y=nt.y)
 end
 
 function get_sienna_thermal_cost(cost::ThermalGenerationCost)
