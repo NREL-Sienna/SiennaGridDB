@@ -17,6 +17,7 @@ const PSY = PowerSystems
 const API_VERSION = "1.0.0"
 
 export psy2openapi
+export openapi2psy
 export IDGenerator
 export getid!
 
@@ -79,9 +80,11 @@ include("modelincludes.jl")
 #@batteries Switched Admittance
 @batteries TapTransformer
 @batteries ThermalGenerationCost
+@batteries PSY.ThermalGenerationCost
 @batteries ThermalGenerationCostStartUp
 @batteries ThermalMultiStart
 @batteries ThermalStandard
+@batteries PSY.ThermalStandard
 @batteries TModelHVDCLine
 @batteries Transformer2W
 @batteries TwoTerminalHVDCLine
@@ -101,6 +104,7 @@ include("sienna_to_json/service.jl")
 
 include("json_to_sienna/common.jl")
 include("json_to_sienna/topology.jl")
+include("json_to_sienna/static_injections.jl")
 
 include("dbinterface/sqlite.jl")
 

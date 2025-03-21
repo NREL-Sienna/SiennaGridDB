@@ -5,6 +5,7 @@ version = "0.1.0"
 
 [deps]
 DBInterface = "a10d1c49-ce27-4219-8d33-6db1a4562965"
+Infiltrator = "5903a43b-9cc3-4c30-8d17-598619ec4e9b"
 JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
 OpenAPI = "d5e62ea6-ddf3-4d43-8e4c-ad5e6c8bfd7d"
 PowerSystems = "bcd98974-b02a-5e2f-9ee0-a103f5c450dd"
@@ -14,6 +15,7 @@ UUIDs = "cf7118a7-6976-5b1a-9a39-7adc72f591a4"
 
 [compat]
 DBInterface = "2.6.1"
+Infiltrator = "1.8.6"
 JSON = "0.21.4"
 SQLite = "1.6.1"
 UUIDs = "1.11.0"
