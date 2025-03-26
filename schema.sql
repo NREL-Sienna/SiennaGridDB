@@ -258,9 +258,9 @@ create table time_series_associations (
 -- of a time-varying quantity.
 create table static_time_series (
   id integer primary key
-  ,time_series_id datetime not null
+  ,time_series_id integer not null
   ,uuid text null
-  ,timestamp datetime not null
+  ,timestamp integer not null
   ,value real not null
   ,foreign key (time_series_id) references time_series (id)
 );
