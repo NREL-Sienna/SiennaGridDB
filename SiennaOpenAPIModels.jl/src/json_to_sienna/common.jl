@@ -15,6 +15,11 @@ function get_bustype_enum(bustype::String)
 end
 
 function get_prime_mover_enum(prime_mover::String)
+    IS.deserialize(PSY.PrimeMovers, prime_mover)
+end
+
+"""
+function get_prime_mover_enum(prime_mover::String)
     if prime_mover == "BA"
         return PSY.PrimeMovers.BA
     elseif prime_mover == "BT"
@@ -65,6 +70,7 @@ function get_prime_mover_enum(prime_mover::String)
         error("Unknown prime mover type: $(prime_mover)")
     end
 end
+"""
 
 function get_fuel_type_enum(fuel_type::String)
     if fuel_type == "COAL"

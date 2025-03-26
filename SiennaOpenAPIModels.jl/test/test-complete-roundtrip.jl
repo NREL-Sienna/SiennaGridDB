@@ -1,12 +1,11 @@
 using SiennaOpenAPIModels
 using OpenAPI
 using PowerSystemCaseBuilder
-using InfrastructureSystems
+import InfrastructureSystems
 const IS = InfrastructureSystems
 import PowerSystems
 const PSY = PowerSystems
 using JSON
-using Infiltrator
 
 @testset "c_sys5_pjm RoundTrip to JSON" begin
     c_sys5 =

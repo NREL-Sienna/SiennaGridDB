@@ -83,7 +83,6 @@ include("modelincludes.jl")
 @batteries ThermalGenerationCostStartUp
 @batteries ThermalMultiStart
 @batteries ThermalStandard
-@batteries PSY.ThermalStandard
 @batteries TModelHVDCLine
 @batteries Transformer2W
 @batteries TwoTerminalHVDCLine
