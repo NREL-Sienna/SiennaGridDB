@@ -1,6 +1,8 @@
 using SiennaOpenAPIModels
 using OpenAPI
 using PowerSystemCaseBuilder
+using InfrastructureSystems
+const IS = InfrastructureSystems
 import PowerSystems
 const PSY = PowerSystems
 using JSON
@@ -39,7 +41,11 @@ using Infiltrator
         @test thermal.reactive_power == thermal_copy.reactive_power
         @test thermal.rating == thermal_copy.rating
         @test thermal.active_power_limits == thermal_copy.active_power_limits
-        @test thermal.operation_cost == thermal_copy.operation_cost
+        @test IS.compare_values(
+            thermal.operation_cost,
+            thermal_copy.operation_cost,
+            exclude=Set([:internal]),
+        )
         @test thermal.prime_mover_type == thermal_copy.prime_mover_type
     end
 end

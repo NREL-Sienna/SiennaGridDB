@@ -46,6 +46,7 @@ include("modelincludes.jl")
 @batteries HydroDispatch
 @batteries HydroEnergyReservoir
 @batteries HydroGenerationCost
+@batteries HydroStorageGenerationCost
 @batteries HydroPumpedStorage
 @batteries InOut
 @batteries IncrementalCurve
@@ -60,7 +61,6 @@ include("modelincludes.jl")
 @batteries LoadZone
 @batteries MinMax
 @batteries MonitoredLine
-@batteries HydroStorageGenerationCost
 @batteries PhaseShiftingTransformer
 @batteries PiecewiseLinearData
 @batteries PiecewiseStepData
@@ -80,7 +80,6 @@ include("modelincludes.jl")
 #@batteries Switched Admittance
 @batteries TapTransformer
 @batteries ThermalGenerationCost
-@batteries PSY.ThermalGenerationCost
 @batteries ThermalGenerationCostStartUp
 @batteries ThermalMultiStart
 @batteries ThermalStandard
