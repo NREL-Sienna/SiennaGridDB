@@ -260,7 +260,7 @@ create table static_time_series (
   id integer primary key
   ,time_series_id integer not null
   ,uuid text null
-  ,timestamp integer not null
+  ,timestamp datetime not null
   ,value real not null
   ,foreign key (time_series_id) references time_series (id)
 );
