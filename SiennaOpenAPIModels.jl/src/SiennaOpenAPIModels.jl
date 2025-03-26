@@ -17,6 +17,7 @@ const PSY = PowerSystems
 const API_VERSION = "1.0.0"
 
 export psy2openapi
+export openapi2psy
 export IDGenerator
 export getid!
 
@@ -98,6 +99,9 @@ include("sienna_to_json/static_injections.jl")
 include("sienna_to_json/topology.jl")
 include("sienna_to_json/branch.jl")
 include("sienna_to_json/service.jl")
+
+include("json_to_sienna/common.jl")
+include("json_to_sienna/topology.jl")
 
 include("dbinterface/sqlite.jl")
 
