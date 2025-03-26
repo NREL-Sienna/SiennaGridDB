@@ -17,6 +17,7 @@ const PSY = PowerSystems
 const API_VERSION = "1.0.0"
 
 export psy2openapi
+export openapi2psy
 export IDGenerator
 export getid!
 
