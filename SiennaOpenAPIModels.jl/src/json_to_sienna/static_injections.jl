@@ -4,7 +4,7 @@ function openapi2psy(thermal::ThermalStandard, resolver::Resolver)
     end
     PSY.ThermalStandard(;
         name=thermal.name,
-        prime_mover_type=get_prime_mover_enum(thermal.prime_mover),
+        prime_mover_type=get_prime_mover_enum(thermal.prime_mover_type),
         fuel=get_fuel_type_enum(thermal.fuel_type),
         rating=thermal.rating / thermal.base_power,
         base_power=thermal.base_power,

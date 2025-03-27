@@ -2,7 +2,7 @@ function psy2openapi(thermal_standard::PSY.ThermalStandard, ids::IDGenerator)
     ThermalStandard(
         id=getid!(ids, thermal_standard),
         name=thermal_standard.name,
-        prime_mover=string(thermal_standard.prime_mover_type),
+        prime_mover_type=string(thermal_standard.prime_mover_type),
         fuel_type=string(thermal_standard.fuel),
         rating=thermal_standard.rating * PSY.get_base_power(thermal_standard),
         base_power=thermal_standard.base_power,
