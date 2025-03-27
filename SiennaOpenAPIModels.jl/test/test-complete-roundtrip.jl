@@ -40,11 +40,24 @@ using JSON
         @test thermal.reactive_power == thermal_copy.reactive_power
         @test thermal.rating == thermal_copy.rating
         @test thermal.active_power_limits == thermal_copy.active_power_limits
-        @test IS.compare_values(
-            thermal.operation_cost,
-            thermal_copy.operation_cost,
-            exclude=Set([:internal]),
-        )
+        @test IS.compare_values(thermal.operation_cost, thermal_copy.operation_cost)
         @test thermal.prime_mover_type == thermal_copy.prime_mover_type
+    end
+    @testset "RenewableDispatch to JSON" begin
+        renew = PSY.get_component(PSY.RenewableDispatch, c_sys5, "PVBus5")
+        @test isa(renew, PSY.RenewableDispatch)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(renew, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, c_sys5)
+        renew_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test renew.name == renew_copy.name
+        @test renew.available == renew_copy.available
+        @test renew.bus == renew_copy.bus
+        @test renew.active_power == renew_copy.active_power
+        @test renew.reactive_power == renew_copy.reactive_power
+        @test renew.rating == renew_copy.rating
+        @test renew.prime_mover_type == renew_copy.prime_mover_type
+        @test renew.reactive_power_limits == renew_copy.reactive_power_limits
+        @test IS.compare_values(renew.operation_cost, renew_copy.operation_cost)
     end
 end
