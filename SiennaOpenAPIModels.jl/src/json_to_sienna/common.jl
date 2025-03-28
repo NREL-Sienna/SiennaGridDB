@@ -46,6 +46,13 @@ function get_sienna_thermal_cost(cost::ThermalGenerationCost)
     )
 end
 
+function get_sienna_renewable_cost(cost::RenewableGenerationCost)
+    PSY.RenewableGenerationCost(
+        curtailment_cost=get_sienna_variable_cost(cost.curtailment_cost),
+        variable=get_sienna_variable_cost(cost.variable),
+    )
+end
+
 function get_sienna_startup(startup::ThermalGenerationCostStartUp)
     return startup.value
 end
