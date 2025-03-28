@@ -60,4 +60,18 @@ using JSON
         @test renew.reactive_power_limits == renew_copy.reactive_power_limits
         @test IS.compare_values(renew.operation_cost, renew_copy.operation_cost)
     end
+    @testset "PowerLoad to JSON" begin
+        load = PSY.get_component(PSY.PowerLoad, c_sys5, "Bus2")
+        @test isa(load, PSY.PowerLoad)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(load, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, c_sys5)
+        load_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test load.name == load_copy.name
+        @test load.available == load_copy.available
+        @test load.bus == load_copy.bus
+        @test load.active_power == load_copy.active_power
+        @test load.max_reactive_power == load_copy.max_reactive_power
+        @test load.base_power == load_copy.base_power
+    end
 end
