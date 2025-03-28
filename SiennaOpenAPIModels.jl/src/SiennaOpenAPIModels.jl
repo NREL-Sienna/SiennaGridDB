@@ -46,6 +46,7 @@ include("modelincludes.jl")
 @batteries HydroDispatch
 @batteries HydroEnergyReservoir
 @batteries HydroGenerationCost
+@batteries HydroStorageGenerationCost
 @batteries HydroPumpedStorage
 @batteries InOut
 @batteries IncrementalCurve
@@ -60,7 +61,6 @@ include("modelincludes.jl")
 @batteries LoadZone
 @batteries MinMax
 @batteries MonitoredLine
-@batteries HydroStorageGenerationCost
 @batteries PhaseShiftingTransformer
 @batteries PiecewiseLinearData
 @batteries PiecewiseStepData
@@ -102,6 +102,7 @@ include("sienna_to_json/service.jl")
 
 include("json_to_sienna/common.jl")
 include("json_to_sienna/topology.jl")
+include("json_to_sienna/static_injections.jl")
 
 include("dbinterface/sqlite.jl")
 

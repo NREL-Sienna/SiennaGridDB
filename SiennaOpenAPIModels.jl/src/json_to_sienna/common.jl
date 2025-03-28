@@ -1,3 +1,6 @@
+import InfrastructureSystems
+const IS = InfrastructureSystems
+
 function get_bustype_enum(bustype::String)
     if bustype == "PQ"
         return PSY.ACBusTypes.PQ
@@ -14,8 +17,130 @@ function get_bustype_enum(bustype::String)
     end
 end
 
+function get_prime_mover_enum(prime_mover_type::String)
+    IS.deserialize(PSY.PrimeMovers, prime_mover_type)
+end
+
+function get_fuel_type_enum(fuel_type::String)
+    IS.deserialize(PSY.ThermalFuels, fuel_type)
+end
+
 function get_tuple_min_max(obj::MinMax)
     return (min=obj.min, max=obj.max)
+end
+
+function get_tuple_up_down(obj::UpDown)
+    return (up=obj.up, down=obj.down)
+end
+
+function get_tuple_xy_coords(obj::XYCoords)
+    return (x=nt.x, y=nt.y)
+end
+
+function get_sienna_thermal_cost(cost::ThermalGenerationCost)
+    PSY.ThermalGenerationCost(
+        start_up=get_sienna_startup(cost.start_up),
+        shut_down=cost.shut_down,
+        fixed=cost.fixed,
+        variable=get_sienna_variable_cost(cost.variable),
+    )
+end
+
+function get_sienna_startup(startup::ThermalGenerationCostStartUp)
+    return startup.value
+end
+
+function get_sienna_stages(stages::StartUpStages)
+    (hot=stages.hot, warm=stages.warm, cold=stages.cold)
+end
+
+function get_sienna_variable_cost(variable::ProductionVariableCostCurve)
+    get_sienna_variable_cost(variable.value)
+end
+
+function get_sienna_unit_system(units::String)
+    if units == "SYSTEM_BASE"
+        return PSY.UnitSystem.SYSTEM_BASE
+    elseif units == "DEVICE_BASE"
+        return PSY.UnitSystem.DEVICE_BASE
+    elseif units == "NATURAL_UNITS"
+        return PSY.UnitSystem.NATURAL_UNITS
+    else
+        error("Unknown unit setting $units")
+    end
+end
+
+function get_sienna_variable_cost(variable::CostCurve)
+    PSY.CostCurve(
+        value_curve=get_sienna_value_curve(variable.value_curve),
+        vom_cost=get_sienna_value_curve(variable.vom_cost),
+        power_units=get_sienna_unit_system(variable.power_units),
+    )
+end
+
+function get_sienna_variable_cost(variable::FuelCurve)
+    PSY.FuelCurve(
+        value_curve=get_sienna_value_curve(variable.value_curve),
+        power_units=get_sienna_unit_system(variable.power_units),
+        fuel_cost=PSY.FuelCurveFuelCost(variable.fuel_cost),
+        vom_cost=get_sienna_input_output_curve(variable.vom_cost),
+    )
+end
+
+function get_sienna_value_curve(curve::ValueCurve)
+    get_sienna_value_curve(curve.value)
+end
+
+function get_sienna_value_curve(curve::InputOutputCurve)
+    PSY.InputOutputCurve(
+        function_data=get_sienna_function_data(curve.function_data),
+        input_at_zero=curve.input_at_zero,
+    )
+end
+
+function get_sienna_value_curve(curve::IncrementalCurve)
+    PSY.IncrementalCurve(
+        function_data=get_sienna_function_data(curve.function_data),
+        initial_input=curve.initial_input,
+        input_at_zero=curve.input_at_zero,
+    )
+end
+
+function get_sienna_value_curve(curve::AverageRateCurve)
+    PSY.AverageRateCurve(
+        function_data=PSY.AverageRateCurveFunctionData(
+            get_sienna_function_data(curve.function_data),
+        ),
+        initial_input=curve.initial_input,
+        input_at_zero=curve.input_at_zero,
+    )
+end
+
+function get_sienna_function_data(function_data::InputOutputCurveFunctionData)
+    return get_sienna_function_data(function_data.value)
+end
+
+function get_sienna_function_data(function_data::LinearFunctionData)
+    PSY.LinearFunctionData(
+        proportional_term=function_data.proportional_term,
+        constant_term=function_data.constant_term,
+    )
+end
+
+function get_sienna_function_data(function_data::QuadraticFunctionData)
+    PSY.QuadraticFunctionData(
+        quadratic_term=function_data.quadratic_term,
+        proportional_term=function_data.proportional_term,
+        constant_term=function_data.constant_term,
+    )
+end
+
+function get_sienna_function_data(function_data::PiecewiseLinearData)
+    PSY.PiecewiseLinearData(points=get_tuple_xy_coords.(function_data.points))
+end
+
+function get_sienna_function_data(function_data::PiecewiseStepData)
+    PSY.PiecewiseStepData(x_coords=function_data.x_coords, y_coords=function_data.y_coords)
 end
 
 mutable struct Resolver
@@ -38,3 +163,13 @@ end
 function (resolve::Resolver)(id::Nothing)
     nothing
 end
+
+"""
+Divide both values of all NamedTuple by a scalar
+"""
+function divide(nt::NamedTuple{T, Tuple{Float64, Float64}}, scalar::Float64) where {T}
+    NamedTuple{T, Tuple{Float64, Float64}}((nt[1] / scalar, nt[2] / scalar))
+end
+
+divide(::Nothing, ::Float64) = nothing
+divide(x::Float64, scalar::Float64) = x / scalar
