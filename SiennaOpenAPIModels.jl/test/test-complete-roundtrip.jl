@@ -6,6 +6,7 @@ const IS = InfrastructureSystems
 import PowerSystems
 const PSY = PowerSystems
 using JSON
+using Infiltrator
 
 @testset "c_sys5_pjm RoundTrip to JSON" begin
     c_sys5 =
@@ -59,5 +60,22 @@ using JSON
         @test renew.prime_mover_type == renew_copy.prime_mover_type
         @test renew.reactive_power_limits == renew_copy.reactive_power_limits
         @test IS.compare_values(renew.operation_cost, renew_copy.operation_cost)
+    end
+    @testset "Line to JSON" begin
+        line = PSY.get_component(PSY.Line, c_sys5, "4")
+        @test isa(line, PSY.Line)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(line, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, c_sys5)
+        line_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test line.name == line_copy.name
+        @test line.available == line_copy.available
+        @test line.active_power_flow == line_copy.active_power_flow
+        @test line.arc == line_copy.arc
+        @test line.b == line_copy.b
+        @test line.rating == line_copy.rating
+        @test line.angle_limits == line_copy.angle_limits
+        @test line.g == line_copy.g
+        @infiltrate
     end
 end
