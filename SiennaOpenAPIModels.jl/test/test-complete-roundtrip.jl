@@ -17,15 +17,7 @@ using JSON
         test_convert = SiennaOpenAPIModels.psy2openapi(acbus, id_gen)
         resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, c_sys5)
         acbus_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
-        @test acbus.name == acbus_copy.name
-        @test acbus.number == acbus_copy.number
-        @test acbus.bustype == acbus_copy.bustype
-        @test acbus.angle == acbus_copy.angle
-        @test acbus.magnitude == acbus_copy.magnitude
-        @test acbus.voltage_limits == acbus_copy.voltage_limits
-        @test acbus.base_voltage == acbus_copy.base_voltage
-        @test acbus.area == acbus_copy.area
-        @test acbus.load_zone == acbus_copy.load_zone
+        @test IS.compare_values(acbus, acbus_copy, exclude=Set([:internal]))
     end
     @testset "ThermalStandard to JSON" begin
         thermal = PSY.get_component(PSY.ThermalStandard, c_sys5, "Solitude")
@@ -34,14 +26,7 @@ using JSON
         test_convert = SiennaOpenAPIModels.psy2openapi(thermal, id_gen)
         resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, c_sys5)
         thermal_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
-        @test thermal.name == thermal_copy.name
-        @test thermal.bus == thermal_copy.bus
-        @test thermal.active_power == thermal_copy.active_power
-        @test thermal.reactive_power == thermal_copy.reactive_power
-        @test thermal.rating == thermal_copy.rating
-        @test thermal.active_power_limits == thermal_copy.active_power_limits
-        @test IS.compare_values(thermal.operation_cost, thermal_copy.operation_cost)
-        @test thermal.prime_mover_type == thermal_copy.prime_mover_type
+        @test IS.compare_values(thermal, thermal_copy, exclude=Set([:internal]))
     end
     @testset "RenewableDispatch to JSON" begin
         renew = PSY.get_component(PSY.RenewableDispatch, c_sys5, "PVBus5")
@@ -50,14 +35,6 @@ using JSON
         test_convert = SiennaOpenAPIModels.psy2openapi(renew, id_gen)
         resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, c_sys5)
         renew_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
-        @test renew.name == renew_copy.name
-        @test renew.available == renew_copy.available
-        @test renew.bus == renew_copy.bus
-        @test renew.active_power == renew_copy.active_power
-        @test renew.reactive_power == renew_copy.reactive_power
-        @test renew.rating == renew_copy.rating
-        @test renew.prime_mover_type == renew_copy.prime_mover_type
-        @test renew.reactive_power_limits == renew_copy.reactive_power_limits
-        @test IS.compare_values(renew.operation_cost, renew_copy.operation_cost)
+        @test IS.compare_values(renew, renew_copy, exclude=Set([:internal]))
     end
 end
