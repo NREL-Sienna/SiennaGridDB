@@ -47,4 +47,14 @@ using JSON
         )
         @test thermal.prime_mover_type == thermal_copy.prime_mover_type
     end
+    @testset "Arc to JSON" begin
+        arc = first(PSY.get_components(PSY.Arc, c_sys5))
+        @test isa(arc, PSY.Arc)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(arc, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, c_sys5)
+        arc_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test arc.from == arc_copy.from
+        @test arc.to == arc_copy.to
+    end
 end
