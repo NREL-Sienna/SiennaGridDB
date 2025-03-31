@@ -61,10 +61,6 @@ function get_sienna_startup(startup::ThermalGenerationCostStartUp)
     return startup.value
 end
 
-function get_sienna_base_power(obj::T) where {T <: SiennaOpenAPIModels}
-    return startup.value
-end
-
 function get_sienna_stages(stages::StartUpStages)
     (hot=stages.hot, warm=stages.warm, cold=stages.cold)
 end

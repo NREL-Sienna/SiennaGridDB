@@ -6,7 +6,6 @@ const IS = InfrastructureSystems
 import PowerSystems
 const PSY = PowerSystems
 using JSON
-using Infiltrator
 
 @testset "c_sys5_pjm RoundTrip to JSON" begin
     c_sys5 =
@@ -76,6 +75,5 @@ using Infiltrator
         @test line.rating == line_copy.rating
         @test line.angle_limits == line_copy.angle_limits
         @test line.g == line_copy.g
-        @infiltrate
     end
 end
