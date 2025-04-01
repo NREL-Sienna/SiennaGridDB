@@ -37,4 +37,13 @@ using JSON
         arc_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
         @test IS.compare_values(arc, arc_copy, exclude=Set([:internal]))
     end
+    @testset "RenewableDispatch to JSON" begin
+        renew = PSY.get_component(PSY.RenewableDispatch, c_sys5, "PVBus5")
+        @test isa(renew, PSY.RenewableDispatch)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(renew, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, c_sys5)
+        renew_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(renew, renew_copy, exclude=Set([:internal]))
+    end
 end
