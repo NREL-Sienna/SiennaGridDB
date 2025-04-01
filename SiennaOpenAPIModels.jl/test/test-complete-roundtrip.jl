@@ -47,3 +47,20 @@ using JSON
         @test IS.compare_values(load, load_copy, exclude=Set([:internal]))
     end
 end
+
+@testset "RTS_GMLC_RT_sys RoundTrip to JSON" begin
+    RTS_GMLC_RT_sys = PowerSystemCaseBuilder.build_system(
+        PowerSystemCaseBuilder.PSISystems,
+        "RTS_GMLC_RT_sys",
+    )
+    @testset "RenewableNonDispatch to JSON" begin
+        renewnon =
+            PSY.get_component(PSY.RenewableNonDispatch, RTS_GMLC_RT_sys, "313_RTPV_1")
+        @test isa(renewnon, PSY.RenewableNonDispatch)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(renewnon, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, RTS_GMLC_RT_sys)
+        renewnon_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(renewnon, renewnon_copy, exclude=Set([:internal]))
+    end
+end
