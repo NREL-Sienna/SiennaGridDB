@@ -101,3 +101,30 @@ function openapi2psy(standard_load::StandardLoad, resolver::Resolver)
         base_power=standard_load.base_power,
     )
 end
+
+function openapi2psy(hydro::HydroDispatch, resolver::Resolver)
+    if hydro.base_power == 0.0
+        error("base power is 0.0")
+    end
+    PSY.HydroDispatch(;
+        name=hydro.name,
+        available=hydro.available,
+        bus=resolver(hydro.bus),
+        active_power=hydro.active_power / hydro.base_power,
+        reactive_power=hydro.reactive_power / hydro.base_power,
+        rating=hydro.rating / hydro.base_power,
+        prime_mover_type=get_prime_mover_enum(hydro.prime_mover_type),
+        active_power_limits=divide(
+            get_tuple_min_max(hydro.active_power_limits),
+            hydro.base_power,
+        ),
+        reactive_power_limits=divide(
+            get_tuple_min_max(hydro.reactive_power_limits),
+            hydro.base_power,
+        ),
+        ramp_limits=divide(get_tuple_up_down(hydro.ramp_limits), hydro.base_power),
+        time_limits=get_tuple_up_down(hydro.time_limits),
+        base_power=hydro.base_power,
+        operation_cost=get_sienna_hydro_cost(hydro.operation_cost),
+    )
+end
