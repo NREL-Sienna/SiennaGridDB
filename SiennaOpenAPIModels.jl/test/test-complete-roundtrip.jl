@@ -45,5 +45,6 @@ using JSON
         resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, c_sys5)
         line_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
         @test IS.compare_values(line, line_copy, exclude=Set([:internal]))
+
     end
 end
