@@ -27,3 +27,15 @@ function openapi2psy(area::Area, resolver::Resolver)
         load_response=area.load_response,
     )
 end
+
+function openapi2psy(load_zone::LoadZone, resolver::Resolver)
+    if PSY.get_base_power(resolver.sys) == 0.0
+        error("base power is 0.0")
+    end
+    PSY.LoadZone(
+        name=load_zone.name,
+        peak_active_power=load_zone.peak_active_power / PSY.get_base_power(resolver.sys),
+        peak_reactive_power=load_zone.peak_reactive_power /
+                            PSY.get_base_power(resolver.sys),
+    )
+end

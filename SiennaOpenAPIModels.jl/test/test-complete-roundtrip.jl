@@ -96,4 +96,13 @@ end
         area_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
         @test IS.compare_values(area, area_copy, exclude=Set([:internal]))
     end
+    @testset "LoadZone to JSON" begin
+        load_zone = PSY.get_component(PSY.LoadZone, sys, "1")
+        @test isa(load_zone, PSY.LoadZone)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(load_zone, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, sys)
+        load_zone_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(load_zone, load_zone_copy, exclude=Set([:internal]))
+    end
 end
