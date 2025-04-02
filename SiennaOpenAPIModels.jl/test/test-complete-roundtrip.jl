@@ -28,6 +28,15 @@ using JSON
         thermal_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
         @test IS.compare_values(thermal, thermal_copy, exclude=Set([:internal]))
     end
+    @testset "Arc to JSON" begin
+        arc = first(PSY.get_components(PSY.Arc, c_sys5))
+        @test isa(arc, PSY.Arc)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(arc, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, c_sys5)
+        arc_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(arc, arc_copy, exclude=Set([:internal]))
+    end
     @testset "RenewableDispatch to JSON" begin
         renew = PSY.get_component(PSY.RenewableDispatch, c_sys5, "PVBus5")
         @test isa(renew, PSY.RenewableDispatch)
