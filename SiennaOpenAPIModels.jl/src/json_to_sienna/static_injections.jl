@@ -101,3 +101,12 @@ function openapi2psy(standard_load::StandardLoad, resolver::Resolver)
         base_power=standard_load.base_power,
     )
 end
+
+function openapi2psy(fixed::FixedAdmittance, resolver::Resolver)
+    PSY.FixedAdmittance(
+        name=fixed.name,
+        available=fixed.available,
+        bus=resolver(fixed.bus),
+        Y=convert_complex_number(fixed.Y),
+    )
+end
