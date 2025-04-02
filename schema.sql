@@ -78,7 +78,7 @@ CREATE TABLE prime_mover_types (
 CREATE TABLE fuels(
     id integer primary key,
     name text NOT NULL,
-    description text nulll,
+    description text NULL,
     UNIQUE (name)
 );
 
