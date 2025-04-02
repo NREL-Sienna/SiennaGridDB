@@ -15,3 +15,15 @@ end
 function openapi2psy(arc::Arc, resolver::Resolver)
     PSY.Arc(from=resolver(arc.from), to=resolver(arc.to))
 end
+
+function openapi2psy(area::Area, resolver::Resolver)
+    if PSY.get_base_power(resolver.sys) == 0.0
+        error("base power is 0.0")
+    end
+    PSY.Area(
+        name=area.name,
+        peak_active_power=area.peak_active_power / PSY.get_base_power(resolver.sys),
+        peak_reactive_power=area.peak_reactive_power / PSY.get_base_power(resolver.sys),
+        load_response=area.load_response,
+    )
+end
