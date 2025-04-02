@@ -17,6 +17,18 @@ function get_bustype_enum(bustype::String)
     end
 end
 
+function get_pump_status_enum(status::String)
+    if status == "PUMP"
+        return PSY.PumpHydroStatus.PUMP
+    elseif status == "GEN"
+        return PSY.PumpHydroStatus.GEN
+    elseif status == "OFF"
+        return PSY.PumpHydroStatus.OFF
+    else
+        error("Unknown PumpHydroStatus: $status")
+    end
+end
+
 function get_prime_mover_enum(prime_mover_type::String)
     IS.deserialize(PSY.PrimeMovers, prime_mover_type)
 end
@@ -65,6 +77,30 @@ function get_sienna_hydro_cost(cost::HydroGenerationCost)
     PSY.HydroGenerationCost(
         variable=get_sienna_variable_cost(cost.variable),
         fixed=cost.fixed,
+    )
+end
+
+function get_sienna_hydrostorage_cost(cost::HydroStorageGenerationCost)
+    if typeof(cost.value) == SiennaOpenAPIModels.HydroGenerationCost
+        get_sienna_hydro_cost(cost.value)
+    elseif typeof(cost.value) == SiennaOpenAPIModels.StorageCost
+        get_sienna_storage_cost(cost.value)
+    end
+end
+
+function get_sienna_storage_startup(cost::StorageCostStartUp)
+    (charge=cost.charge, discharge=cost.discharge)
+end
+
+function get_sienna_storage_cost(cost::StorageCost)
+    PSY.StorageCost(
+        charge_variable_cost=get_sienna_variable_cost(cost.charge_variable_cost),
+        discharge_variable_cost=get_sienna_variable_cost(cost.discharge_variable_cost),
+        fixed=cost.fixed,
+        shut_down=cost.shut_down,
+        start_up=get_sienna_storage_startup(cost.start_up),
+        energy_shortage_cost=cost.energy_shortage_cost,
+        energy_surplus_cost=cost.energy_surplus_cost,
     )
 end
 

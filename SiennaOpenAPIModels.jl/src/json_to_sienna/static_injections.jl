@@ -128,3 +128,56 @@ function openapi2psy(hydro::HydroDispatch, resolver::Resolver)
         operation_cost=get_sienna_hydro_cost(hydro.operation_cost),
     )
 end
+
+function openapi2psy(hydro::HydroPumpedStorage, resolver::Resolver)
+    if hydro.base_power == 0.0
+        error("base power is 0.0")
+    end
+    PSY.HydroPumpedStorage(
+        name=hydro.name,
+        available=hydro.available,
+        bus=resolver(hydro.bus),
+        active_power=hydro.active_power / hydro.base_power,
+        reactive_power=hydro.reactive_power / hydro.base_power,
+        rating=hydro.rating / hydro.base_power,
+        base_power=hydro.base_power,
+        rating_pump=hydro.rating_pump / hydro.base_power,
+        prime_mover_type=get_prime_mover_enum(hydro.prime_mover_type),
+        active_power_limits=divide(
+            get_tuple_min_max(hydro.active_power_limits),
+            hydro.base_power,
+        ),
+        reactive_power_limits=divide(
+            get_tuple_min_max(hydro.reactive_power_limits),
+            hydro.base_power,
+        ),
+        ramp_limits=divide(get_tuple_up_down(hydro.ramp_limits), hydro.base_power),
+        time_limits=get_tuple_up_down(hydro.time_limits),
+        active_power_limits_pump=divide(
+            get_tuple_min_max(hydro.active_power_limits_pump),
+            hydro.base_power,
+        ),
+        reactive_power_limits_pump=divide(
+            get_tuple_min_max(hydro.reactive_power_limits_pump),
+            hydro.base_power,
+        ),
+        ramp_limits_pump=divide(
+            get_tuple_up_down(hydro.ramp_limits_pump),
+            hydro.base_power,
+        ),
+        time_limits_pump=get_tuple_up_down(hydro.time_limits_pump),
+        storage_capacity=divide(
+            get_tuple_up_down(hydro.storage_capacity),
+            hydro.base_power,
+        ),
+        inflow=hydro.inflow / hydro.base_power,
+        outflow=hydro.outflow,
+        initial_storage=divide(get_tuple_up_down(hydro.initial_storage), hydro.base_power),
+        operation_cost=get_sienna_hydrostorage_cost(hydro.operation_cost),
+        storage_target=get_tuple_up_down(hydro.storage_target),
+        pump_efficiency=hydro.pump_efficiency,
+        conversion_factor=hydro.conversion_factor,
+        status=get_pump_status_enum(hydro.status),
+        time_at_status=hydro.time_at_status,
+    )
+end
