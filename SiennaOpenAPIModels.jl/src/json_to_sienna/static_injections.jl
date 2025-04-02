@@ -50,3 +50,19 @@ function openapi2psy(renew::RenewableDispatch, resolver::Resolver)
         base_power=renew.base_power,
     )
 end
+
+function openapi2psy(load::PowerLoad, resolver::Resolver)
+    if load.base_power == 0.0
+        error("base power is 0.0")
+    end
+    PSY.PowerLoad(;
+        name=load.name,
+        available=load.available,
+        bus=resolver(load.bus),
+        active_power=load.active_power / load.base_power,
+        reactive_power=load.reactive_power / load.base_power,
+        base_power=load.base_power,
+        max_active_power=load.max_active_power / load.base_power,
+        max_reactive_power=load.max_reactive_power / load.base_power,
+    )
+end

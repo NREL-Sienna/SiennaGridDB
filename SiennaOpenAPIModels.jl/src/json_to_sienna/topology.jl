@@ -11,3 +11,7 @@ function openapi2psy(bus::ACBus, resolver::Resolver)
         load_zone=resolver(bus.load_zone),
     )
 end
+
+function openapi2psy(arc::Arc, resolver::Resolver)
+    PSY.Arc(from=resolver(arc.from), to=resolver(arc.to))
+end
