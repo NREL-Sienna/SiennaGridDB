@@ -65,3 +65,19 @@ using JSON
         @test IS.compare_values(load, load_copy, exclude=Set([:internal]))
     end
 end
+
+@testset "c_sys5_all Roundtrip to JSON" begin
+    c_sys5_all = PowerSystemCaseBuilder.build_system(
+        PowerSystemCaseBuilder.PSITestSystems,
+        "c_sys5_all_components",
+    )
+    @testset "StandardLoad to JSON" begin
+        load = PSY.get_component(PSY.StandardLoad, c_sys5_all, "Bus3")
+        @test isa(load, PSY.StandardLoad)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(load, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, c_sys5_all)
+        load_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(load, load_copy, exclude=Set([:internal]))
+    end
+end
