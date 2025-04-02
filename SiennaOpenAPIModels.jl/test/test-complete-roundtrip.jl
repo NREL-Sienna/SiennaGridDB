@@ -106,3 +106,44 @@ end
         @test IS.compare_values(hydro, hydro_copy, exclude=Set([:internal]))
     end
 end
+
+@testset "psse_3bus_gen_cls_sys Roundtrip to JSON" begin
+    sys = PowerSystemCaseBuilder.build_system(
+        PowerSystemCaseBuilder.PSYTestSystems,
+        "psse_3bus_gen_cls_sys",
+    )
+    @testset "Area to JSON" begin
+        area = PSY.get_component(PSY.Area, sys, "1")
+        @test isa(area, PSY.Area)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(area, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, sys)
+        area_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(area, area_copy, exclude=Set([:internal]))
+    end
+    @testset "LoadZone to JSON" begin
+        load_zone = PSY.get_component(PSY.LoadZone, sys, "1")
+        @test isa(load_zone, PSY.LoadZone)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(load_zone, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, sys)
+        load_zone_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(load_zone, load_zone_copy, exclude=Set([:internal]))
+    end
+end
+
+@testset "sys10_pjm_ac_dc Roundtrip to JSON" begin
+    sys10_pjm_ac_dc = PowerSystemCaseBuilder.build_system(
+        PowerSystemCaseBuilder.PSISystems,
+        "sys10_pjm_ac_dc",
+    )
+    @testset "DCBus to JSON" begin
+        dcbus = PSY.get_component(PSY.DCBus, sys10_pjm_ac_dc, "nodeD2_DC")
+        @test isa(dcbus, PSY.DCBus)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(dcbus, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, sys10_pjm_ac_dc)
+        dcbus_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(dcbus, dcbus_copy, exclude=Set([:internal]))
+    end
+end
