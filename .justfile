@@ -14,7 +14,15 @@ create-schema db=db-name: assert-sqlite-version
     @rm {{db}}
     @{{sqlite-command}} {{db}} < schema.sql
 
-load-dummy-data db=db-name: create-schema
+create-triggers db=db-name: create-schema
+    @echo "Adding triggers to schema"
+    @{{sqlite-command}} {{db}} < triggers.sql
+
+create-views db=db-name: create-schema
+    @echo "Adding views to schema"
+    @{{sqlite-command}} {{db}} < views.sql
+
+load-dummy-data db=db-name: create-schema create-triggers create-views
     @echo "Loading dummy data"
     @{{sqlite-command}} {{db}} < {{data}}
 
@@ -29,3 +37,14 @@ test db=db-name:
     @echo "Running test sequence on {{db}}..."
     @just load-dummy-data {{db}}
     @just query {{db}}
+
+format sql-schema:
+    #!/usr/bin/env bash
+    set -euxo pipefail
+    echo "Formatting code {{sql-schema}}"
+    if command -v sleek &> /dev/null; then
+        sleek {{sql-schema}}
+    else
+        echo "SQL formatter does not exist. Installed it using `cargo install sleek`"
+        exit 1
+    fi
