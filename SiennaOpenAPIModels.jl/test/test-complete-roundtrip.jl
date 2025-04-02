@@ -96,4 +96,13 @@ end
         load_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
         @test IS.compare_values(load, load_copy, exclude=Set([:internal]))
     end
+    @testset "HydroDispatch to JSON" begin
+        hydro = PSY.get_component(PSY.HydroDispatch, c_sys5_all, "HydroDispatch")
+        @test isa(hydro, PSY.HydroDispatch)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(hydro, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, c_sys5_all)
+        hydro_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(hydro, hydro_copy, exclude=Set([:internal]))
+    end
 end
