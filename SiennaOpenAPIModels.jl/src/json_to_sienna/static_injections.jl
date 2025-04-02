@@ -107,6 +107,6 @@ function openapi2psy(fixed::FixedAdmittance, resolver::Resolver)
         name=fixed.name,
         available=fixed.available,
         bus=resolver(fixed.bus),
-        Y=convert_complex_number(fixed.Y),
+        Y=get_julia_complex(fixed.Y),
     )
 end

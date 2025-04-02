@@ -37,7 +37,7 @@ function get_tuple_from_to(obj::FromTo)
     return (from=obj.from, to=obj.to)
 end
 
-function convert_complex_number(obj::ComplexNumber)
+function get_julia_complex(obj::ComplexNumber)
     Complex(obj.real, obj.imag)
 end
 

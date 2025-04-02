@@ -6,7 +6,6 @@ const IS = InfrastructureSystems
 import PowerSystems
 const PSY = PowerSystems
 using JSON
-using Infiltrator
 
 @testset "c_sys5_pjm RoundTrip to JSON" begin
     c_sys5 =
@@ -96,6 +95,5 @@ end
         resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, RTS_GMLC_RT_sys)
         fixed_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
         @test IS.compare_values(fixed, fixed_copy, exclude=Set([:internal]))
-        @infiltrate
     end
 end
