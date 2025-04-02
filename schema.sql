@@ -52,6 +52,21 @@ DROP TABLE IF EXISTS supplemental_attributes;
 
 DROP TABLE IF EXISTS attributes_associations;
 
+DROP TABLE IF EXISTS arcs;
+
+DROP TABLE IF EXISTS hydro_reservoir;
+
+DROP TABLE IF EXISTS hydro_reservoir_connections;
+
+DROP TABLE IF EXISTS fuels;
+
+DROP TABLE IF EXISTS supplemental_attributes_association;
+
+DROP TABLE IF EXISTS transport_technologies;
+
+DROP TABLE IF EXISTS static_time_series;
+
+
 -- NOTE: This table should not be interacted directly since it gets populated
 -- automatically.
 -- Table of certain entities of griddb schema.
@@ -127,6 +142,7 @@ CREATE TABLE transmission_lines (
 -- markets.
 -- Transmission interchanges between two balancing topologies or areas
 CREATE TABLE transmission_interchanges (
+    id integer PRIMARY KEY,
     arc_id int REFERENCES arcs(id),
     name text NOT NULL,
     max_flow_from real NOT NULL,
