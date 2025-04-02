@@ -37,4 +37,13 @@ using JSON
         renew_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
         @test IS.compare_values(renew, renew_copy, exclude=Set([:internal]))
     end
+    @testset "PowerLoad to JSON" begin
+        load = PSY.get_component(PSY.PowerLoad, c_sys5, "Bus2")
+        @test isa(load, PSY.PowerLoad)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(load, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, c_sys5)
+        load_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(load, load_copy, exclude=Set([:internal]))
+    end
 end
