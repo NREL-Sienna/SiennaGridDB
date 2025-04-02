@@ -39,3 +39,15 @@ function openapi2psy(load_zone::LoadZone, resolver::Resolver)
                             PSY.get_base_power(resolver.sys),
     )
 end
+
+function openapi2psy(dcbus::DCBus, resolver::Resolver)
+    PSY.DCBus(
+        number=dcbus.number,
+        name=dcbus.name,
+        magnitude=dcbus.magnitude,
+        voltage_limits=get_tuple_min_max(dcbus.voltage_limits),
+        base_voltage=dcbus.base_voltage,
+        area=resolver(dcbus.area),
+        load_zone=resolver(dcbus.load_zone),
+    )
+end
