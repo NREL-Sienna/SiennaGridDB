@@ -37,6 +37,10 @@ function get_tuple_up_down(obj::UpDown)
     return (up=obj.up, down=obj.down)
 end
 
+function get_tuple_from_to(obj::FromTo)
+    return (from=obj.from, to=obj.to)
+end
+
 function get_tuple_xy_coords(obj::XYCoords)
     return (x=nt.x, y=nt.y)
 end
