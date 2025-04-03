@@ -102,6 +102,15 @@ function openapi2psy(standard_load::StandardLoad, resolver::Resolver)
     )
 end
 
+function openapi2psy(fixed::FixedAdmittance, resolver::Resolver)
+    PSY.FixedAdmittance(
+        name=fixed.name,
+        available=fixed.available,
+        bus=resolver(fixed.bus),
+        Y=get_julia_complex(fixed.Y),
+    )
+end
+
 function openapi2psy(hydro::HydroDispatch, resolver::Resolver)
     if hydro.base_power == 0.0
         error("base power is 0.0")

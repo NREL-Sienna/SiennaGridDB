@@ -107,6 +107,22 @@ end
     end
 end
 
+@testset "RTS_GMLC_RT_sys RoundTrip to JSON" begin
+    RTS_GMLC_RT_sys = PowerSystemCaseBuilder.build_system(
+        PowerSystemCaseBuilder.PSISystems,
+        "RTS_GMLC_RT_sys",
+    )
+    @testset "FixedAdmittance to JSON" begin
+        fixed = PSY.get_component(PSY.FixedAdmittance, RTS_GMLC_RT_sys, "Camus")
+        @test isa(fixed, PSY.FixedAdmittance)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(fixed, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, RTS_GMLC_RT_sys)
+        fixed_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(fixed, fixed_copy, exclude=Set([:internal]))
+    end
+end
+                    
 @testset "psse_3bus_gen_cls_sys Roundtrip to JSON" begin
     sys = PowerSystemCaseBuilder.build_system(
         PowerSystemCaseBuilder.PSYTestSystems,
