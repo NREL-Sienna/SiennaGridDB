@@ -80,6 +80,16 @@ end
         transform_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
         @test IS.compare_values(transform, transform_copy, exclude=Set([:internal]))
     end
+    @testset "TapTransformer to JSON" begin
+        taptransform =
+            PSY.get_component(PowerSystems.TapTransformer, sys_14_bus, "BUS 04-BUS 07-i_1")
+        @test isa(taptransform, PSY.TapTransformer)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(taptransform, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, sys_14_bus)
+        taptransform_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(taptransform, taptransform_copy, exclude=Set([:internal]))
+    end
 end
 
 @testset "c_sys5_all Roundtrip to JSON" begin
