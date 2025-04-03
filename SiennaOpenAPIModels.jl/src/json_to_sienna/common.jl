@@ -45,6 +45,10 @@ function get_tuple_from_to(obj::FromTo)
     return (from=obj.from, to=obj.to)
 end
 
+function get_julia_complex(obj::ComplexNumber)
+    Complex(obj.real, obj.imag)
+end
+
 get_tuple_xy_coords(::Nothing) = nothing
 
 function get_tuple_xy_coords(obj::XYCoords)
