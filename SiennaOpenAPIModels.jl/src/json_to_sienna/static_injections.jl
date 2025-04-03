@@ -50,3 +50,81 @@ function openapi2psy(renew::RenewableDispatch, resolver::Resolver)
         base_power=renew.base_power,
     )
 end
+
+function openapi2psy(load::PowerLoad, resolver::Resolver)
+    if load.base_power == 0.0
+        error("base power is 0.0")
+    end
+    PSY.PowerLoad(;
+        name=load.name,
+        available=load.available,
+        bus=resolver(load.bus),
+        active_power=load.active_power / load.base_power,
+        reactive_power=load.reactive_power / load.base_power,
+        base_power=load.base_power,
+        max_active_power=load.max_active_power / load.base_power,
+        max_reactive_power=load.max_reactive_power / load.base_power,
+    )
+end
+
+function openapi2psy(standard_load::StandardLoad, resolver::Resolver)
+    if standard_load.base_power == 0.0
+        error("base power is 0.0")
+    end
+    PSY.StandardLoad(
+        name=standard_load.name,
+        available=standard_load.available,
+        bus=resolver(standard_load.bus),
+        constant_active_power=standard_load.constant_active_power /
+                              standard_load.base_power,
+        constant_reactive_power=standard_load.constant_reactive_power /
+                                standard_load.base_power,
+        impedance_active_power=standard_load.impedance_active_power /
+                               standard_load.base_power,
+        impedance_reactive_power=standard_load.impedance_reactive_power /
+                                 standard_load.base_power,
+        current_active_power=standard_load.current_active_power / standard_load.base_power,
+        current_reactive_power=standard_load.current_reactive_power /
+                               standard_load.base_power,
+        max_constant_active_power=standard_load.max_constant_active_power /
+                                  standard_load.base_power,
+        max_constant_reactive_power=standard_load.max_constant_reactive_power /
+                                    standard_load.base_power,
+        max_impedance_active_power=standard_load.max_impedance_active_power /
+                                   standard_load.base_power,
+        max_impedance_reactive_power=standard_load.max_impedance_reactive_power /
+                                     standard_load.base_power,
+        max_current_active_power=standard_load.max_current_active_power /
+                                 standard_load.base_power,
+        max_current_reactive_power=standard_load.max_current_reactive_power /
+                                   standard_load.base_power,
+        base_power=standard_load.base_power,
+    )
+end
+
+function openapi2psy(hydro::HydroDispatch, resolver::Resolver)
+    if hydro.base_power == 0.0
+        error("base power is 0.0")
+    end
+    PSY.HydroDispatch(;
+        name=hydro.name,
+        available=hydro.available,
+        bus=resolver(hydro.bus),
+        active_power=hydro.active_power / hydro.base_power,
+        reactive_power=hydro.reactive_power / hydro.base_power,
+        rating=hydro.rating / hydro.base_power,
+        prime_mover_type=get_prime_mover_enum(hydro.prime_mover_type),
+        active_power_limits=divide(
+            get_tuple_min_max(hydro.active_power_limits),
+            hydro.base_power,
+        ),
+        reactive_power_limits=divide(
+            get_tuple_min_max(hydro.reactive_power_limits),
+            hydro.base_power,
+        ),
+        ramp_limits=divide(get_tuple_up_down(hydro.ramp_limits), hydro.base_power),
+        time_limits=get_tuple_up_down(hydro.time_limits),
+        base_power=hydro.base_power,
+        operation_cost=get_sienna_hydro_cost(hydro.operation_cost),
+    )
+end
