@@ -22,7 +22,7 @@ function openapi2psy(thermal::ThermalStandard, resolver::Resolver)
             thermal.base_power,
         ),
         ramp_limits=divide(get_tuple_up_down(thermal.ramp_limits), thermal.base_power),
-        operation_cost=get_sienna_thermal_cost(thermal.operation_cost),
+        operation_cost=get_sienna_operation_cost(thermal.operation_cost),
         time_limits=get_tuple_up_down(thermal.time_limits),
         must_run=thermal.must_run,
         bus=resolver(thermal.bus),
@@ -46,7 +46,7 @@ function openapi2psy(renew::RenewableDispatch, resolver::Resolver)
             renew.base_power,
         ),
         power_factor=renew.power_factor,
-        operation_cost=get_sienna_renewable_cost(renew.operation_cost),
+        operation_cost=get_sienna_operation_cost(renew.operation_cost),
         base_power=renew.base_power,
     )
 end
@@ -125,7 +125,7 @@ function openapi2psy(hydro::HydroDispatch, resolver::Resolver)
         ramp_limits=divide(get_tuple_up_down(hydro.ramp_limits), hydro.base_power),
         time_limits=get_tuple_up_down(hydro.time_limits),
         base_power=hydro.base_power,
-        operation_cost=get_sienna_hydro_cost(hydro.operation_cost),
+        operation_cost=get_sienna_operation_cost(hydro.operation_cost),
     )
 end
 
@@ -173,7 +173,7 @@ function openapi2psy(hydro::HydroPumpedStorage, resolver::Resolver)
         inflow=hydro.inflow / hydro.base_power,
         outflow=hydro.outflow,
         initial_storage=divide(get_tuple_up_down(hydro.initial_storage), hydro.base_power),
-        operation_cost=get_sienna_hydrostorage_cost(hydro.operation_cost),
+        operation_cost=get_sienna_operation_cost(hydro.operation_cost),
         storage_target=get_tuple_up_down(hydro.storage_target),
         pump_efficiency=hydro.pump_efficiency,
         conversion_factor=hydro.conversion_factor,
