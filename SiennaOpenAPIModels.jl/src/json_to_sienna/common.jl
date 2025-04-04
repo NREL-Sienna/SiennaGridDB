@@ -1,9 +1,7 @@
 import InfrastructureSystems
 const IS = InfrastructureSystems
 
-"""
-Functions that deserilize strings
-"""
+# Functions that deserilize strings
 
 function get_bustype_enum(bustype::String)
     IS.deserialize(PSY.ACBusTypes, bustype)
@@ -25,9 +23,7 @@ function get_sienna_unit_system(units::String)
     IS.deserialize(PSY.UnitSystem, units)
 end
 
-"""
-Functions that convert tuples
-"""
+# Functions that convert and scale tuples
 
 get_tuple_min_max(::Nothing) = nothing
 
@@ -58,7 +54,6 @@ end
 """
 Divide both values of all NamedTuple by a scalar
 """
-
 function divide(nt::NamedTuple{T, Tuple{Float64, Float64}}, scalar::Float64) where {T}
     NamedTuple{T, Tuple{Float64, Float64}}((nt[1] / scalar, nt[2] / scalar))
 end
@@ -66,9 +61,7 @@ end
 divide(::Nothing, ::Float64) = nothing
 divide(x::Float64, scalar::Float64) = x / scalar
 
-"""
-Functions that get operation costs
-"""
+# Functions that get operation costs
 
 function get_sienna_operation_cost(cost::ThermalGenerationCost)
     PSY.ThermalGenerationCost(
@@ -109,10 +102,8 @@ function get_sienna_operation_cost(cost::StorageCost)
     )
 end
 
-"""
-Getter functions used within the operation cost getters, including start_ups, stages, variable costs,
-value curves, and function data
-"""
+# Getter functions used within the operation cost getters, including startups,
+# stages, variable costs, value curves, and function data
 
 get_sienna_startup(::Nothing) = nothing
 
@@ -235,9 +226,7 @@ function get_sienna_function_data(function_data::PiecewiseStepData)
     PSY.PiecewiseStepData(x_coords=function_data.x_coords, y_coords=function_data.y_coords)
 end
 
-"""
-Resolver stuff
-"""
+# Resolver stuff
 
 mutable struct Resolver
     sys::PSY.System
