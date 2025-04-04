@@ -25,12 +25,24 @@ function get_fuel_type_enum(fuel_type::String)
     IS.deserialize(PSY.ThermalFuels, fuel_type)
 end
 
+get_tuple_min_max(::Nothing) = nothing
+
 function get_tuple_min_max(obj::MinMax)
     return (min=obj.min, max=obj.max)
 end
 
+get_tuple_up_down(::Nothing) = nothing
+
 function get_tuple_up_down(obj::UpDown)
     return (up=obj.up, down=obj.down)
+end
+
+function get_tuple_from_to(obj::FromTo)
+    return (from=obj.from, to=obj.to)
+end
+
+function get_julia_complex(obj::ComplexNumber)
+    Complex(obj.real, obj.imag)
 end
 
 function get_tuple_xy_coords(obj::XYCoords)
@@ -50,6 +62,13 @@ function get_sienna_renewable_cost(cost::RenewableGenerationCost)
     PSY.RenewableGenerationCost(
         curtailment_cost=get_sienna_variable_cost(cost.curtailment_cost),
         variable=get_sienna_variable_cost(cost.variable),
+    )
+end
+
+function get_sienna_hydro_cost(cost::HydroGenerationCost)
+    PSY.HydroGenerationCost(
+        variable=get_sienna_variable_cost(cost.variable),
+        fixed=cost.fixed,
     )
 end
 
