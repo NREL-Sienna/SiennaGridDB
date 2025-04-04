@@ -108,7 +108,7 @@ end
 get_sienna_startup(::Nothing) = nothing
 
 function get_sienna_startup(startup::ThermalGenerationCostStartUp)
-    get_sienna_stages(startup.value)
+    get_sienna_startup(startup.value)
 end
 
 function get_sienna_startup(startup::StorageCostStartUp)
@@ -123,12 +123,8 @@ function get_sienna_startup(startup::StorageCostStartUpOneOf)
     (charge=startup.charge, discharge=startup.discharge)
 end
 
-function get_sienna_stages(stages::StartUpStages)
+function get_sienna_startup(stages::StartUpStages)
     (hot=stages.hot, warm=stages.warm, cold=stages.cold)
-end
-
-function get_sienna_stages(stages::Float64)
-    return stages
 end
 
 get_sienna_variable_cost(::Nothing) = nothing
