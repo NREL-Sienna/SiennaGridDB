@@ -103,7 +103,7 @@ function get_sienna_operation_cost(cost::StorageCost)
 end
 
 # Getter functions used within the operation cost getters, including startups,
-# stages, variable costs, value curves, and function data
+# variable costs, value curves, and function data
 
 get_sienna_startup(::Nothing) = nothing
 
