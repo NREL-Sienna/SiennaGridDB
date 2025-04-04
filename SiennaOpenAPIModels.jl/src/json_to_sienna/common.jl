@@ -25,6 +25,16 @@ function get_fuel_type_enum(fuel_type::String)
     IS.deserialize(PSY.ThermalFuels, fuel_type)
 end
 
+function get_storage_tech_enum(storage::String)
+    IS.deserialize(PSY.StorageTech, storage)
+end
+
+get_tuple_in_out(::Nothing) = nothing
+
+function get_tuple_in_out(obj::InOut)
+    return (in=obj.in, out=obj.out)
+end
+
 get_tuple_min_max(::Nothing) = nothing
 
 function get_tuple_min_max(obj::MinMax)
@@ -72,8 +82,32 @@ function get_sienna_hydro_cost(cost::HydroGenerationCost)
     )
 end
 
+function get_sienna_operation_cost(cost::StorageCost)
+    PSY.StorageCost(
+        charge_variable_cost=get_sienna_variable_cost(cost.charge_variable_cost),
+        discharge_variable_cost=get_sienna_variable_cost(cost.discharge_variable_cost),
+        fixed=cost.fixed,
+        shut_down=cost.shut_down,
+        start_up=get_sienna_startup(cost.start_up),
+        energy_shortage_cost=cost.energy_shortage_cost,
+        energy_surplus_cost=cost.energy_surplus_cost,
+    )
+end
+
 function get_sienna_startup(startup::ThermalGenerationCostStartUp)
     return startup.value
+end
+
+function get_sienna_startup(startup::StorageCostStartUp)
+    get_sienna_startup(startup.value)
+end
+
+function get_sienna_startup(startup::Float64)
+    return startup
+end
+
+function get_sienna_startup(startup::StorageCostStartUpOneOf)
+    (charge=startup.charge, discharge=startup.discharge)
 end
 
 function get_sienna_stages(stages::StartUpStages)

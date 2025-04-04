@@ -131,8 +131,18 @@ end
         fixed_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
         @test IS.compare_values(fixed, fixed_copy, exclude=Set([:internal]))
     end
+    @testset "EnergyReservoirStorage to JSON" begin
+        energy_res =
+            PSY.get_component(PSY.EnergyReservoirStorage, RTS_GMLC_RT_sys, "313_STORAGE_1")
+        @test isa(energy_res, PSY.EnergyReservoirStorage)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(energy_res, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, RTS_GMLC_RT_sys)
+        energy_res_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(energy_res, energy_res_copy, exclude=Set([:internal]))
+    end
 end
-                    
+
 @testset "psse_3bus_gen_cls_sys Roundtrip to JSON" begin
     sys = PowerSystemCaseBuilder.build_system(
         PowerSystemCaseBuilder.PSYTestSystems,
