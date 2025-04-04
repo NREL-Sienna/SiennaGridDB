@@ -1,20 +1,14 @@
 import InfrastructureSystems
 const IS = InfrastructureSystems
 
+# Functions that deserilize strings
+
 function get_bustype_enum(bustype::String)
-    if bustype == "PQ"
-        return PSY.ACBusTypes.PQ
-    elseif bustype == "PV"
-        return PSY.ACBusTypes.PV
-    elseif bustype == "REF"
-        return PSY.ACBusTypes.REF
-    elseif bustype == "ISOLATED"
-        return PSY.ACBusTypes.ISOLATED
-    elseif bustype == "SLACK"
-        return PSY.ACBusTypes.SLACK
-    else
-        error("Unknown bus type: $bustype")
-    end
+    IS.deserialize(PSY.ACBusTypes, bustype)
+end
+
+function get_pump_status_enum(status::String)
+    IS.deserialize(PSY.PumpHydroStatus, status)
 end
 
 function get_prime_mover_enum(prime_mover_type::String)
@@ -24,6 +18,12 @@ end
 function get_fuel_type_enum(fuel_type::String)
     IS.deserialize(PSY.ThermalFuels, fuel_type)
 end
+
+function get_sienna_unit_system(units::String)
+    IS.deserialize(PSY.UnitSystem, units)
+end
+
+# Functions that convert and scale tuples
 
 get_tuple_min_max(::Nothing) = nothing
 
@@ -45,11 +45,25 @@ function get_julia_complex(obj::ComplexNumber)
     Complex(obj.real, obj.imag)
 end
 
+get_tuple_xy_coords(::Nothing) = nothing
+
 function get_tuple_xy_coords(obj::XYCoords)
-    return (x=nt.x, y=nt.y)
+    return (x=obj.x, y=obj.y)
 end
 
-function get_sienna_thermal_cost(cost::ThermalGenerationCost)
+"""
+Divide both values of all NamedTuple by a scalar
+"""
+function divide(nt::NamedTuple{T, Tuple{Float64, Float64}}, scalar::Float64) where {T}
+    NamedTuple{T, Tuple{Float64, Float64}}((nt[1] / scalar, nt[2] / scalar))
+end
+
+divide(::Nothing, ::Float64) = nothing
+divide(x::Float64, scalar::Float64) = x / scalar
+
+# Functions that get operation costs
+
+function get_sienna_operation_cost(cost::ThermalGenerationCost)
     PSY.ThermalGenerationCost(
         start_up=get_sienna_startup(cost.start_up),
         shut_down=cost.shut_down,
@@ -58,42 +72,65 @@ function get_sienna_thermal_cost(cost::ThermalGenerationCost)
     )
 end
 
-function get_sienna_renewable_cost(cost::RenewableGenerationCost)
+function get_sienna_operation_cost(cost::RenewableGenerationCost)
     PSY.RenewableGenerationCost(
         curtailment_cost=get_sienna_variable_cost(cost.curtailment_cost),
         variable=get_sienna_variable_cost(cost.variable),
     )
 end
 
-function get_sienna_hydro_cost(cost::HydroGenerationCost)
+function get_sienna_operation_cost(cost::HydroGenerationCost)
     PSY.HydroGenerationCost(
         variable=get_sienna_variable_cost(cost.variable),
         fixed=cost.fixed,
     )
 end
 
-function get_sienna_startup(startup::ThermalGenerationCostStartUp)
-    return startup.value
+function get_sienna_operation_cost(cost::HydroStorageGenerationCost)
+    get_sienna_operation_cost(cost.value)
 end
 
-function get_sienna_stages(stages::StartUpStages)
+function get_sienna_operation_cost(cost::StorageCost)
+    PSY.StorageCost(
+        charge_variable_cost=get_sienna_variable_cost(cost.charge_variable_cost),
+        discharge_variable_cost=get_sienna_variable_cost(cost.discharge_variable_cost),
+        fixed=cost.fixed,
+        shut_down=cost.shut_down,
+        start_up=get_sienna_startup(cost.start_up),
+        energy_shortage_cost=cost.energy_shortage_cost,
+        energy_surplus_cost=cost.energy_surplus_cost,
+    )
+end
+
+# Getter functions used within the operation cost getters, including startups,
+# variable costs, value curves, and function data
+
+get_sienna_startup(::Nothing) = nothing
+
+function get_sienna_startup(startup::ThermalGenerationCostStartUp)
+    get_sienna_startup(startup.value)
+end
+
+function get_sienna_startup(startup::StorageCostStartUp)
+    get_sienna_startup(startup.value)
+end
+
+function get_sienna_startup(startup::Float64)
+    return startup
+end
+
+function get_sienna_startup(startup::StorageCostStartUpOneOf)
+    (charge=startup.charge, discharge=startup.discharge)
+end
+
+function get_sienna_startup(stages::StartUpStages)
     (hot=stages.hot, warm=stages.warm, cold=stages.cold)
 end
 
+get_sienna_variable_cost(::Nothing) = nothing
+
 function get_sienna_variable_cost(variable::ProductionVariableCostCurve)
     get_sienna_variable_cost(variable.value)
-end
-
-function get_sienna_unit_system(units::String)
-    if units == "SYSTEM_BASE"
-        return PSY.UnitSystem.SYSTEM_BASE
-    elseif units == "DEVICE_BASE"
-        return PSY.UnitSystem.DEVICE_BASE
-    elseif units == "NATURAL_UNITS"
-        return PSY.UnitSystem.NATURAL_UNITS
-    else
-        error("Unknown unit setting $units")
-    end
 end
 
 function get_sienna_variable_cost(variable::CostCurve)
@@ -108,10 +145,16 @@ function get_sienna_variable_cost(variable::FuelCurve)
     PSY.FuelCurve(
         value_curve=get_sienna_value_curve(variable.value_curve),
         power_units=get_sienna_unit_system(variable.power_units),
-        fuel_cost=PSY.FuelCurveFuelCost(variable.fuel_cost),
-        vom_cost=get_sienna_input_output_curve(variable.vom_cost),
+        fuel_cost=get_sienna_variable_cost(variable.fuel_cost),
+        vom_cost=get_sienna_value_curve(variable.vom_cost),
     )
 end
+
+function get_sienna_variable_cost(variable::FuelCurveFuelCost)
+    return variable.value
+end
+
+get_sienna_value_curve(::Nothing) = nothing
 
 function get_sienna_value_curve(curve::ValueCurve)
     get_sienna_value_curve(curve.value)
@@ -142,8 +185,18 @@ function get_sienna_value_curve(curve::AverageRateCurve)
     )
 end
 
+get_sienna_function_data(::Nothing) = nothing
+
 function get_sienna_function_data(function_data::InputOutputCurveFunctionData)
-    return get_sienna_function_data(function_data.value)
+    get_sienna_function_data(function_data.value)
+end
+
+function get_sienna_function_data(function_data::AverageRateCurveFunctionData)
+    get_sienna_function_data(function_data.value)
+end
+
+function get_sienna_function_data(function_data::IncrementalCurveFunctionData)
+    get_sienna_function_data(function_data.value)
 end
 
 function get_sienna_function_data(function_data::LinearFunctionData)
@@ -169,6 +222,8 @@ function get_sienna_function_data(function_data::PiecewiseStepData)
     PSY.PiecewiseStepData(x_coords=function_data.x_coords, y_coords=function_data.y_coords)
 end
 
+# Resolver stuff
+
 mutable struct Resolver
     sys::PSY.System
     id2uuid::Dict{Int64, UUID}
@@ -189,13 +244,3 @@ end
 function (resolve::Resolver)(id::Nothing)
     nothing
 end
-
-"""
-Divide both values of all NamedTuple by a scalar
-"""
-function divide(nt::NamedTuple{T, Tuple{Float64, Float64}}, scalar::Float64) where {T}
-    NamedTuple{T, Tuple{Float64, Float64}}((nt[1] / scalar, nt[2] / scalar))
-end
-
-divide(::Nothing, ::Float64) = nothing
-divide(x::Float64, scalar::Float64) = x / scalar
