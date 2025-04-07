@@ -8,7 +8,7 @@ Name | Type | Description | Notes
 **id** | **Int64** |  | [default to nothing]
 **available** | **Bool** |  | [default to nothing]
 **bus** | **Int64** |  | [default to nothing]
-**dc_bus** | **Float64** |  | [default to nothing]
+**dc_bus** | **Int64** |  | [default to nothing]
 **active_power** | **Float64** |  | [default to nothing]
 **active_power_limits** | [***MinMax**](MinMax.md) |  | [default to nothing]
 **base_power** | **Float64** |  | [default to nothing]

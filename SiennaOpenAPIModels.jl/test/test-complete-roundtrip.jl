@@ -132,7 +132,7 @@ end
         @test IS.compare_values(fixed, fixed_copy, exclude=Set([:internal]))
     end
 end
-                    
+
 @testset "psse_3bus_gen_cls_sys Roundtrip to JSON" begin
     sys = PowerSystemCaseBuilder.build_system(
         PowerSystemCaseBuilder.PSYTestSystems,
@@ -171,5 +171,26 @@ end
         resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, sys10_pjm_ac_dc)
         dcbus_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
         @test IS.compare_values(dcbus, dcbus_copy, exclude=Set([:internal]))
+    end
+end
+
+@testset "Two area pjm Roundtrip to JSON" begin
+    two_area_pjm_DA = PowerSystemCaseBuilder.build_system(
+        PowerSystemCaseBuilder.PSISystems,
+        "two_area_pjm_DA",
+    )
+    @testset "AreaInterchange to JSON" begin
+        area_interchange =
+            only(collect(PSY.get_components(PSY.AreaInterchange, two_area_pjm_DA)))
+        @test isa(area_interchange, PSY.AreaInterchange)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(area_interchange, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, two_area_pjm_DA)
+        area_interchange_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(
+            area_interchange,
+            area_interchange_copy,
+            exclude=Set([:internal]),
+        )
     end
 end
