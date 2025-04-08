@@ -183,3 +183,20 @@ end
         @test IS.compare_values(dcbus, dcbus_copy, exclude=Set([:internal]))
     end
 end
+
+@testset "c_sys5_phes_ed Roundtrip to JSON" begin
+    c_sys5_phes_ed = PowerSystemCaseBuilder.build_system(
+        PowerSystemCaseBuilder.PSITestSystems,
+        "c_sys5_phes_ed",
+    )
+    @testset "HydroPumpedStorage to JSON" begin
+        pumped =
+            PSY.get_component(PSY.HydroPumpedStorage, c_sys5_phes_ed, "HydroPumpedStorage")
+        @test isa(pumped, PSY.HydroPumpedStorage)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(pumped, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, c_sys5_phes_ed)
+        pumped_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(pumped, pumped_copy, exclude=Set([:internal]))
+    end
+end
