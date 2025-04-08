@@ -132,7 +132,7 @@ end
         @test IS.compare_values(fixed, fixed_copy, exclude=Set([:internal]))
     end
 end
-                    
+
 @testset "psse_3bus_gen_cls_sys Roundtrip to JSON" begin
     sys = PowerSystemCaseBuilder.build_system(
         PowerSystemCaseBuilder.PSYTestSystems,
@@ -188,5 +188,26 @@ end
         resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, c_sys5_phes_ed)
         pumped_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
         @test IS.compare_values(pumped, pumped_copy, exclude=Set([:internal]))
+    end
+end
+
+@testset "5_bus_matpower_RT Roundtrip to JSON" begin
+    sys_5bus_matpower_RT = PowerSystemCaseBuilder.build_system(
+        PowerSystemCaseBuilder.PSISystems,
+        "5_bus_matpower_RT",
+    )
+    @testset "PhaseShiftingTransformer to JSON" begin
+        phase = PSY.get_component(
+            PSY.PhaseShiftingTransformer,
+            sys_5bus_matpower_RT,
+            "bus3-bus4-i_6",
+        )
+        @test isa(phase, PSY.PhaseShiftingTransformer)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(phase, id_gen)
+        resolver =
+            SiennaOpenAPIModels.resolver_from_id_generator(id_gen, sys_5bus_matpower_RT)
+        phase_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(phase, phase_copy, exclude=Set([:internal]))
     end
 end
