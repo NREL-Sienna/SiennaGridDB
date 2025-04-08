@@ -1,3 +1,21 @@
+function openapi2psy(area_interchange::AreaInterchange, resolver::Resolver)
+    if PSY.get_base_power(resolver.sys) == 0.0
+        error("base power is 0.0")
+    end
+    PSY.AreaInterchange(
+        name=area_interchange.name,
+        available=area_interchange.available,
+        active_power_flow=area_interchange.active_power_flow /
+                          PSY.get_base_power(resolver.sys),
+        flow_limits=divide(
+            get_tuple_fromto_tofrom(area_interchange.flow_limits),
+            PSY.get_base_power(resolver.sys),
+        ),
+        from_area=resolver(area_interchange.from_area),
+        to_area=resolver(area_interchange.to_area),
+    )
+end
+
 function openapi2psy(line::Line, resolver::Resolver)
     if PSY.get_base_power(resolver.sys) == 0.0
         error("base power is 0.0")

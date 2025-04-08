@@ -23,7 +23,7 @@
     - id::Int64
     - available::Bool
     - bus::Int64
-    - dc_bus::Float64
+    - dc_bus::Int64
     - active_power::Float64
     - active_power_limits::MinMax
     - base_power::Float64
@@ -38,7 +38,7 @@ Base.@kwdef mutable struct InterconnectingConverter <: OpenAPI.APIModel
     id::Union{Nothing, Int64} = nothing
     available::Union{Nothing, Bool} = nothing
     bus::Union{Nothing, Int64} = nothing
-    dc_bus::Union{Nothing, Float64} = nothing
+    dc_bus::Union{Nothing, Int64} = nothing
     active_power::Union{Nothing, Float64} = nothing
     active_power_limits = nothing # spec type: Union{ Nothing, MinMax }
     base_power::Union{Nothing, Float64} = nothing
@@ -127,7 +127,7 @@ const _property_types_InterconnectingConverter = Dict{Symbol, String}(
     Symbol("id") => "Int64",
     Symbol("available") => "Bool",
     Symbol("bus") => "Int64",
-    Symbol("dc_bus") => "Float64",
+    Symbol("dc_bus") => "Int64",
     Symbol("active_power") => "Float64",
     Symbol("active_power_limits") => "MinMax",
     Symbol("base_power") => "Float64",
