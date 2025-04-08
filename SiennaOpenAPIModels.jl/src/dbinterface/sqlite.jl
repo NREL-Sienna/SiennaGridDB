@@ -95,7 +95,7 @@ const SQLITE_CREATE_STR = [
     	name TEXT NOT NULL,
     	obj_type TEXT NOT NULL,
     	bus_id INTEGER NOT NULL,
-    	base_power DOUBLE NOT NULL,
+        base_power DOUBLE,
     	PRIMARY KEY (id),
     	UNIQUE (name),
     	FOREIGN KEY(bus_id) REFERENCES bus (id)
@@ -111,6 +111,20 @@ const SQLITE_CREATE_STR = [
     	PRIMARY KEY (id),
     	UNIQUE (name),
     	FOREIGN KEY(arc_id) REFERENCES arc (id)
+    )
+    """,
+    """
+    CREATE TABLE area_transmission (
+        id INTEGER NOT NULL,
+        name TEXT NOT NULL,
+        obj_type TEXT NOT NULL,
+        from_area INTEGER NOT NULL,
+        to_area INTEGER NOT NULL,
+        rating DOUBLE NOT NULL,
+        PRIMARY KEY (id),
+        UNIQUE (name),
+        FOREIGN KEY(from_area) REFERENCES area (id),
+        FOREIGN KEY(to_area) REFERENCES area (id)
     )
     """,
 ]
@@ -178,7 +192,11 @@ const TABLE_SCHEMAS = Dict(
     ),
     "load" => Tables.Schema(
         ["id", "name", "obj_type", "bus_id", "base_power"],
-        [Int64, String, String, Int64, Float64],
+        [Int64, String, String, Int64, Union{Nothing, Float64}],
+    ),
+    "area_transmission" => Tables.Schema(
+        ["id", "name", "obj_type", "from_area", "to_area", "rating"],
+        [Int64, String, String, Int64, Int64, Float64],
     ),
 )
 
@@ -193,46 +211,62 @@ const OPENAPI_FIELDS_TO_DB = Dict(
 
 const DB_TO_OPENAPI_FIELDS = Dict(t => s for (s, t) in OPENAPI_FIELDS_TO_DB)
 
+const TYPE_TO_TABLE_LIST = [
+    Area => "area",
+    LoadZone => "loadzone",
+    ACBus => "bus",
+    Arc => "arc",
+    AreaInterchange => "area_transmission",
+    Line => "transmission",
+    Transformer2W => "transmission",
+    MonitoredLine => "transmission",
+    PhaseShiftingTransformer => "transmission",
+    TapTransformer => "transmission",
+    PowerLoad => "load",
+    StandardLoad => "load",
+    FixedAdmittance => "load",
+    InterruptiblePowerLoad => "load",
+    ThermalStandard => "generation_unit",
+    RenewableDispatch => "generation_unit",
+    EnergyReservoirStorage => "generation_unit",
+    HydroDispatch => "generation_unit",
+    HydroPumpedStorage => "generation_unit",
+    ThermalMultiStart => "generation_unit",
+    RenewableNonDispatch => "generation_unit",
+    HydroPumpedStorage => "generation_unit",
+    HydroEnergyReservoir => "generation_unit",
+]
+const TYPE_TO_TABLE = Dict(TYPE_TO_TABLE_LIST)
+
 const ALL_PSY_TYPES = [
     PSY.Area,
     PSY.LoadZone,
     PSY.ACBus,
     PSY.Arc,
-    PSY.ThermalStandard,
-    PSY.RenewableDispatch,
+    PSY.AreaInterchange,
     PSY.Line,
     PSY.Transformer2W,
+    PSY.MonitoredLine,
+    PSY.PhaseShiftingTransformer,
+    PSY.TapTransformer,
     PSY.PowerLoad,
     PSY.StandardLoad,
-]
-const ALL_TYPES = [
-    Area,
-    LoadZone,
-    ACBus,
-    Arc,
-    ThermalStandard,
-    RenewableDispatch,
-    Line,
-    Transformer2W,
-    PowerLoad,
-    StandardLoad,
+    PSY.FixedAdmittance,
+    PSY.InterruptiblePowerLoad,
+    PSY.ThermalStandard,
+    PSY.RenewableDispatch,
+    PSY.EnergyReservoirStorage,
+    PSY.HydroDispatch,
+    PSY.HydroPumpedStorage,
+    PSY.ThermalMultiStart,
+    PSY.RenewableNonDispatch,
+    PSY.HydroPumpedStorage,
+    PSY.HydroEnergyReservoir,
 ]
 
+const ALL_TYPES = first.(TYPE_TO_TABLE_LIST)
 const PSY_TO_OPENAPI_TYPE = Dict(k => v for (k, v) in zip(ALL_PSY_TYPES, ALL_TYPES))
-
 const TYPE_NAMES = Dict(string(t) => t for t in ALL_TYPES)
-const TYPE_TO_TABLE = Dict(
-    ACBus => "bus",
-    Area => "area",
-    Arc => "arc",
-    Line => "transmission",
-    LoadZone => "loadzone",
-    PowerLoad => "load",
-    ThermalStandard => "generation_unit",
-    Transformer2W => "transmission",
-    RenewableDispatch => "generation_unit",
-    StandardLoad => "load",
-)
 
 function make_sqlite!(db)
     for table in SQLITE_CREATE_STR
