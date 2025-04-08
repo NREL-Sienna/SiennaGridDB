@@ -35,21 +35,48 @@ function openapi2psy(line::Line, resolver::Resolver)
     )
 end
 
-function openapi2psy(transform::Transformer2W, resolver::Resolver)
+function openapi2psy(monitored::MonitoredLine, resolver::Resolver)
     if PSY.get_base_power(resolver.sys) == 0.0
         error("base power is 0.0")
     end
-    PSY.Transformer2W(;
-        name=transform.name,
-        available=transform.available,
-        active_power_flow=transform.active_power_flow / PSY.get_base_power(resolver.sys),
-        reactive_power_flow=transform.reactive_power_flow /
+    PSY.MonitoredLine(
+        name=monitored.name,
+        available=monitored.available,
+        active_power_flow=monitored.active_power_flow / PSY.get_base_power(resolver.sys),
+        reactive_power_flow=monitored.reactive_power_flow /
                             PSY.get_base_power(resolver.sys),
-        arc=resolver(transform.arc),
-        r=transform.r,
-        x=transform.x,
-        primary_shunt=transform.primary_shunt,
-        rating=transform.rating / PSY.get_base_power(resolver.sys),
+        arc=resolver(monitored.arc),
+        r=monitored.r,
+        x=monitored.x,
+        b=get_tuple_from_to(monitored.b),
+        flow_limits=divide(
+            get_tuple_fromto_tofrom(monitored.flow_limits),
+            PSY.get_base_power(resolver.sys),
+        ),
+        rating=monitored.rating / PSY.get_base_power(resolver.sys),
+        angle_limits=get_tuple_min_max(monitored.angle_limits),
+        g=get_tuple_from_to(monitored.g),
+    )
+end
+
+function openapi2psy(transformer::PhaseShiftingTransformer, resolver::Resolver)
+    if PSY.get_base_power(resolver.sys) == 0.0
+        error("base power is 0.0")
+    end
+    PSY.PhaseShiftingTransformer(
+        name=transformer.name,
+        available=transformer.available,
+        active_power_flow=transformer.active_power_flow / PSY.get_base_power(resolver.sys),
+        reactive_power_flow=transformer.reactive_power_flow /
+                            PSY.get_base_power(resolver.sys),
+        arc=resolver(transformer.arc),
+        r=transformer.r,
+        x=transformer.x,
+        primary_shunt=transformer.primary_shunt,
+        tap=transformer.tap,
+        α=transformer.alpha,
+        rating=divide(transformer.rating, PSY.get_base_power(resolver.sys)),
+        phase_angle_limits=get_tuple_min_max(transformer.phase_angle_limits),
     )
 end
 
@@ -69,5 +96,23 @@ function openapi2psy(taptransform::TapTransformer, resolver::Resolver)
         primary_shunt=taptransform.primary_shunt,
         tap=taptransform.tap,
         rating=taptransform.rating,
+    )
+end
+
+function openapi2psy(transform::Transformer2W, resolver::Resolver)
+    if PSY.get_base_power(resolver.sys) == 0.0
+        error("base power is 0.0")
+    end
+    PSY.Transformer2W(;
+        name=transform.name,
+        available=transform.available,
+        active_power_flow=transform.active_power_flow / PSY.get_base_power(resolver.sys),
+        reactive_power_flow=transform.reactive_power_flow /
+                            PSY.get_base_power(resolver.sys),
+        arc=resolver(transform.arc),
+        r=transform.r,
+        x=transform.x,
+        primary_shunt=transform.primary_shunt,
+        rating=transform.rating / PSY.get_base_power(resolver.sys),
     )
 end
