@@ -122,6 +122,16 @@ end
         PowerSystemCaseBuilder.PSISystems,
         "RTS_GMLC_RT_sys",
     )
+    @testset "EnergyReservoirStorage to JSON" begin
+        energy_res =
+            PSY.get_component(PSY.EnergyReservoirStorage, RTS_GMLC_RT_sys, "313_STORAGE_1")
+        @test isa(energy_res, PSY.EnergyReservoirStorage)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(energy_res, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, RTS_GMLC_RT_sys)
+        energy_res_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(energy_res, energy_res_copy, exclude=Set([:internal]))
+    end
     @testset "RenewableNonDispatch to JSON" begin
         renewnon =
             PSY.get_component(PSY.RenewableNonDispatch, RTS_GMLC_RT_sys, "313_RTPV_1")
@@ -200,7 +210,8 @@ end
         @test IS.compare_values(
             area_interchange,
             area_interchange_copy,
-            exclude=Set([:internal]))
+            exclude=Set([:internal]),
+        )
     end
     @testset "MonitoredLine" begin
         monitored = only(collect(PSY.get_components(PSY.MonitoredLine, two_area_pjm_DA)))
@@ -212,7 +223,7 @@ end
         @test IS.compare_values(monitored, monitored_copy, exclude=Set([:internal]))
     end
 end
-                            
+
 @testset "c_sys5_phes_ed Roundtrip to JSON" begin
     c_sys5_phes_ed = PowerSystemCaseBuilder.build_system(
         PowerSystemCaseBuilder.PSITestSystems,

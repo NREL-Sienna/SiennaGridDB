@@ -1,3 +1,40 @@
+function openapi2psy(energy_res::EnergyReservoirStorage, resolver::Resolver)
+    if energy_res.base_power == 0.0
+        error("base power is 0.0")
+    end
+    PSY.EnergyReservoirStorage(;
+        name=energy_res.name,
+        available=energy_res.available,
+        bus=resolver(energy_res.bus),
+        prime_mover_type=get_prime_mover_enum(energy_res.prime_mover_type),
+        storage_technology_type=get_storage_tech_enum(energy_res.storage_technology_type),
+        storage_capacity=energy_res.storage_capacity / energy_res.base_power,
+        storage_level_limits=get_tuple_min_max(energy_res.storage_level_limits),
+        initial_storage_capacity_level=energy_res.initial_storage_capacity_level,
+        rating=energy_res.rating / energy_res.base_power,
+        active_power=energy_res.active_power / energy_res.base_power,
+        input_active_power_limits=divide(
+            get_tuple_min_max(energy_res.input_active_power_limits),
+            energy_res.base_power,
+        ),
+        output_active_power_limits=divide(
+            get_tuple_min_max(energy_res.output_active_power_limits),
+            energy_res.base_power,
+        ),
+        efficiency=get_tuple_in_out(energy_res.efficiency),
+        reactive_power=energy_res.reactive_power / energy_res.base_power,
+        reactive_power_limits=divide(
+            get_tuple_min_max(energy_res.reactive_power_limits),
+            energy_res.base_power,
+        ),
+        base_power=energy_res.base_power,
+        operation_cost=get_sienna_operation_cost(energy_res.operation_cost),
+        conversion_factor=energy_res.conversion_factor,
+        storage_target=energy_res.storage_target,
+        cycle_limits=energy_res.cycle_limits,
+    )
+end
+
 function openapi2psy(thermal::ThermalStandard, resolver::Resolver)
     if thermal.base_power == 0.0
         error("base power is 0.0")
