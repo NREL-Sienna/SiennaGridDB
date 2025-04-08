@@ -67,6 +67,23 @@ function openapi2psy(load::PowerLoad, resolver::Resolver)
     )
 end
 
+function openapi2psy(renewnon::RenewableNonDispatch, resolver::Resolver)
+    if renewnon.base_power == 0.0
+        error("base power is 0.0")
+    end
+    PSY.RenewableNonDispatch(;
+        name=renewnon.name,
+        available=renewnon.available,
+        bus=resolver(renewnon.bus),
+        active_power=renewnon.active_power / renewnon.base_power,
+        reactive_power=renewnon.reactive_power / renewnon.base_power,
+        rating=renewnon.rating / renewnon.base_power,
+        prime_mover_type=get_prime_mover_enum(renewnon.prime_mover_type),
+        power_factor=renewnon.power_factor,
+        base_power=renewnon.base_power,
+    )
+end
+
 function openapi2psy(standard_load::StandardLoad, resolver::Resolver)
     if standard_load.base_power == 0.0
         error("base power is 0.0")

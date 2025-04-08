@@ -122,6 +122,16 @@ end
         PowerSystemCaseBuilder.PSISystems,
         "RTS_GMLC_RT_sys",
     )
+    @testset "RenewableNonDispatch to JSON" begin
+        renewnon =
+            PSY.get_component(PSY.RenewableNonDispatch, RTS_GMLC_RT_sys, "313_RTPV_1")
+        @test isa(renewnon, PSY.RenewableNonDispatch)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(renewnon, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, RTS_GMLC_RT_sys)
+        renewnon_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(renewnon, renewnon_copy, exclude=Set([:internal]))
+    end
     @testset "FixedAdmittance to JSON" begin
         fixed = PSY.get_component(PSY.FixedAdmittance, RTS_GMLC_RT_sys, "Camus")
         @test isa(fixed, PSY.FixedAdmittance)
@@ -174,6 +184,35 @@ end
     end
 end
 
+@testset "Two area pjm Roundtrip to JSON" begin
+    two_area_pjm_DA = PowerSystemCaseBuilder.build_system(
+        PowerSystemCaseBuilder.PSISystems,
+        "two_area_pjm_DA",
+    )
+    @testset "AreaInterchange to JSON" begin
+        area_interchange =
+            only(collect(PSY.get_components(PSY.AreaInterchange, two_area_pjm_DA)))
+        @test isa(area_interchange, PSY.AreaInterchange)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(area_interchange, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, two_area_pjm_DA)
+        area_interchange_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(
+            area_interchange,
+            area_interchange_copy,
+            exclude=Set([:internal]))
+    end
+    @testset "MonitoredLine" begin
+        monitored = only(collect(PSY.get_components(PSY.MonitoredLine, two_area_pjm_DA)))
+        @test isa(monitored, PSY.MonitoredLine)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(monitored, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, two_area_pjm_DA)
+        monitored_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(monitored, monitored_copy, exclude=Set([:internal]))
+    end
+end
+                            
 @testset "c_sys5_phes_ed Roundtrip to JSON" begin
     c_sys5_phes_ed = PowerSystemCaseBuilder.build_system(
         PowerSystemCaseBuilder.PSITestSystems,
