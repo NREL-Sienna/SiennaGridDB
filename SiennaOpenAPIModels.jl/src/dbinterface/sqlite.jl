@@ -237,35 +237,41 @@ function load_to_db!(db, data::Arc)
     DBInterface.execute(db, stmt_str, [data.id, data.from, data.to])
 end
 
+function get_row_field(c::OpenAPI.APIModel, obj_type::AbstractString, col_name::Symbol)
+    if col_name == :obj_type
+        return obj_type
+    end
+    k = if haskey(DB_TO_OPENAPI_FIELDS, string(col_name))
+        Symbol(DB_TO_OPENAPI_FIELDS[string(col_name)])
+    else
+        col_name
+    end
+
+    if !hasproperty(c, k)
+        return nothing
+    else
+        return getproperty(c, k)
+    end
+end
+
 function add_components_to_tables!(
     table_name::AbstractString,
     obj_type::AbstractString,
     schema::Tables.Schema,
-    table::S,
-    attributes_table::T,
+    table_statement::DBInterface.Statement,
+    attribute_statement::DBInterface.Statement,
     components,
     ids::IDGenerator,
-)::Tuple{S, T} where {S, T}
+)
     for c in components
         c = psy2openapi(c, ids)
-        push!(table.obj_type, obj_type)
-        for (col_name, col_type) in zip(schema.names, schema.types)
-            if col_name == :obj_type
-                continue
-            end
-            k = if haskey(DB_TO_OPENAPI_FIELDS, string(col_name))
-                Symbol(DB_TO_OPENAPI_FIELDS[string(col_name)])
-            else
-                col_name
-            end
-
-            if !hasproperty(c, k)
-                @assert Nothing <: col_type "$obj_type does not have $col_name with type $col_type"
-                push!(getproperty(table, col_name), nothing)
-            else
-                push!(getproperty(table, col_name), getproperty(c, k))
-            end
-        end
+        row = tuple(
+            (
+                get_row_field(c, obj_type, col_name) for
+                (col_name, col_type) in zip(schema.names, schema.types)
+            )...,
+        )
+        DBInterface.execute(table_statement, row)
         for (k, v) in JSON.parse(OpenAPI.to_json(c))
             col_name = if haskey(OPENAPI_FIELDS_TO_DB, k)
                 OPENAPI_FIELDS_TO_DB[k]
@@ -273,99 +279,43 @@ function add_components_to_tables!(
                 k
             end
             if !in(Symbol(col_name), schema.names)
-                push!(
-                    attributes_table,
-                    (
-                        entity_id=c.id,
-                        entity_type=table_name,
-                        key=col_name,
-                        value=JSON.json(v),
-                    ),
+                DBInterface.execute(
+                    attribute_statement,
+                    (c.id, table_name, col_name, JSON.json(v)),
                 )
             end
         end
     end
-    return table, attributes_table
 end
 
-function get_table_from_components(::Type{T}, components, ids) where {T}
+function send_table_to_db!(::Type{T}, db, components, ids) where {T}
     table_name = TYPE_TO_TABLE[T]
     obj_type = last(split(string(T), "."))
     schema = TABLE_SCHEMAS[table_name]
-    #table = NamedTuple{schema.names, Tuple{schema.types...}}[]
-    #attributes = NamedTuple{
-    #    TABLE_SCHEMA["attributes"].names,
-    #    Tuple{TABLE_SCHEMAS["attributes"].types...},
-    #}[]
-    table = NamedTuple{schema.names, Tuple{(Vector{i} for i in schema.types)...}}((
-        [] for t in schema.types
-    ))
-    #table = Dict(k => [] for (k, t) for zip(schema.names, schema.types))
-    attributes_table = NamedTuple{
-        TABLE_SCHEMAS["attributes"].names[2:end],
-        Tuple{TABLE_SCHEMAS["attributes"].types[2:end]...},
-    }[]
+    table_statement = DBInterface.prepare(
+        db,
+        """INSERT INTO $table_name ($(join(schema.names, ", ")))
+          VALUES ($(join(repeat("?", length(schema.names)), ", ")))""",
+    )
+    attributes_statement = DBInterface.prepare(
+        db,
+        "INSERT INTO attributes (entity_id, entity_type, key, value) VALUES (?, ?, ?, json(?))",
+    )
     return add_components_to_tables!(
         table_name,
         obj_type,
         schema,
-        table,
-        attributes_table,
+        table_statement,
+        attributes_statement,
         components,
         ids,
     )
 end
 
-function load_to_db!(db, data)
-    # Parse data to JSON
-    T = typeof(data)
-    table_name = TYPE_TO_TABLE[T]
-    data = JSON.parse(OpenAPI.to_json(data))
-    # Pack into main row
-    main_row = Any[last(split(string(T), "."))]
-    column_names = ["obj_type"]
-    attributes = Dict()
-    for (k, v) in data
-        if haskey(OPENAPI_FIELDS_TO_DB, k)
-            col_name = OPENAPI_FIELDS_TO_DB[k]
-        else
-            col_name = k
-        end
-        if in(Symbol(col_name), TABLE_SCHEMAS[table_name].names)
-            push!(column_names, col_name)
-            push!(main_row, v)
-        else
-            attributes[k] = v
-        end
-    end
-    stmt_str = "INSERT INTO $table_name ($(join(column_names, ", ")))
-        VALUES ($(join(repeat("?", length(column_names)), ", ")))"
-    DBInterface.execute(db, stmt_str, main_row)
-    for (k, v) in attributes
-        # Add a row for each attributes.
-        # SQLite requires converting to JSON manually, since SQLite.jl
-        # does not do JSON serialization.
-        DBInterface.execute(
-            db,
-            "INSERT INTO attributes (entity_id, entity_type, key, value)
-VALUES (?, ?, ?, json(?))",
-            [data["id"], table_name, k, JSON.json(v)],
-        )
-    end
-end
-
 function sys2db!(db, sys::PSY.System, ids::IDGenerator)
-    for (T, OPENAPI_T) in zip(ALL_PSY_TYPES, ALL_TYPES)
-        table_name = TYPE_TO_TABLE[OPENAPI_T]
-        table, attributes =
-            get_table_from_components(OPENAPI_T, PSY.get_components(T, sys), ids)
-
-        println(typeof(table))
-        @assert length(unique((length(entries) for entries in table))) == 1 """
-            $T, $table_name
-            $([length(entries) for entries in table])
-        """
-        SQLite.load!(table, db, table_name)
-        SQLite.load!(attributes, db, "attributes")
+    DBInterface.transaction(db) do
+        for (T, OPENAPI_T) in zip(ALL_PSY_TYPES, ALL_TYPES)
+            send_table_to_db!(OPENAPI_T, db, PSY.get_components(T, sys), ids)
+        end
     end
 end
