@@ -20,11 +20,15 @@ end
         PowerSystemCaseBuilder.build_system(PowerSystemCaseBuilder.PSISystems, "c_sys5_pjm")
     @testset "ACBus to DB" begin
         acbus = PSY.get_bus(c_sys5, 1)
-        test_convert = SiennaOpenAPIModels.psy2openapi(acbus, IDGenerator())
         db = SQLite.DB()
         SiennaOpenAPIModels.make_sqlite!(db)
         @test collect(DBInterface.execute(db, "SELECT * FROM bus")) == []
-        SiennaOpenAPIModels.load_to_db!(db, test_convert)
+        SiennaOpenAPIModels.send_table_to_db!(
+            SiennaOpenAPIModels.ACBus,
+            db,
+            [acbus],
+            IDGenerator(),
+        )
 
         rows = Tables.rowtable(DBInterface.execute(db, "SELECT * FROM bus"))
         @test length(rows) == 1
@@ -75,4 +79,16 @@ end
     SiennaOpenAPIModels.sys2db!(db, sys, IDGenerator())
     acbuses = Tables.columntable(DBInterface.execute(db, "SELECT * FROM bus"))
     @test length(acbuses.id) == 118
+end
+
+@testset "RTS-System to DB" begin
+    sys = PowerSystemCaseBuilder.build_system(
+        PowerSystemCaseBuilder.PSISystems,
+        "RTS_GMLC_RT_sys",
+    )
+    db = SQLite.DB()
+    SiennaOpenAPIModels.make_sqlite!(db)
+    SiennaOpenAPIModels.sys2db!(db, sys, IDGenerator())
+    acbuses = Tables.columntable(DBInterface.execute(db, "SELECT * FROM bus"))
+    @test length(acbuses.id) == 73
 end
