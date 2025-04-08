@@ -250,11 +250,7 @@ function get_row_field(c::OpenAPI.APIModel, obj_type::AbstractString, col_name::
     if col_name == :obj_type
         return obj_type
     end
-    k = if haskey(DB_TO_OPENAPI_FIELDS, string(col_name))
-        Symbol(DB_TO_OPENAPI_FIELDS[string(col_name)])
-    else
-        col_name
-    end
+    k = Symbol(get(DB_TO_OPENAPI_FIELDS, string(col_name), col_name))
 
     if !hasproperty(c, k)
         return nothing
@@ -290,11 +286,7 @@ function add_components_to_tables!(
             end
         end
         for (k, v) in JSON.parse(OpenAPI.to_json(c))
-            col_name = if haskey(OPENAPI_FIELDS_TO_DB, k)
-                OPENAPI_FIELDS_TO_DB[k]
-            else
-                k
-            end
+            col_name = get(OPENAPI_FIELDS_TO_DB, k, k)
             if !in(Symbol(col_name), schema.names)
                 DBInterface.execute(
                     attribute_statement,
