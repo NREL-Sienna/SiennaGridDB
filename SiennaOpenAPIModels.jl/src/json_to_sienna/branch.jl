@@ -35,6 +35,30 @@ function openapi2psy(line::Line, resolver::Resolver)
     )
 end
 
+function openapi2psy(monitored::MonitoredLine, resolver::Resolver)
+    if PSY.get_base_power(resolver.sys) == 0.0
+        error("base power is 0.0")
+    end
+    PSY.MonitoredLine(
+        name=monitored.name,
+        available=monitored.available,
+        active_power_flow=monitored.active_power_flow / PSY.get_base_power(resolver.sys),
+        reactive_power_flow=monitored.reactive_power_flow /
+                            PSY.get_base_power(resolver.sys),
+        arc=resolver(monitored.arc),
+        r=monitored.r,
+        x=monitored.x,
+        b=get_tuple_from_to(monitored.b),
+        flow_limits=divide(
+            get_tuple_fromto_tofrom(monitored.flow_limits),
+            PSY.get_base_power(resolver.sys),
+        ),
+        rating=monitored.rating / PSY.get_base_power(resolver.sys),
+        angle_limits=get_tuple_min_max(monitored.angle_limits),
+        g=get_tuple_from_to(monitored.g),
+    )
+end
+
 function openapi2psy(transform::Transformer2W, resolver::Resolver)
     if PSY.get_base_power(resolver.sys) == 0.0
         error("base power is 0.0")

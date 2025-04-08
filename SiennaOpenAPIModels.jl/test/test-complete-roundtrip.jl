@@ -202,6 +202,15 @@ end
             area_interchange_copy,
             exclude=Set([:internal]))
     end
+    @testset "MonitoredLine" begin
+        monitored = only(collect(PSY.get_components(PSY.MonitoredLine, two_area_pjm_DA)))
+        @test isa(monitored, PSY.MonitoredLine)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(monitored, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, two_area_pjm_DA)
+        monitored_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(monitored, monitored_copy, exclude=Set([:internal]))
+    end
 end
                             
 @testset "c_sys5_phes_ed Roundtrip to JSON" begin
