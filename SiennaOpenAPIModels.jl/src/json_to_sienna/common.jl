@@ -23,7 +23,17 @@ function get_sienna_unit_system(units::String)
     IS.deserialize(PSY.UnitSystem, units)
 end
 
+function get_storage_tech_enum(storage::String)
+    IS.deserialize(PSY.StorageTech, storage)
+end
+
 # Functions that convert and scale tuples
+
+get_tuple_in_out(::Nothing) = nothing
+
+function get_tuple_in_out(obj::InOut)
+    return (in=obj.in, out=obj.out)
+end
 
 get_tuple_min_max(::Nothing) = nothing
 
