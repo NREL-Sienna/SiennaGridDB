@@ -5,6 +5,9 @@ import Tables
 
 const SQLITE_CREATE_STR = [
     """
+    PRAGMA foreign_keys = ON;
+    """,
+    """
     CREATE TABLE area (
         id INTEGER NOT NULL,
         name TEXT NOT NULL,
@@ -191,6 +194,8 @@ const OPENAPI_FIELDS_TO_DB = Dict(
 const DB_TO_OPENAPI_FIELDS = Dict(t => s for (s, t) in OPENAPI_FIELDS_TO_DB)
 
 const ALL_PSY_TYPES = [
+    PSY.Area,
+    PSY.LoadZone,
     PSY.ACBus,
     PSY.Arc,
     PSY.ThermalStandard,
@@ -201,6 +206,8 @@ const ALL_PSY_TYPES = [
     PSY.StandardLoad,
 ]
 const ALL_TYPES = [
+    Area,
+    LoadZone,
     ACBus,
     Arc,
     ThermalStandard,
@@ -216,12 +223,14 @@ const PSY_TO_OPENAPI_TYPE = Dict(k => v for (k, v) in zip(ALL_PSY_TYPES, ALL_TYP
 const TYPE_NAMES = Dict(string(t) => t for t in ALL_TYPES)
 const TYPE_TO_TABLE = Dict(
     ACBus => "bus",
+    Area => "area",
     Arc => "arc",
-    ThermalStandard => "generation_unit",
-    RenewableDispatch => "generation_unit",
     Line => "transmission",
-    Transformer2W => "transmission",
+    LoadZone => "loadzone",
     PowerLoad => "load",
+    ThermalStandard => "generation_unit",
+    Transformer2W => "transmission",
+    RenewableDispatch => "generation_unit",
     StandardLoad => "load",
 )
 
@@ -271,7 +280,15 @@ function add_components_to_tables!(
                 (col_name, col_type) in zip(schema.names, schema.types)
             )...,
         )
-        DBInterface.execute(table_statement, row)
+        try
+            DBInterface.execute(table_statement, row)
+        catch e
+            if isa(e, SQLite.SQLiteException)
+                error("Failed to insert into $(table_name): $(e.msg) with values $(row)")
+            else
+                rethrow(e)
+            end
+        end
         for (k, v) in JSON.parse(OpenAPI.to_json(c))
             col_name = if haskey(OPENAPI_FIELDS_TO_DB, k)
                 OPENAPI_FIELDS_TO_DB[k]

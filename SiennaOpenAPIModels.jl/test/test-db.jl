@@ -80,3 +80,15 @@ end
     acbuses = Tables.columntable(DBInterface.execute(db, "SELECT * FROM bus"))
     @test length(acbuses.id) == 118
 end
+
+@testset "RTS-System to DB" begin
+    sys = PowerSystemCaseBuilder.build_system(
+        PowerSystemCaseBuilder.PSISystems,
+        "RTS_GMLC_RT_sys",
+    )
+    db = SQLite.DB()
+    SiennaOpenAPIModels.make_sqlite!(db)
+    SiennaOpenAPIModels.sys2db!(db, sys, IDGenerator())
+    acbuses = Tables.columntable(DBInterface.execute(db, "SELECT * FROM bus"))
+    @test length(acbuses.id) == 73
+end
