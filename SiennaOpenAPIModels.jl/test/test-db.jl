@@ -86,6 +86,9 @@ end
         PowerSystemCaseBuilder.PSISystems,
         "RTS_GMLC_RT_sys",
     )
+    for fixed_admittance in PSY.get_components(PSY.FixedAdmittance, sys)
+        PSY.set_name!(sys, fixed_admittance, PSY.get_name(fixed_admittance) * "_admitatnce")
+    end
     db = SQLite.DB()
     SiennaOpenAPIModels.make_sqlite!(db)
     SiennaOpenAPIModels.sys2db!(db, sys, IDGenerator())
