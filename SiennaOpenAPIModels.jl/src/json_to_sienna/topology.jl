@@ -28,18 +28,6 @@ function openapi2psy(area::Area, resolver::Resolver)
     )
 end
 
-function openapi2psy(load_zone::LoadZone, resolver::Resolver)
-    if PSY.get_base_power(resolver.sys) == 0.0
-        error("base power is 0.0")
-    end
-    PSY.LoadZone(
-        name=load_zone.name,
-        peak_active_power=load_zone.peak_active_power / PSY.get_base_power(resolver.sys),
-        peak_reactive_power=load_zone.peak_reactive_power /
-                            PSY.get_base_power(resolver.sys),
-    )
-end
-
 function openapi2psy(dcbus::DCBus, resolver::Resolver)
     PSY.DCBus(
         number=dcbus.number,
@@ -49,5 +37,16 @@ function openapi2psy(dcbus::DCBus, resolver::Resolver)
         base_voltage=dcbus.base_voltage,
         area=resolver(dcbus.area),
         load_zone=resolver(dcbus.load_zone),
+    )
+end
+function openapi2psy(load_zone::LoadZone, resolver::Resolver)
+    if PSY.get_base_power(resolver.sys) == 0.0
+        error("base power is 0.0")
+    end
+    PSY.LoadZone(
+        name=load_zone.name,
+        peak_active_power=load_zone.peak_active_power / PSY.get_base_power(resolver.sys),
+        peak_reactive_power=load_zone.peak_reactive_power /
+                            PSY.get_base_power(resolver.sys),
     )
 end

@@ -7,16 +7,16 @@ function get_bustype_enum(bustype::String)
     IS.deserialize(PSY.ACBusTypes, bustype)
 end
 
-function get_pump_status_enum(status::String)
-    IS.deserialize(PSY.PumpHydroStatus, status)
+function get_fuel_type_enum(fuel_type::String)
+    IS.deserialize(PSY.ThermalFuels, fuel_type)
 end
 
 function get_prime_mover_enum(prime_mover_type::String)
     IS.deserialize(PSY.PrimeMovers, prime_mover_type)
 end
 
-function get_fuel_type_enum(fuel_type::String)
-    IS.deserialize(PSY.ThermalFuels, fuel_type)
+function get_pump_status_enum(status::String)
+    IS.deserialize(PSY.PumpHydroStatus, status)
 end
 
 function get_sienna_unit_system(units::String)
@@ -28,6 +28,18 @@ function get_storage_tech_enum(storage::String)
 end
 
 # Functions that convert and scale tuples
+
+function get_julia_complex(obj::ComplexNumber)
+    Complex(obj.real, obj.imag)
+end
+
+function get_tuple_from_to(obj::FromTo)
+    return (from=obj.from, to=obj.to)
+end
+
+function get_tuple_fromto_tofrom(obj::FromToToFrom)
+    return (from_to=obj.from_to, to_from=obj.to_from)
+end
 
 get_tuple_in_out(::Nothing) = nothing
 
@@ -45,18 +57,6 @@ get_tuple_up_down(::Nothing) = nothing
 
 function get_tuple_up_down(obj::UpDown)
     return (up=obj.up, down=obj.down)
-end
-
-function get_tuple_from_to(obj::FromTo)
-    return (from=obj.from, to=obj.to)
-end
-
-function get_tuple_fromto_tofrom(obj::FromToToFrom)
-    return (from_to=obj.from_to, to_from=obj.to_from)
-end
-
-function get_julia_complex(obj::ComplexNumber)
-    Complex(obj.real, obj.imag)
 end
 
 get_tuple_xy_coords(::Nothing) = nothing
@@ -77,22 +77,6 @@ divide(x::Float64, scalar::Float64) = x / scalar
 
 # Functions that get operation costs
 
-function get_sienna_operation_cost(cost::ThermalGenerationCost)
-    PSY.ThermalGenerationCost(
-        start_up=get_sienna_startup(cost.start_up),
-        shut_down=cost.shut_down,
-        fixed=cost.fixed,
-        variable=get_sienna_variable_cost(cost.variable),
-    )
-end
-
-function get_sienna_operation_cost(cost::RenewableGenerationCost)
-    PSY.RenewableGenerationCost(
-        curtailment_cost=get_sienna_variable_cost(cost.curtailment_cost),
-        variable=get_sienna_variable_cost(cost.variable),
-    )
-end
-
 function get_sienna_operation_cost(cost::HydroGenerationCost)
     PSY.HydroGenerationCost(
         variable=get_sienna_variable_cost(cost.variable),
@@ -102,6 +86,13 @@ end
 
 function get_sienna_operation_cost(cost::HydroStorageGenerationCost)
     get_sienna_operation_cost(cost.value)
+end
+
+function get_sienna_operation_cost(cost::RenewableGenerationCost)
+    PSY.RenewableGenerationCost(
+        curtailment_cost=get_sienna_variable_cost(cost.curtailment_cost),
+        variable=get_sienna_variable_cost(cost.variable),
+    )
 end
 
 function get_sienna_operation_cost(cost::StorageCost)
@@ -116,36 +107,41 @@ function get_sienna_operation_cost(cost::StorageCost)
     )
 end
 
+function get_sienna_operation_cost(cost::ThermalGenerationCost)
+    PSY.ThermalGenerationCost(
+        start_up=get_sienna_startup(cost.start_up),
+        shut_down=cost.shut_down,
+        fixed=cost.fixed,
+        variable=get_sienna_variable_cost(cost.variable),
+    )
+end
+
 # Getter functions used within the operation cost getters, including startups,
 # variable costs, value curves, and function data
 
 get_sienna_startup(::Nothing) = nothing
 
-function get_sienna_startup(startup::ThermalGenerationCostStartUp)
-    get_sienna_startup(startup.value)
-end
-
-function get_sienna_startup(startup::StorageCostStartUp)
-    get_sienna_startup(startup.value)
-end
-
 function get_sienna_startup(startup::Float64)
     return startup
-end
-
-function get_sienna_startup(startup::StorageCostStartUpOneOf)
-    (charge=startup.charge, discharge=startup.discharge)
 end
 
 function get_sienna_startup(stages::StartUpStages)
     (hot=stages.hot, warm=stages.warm, cold=stages.cold)
 end
 
-get_sienna_variable_cost(::Nothing) = nothing
-
-function get_sienna_variable_cost(variable::ProductionVariableCostCurve)
-    get_sienna_variable_cost(variable.value)
+function get_sienna_startup(startup::StorageCostStartUp)
+    get_sienna_startup(startup.value)
 end
+
+function get_sienna_startup(startup::StorageCostStartUpOneOf)
+    (charge=startup.charge, discharge=startup.discharge)
+end
+
+function get_sienna_startup(startup::ThermalGenerationCostStartUp)
+    get_sienna_startup(startup.value)
+end
+
+get_sienna_variable_cost(::Nothing) = nothing
 
 function get_sienna_variable_cost(variable::CostCurve)
     PSY.CostCurve(
@@ -168,15 +164,18 @@ function get_sienna_variable_cost(variable::FuelCurveFuelCost)
     return variable.value
 end
 
-get_sienna_value_curve(::Nothing) = nothing
-
-function get_sienna_value_curve(curve::ValueCurve)
-    get_sienna_value_curve(curve.value)
+function get_sienna_variable_cost(variable::ProductionVariableCostCurve)
+    get_sienna_variable_cost(variable.value)
 end
 
-function get_sienna_value_curve(curve::InputOutputCurve)
-    PSY.InputOutputCurve(
-        function_data=get_sienna_function_data(curve.function_data),
+get_sienna_value_curve(::Nothing) = nothing
+
+function get_sienna_value_curve(curve::AverageRateCurve)
+    PSY.AverageRateCurve(
+        function_data=PSY.AverageRateCurveFunctionData(
+            get_sienna_function_data(curve.function_data),
+        ),
+        initial_input=curve.initial_input,
         input_at_zero=curve.input_at_zero,
     )
 end
@@ -189,21 +188,18 @@ function get_sienna_value_curve(curve::IncrementalCurve)
     )
 end
 
-function get_sienna_value_curve(curve::AverageRateCurve)
-    PSY.AverageRateCurve(
-        function_data=PSY.AverageRateCurveFunctionData(
-            get_sienna_function_data(curve.function_data),
-        ),
-        initial_input=curve.initial_input,
+function get_sienna_value_curve(curve::InputOutputCurve)
+    PSY.InputOutputCurve(
+        function_data=get_sienna_function_data(curve.function_data),
         input_at_zero=curve.input_at_zero,
     )
 end
 
-get_sienna_function_data(::Nothing) = nothing
-
-function get_sienna_function_data(function_data::InputOutputCurveFunctionData)
-    get_sienna_function_data(function_data.value)
+function get_sienna_value_curve(curve::ValueCurve)
+    get_sienna_value_curve(curve.value)
 end
+
+get_sienna_function_data(::Nothing) = nothing
 
 function get_sienna_function_data(function_data::AverageRateCurveFunctionData)
     get_sienna_function_data(function_data.value)
@@ -213,16 +209,12 @@ function get_sienna_function_data(function_data::IncrementalCurveFunctionData)
     get_sienna_function_data(function_data.value)
 end
 
-function get_sienna_function_data(function_data::LinearFunctionData)
-    PSY.LinearFunctionData(
-        proportional_term=function_data.proportional_term,
-        constant_term=function_data.constant_term,
-    )
+function get_sienna_function_data(function_data::InputOutputCurveFunctionData)
+    get_sienna_function_data(function_data.value)
 end
 
-function get_sienna_function_data(function_data::QuadraticFunctionData)
-    PSY.QuadraticFunctionData(
-        quadratic_term=function_data.quadratic_term,
+function get_sienna_function_data(function_data::LinearFunctionData)
+    PSY.LinearFunctionData(
         proportional_term=function_data.proportional_term,
         constant_term=function_data.constant_term,
     )
@@ -234,6 +226,14 @@ end
 
 function get_sienna_function_data(function_data::PiecewiseStepData)
     PSY.PiecewiseStepData(x_coords=function_data.x_coords, y_coords=function_data.y_coords)
+end
+
+function get_sienna_function_data(function_data::QuadraticFunctionData)
+    PSY.QuadraticFunctionData(
+        quadratic_term=function_data.quadratic_term,
+        proportional_term=function_data.proportional_term,
+        constant_term=function_data.constant_term,
+    )
 end
 
 # Resolver stuff
