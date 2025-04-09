@@ -438,6 +438,8 @@ end
 function db2sys!(sys::PSY.System, db, resolver::Resolver)
     attributes = get_entity_attributes(db)
 
+    row_counts = Dict{String, Int64}()
+    all_entities = 0
     # We need to parse ALL_TYPES in a specific order to resolver correctly
     for OPENAPI_T in ALL_DESERIALIZABLE_TYPES
         table_name = TYPE_TO_TABLE[OPENAPI_T]
@@ -448,6 +450,20 @@ function db2sys!(sys::PSY.System, db, resolver::Resolver)
             (obj_type,),
         )
         add_components_to_sys!(OPENAPI_T, sys, rows, attributes, resolver)
+        row_counts[table_name] =
+            get(row_counts, table_name, 0) + (length(resolver.id2uuid) - all_entities)
+        all_entities = length(resolver.id2uuid)
+    end
+    for (table_name, _) in TABLE_SCHEMAS
+        if table_name == "attributes"
+            continue
+        end
+        result = DBInterface.execute(db, "SELECT count(*) from $table_name")
+        db_count = first(first(result))::Int64
+        local_count = get(row_counts, table_name, 0)
+        if db_count != local_count
+            @warn "Table $table_name contains $db_count ids but only $local_count were processed"
+        end
     end
 end
 
