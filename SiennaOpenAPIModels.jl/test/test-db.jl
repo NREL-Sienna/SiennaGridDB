@@ -21,12 +21,8 @@ custom_isequivalent(x::AbstractFloat, y::AbstractFloat) = isequal(x, y) || (x ==
 function test_component_each_type(sys, copy_of_sys)
     for T in SiennaOpenAPIModels.ALL_DESERIALIZABLE_TYPES
         SIENNA_T = SiennaOpenAPIModels.OPENAPI_TYPE_TO_PSY[T]
-        result = @test length(PSY.get_components(SIENNA_T, sys)) ==
+        @test length(PSY.get_components(SIENNA_T, sys)) ==
               length(PSY.get_components(SIENNA_T, copy_of_sys))
-        if result isa Test.Fail
-            @infiltrate
-        end
-
         if SIENNA_T <: PSY.Arc
             continue
         end
