@@ -60,24 +60,6 @@ scale(x::Float64, scalar::Float64) = scalar * x
 
 # Functions that get operation costs
 
-function get_operation_cost(cost::PSY.ThermalGenerationCost)
-    ThermalGenerationCost(
-        cost_type="THERMAL",
-        start_up=ThermalGenerationCostStartUp(get_startup(cost.start_up)),
-        shut_down=cost.shut_down,
-        fixed=cost.fixed,
-        variable=ProductionVariableCostCurve(get_variable_cost(cost.variable)),
-    )
-end
-
-function get_operation_cost(cost::PSY.RenewableGenerationCost)
-    RenewableGenerationCost(
-        cost_type="RENEWABLE",
-        curtailment_cost=get_variable_cost(cost.curtailment_cost),
-        variable=get_variable_cost(cost.variable),
-    )
-end
-
 function get_operation_cost(cost::PSY.HydroGenerationCost)
     HydroGenerationCost(
         cost_type="HYDRO",
@@ -94,6 +76,14 @@ function get_operation_cost(cost::PSY.LoadCost)
     )
 end
 
+function get_operation_cost(cost::PSY.RenewableGenerationCost)
+    RenewableGenerationCost(
+        cost_type="RENEWABLE",
+        curtailment_cost=get_variable_cost(cost.curtailment_cost),
+        variable=get_variable_cost(cost.variable),
+    )
+end
+
 function get_operation_cost(cost::PSY.StorageCost)
     StorageCost(
         cost_type="STORAGE",
@@ -104,6 +94,16 @@ function get_operation_cost(cost::PSY.StorageCost)
         start_up=StorageCostStartUp(get_startup(cost.start_up)),
         energy_shortage_cost=cost.energy_shortage_cost,
         energy_surplus_cost=cost.energy_surplus_cost,
+    )
+end
+
+function get_operation_cost(cost::PSY.ThermalGenerationCost)
+    ThermalGenerationCost(
+        cost_type="THERMAL",
+        start_up=ThermalGenerationCostStartUp(get_startup(cost.start_up)),
+        shut_down=cost.shut_down,
+        fixed=cost.fixed,
+        variable=ProductionVariableCostCurve(get_variable_cost(cost.variable)),
     )
 end
 
@@ -160,14 +160,6 @@ function get_value_curve(curve::T) where {T <: PSY.ValueCurve}
     error("Unsupported type $T")
 end
 
-function get_value_curve(curve::PSY.InputOutputCurve)
-    InputOutputCurve(
-        curve_type="INPUT_OUTPUT",
-        function_data=InputOutputCurveFunctionData(get_function_data(curve.function_data)),
-        input_at_zero=curve.input_at_zero,
-    )
-end
-
 function get_value_curve(curve::PSY.AverageRateCurve)
     AverageRateCurve(
         curve_type="AVERAGE_RATE",
@@ -186,20 +178,19 @@ function get_value_curve(curve::PSY.IncrementalCurve)
     )
 end
 
+function get_value_curve(curve::PSY.InputOutputCurve)
+    InputOutputCurve(
+        curve_type="INPUT_OUTPUT",
+        function_data=InputOutputCurveFunctionData(get_function_data(curve.function_data)),
+        input_at_zero=curve.input_at_zero,
+    )
+end
+
 get_function_data(::Nothing) = nothing
 
 function get_function_data(function_data::PSY.LinearFunctionData)
     LinearFunctionData(
         function_type="LINEAR",
-        proportional_term=function_data.proportional_term,
-        constant_term=function_data.constant_term,
-    )
-end
-
-function get_function_data(function_data::PSY.QuadraticFunctionData)
-    QuadraticFunctionData(
-        function_type="QUADRATIC",
-        quadratic_term=function_data.quadratic_term,
         proportional_term=function_data.proportional_term,
         constant_term=function_data.constant_term,
     )
@@ -217,6 +208,15 @@ function get_function_data(function_data::PSY.PiecewiseStepData)
         function_type="PIECEWISE_STEP",
         x_coords=function_data.x_coords,
         y_coords=function_data.y_coords,
+    )
+end
+
+function get_function_data(function_data::PSY.QuadraticFunctionData)
+    QuadraticFunctionData(
+        function_type="QUADRATIC",
+        quadratic_term=function_data.quadratic_term,
+        proportional_term=function_data.proportional_term,
+        constant_term=function_data.constant_term,
     )
 end
 
