@@ -88,6 +88,10 @@ function get_sienna_operation_cost(cost::HydroStorageGenerationCost)
     get_sienna_operation_cost(cost.value)
 end
 
+function get_sienna_operation_cost(cost::LoadCost)
+    PSY.LoadCost(variable=get_sienna_variable_cost(cost.variable), fixed=cost.fixed)
+end
+
 function get_sienna_operation_cost(cost::RenewableGenerationCost)
     PSY.RenewableGenerationCost(
         curtailment_cost=get_sienna_variable_cost(cost.curtailment_cost),

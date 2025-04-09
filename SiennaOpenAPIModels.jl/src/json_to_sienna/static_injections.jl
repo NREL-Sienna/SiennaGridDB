@@ -124,6 +124,23 @@ function openapi2psy(hydro::HydroPumpedStorage, resolver::Resolver)
     )
 end
 
+function openapi2psy(interrupt::InterruptiblePowerLoad, resolver::Resolver)
+    if interrupt.base_power == 0.0
+        error("base power is 0.0")
+    end
+    PSY.InterruptiblePowerLoad(
+        name=interrupt.name,
+        available=interrupt.available,
+        bus=resolver(interrupt.bus),
+        active_power=interrupt.active_power / interrupt.base_power,
+        reactive_power=interrupt.reactive_power / interrupt.base_power,
+        max_active_power=interrupt.max_active_power / interrupt.base_power,
+        max_reactive_power=interrupt.max_reactive_power / interrupt.base_power,
+        base_power=interrupt.base_power,
+        operation_cost=get_sienna_operation_cost(interrupt.operation_cost),
+    )
+end
+
 function openapi2psy(load::PowerLoad, resolver::Resolver)
     if load.base_power == 0.0
         error("base power is 0.0")
