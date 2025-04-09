@@ -120,7 +120,7 @@ const SQLITE_CREATE_STR = [
         obj_type TEXT NOT NULL,
         from_area INTEGER NOT NULL,
         to_area INTEGER NOT NULL,
-        rating DOUBLE NOT NULL,
+        rating DOUBLE,
         PRIMARY KEY (id),
         UNIQUE (name),
         FOREIGN KEY(from_area) REFERENCES area (id),
@@ -196,7 +196,7 @@ const TABLE_SCHEMAS = Dict(
     ),
     "area_transmission" => Tables.Schema(
         ["id", "name", "obj_type", "from_area", "to_area", "rating"],
-        [Int64, String, String, Int64, Int64, Float64],
+        [Int64, String, String, Int64, Int64, Union{Nothing, Float64}],
     ),
 )
 
