@@ -116,3 +116,32 @@ function openapi2psy(transform::Transformer2W, resolver::Resolver)
         rating=transform.rating / PSY.get_base_power(resolver.sys),
     )
 end
+
+function openapi2psy(hvdc::TwoTerminalHVDCLine, resolver::Resolver)
+    if PSY.get_base_power(resolver.sys) == 0.0
+        error("base power is 0.0")
+    end
+    PSY.TwoTerminalHVDCLine(
+        name=hvdc.name,
+        available=hvdc.available,
+        active_power_flow=hvdc.active_power_flow / PSY.get_base_power(resolver.sys),
+        arc=resolver(hvdc.arc),
+        active_power_limits_from=divide(
+            get_tuple_min_max(hvdc.active_power_limits_from),
+            PSY.get_base_power(resolver.sys),
+        ),
+        active_power_limits_to=divide(
+            get_tuple_min_max(hvdc.active_power_limits_to),
+            PSY.get_base_power(resolver.sys),
+        ),
+        reactive_power_limits_from=divide(
+            get_tuple_min_max(hvdc.reactive_power_limits_from),
+            PSY.get_base_power(resolver.sys),
+        ),
+        reactive_power_limits_to=divide(
+            get_tuple_min_max(hvdc.reactive_power_limits_to),
+            PSY.get_base_power(resolver.sys),
+        ),
+        loss=get_sienna_value_curve(hvdc.loss),
+    )
+end
