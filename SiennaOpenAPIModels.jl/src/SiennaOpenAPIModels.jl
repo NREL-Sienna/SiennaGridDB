@@ -103,6 +103,7 @@ include("json_to_sienna/common.jl")
 include("json_to_sienna/topology.jl")
 include("json_to_sienna/static_injections.jl")
 include("json_to_sienna/branch.jl")
+include("json_to_sienna/service.jl")
 
 include("dbinterface/sqlite.jl")
 
