@@ -234,7 +234,6 @@ const TYPE_TO_TABLE_LIST = [
     HydroPumpedStorage => "generation_unit",
     ThermalMultiStart => "generation_unit",
     RenewableNonDispatch => "generation_unit",
-    HydroPumpedStorage => "generation_unit",
     HydroEnergyReservoir => "generation_unit",
 ]
 const TYPE_TO_TABLE = Dict(TYPE_TO_TABLE_LIST)
@@ -262,13 +261,39 @@ const ALL_PSY_TYPES = [
     PSY.HydroPumpedStorage,
     PSY.ThermalMultiStart,
     PSY.RenewableNonDispatch,
-    PSY.HydroPumpedStorage,
     PSY.HydroEnergyReservoir,
 ]
 
 const ALL_TYPES = first.(TYPE_TO_TABLE_LIST)
 const PSY_TO_OPENAPI_TYPE = Dict(k => v for (k, v) in zip(ALL_PSY_TYPES, ALL_TYPES))
+const OPENAPI_TYPE_TO_PSY = Dict(v => k for (k, v) in zip(ALL_PSY_TYPES, ALL_TYPES))
 const TYPE_NAMES = Dict(string(t) => t for t in ALL_TYPES)
+
+const ALL_DESERIALIZABLE_TYPES = [
+    Area,
+    LoadZone,
+    ACBus,
+    Arc,
+    AreaInterchange,
+    Line,
+    Transformer2W,
+    MonitoredLine,
+    # PhaseShiftingTransformer,
+    TapTransformer,
+    # TwoTerminalHVDCLine,
+    PowerLoad,
+    StandardLoad,
+    FixedAdmittance,
+    # InterruptiblePowerLoad,
+    ThermalStandard,
+    RenewableDispatch,
+    # EnergyReservoirStorage,
+    HydroDispatch,
+    HydroPumpedStorage,
+    # ThermalMultiStart,
+    RenewableNonDispatch,
+    # HydroEnergyReservoir,
+]
 
 function make_sqlite!(db)
     for table in SQLITE_CREATE_STR
@@ -363,4 +388,72 @@ function sys2db!(db, sys::PSY.System, ids::IDGenerator)
             send_table_to_db!(OPENAPI_T, db, PSY.get_components(T, sys), ids)
         end
     end
+end
+
+# Database to System Translation
+
+function get_entity_attributes(db)
+    # First, get all attributes for this entity type and group them by entity_id
+    attributes_query = """
+    SELECT entity_id,
+           json_group_object(key, json(value)) AS attribute_json
+    FROM attributes
+    GROUP BY entity_id
+    """
+
+    attributes_result = DBInterface.execute(db, attributes_query, strict=true)
+
+    # Create a dictionary of entity_id => attributes
+    attributes_dict = Dict{Int64, Dict{String, Any}}()
+    for row in attributes_result
+        attributes_dict[row.entity_id] = JSON.parse(row.attribute_json)
+    end
+
+    return attributes_dict
+end
+
+function add_components_to_sys!(
+    ::Type{OpenAPI_T},
+    sys::PSY.System,
+    rows,
+    attributes::Dict{Int64, Dict{String, Any}},
+    resolver::Resolver,
+) where {OpenAPI_T}
+    for row in rows
+        extra_attributes = get(attributes, row.id, Dict{String, Any}())
+        dict = merge(
+            Dict(
+                get(DB_TO_OPENAPI_FIELDS, string(k), string(k)) => coalesce(v, nothing)
+                for (k, v) in zip(propertynames(row), row)
+            ),
+            extra_attributes,
+        )
+        openapi_obj = OpenAPI.from_json(OpenAPI_T, dict)
+        sienna_obj = openapi2psy(openapi_obj, resolver)
+        PowerSystems.add_component!(sys, sienna_obj)
+        resolver.id2uuid[row.id] = IS.get_uuid(sienna_obj)
+    end
+end
+
+function db2sys!(sys::PSY.System, db, resolver::Resolver)
+    attributes = get_entity_attributes(db)
+
+    # We need to parse ALL_TYPES in a specific order to resolver correctly
+    for OPENAPI_T in ALL_DESERIALIZABLE_TYPES
+        table_name = TYPE_TO_TABLE[OPENAPI_T]
+        obj_type = last(split(string(OPENAPI_T), "."))
+        rows = DBInterface.execute(
+            db,
+            "SELECT * FROM $table_name WHERE obj_type=?",
+            (obj_type,),
+        )
+        add_components_to_sys!(OPENAPI_T, sys, rows, attributes, resolver)
+    end
+end
+
+function make_system_from_db(db)
+    sys = PSY.System(100)
+    resolver = Resolver(sys, Dict{Int64, UUID}())
+    db2sys!(sys, db, resolver)
+    return sys
 end
