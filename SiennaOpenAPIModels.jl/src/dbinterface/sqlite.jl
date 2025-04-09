@@ -107,7 +107,7 @@ const SQLITE_CREATE_STR = [
     	name TEXT NOT NULL,
     	obj_type TEXT NOT NULL,
     	arc_id INTEGER NOT NULL,
-    	rating DOUBLE NOT NULL,
+    	rating DOUBLE,
     	PRIMARY KEY (id),
     	UNIQUE (name),
     	FOREIGN KEY(arc_id) REFERENCES arc (id)
@@ -184,7 +184,7 @@ const TABLE_SCHEMAS = Dict(
     ),
     "transmission" => Tables.Schema(
         ["id", "name", "obj_type", "arc_id", "rating"],
-        [Int64, String, String, Int64, Float64],
+        [Int64, String, String, Int64, Union{Nothing, Float64}],
     ),
     "arc" => Tables.Schema(
         ["id", "obj_type", "from_id", "to_id"],
@@ -222,6 +222,7 @@ const TYPE_TO_TABLE_LIST = [
     MonitoredLine => "transmission",
     PhaseShiftingTransformer => "transmission",
     TapTransformer => "transmission",
+    TwoTerminalHVDCLine => "transmission",
     PowerLoad => "load",
     StandardLoad => "load",
     FixedAdmittance => "load",
@@ -249,6 +250,7 @@ const ALL_PSY_TYPES = [
     PSY.MonitoredLine,
     PSY.PhaseShiftingTransformer,
     PSY.TapTransformer,
+    PSY.TwoTerminalHVDCLine,
     PSY.PowerLoad,
     PSY.StandardLoad,
     PSY.FixedAdmittance,
