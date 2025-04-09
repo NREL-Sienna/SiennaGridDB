@@ -214,6 +214,40 @@ function openapi2psy(standard_load::StandardLoad, resolver::Resolver)
     )
 end
 
+function openapi2psy(multi::ThermalMultiStart, resolver::Resolver)
+    PSY.ThermalMultiStart(
+        name=multi.name,
+        available=multi.available,
+        status=multi.status,
+        bus=resolver(multi.bus),
+        active_power=multi.active_power / multi.base_power,
+        reactive_power=multi.reactive_power / multi.base_power,
+        rating=multi.rating / multi.base_power,
+        prime_mover_type=get_prime_mover_enum(multi.prime_mover_type),
+        fuel=get_fuel_type_enum(multi.fuel),
+        active_power_limits=divide(
+            get_tuple_min_max(multi.active_power_limits),
+            multi.base_power,
+        ),
+        reactive_power_limits=divide(
+            get_tuple_min_max(multi.reactive_power_limits),
+            multi.base_power,
+        ),
+        ramp_limits=divide(get_tuple_up_down(multi.ramp_limits), multi.base_power),
+        power_trajectory=divide(
+            get_tuple_startup_shutdown(multi.power_trajectory),
+            multi.base_power,
+        ),
+        time_limits=get_tuple_up_down(multi.time_limits),
+        start_time_limits=get_sienna_startup(multi.start_time_limits),
+        start_types=multi.start_types,
+        operation_cost=get_sienna_operation_cost(multi.operation_cost),
+        base_power=multi.base_power,
+        time_at_status=multi.time_at_status,
+        must_run=multi.must_run,
+    )
+end
+
 function openapi2psy(thermal::ThermalStandard, resolver::Resolver)
     if thermal.base_power == 0.0
         error("base power is 0.0")
