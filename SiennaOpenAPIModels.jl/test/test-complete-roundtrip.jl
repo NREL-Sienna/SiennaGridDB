@@ -100,7 +100,7 @@ end
         renewnon_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
         @test IS.compare_values(renewnon, renewnon_copy, exclude=Set([:internal]))
     end
-    @testset "TwoTerminalHVDCLine to JSON" begin
+    @testset "TwoTerminalHVDCLine to JSON and Back" begin
         hvdc = PSY.get_component(PSY.TwoTerminalHVDCLine, RTS_GMLC_RT_sys, "DC1")
         @test isa(hvdc, PSY.TwoTerminalHVDCLine)
         id_gen = IDGenerator()
