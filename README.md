@@ -2,7 +2,40 @@
 
 Schema for the SQL database for Sienna Applications
 
-## Set pre-commit environment
+> [!IMPORTANT]
+> The griddb schema was designed using SQLite 3.45 to use some of the jsonb
+> functionality. We do not intend to provide backwards compatibility since when
+> we deisgined this 3.45 had already a year of being deployed.
+
+## How To(s)
+
+### How to install `just`
+
+> [!NOTE]
+> The recommended method to install just is using cargo.
+> However, there are multiple ways of installing it see the `just` documentation for [just](https://github.com/casey/just)
+
+```console
+cargo install just
+```
+
+### Create and example database and run some queries on it
+
+```console
+just test
+```
+
+### Run example queries on a griddb schema database
+
+To create a database with the schema use the following command:
+
+```console
+just queries $DB_NAME
+```
+
+## Contributing
+
+### Set pre-commit environment
 
 Install a virtual environment
 
@@ -20,18 +53,4 @@ Setup pre-commit to run automatically on each commit.
 
 ```console
 pre-commit install
-```
-
-## How to create the Schema
-
-To create a database with the schema use the following command:
-
-```console
-sqlite3 test.db < schema.sql
-```
-
-Testing data with some basic queries:
-
-```console
-sqlite3 -table < dummy_data.sql
 ```
