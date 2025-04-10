@@ -65,6 +65,12 @@ function get_tuple_min_max(obj::MinMax)
     return (min=obj.min, max=obj.max)
 end
 
+get_tuple_startup_shutdown(::Nothing) = nothing
+
+function get_tuple_startup_shutdown(obj::StartUpShutDown)
+    return (startup=obj.startup, shutdown=obj.shutdown)
+end
+
 get_tuple_up_down(::Nothing) = nothing
 
 function get_tuple_up_down(obj::UpDown)

@@ -290,6 +290,22 @@ end
     end
 end
 
+@testset "c_sys5_pglib Complete RoundTrip to JSON" begin
+    c_sys5_pglib = PowerSystemCaseBuilder.build_system(
+        PowerSystemCaseBuilder.PSITestSystems,
+        "c_sys5_pglib",
+    )
+    @testset "ThermalMultiStart to JSON and Back" begin
+        multi = PSY.get_component(PSY.ThermalMultiStart, c_sys5_pglib, "115_STEAM_1")
+        @test isa(multi, PSY.ThermalMultiStart)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(multi, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, c_sys5_pglib)
+        multi_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(multi, multi_copy, exclude=Set([:internal]))
+    end
+end
+
 @testset "c_sys5_phes_ed Complete Roundtrip to JSON" begin
     c_sys5_phes_ed = PowerSystemCaseBuilder.build_system(
         PowerSystemCaseBuilder.PSITestSystems,
