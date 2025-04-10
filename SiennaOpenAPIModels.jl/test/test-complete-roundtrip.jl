@@ -117,7 +117,7 @@ end
         resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, RTS_GMLC_RT_sys)
         reg_down_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
         @test IS.compare_values(reg_down, reg_down_copy, exclude=Set([:internal]))
-    end                        
+    end
 end
 
 @testset "sys10_pjm_ac_dc Complete Roundtrip to JSON" begin
@@ -133,6 +133,16 @@ end
         resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, sys10_pjm_ac_dc)
         dcbus_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
         @test IS.compare_values(dcbus, dcbus_copy, exclude=Set([:internal]))
+    end
+    @testset "TModelHVDCLine to JSON and Back" begin
+        tmodel =
+            PSY.get_component(PSY.TModelHVDCLine, sys10_pjm_ac_dc, "nodeD_DC-nodeD2_DC")
+        @test isa(tmodel, PSY.TModelHVDCLine)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(tmodel, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, sys10_pjm_ac_dc)
+        tmodel_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(tmodel, tmodel_copy, exclude=Set([:internal]))
     end
 end
 
