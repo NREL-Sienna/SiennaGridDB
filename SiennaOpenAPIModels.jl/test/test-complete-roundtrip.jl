@@ -134,7 +134,7 @@ end
         dcbus_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
         @test IS.compare_values(dcbus, dcbus_copy, exclude=Set([:internal]))
     end
-    @testset "InterconnectingConverter to JSON" begin
+    @testset "InterconnectingConverter to JSON and Back" begin
         inter =
             PSY.get_component(PSY.InterconnectingConverter, sys10_pjm_ac_dc, "IPC-nodeD2")
         @test isa(inter, PSY.InterconnectingConverter)
