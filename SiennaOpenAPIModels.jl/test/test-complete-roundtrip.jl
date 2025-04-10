@@ -201,6 +201,16 @@ end
         hydro_res_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
         @test IS.compare_values(hydro_res, hydro_res_copy, exclude=Set([:internal]))
     end
+    @testset "InterruptiblePowerLoad to JSON and Back" begin
+        interrupt =
+            only(collect(PSY.get_components(PSY.InterruptiblePowerLoad, c_sys5_hy_ed)))
+        @test isa(interrupt, PSY.InterruptiblePowerLoad)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(interrupt, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, c_sys5_hy_ed)
+        interrupt_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(interrupt, interrupt_copy, exclude=Set([:internal]))
+    end
 end
 
 @testset "sys_14_bus Complete RoundTrip to JSON" begin
