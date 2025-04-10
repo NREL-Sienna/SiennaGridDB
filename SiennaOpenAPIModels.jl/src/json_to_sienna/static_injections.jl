@@ -158,6 +158,28 @@ function openapi2psy(hydro::HydroPumpedStorage, resolver::Resolver)
     )
 end
 
+function openapi2psy(inter::InterconnectingConverter, resolver::Resolver)
+    if inter.base_power == 0.0
+        error("base power is 0.0")
+    end
+    PSY.InterconnectingConverter(
+        name=inter.name,
+        available=inter.available,
+        bus=resolver(inter.bus),
+        dc_bus=resolver(inter.dc_bus),
+        active_power=inter.active_power / inter.base_power,
+        rating=inter.rating / inter.base_power,
+        active_power_limits=divide(
+            get_tuple_min_max(inter.active_power_limits),
+            inter.base_power,
+        ),
+        base_power=inter.base_power,
+        dc_current=inter.dc_current,
+        max_dc_current=inter.max_dc_current,
+        loss_function=get_sienna_value_curve(inter.loss_function),
+    )
+end
+
 function openapi2psy(interrupt::InterruptiblePowerLoad, resolver::Resolver)
     if interrupt.base_power == 0.0
         error("base power is 0.0")
