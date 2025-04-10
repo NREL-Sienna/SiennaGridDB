@@ -215,6 +215,9 @@ function openapi2psy(standard_load::StandardLoad, resolver::Resolver)
 end
 
 function openapi2psy(multi::ThermalMultiStart, resolver::Resolver)
+    if multi.base_power == 0.0
+        error("base power is 0.0")
+    end
     PSY.ThermalMultiStart(
         name=multi.name,
         available=multi.available,
