@@ -19,6 +19,18 @@ function get_pump_status_enum(status::String)
     IS.deserialize(PSY.PumpHydroStatus, status)
 end
 
+function get_reserve_enum(direction::String)
+    if direction == "UP"
+        return PSY.ReserveUp
+    elseif direction == "DOWN"
+        return PSY.ReserveDown
+    elseif direction == "SYMMETRIC"
+        return PSY.ReserveSymmetric
+    else
+        error("Unsupported Reserve Direction: $(direction)")
+    end
+end
+
 function get_sienna_unit_system(units::String)
     IS.deserialize(PSY.UnitSystem, units)
 end

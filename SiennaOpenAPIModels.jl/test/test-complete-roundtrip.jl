@@ -109,6 +109,15 @@ end
         hvdc_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
         @test IS.compare_values(hvdc, hvdc_copy, exclude=Set([:internal]))
     end
+    @testset "VariableReserve DOWN to JSON and Back" begin
+        reg_down = PSY.get_component(PSY.VariableReserve, RTS_GMLC_RT_sys, "Reg_Down")
+        @test isa(reg_down, PSY.VariableReserve{PSY.ReserveDown})
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(reg_down, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, RTS_GMLC_RT_sys)
+        reg_down_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(reg_down, reg_down_copy, exclude=Set([:internal]))
+    end                        
 end
 
 @testset "sys10_pjm_ac_dc Complete Roundtrip to JSON" begin
