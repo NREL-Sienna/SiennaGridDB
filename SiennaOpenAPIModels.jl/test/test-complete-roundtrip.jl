@@ -100,6 +100,15 @@ end
         renewnon_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
         @test IS.compare_values(renewnon, renewnon_copy, exclude=Set([:internal]))
     end
+    @testset "TwoTerminalHVDCLine to JSON and Back" begin
+        hvdc = PSY.get_component(PSY.TwoTerminalHVDCLine, RTS_GMLC_RT_sys, "DC1")
+        @test isa(hvdc, PSY.TwoTerminalHVDCLine)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(hvdc, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, RTS_GMLC_RT_sys)
+        hvdc_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(hvdc, hvdc_copy, exclude=Set([:internal]))
+    end
     @testset "VariableReserve DOWN to JSON and Back" begin
         reg_down = PSY.get_component(PSY.VariableReserve, RTS_GMLC_RT_sys, "Reg_Down")
         @test isa(reg_down, PSY.VariableReserve{PSY.ReserveDown})
@@ -108,7 +117,7 @@ end
         resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, RTS_GMLC_RT_sys)
         reg_down_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
         @test IS.compare_values(reg_down, reg_down_copy, exclude=Set([:internal]))
-    end
+    end                        
 end
 
 @testset "sys10_pjm_ac_dc Complete Roundtrip to JSON" begin
@@ -174,6 +183,23 @@ end
         resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, c_sys5_all)
         load_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
         @test IS.compare_values(load, load_copy, exclude=Set([:internal]))
+    end
+end
+
+@testset "c_sys5_hy_ed Complete RoundTrip to JSON" begin
+    c_sys5_hy_ed = PowerSystemCaseBuilder.build_system(
+        PowerSystemCaseBuilder.PSITestSystems,
+        "c_sys5_hy_ed",
+    )
+    @testset "HydroEnergyReservoir to JSON and Back" begin
+        hydro_res =
+            only(collect(PSY.get_components(PSY.HydroEnergyReservoir, c_sys5_hy_ed)))
+        @test isa(hydro_res, PSY.HydroEnergyReservoir)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(hydro_res, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, c_sys5_hy_ed)
+        hydro_res_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(hydro_res, hydro_res_copy, exclude=Set([:internal]))
     end
 end
 
