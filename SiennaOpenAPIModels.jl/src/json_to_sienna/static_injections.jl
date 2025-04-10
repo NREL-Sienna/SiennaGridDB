@@ -71,6 +71,40 @@ function openapi2psy(hydro::HydroDispatch, resolver::Resolver)
     )
 end
 
+function openapi2psy(hydro_res::HydroEnergyReservoir, resolver::Resolver)
+    if hydro_res.base_power == 0.0
+        error("base power is 0.0")
+    end
+    PSY.HydroEnergyReservoir(
+        name=hydro_res.name,
+        available=hydro_res.available,
+        bus=resolver(hydro_res.bus),
+        active_power=hydro_res.active_power / hydro_res.base_power,
+        reactive_power=hydro_res.reactive_power / hydro_res.base_power,
+        rating=hydro_res.rating / hydro_res.base_power,
+        prime_mover_type=get_prime_mover_enum(hydro_res.prime_mover_type),
+        active_power_limits=divide(
+            get_tuple_min_max(hydro_res.active_power_limits),
+            hydro_res.base_power,
+        ),
+        reactive_power_limits=divide(
+            get_tuple_min_max(hydro_res.reactive_power_limits),
+            hydro_res.base_power,
+        ),
+        ramp_limits=divide(get_tuple_up_down(hydro_res.ramp_limits), hydro_res.base_power),
+        time_limits=get_tuple_up_down(hydro_res.time_limits),
+        base_power=hydro_res.base_power,
+        storage_capacity=hydro_res.storage_capacity / hydro_res.base_power,
+        inflow=hydro_res.inflow / hydro_res.base_power,
+        initial_storage=hydro_res.initial_storage / hydro_res.base_power,
+        operation_cost=get_sienna_operation_cost(hydro_res.operation_cost),
+        storage_target=hydro_res.storage_target,
+        conversion_factor=hydro_res.conversion_factor,
+        status=hydro_res.status,
+        time_at_status=hydro_res.time_at_status,
+    )
+end
+
 function openapi2psy(hydro::HydroPumpedStorage, resolver::Resolver)
     if hydro.base_power == 0.0
         error("base power is 0.0")

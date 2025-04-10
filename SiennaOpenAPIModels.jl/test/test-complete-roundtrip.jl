@@ -100,6 +100,15 @@ end
         renewnon_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
         @test IS.compare_values(renewnon, renewnon_copy, exclude=Set([:internal]))
     end
+    @testset "TwoTerminalHVDCLine to JSON and Back" begin
+        hvdc = PSY.get_component(PSY.TwoTerminalHVDCLine, RTS_GMLC_RT_sys, "DC1")
+        @test isa(hvdc, PSY.TwoTerminalHVDCLine)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(hvdc, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, RTS_GMLC_RT_sys)
+        hvdc_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(hvdc, hvdc_copy, exclude=Set([:internal]))
+    end
 end
 
 @testset "sys10_pjm_ac_dc Complete Roundtrip to JSON" begin
@@ -173,6 +182,16 @@ end
         PowerSystemCaseBuilder.PSITestSystems,
         "c_sys5_hy_ed",
     )
+    @testset "HydroEnergyReservoir to JSON and Back" begin
+        hydro_res =
+            only(collect(PSY.get_components(PSY.HydroEnergyReservoir, c_sys5_hy_ed)))
+        @test isa(hydro_res, PSY.HydroEnergyReservoir)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(hydro_res, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, c_sys5_hy_ed)
+        hydro_res_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(hydro_res, hydro_res_copy, exclude=Set([:internal]))
+    end
     @testset "InterruptiblePowerLoad to JSON and Back" begin
         interrupt =
             only(collect(PSY.get_components(PSY.InterruptiblePowerLoad, c_sys5_hy_ed)))
