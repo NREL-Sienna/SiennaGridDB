@@ -99,6 +99,29 @@ function openapi2psy(taptransform::TapTransformer, resolver::Resolver)
     )
 end
 
+function openapi2psy(tmodel::TModelHVDCLine, resolver::Resolver)
+    if PSY.get_base_power(resolver.sys) == 0.0
+        error("base power is 0.0")
+    end
+    PSY.TModelHVDCLine(
+        name=tmodel.name,
+        available=tmodel.available,
+        active_power_flow=tmodel.active_power_flow / PSY.get_base_power(resolver.sys),
+        arc=resolver(tmodel.arc),
+        r=tmodel.r,
+        l=tmodel.l,
+        c=tmodel.c,
+        active_power_limits_from=divide(
+            get_tuple_min_max(tmodel.active_power_limits_from),
+            PSY.get_base_power(resolver.sys),
+        ),
+        active_power_limits_to=divide(
+            get_tuple_min_max(tmodel.active_power_limits_to),
+            PSY.get_base_power(resolver.sys),
+        ),
+    )
+end
+
 function openapi2psy(transform::Transformer2W, resolver::Resolver)
     if PSY.get_base_power(resolver.sys) == 0.0
         error("base power is 0.0")
