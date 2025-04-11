@@ -284,7 +284,7 @@ const ALL_DESERIALIZABLE_TYPES = [
     PowerLoad,
     StandardLoad,
     FixedAdmittance,
-    # InterruptiblePowerLoad,
+    InterruptiblePowerLoad,
     ThermalStandard,
     RenewableDispatch,
     EnergyReservoirStorage,
