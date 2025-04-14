@@ -280,19 +280,19 @@ const ALL_DESERIALIZABLE_TYPES = [
     MonitoredLine,
     PhaseShiftingTransformer,
     TapTransformer,
-    # TwoTerminalHVDCLine,
+    TwoTerminalHVDCLine,
     PowerLoad,
     StandardLoad,
     FixedAdmittance,
-    # InterruptiblePowerLoad,
+    InterruptiblePowerLoad,
     ThermalStandard,
     RenewableDispatch,
     EnergyReservoirStorage,
     HydroDispatch,
     HydroPumpedStorage,
-    # ThermalMultiStart,
+    ThermalMultiStart,
     RenewableNonDispatch,
-    # HydroEnergyReservoir,
+    HydroEnergyReservoir,
 ]
 
 function make_sqlite!(db)
