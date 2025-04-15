@@ -329,8 +329,9 @@ function add_components_to_tables!(
     components,
     ids::IDGenerator,
 )
-    for c in components
-        c = psy2openapi(c, ids)
+    for psy_c in components
+        uuid = IS.get_uuid(psy_c)
+        c = psy2openapi(psy_c, ids)
         row = tuple(
             (
                 get_row_field(c, obj_type, col_name) for
@@ -355,6 +356,10 @@ function add_components_to_tables!(
                 )
             end
         end
+        DBInterface.execute(
+            attribute_statement,
+            (c.id, table_name, "uuid", JSON.json(string(uuid))),
+        )
     end
 end
 
@@ -430,6 +435,9 @@ function add_components_to_sys!(
         )
         openapi_obj = OpenAPI.from_json(OpenAPI_T, dict)
         sienna_obj = openapi2psy(openapi_obj, resolver)
+        if haskey(extra_attributes, "uuid")
+            IS.set_uuid!(IS.get_internal(sienna_obj), Base.UUID(extra_attributes["uuid"]))
+        end
         PowerSystems.add_component!(sys, sienna_obj)
         resolver.id2uuid[row.id] = IS.get_uuid(sienna_obj)
     end

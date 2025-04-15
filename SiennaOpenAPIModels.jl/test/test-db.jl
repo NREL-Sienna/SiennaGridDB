@@ -35,7 +35,8 @@ function test_component_each_type(sys, copy_of_sys)
             custom_isequivalent,
             component,
             new_component,
-            exclude=Set([:internal, :services]),
+            compare_uuids=true,
+            exclude=Set([:units_info, :ext, :services]),
         )
     end
 
@@ -71,8 +72,8 @@ end
                 "SELECT id, entity_id, entity_type, key, json(value) as value FROM attributes",
             ),
         )
-        @test length(attributes.id) == 6
-        @test length(unique(attributes.id)) == 6
+        @test length(attributes.id) == 7
+        @test length(unique(attributes.id)) == 7
         @test all(attributes.entity_id .== 1)
         @test all(attributes.entity_type .== "bus")
         @test attributes_to_dict(attributes) == Dict(
@@ -82,6 +83,7 @@ end
             "magnitude" => 1.0,
             "angle" => 0.0,
             "bustype" => "PV",
+            "uuid" => string(IS.get_uuid(acbus)),
         )
     end
     @testset "Full sys to DB" begin
