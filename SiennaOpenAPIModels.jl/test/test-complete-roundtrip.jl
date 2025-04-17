@@ -134,6 +134,16 @@ end
         dcbus_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
         @test IS.compare_values(dcbus, dcbus_copy, exclude=Set([:internal]))
     end
+    @testset "InterconnectingConverter to JSON and Back" begin
+        inter =
+            PSY.get_component(PSY.InterconnectingConverter, sys10_pjm_ac_dc, "IPC-nodeD2")
+        @test isa(inter, PSY.InterconnectingConverter)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(inter, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, sys10_pjm_ac_dc)
+        inter_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(inter, inter_copy, exclude=Set([:internal]))
+    end
     @testset "TModelHVDCLine to JSON and Back" begin
         tmodel =
             PSY.get_component(PSY.TModelHVDCLine, sys10_pjm_ac_dc, "nodeD_DC-nodeD2_DC")
