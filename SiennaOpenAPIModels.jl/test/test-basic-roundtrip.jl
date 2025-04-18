@@ -174,11 +174,11 @@ end
         @test test_convert.power_factor == 1.0
         @test test_convert.base_power == 101.7
     end
-    @testset "TwoTerminalHVDCLine to JSON" begin
+    @testset "TwoTerminalGenericHVDCLine to JSON" begin
         hvdc = PSY.get_component(PSY.TwoTerminalHVDCLine, RTS_GMLC_RT_sys, "DC1")
         @test isa(hvdc, PSY.TwoTerminalHVDCLine)
         test_convert = SiennaOpenAPIModels.psy2openapi(hvdc, IDGenerator())
-        test_roundtrip(SiennaOpenAPIModels.TwoTerminalHVDCLine, test_convert)
+        test_roundtrip(SiennaOpenAPIModels.TwoTerminalGenericHVDCLine, test_convert)
         @test test_convert.id == 1
         @test test_convert.available
         @test test_convert.active_power_flow == 0.0
