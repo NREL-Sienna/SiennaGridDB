@@ -217,7 +217,7 @@ function get_sienna_value_curve(curve::InputOutputCurve)
     )
 end
 
-function get_sienna_value_curve(curve::TwoTerminalHVDCLineLoss)
+function get_sienna_value_curve(curve::TwoTerminalGenericHVDCLineLoss)
     get_sienna_value_curve(curve.value)
 end
 
