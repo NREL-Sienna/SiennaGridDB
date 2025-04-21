@@ -80,6 +80,31 @@ end
         @test test_convert.from == 2
         @test test_convert.to == 3
     end
+    @testset "ExponentialLoad to JSON" begin
+        exp_load = PSY.ExponentialLoad(
+            name="exp_load",
+            available=true,
+            bus=PSY.get_bus(c_sys5, "nodeE"),
+            active_power=4.0,
+            reactive_power=1.3147,
+            α=0.0,
+            β=0.0,
+            base_power=100.0,
+            max_active_power=3.801843804166639,
+            max_reactive_power=1.3147,
+        )
+        PSY.add_component!(c_sys5, exp_load)
+        @test isa(exp_load, PSY.ExponentialLoad)
+        test_convert = SiennaOpenAPIModels.psy2openapi(exp_load, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.ExponentialLoad, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.available
+        @test test_convert.bus == 2
+        @test test_convert.active_power == 400.0
+        @test test_convert.alpha == 0.0
+        @test test_convert.beta == 0.0
+        @test test_convert.max_reactive_power == 131.47
+    end
     @testset "Line to JSON" begin
         line = PSY.get_component(PSY.Line, c_sys5, "4")
         @test isa(line, PSY.Line)
