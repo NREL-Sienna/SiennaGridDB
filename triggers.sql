@@ -1,28 +1,4 @@
 /* Autopopulate entity table */
-CREATE TRIGGER IF NOT EXISTS autofill_prime_mover_types
-AFTER
-INSERT
-    ON prime_mover_types
-BEGIN
-INSERT INTO
-    entities(entity_type, entity_id)
-VALUES
-    ("prime_mover_types", new.id);
-
-END;
-
-CREATE TRIGGER IF NOT EXISTS autofill_fuels
-AFTER
-INSERT
-    ON fuels
-BEGIN
-INSERT INTO
-    entities(entity_type, entity_id)
-VALUES
-    ("fuels", new.id);
-
-END;
-
 CREATE TRIGGER IF NOT EXISTS autofill_planning_regions
 AFTER
 INSERT
@@ -143,18 +119,6 @@ VALUES
 
 END;
 
-CREATE TRIGGER IF NOT EXISTS autofill_attributes
-AFTER
-INSERT
-ON attributes
-BEGIN
-  INSERT INTO
-  entities(entity_type, entity_id)
-  VALUES
-  ("attributes", new.id);
-
-END;
-
 CREATE TRIGGER IF NOT EXISTS autofill_supplemental_attributes
 AFTER
 INSERT
@@ -167,36 +131,55 @@ VALUES
 
 END;
 
--- Create a trigger that runs after inserting into the arcs table
 CREATE TRIGGER IF NOT EXISTS enforce_arc_entity_types_insert
 AFTER
 INSERT
     ON arcs
 BEGIN
--- Check if the from_to entity has a valid type
+-- Fetch entity types for from_id and to_id and perform checks
 SELECT
     CASE
+        -- Check if from_id entity type is valid
         WHEN (
             SELECT
                 entity_type
             FROM
                 entities
             WHERE
-                id = NEW.from_to
-        ) NOT IN ('balancing_topologies', 'planning_regions') THEN RAISE(ABORT, 'Invalid from_to entity type')
-    END;
-
--- Check if the to_from entity has a valid type
-SELECT
-    CASE
+                id = NEW.from_id
+        ) NOT IN ('balancing_topologies', 'planning_regions') THEN RAISE(
+            ABORT,
+            'Invalid from_id entity type: must be balancing_topologies or planning_regions'
+        ) -- Check if to_id entity type is valid
         WHEN (
             SELECT
                 entity_type
             FROM
                 entities
             WHERE
-                id = NEW.to_from
-        ) NOT IN ('balancing_topologies', 'planning_regions') THEN RAISE(ABORT, 'Invalid to_from entity type')
+                id = NEW.to_id
+        ) NOT IN ('balancing_topologies', 'planning_regions') THEN RAISE(
+            ABORT,
+            'Invalid to_id entity type: must be balancing_topologies or planning_regions'
+        ) -- Check if from_id and to_id entity types match
+        WHEN (
+            SELECT
+                entity_type
+            FROM
+                entities
+            WHERE
+                id = NEW.from_id
+        ) != (
+            SELECT
+                entity_type
+            FROM
+                entities
+            WHERE
+                id = NEW.to_id
+        ) THEN RAISE(
+            ABORT,
+            'Entity types for from_id and to_id must match'
+        )
     END;
 
 END;

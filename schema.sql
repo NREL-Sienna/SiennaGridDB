@@ -20,13 +20,7 @@ DROP TABLE IF EXISTS storage_technologies;
 
 DROP TABLE IF EXISTS transmission_lines;
 
-DROP TABLE IF EXISTS demand_requirements;
-
 DROP TABLE IF EXISTS planning_regions;
-
-DROP TABLE IF EXISTS attributes;
-
-DROP TABLE IF EXISTS data_types;
 
 DROP TABLE IF EXISTS time_series;
 
@@ -35,14 +29,6 @@ DROP TABLE IF EXISTS transmission_interchanges;
 DROP TABLE IF EXISTS entities;
 
 DROP TABLE IF EXISTS time_series_associations;
-
-DROP TABLE IF EXISTS time_series_metadata;
-
-DROP TABLE IF EXISTS single_time_series;
-
-DROP TABLE IF EXISTS deterministic_forecast_time_series;
-
-DROP TABLE IF EXISTS probabilistic_forecast_time_series;
 
 DROP TABLE IF EXISTS operational_data;
 
@@ -64,9 +50,6 @@ DROP TABLE IF EXISTS supplemental_attributes_association;
 
 DROP TABLE IF EXISTS transport_technologies;
 
-DROP TABLE IF EXISTS static_time_series;
-
-
 -- NOTE: This table should not be interacted directly since it gets populated
 -- automatically.
 -- Table of certain entities of griddb schema.
@@ -84,14 +67,14 @@ CREATE TABLE entities (
 -- by the combination of (prime_mover, fuel)
 -- Categories to classify generating units and supply technologies
 CREATE TABLE prime_mover_types (
-    id integer primary key,
+    id integer PRIMARY KEY,
     name text NOT NULL,
     description text NULL,
     UNIQUE(name)
 );
 
 CREATE TABLE fuels(
-    id integer primary key,
+    id integer PRIMARY KEY,
     name text NOT NULL,
     description text NULL,
     UNIQUE (name)
@@ -119,10 +102,10 @@ CREATE TABLE balancing_topologies (
 -- Physical connection between entities.
 CREATE TABLE arcs (
     id integer PRIMARY KEY,
-    from_to integer,
-    to_from integer,
-    FOREIGN KEY (from_to) REFERENCES entities (id),
-    FOREIGN KEY (to_from) REFERENCES entities (id)
+    from_id integer,
+    to_id integer,
+    FOREIGN KEY (from_id) REFERENCES entities (id),
+    FOREIGN KEY (to_id) REFERENCES entities (id)
 );
 
 -- Existing transmission lines
@@ -169,8 +152,8 @@ CREATE TABLE storage_units (
     id integer PRIMARY KEY,
     name text NOT NULL,
     prime_mover text NOT NULL REFERENCES prime_mover_types(name),
--- Energy capacity
-    max_capacity real NOT NULL CHECK (max_capacity > 0) ,
+    -- Energy capacity
+    max_capacity real NOT NULL CHECK (max_capacity > 0),
     balancing_topology text NOT NULL REFERENCES balancing_topologies (name),
     efficiency_up real CHECK (
         efficiency_up > 0
@@ -193,8 +176,8 @@ CREATE TABLE hydro_reservoir(
 );
 
 CREATE TABLE hydro_reservoir_connections(
-    turbine_id integer not null REFERENCES generation_units(id),
-    reservoir_id integer not null REFERENCES hydro_reservoir(id)
+    turbine_id integer NOT NULL REFERENCES generation_units(id),
+    reservoir_id integer NOT NULL REFERENCES hydro_reservoir(id)
 );
 
 -- NOTE: The purpose of this table is to capture technologies available for
@@ -203,7 +186,7 @@ CREATE TABLE hydro_reservoir_connections(
 CREATE TABLE supply_technologies (
     id integer PRIMARY KEY,
     prime_mover text NOT NULL REFERENCES prime_mover_types(name),
-    fuel text NULL REFERENCES  fuels(name),
+    fuel text NULL REFERENCES fuels(name),
     area text NULL REFERENCES planning_regions (name),
     balancing_topology text NULL REFERENCES balancing_topologies (name),
     scenario text NULL,
@@ -245,20 +228,12 @@ CREATE TABLE operational_data (
 -- be included in the `operational_data` table.
 CREATE TABLE attributes (
     id integer PRIMARY KEY,
+    entity_id integer NOT NULL,
     TYPE text NOT NULL,
     name text NOT NULL,
     value json NOT NULL,
-    json_type text generated always AS (json_type(value)) virtual
+    json_type text generated always AS (json_type(value)) virtual FOREIGN KEY (entity_id) REFERENCES entities (id),
 );
-
--- Association table between attributes and entities
-CREATE TABLE attributes_associations (
-    attribute_id integer NOT NULL,
-    entity_id integer NOT NULL,
-    FOREIGN KEY (entity_id) REFERENCES entities (id),
-    FOREIGN KEY (attribute_id) REFERENCES attributes (id),
-    UNIQUE(attribute_id, entity_id)
-) strict;
 
 -- NOTE: Supplemental are optional parameters that can be linked to entities.
 -- The main purpose of this is to provide a way to save relevant information
@@ -288,59 +263,8 @@ CREATE TABLE time_series (
     horizon integer NOT NULL,
     INTERVAL integer NOT NULL,
     length integer NOT NULL,
+    scaling_multiplier text NOT NULL,
     features json NULL,
-    metadata json NULL
-);
-
--- associate time series with entities or attributes
-CREATE TABLE time_series_associations (
-    time_series_id integer NOT NULL,
-    owner_id integer NOT NULL,
-    FOREIGN KEY (owner_id) REFERENCES entities (id),
-    FOREIGN KEY (time_series_id) REFERENCES time_series (id)
+    owner_id integer,
+    FOREIGN KEY (owner_id) REFERENCES entities (id)
 ) strict;
-
--- From Sienna docs:
--- A static time series data is a single column of data where each time period has
--- a single value assigned to a component field, such as its maximum active power.
--- This data commonly is obtained from historical information or the realization
--- of a time-varying quantity.
-CREATE TABLE static_time_series (
-    id integer PRIMARY KEY,
-    time_series_id integer NOT NULL,
-    uuid text NULL,
-    timestamp datetime NOT NULL,
-    value real NOT NULL,
-    FOREIGN KEY (time_series_id) REFERENCES time_series (id)
-);
-
---  A deterministic time series represent forecast that data that usually comes
---  in the following format, where a column represents the time stamp
---  associated with the initial time of the forecast, and the remaining columns
---  represent the forecasted values at each step in the forecast horizon.
-CREATE TABLE deterministic_forecast_time_series (
-    id integer PRIMARY KEY,
-    time_series_id integer NOT NULL,
-    uuid text NULL,
-    timestamp datetime NOT NULL,
-    value json NOT NULL,
-    FOREIGN KEY (time_series_id) REFERENCES time_series (id)
-);
-
-CREATE TABLE probabilistic_forecast_time_series (
-    id integer PRIMARY KEY,
-    time_series_id integer NOT NULL,
-    uuid text NULL,
-    timestamp datetime NOT NULL,
-    value real NOT NULL,
-    FOREIGN KEY (time_series_id) REFERENCES time_series (id)
-);
-
--- Safety mechanism to force json arrays
--- CREATE TRIGGER enforce_json_array_value_on_deterministic_time_series
--- BEFORE INSERT ON deterministic_forecast_time_series
--- FOR EACH ROW
--- WHEN NOT (json_valid(NEW.value) AND json_type(NEW.value, '$') = 'array')
--- BEGIN
---     SELECT RAISE(ABORT, 'Value must be a valid JSON array');
--- END;
