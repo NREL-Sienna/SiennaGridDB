@@ -122,8 +122,9 @@ function psy2openapi(transformer2w::PSY.Transformer2W, ids::IDGenerator)
     )
 end
 
+# Leaving old PSY name since we're not using PSY5 yet
 function psy2openapi(hvdc::PSY.TwoTerminalHVDCLine, ids::IDGenerator)
-    TwoTerminalHVDCLine(
+    TwoTerminalGenericHVDCLine(
         id=getid!(ids, hvdc),
         name=hvdc.name,
         available=hvdc.available,
@@ -141,6 +142,6 @@ function psy2openapi(hvdc::PSY.TwoTerminalHVDCLine, ids::IDGenerator)
         reactive_power_limits_to=get_min_max(
             scale(hvdc.reactive_power_limits_to, PSY.get_base_power(hvdc)),
         ),
-        loss=TwoTerminalHVDCLineLoss(get_value_curve(hvdc.loss)),
+        loss=TwoTerminalGenericHVDCLineLoss(get_value_curve(hvdc.loss)),
     )
 end
