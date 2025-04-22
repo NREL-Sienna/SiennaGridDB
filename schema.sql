@@ -230,7 +230,7 @@ CREATE TABLE operational_data (
     downtime real NOT NULL CHECK (downtime >= 0),
     ramp_up real NOT NULL,
     ramp_down real NOT NULL,
-    operational_cost jsonb NULL,
+    operational_cost json NULL,
     -- We can add what type of operational cost it is or other parameters (e.g., variable)
     operational_cost_type text generated always AS (json_type(operational_cost)) virtual,
     FOREIGN KEY (entity_id) REFERENCES entities(id)
@@ -247,7 +247,7 @@ CREATE TABLE attributes (
     id integer PRIMARY KEY,
     TYPE text NOT NULL,
     name text NOT NULL,
-    value jsonb NOT NULL,
+    value json NOT NULL,
     json_type text generated always AS (json_type(value)) virtual
 );
 
@@ -267,7 +267,7 @@ CREATE TABLE attributes_associations (
 CREATE TABLE supplemental_attributes (
     id integer PRIMARY KEY,
     TYPE text NOT NULL,
-    value jsonb NOT NULL,
+    value json NOT NULL,
     json_type text generated always AS (json_type (value)) virtual
 );
 
@@ -288,8 +288,8 @@ CREATE TABLE time_series (
     horizon integer NOT NULL,
     INTERVAL integer NOT NULL,
     length integer NOT NULL,
-    features jsonb NULL,
-    metadata jsonb NULL
+    features json NULL,
+    metadata json NULL
 );
 
 -- associate time series with entities or attributes
@@ -323,7 +323,7 @@ CREATE TABLE deterministic_forecast_time_series (
     time_series_id integer NOT NULL,
     uuid text NULL,
     timestamp datetime NOT NULL,
-    value jsonb NOT NULL,
+    value json NOT NULL,
     FOREIGN KEY (time_series_id) REFERENCES time_series (id)
 );
 
