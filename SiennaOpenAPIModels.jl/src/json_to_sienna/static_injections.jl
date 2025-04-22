@@ -287,6 +287,20 @@ function openapi2psy(standard_load::StandardLoad, resolver::Resolver)
     )
 end
 
+function openapi2psy(switch::SwitchedAdmittance, resolver::Resolver)
+    if PSY.get_base_power(resolver.sys) == 0.0
+        error("base power is 0.0")
+    end
+    PSY.SwitchedAdmittance(
+        name=switch.name,
+        available=switch.available,
+        bus=resolver(switch.bus),
+        Y=get_julia_complex(switch.Y),
+        number_of_steps=switch.number_of_steps,
+        Y_increase=get_julia_complex(switch.Y_increase),
+    )
+end
+
 function openapi2psy(multi::ThermalMultiStart, resolver::Resolver)
     if multi.base_power == 0.0
         error("base power is 0.0")
