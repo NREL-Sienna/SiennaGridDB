@@ -75,3 +75,8 @@ convention = "numpy"
 
 [tool.sqlfluff.core]
 dialect = "postgres"
+
+[dependency-groups]
+dev = [
+    "pre-commit>=3.5.0",
+]
