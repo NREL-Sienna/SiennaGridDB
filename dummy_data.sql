@@ -65,9 +65,9 @@ VALUES
 
 -- Supplemental attributes
 INSERT INTO supplemental_attributes (type, value) VALUES
-    ('outage', jsonb("[0,1,2,3]"));
+    ('outage', json("[0,1,2,3]"));
 INSERT INTO supplemental_attributes (type, value) VALUES
-    ('geolocation', jsonb("{'lat': 30.5, 'lon': -99.5}"));
+    ('geolocation', json("{'lat': 30.5, 'lon': -99.5}"));
 
 -- Add supplemental attribute to some entities
 INSERT INTO supplemental_attributes_association (attribute_id, entity_id) values (1, 3);
@@ -129,5 +129,5 @@ INSERT INTO deterministic_forecast_time_series (time_series_id, timestamp, value
 SELECT
     2 AS time_series_id,
     timestamp,
-    jsonb_array(random(), random(), random(), random()) AS value -- 4 horizons
+    json_array(random(), random(), random(), random()) AS value -- 4 horizons
 FROM time_points;
