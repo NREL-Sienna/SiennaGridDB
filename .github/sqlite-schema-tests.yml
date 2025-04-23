@@ -2,9 +2,9 @@ name: Sqlite Schema tests
 
 on:
   push:
-    branches:
-      - main
-    tags: ["*"]
+    #branches:
+    #  - main
+    #tags: ["*"]
   pull_request:
     branches:
       - main
