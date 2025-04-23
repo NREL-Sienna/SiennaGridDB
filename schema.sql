@@ -56,8 +56,7 @@ DROP TABLE IF EXISTS transport_technologies;
 CREATE TABLE entities (
     id integer PRIMARY KEY,
     entity_type text NOT NULL,
-    entity_id integer NOT NULL,
-    UNIQUE (id, entity_id, entity_type)
+    UNIQUE (id, entity_type)
 );
 
 -- NOTE: Sienna-griddb follows the convention of the EIA prime mover where we
@@ -82,7 +81,7 @@ CREATE TABLE fuels(
 
 -- Investment regions
 CREATE TABLE planning_regions (
-    id integer PRIMARY KEY,
+    id integer PRIMARY KEY REFERENCES entities (id),
     name text NOT NULL UNIQUE,
     description text NULL
 );
@@ -90,9 +89,9 @@ CREATE TABLE planning_regions (
 -- Balancing topologies for the system. Could be either buses, or larger
 -- aggregated regions.
 CREATE TABLE balancing_topologies (
-    id integer PRIMARY KEY,
+    id integer PRIMARY KEY REFERENCES entities (id),
     name text NOT NULL UNIQUE,
-    area text NULL REFERENCES planning_regions (name),
+    area integer NULL REFERENCES planning_regions (id),
     description text NULL
 );
 
@@ -101,7 +100,7 @@ CREATE TABLE balancing_topologies (
 -- transmission interchanges, etc.).
 -- Physical connection between entities.
 CREATE TABLE arcs (
-    id integer PRIMARY KEY,
+    id integer PRIMARY KEY REFERENCES entities (id),
     from_id integer,
     to_id integer,
     FOREIGN KEY (from_id) REFERENCES entities (id),
@@ -110,12 +109,13 @@ CREATE TABLE arcs (
 
 -- Existing transmission lines
 CREATE TABLE transmission_lines (
-    id integer PRIMARY KEY,
+    id integer PRIMARY KEY REFERENCES entities (id),
+    name text NOT NULL UNIQUE,
     arc_id integer,
     continuous_rating real NOT NULL CHECK (continuous_rating >= 0),
-    ste_rating real NOT NULL CHECK (ste_rating >= 0),
-    lte_rating real NOT NULL CHECK (lte_rating >= 0),
-    line_length real NOT NULL CHECK (line_length >= 0),
+    ste_rating real NULL CHECK (ste_rating >= 0),
+    lte_rating real NULL CHECK (lte_rating >= 0),
+    line_length real NULL CHECK (line_length >= 0),
     FOREIGN KEY (arc_id) REFERENCES arcs (id)
 ) strict;
 
@@ -125,9 +125,9 @@ CREATE TABLE transmission_lines (
 -- markets.
 -- Transmission interchanges between two balancing topologies or areas
 CREATE TABLE transmission_interchanges (
-    id integer PRIMARY KEY,
+    id integer PRIMARY KEY REFERENCES entities (id),
+    name text NOT NULL UNIQUE,
     arc_id int REFERENCES arcs(id),
-    name text NOT NULL,
     max_flow_from real NOT NULL,
     max_flow_to real NOT NULL
 ) strict;
@@ -135,11 +135,11 @@ CREATE TABLE transmission_interchanges (
 -- NOTE: The purpose of this table is to capture data of **existing units only**.
 -- Table of generation units
 CREATE TABLE generation_units (
-    id integer PRIMARY KEY,
+    id integer PRIMARY KEY REFERENCES entities (id),
     name text NOT NULL,
     prime_mover text NOT NULL REFERENCES prime_mover_types(name),
     fuel text NULL REFERENCES fuels(name),
-    balancing_topology text NOT NULL REFERENCES balancing_topologies (name),
+    balancing_topology integer NOT NULL REFERENCES balancing_topologies (id),
     rating real NOT NULL CHECK (rating > 0),
     base_power real NOT NULL CHECK (base_power > 0),
     CHECK (base_power >= rating),
@@ -149,12 +149,12 @@ CREATE TABLE generation_units (
 -- NOTE: The purpose of this table is to capture data of **existing storage units only**.
 -- Table of energy storage units (including PHES or other kinds),
 CREATE TABLE storage_units (
-    id integer PRIMARY KEY,
+    id integer PRIMARY KEY REFERENCES entities (id),
     name text NOT NULL,
     prime_mover text NOT NULL REFERENCES prime_mover_types(name),
     -- Energy capacity
     max_capacity real NOT NULL CHECK (max_capacity > 0),
-    balancing_topology text NOT NULL REFERENCES balancing_topologies (name),
+    balancing_topology integer NOT NULL REFERENCES balancing_topologies (id),
     efficiency_up real CHECK (
         efficiency_up > 0
         AND efficiency_up <= 1.0
@@ -170,7 +170,7 @@ CREATE TABLE storage_units (
 ) strict;
 
 CREATE TABLE hydro_reservoir(
-    id integer PRIMARY KEY,
+    id integer PRIMARY KEY REFERENCES entities (id),
     name text NOT NULL,
     UNIQUE(name)
 );
@@ -184,7 +184,7 @@ CREATE TABLE hydro_reservoir_connections(
 -- investment for expansion problems.
 -- Investment technology options for expansion problems
 CREATE TABLE supply_technologies (
-    id integer PRIMARY KEY,
+    id integer PRIMARY KEY REFERENCES entities (id),
     prime_mover text NOT NULL REFERENCES prime_mover_types(name),
     fuel text NULL REFERENCES fuels(name),
     area text NULL REFERENCES planning_regions (name),
@@ -194,7 +194,7 @@ CREATE TABLE supply_technologies (
 );
 
 CREATE TABLE transport_technologies(
-    id integer PRIMARY KEY,
+    id integer PRIMARY KEY REFERENCES entities (id),
     arc_id integer NULL REFERENCES arcs(id),
     scenario text NULL,
     UNIQUE(id, arc_id, scenario)
@@ -232,7 +232,8 @@ CREATE TABLE attributes (
     TYPE text NOT NULL,
     name text NOT NULL,
     value json NOT NULL,
-    json_type text generated always AS (json_type(value)) virtual FOREIGN KEY (entity_id) REFERENCES entities (id),
+    json_type text generated always AS (json_type(value)) virtual,
+    FOREIGN KEY (entity_id) REFERENCES entities (id)
 );
 
 -- NOTE: Supplemental are optional parameters that can be linked to entities.
@@ -240,7 +241,7 @@ CREATE TABLE attributes (
 -- but that could or could not be used for modeling. not `text`. Examples of
 -- this field are geolocation (e.g., lat, long), outages, etc.)
 CREATE TABLE supplemental_attributes (
-    id integer PRIMARY KEY,
+    id integer PRIMARY KEY REFERENCES entities (id),
     TYPE text NOT NULL,
     value json NOT NULL,
     json_type text generated always AS (json_type (value)) virtual
@@ -254,17 +255,25 @@ CREATE TABLE supplemental_attributes_association (
 ) strict;
 
 CREATE TABLE time_series (
-    id integer PRIMARY KEY,
-    uuid text NULL,
-    time_series_type text NOT NULL,
-    name text NOT NULL,
-    initial_timestamp datetime NOT NULL,
-    resolution_ms integer NOT NULL,
-    horizon integer NOT NULL,
-    INTERVAL integer NOT NULL,
-    length integer NOT NULL,
-    scaling_multiplier text NOT NULL,
-    features json NULL,
-    owner_id integer,
-    FOREIGN KEY (owner_id) REFERENCES entities (id)
-) strict;
+    id INTEGER PRIMARY KEY,
+    time_series_uuid TEXT NOT NULL,
+    time_series_type TEXT NOT NULL,
+    initial_timestamp TEXT NOT NULL,
+    resolution INTEGER NOT NULL,
+    horizon INTEGER,
+    INTERVAL INTEGER window_count INTEGER,
+    length INTEGER,
+    scaling_multiplier TEXT,
+    -- enum: ["max_active_power", ]
+    name TEXT NOT NULL,
+    owner_id INTEGER NOT NULL,
+    features TEXT
+);
+
+CREATE TABLE loads (
+    id integer PRIMARY KEY REFERENCES entities (id),
+    name TEXT NOT NULL UNIQUE,
+    balancing_topology INTEGER NOT NULL,
+    base_power DOUBLE,
+    FOREIGN KEY(balancing_topology) REFERENCES balancing_topologies (id)
+);

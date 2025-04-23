@@ -1,136 +1,101 @@
-/* Autopopulate entity table */
-CREATE TRIGGER IF NOT EXISTS autofill_planning_regions
-AFTER
-INSERT
-    ON planning_regions
-BEGIN
-INSERT INTO
-    entities(entity_type, entity_id)
-VALUES
-    ("planning_regions", new.id);
+/*
+ CREATE TRIGGER IF NOT EXISTS autofill_planning_regions
+ AFTER
+ INSERT ON planning_regions BEGIN
+ INSERT INTO entities(entity_type, entity_id)
+ VALUES ("planning_regions", new.id);
 
-END;
+ END;
 
-CREATE TRIGGER IF NOT EXISTS autofill_balancing_topologies
-AFTER
-INSERT
-    ON balancing_topologies
-BEGIN
-INSERT INTO
-    entities(entity_type, entity_id)
-VALUES
-    ("balancing_topologies", new.id);
+ CREATE TRIGGER IF NOT EXISTS autofill_balancing_topologies
+ AFTER
+ INSERT ON balancing_topologies BEGIN
+ INSERT INTO entities(entity_type, entity_id)
+ VALUES ("balancing_topologies", new.id);
 
-END;
+ END;
 
-CREATE TRIGGER IF NOT EXISTS autofill_generation_units
-AFTER
-INSERT
-    ON generation_units
-BEGIN
-INSERT INTO
-    entities(entity_type, entity_id)
-VALUES
-    ("generation_units", new.id);
+ CREATE TRIGGER IF NOT EXISTS autofill_generation_units
+ AFTER
+ INSERT ON generation_units BEGIN
+ INSERT INTO entities(entity_type, entity_id)
+ VALUES ("generation_units", new.id);
 
-END;
+ END;
 
-CREATE TRIGGER IF NOT EXISTS autofill_storage_units
-AFTER
-INSERT
-    ON storage_units
-BEGIN
-INSERT INTO
-    entities(entity_type, entity_id)
-VALUES
-    ("storage_units", new.id);
+ CREATE TRIGGER IF NOT EXISTS autofill_storage_units
+ AFTER
+ INSERT ON storage_units BEGIN
+ INSERT INTO entities(entity_type, entity_id)
+ VALUES ("storage_units", new.id);
 
-END;
+ END;
 
-CREATE TRIGGER IF NOT EXISTS autofill_arcs
-AFTER
-INSERT
-    ON arcs
-BEGIN
-INSERT INTO
-    entities(entity_type, entity_id)
-VALUES
-    ("arcs", new.id);
+ CREATE TRIGGER IF NOT EXISTS autofill_arcs
+ AFTER
+ INSERT ON arcs BEGIN
+ INSERT INTO entities(entity_type, entity_id)
+ VALUES ("arcs", new.id);
 
-END;
+ END;
 
-CREATE TRIGGER IF NOT EXISTS autofill_transmission_lines
-AFTER
-INSERT
-    ON transmission_lines
-BEGIN
-INSERT INTO
-    entities(entity_type, entity_id)
-VALUES
-    ("transmission_lines", new.id);
+ CREATE TRIGGER IF NOT EXISTS autofill_transmission_lines
+ AFTER
+ INSERT ON transmission_lines BEGIN
+ INSERT INTO entities(entity_type, entity_id)
+ VALUES ("transmission_lines", new.id);
 
-END;
+ END;
 
-CREATE TRIGGER IF NOT EXISTS autofill_transmission_interchanges
-AFTER
-INSERT
-    ON transmission_interchanges
-BEGIN
-INSERT INTO
-    entities(entity_type, entity_id)
-VALUES
-    ("transmission_interchanges", new.id);
+ CREATE TRIGGER IF NOT EXISTS autofill_transmission_interchanges
+ AFTER
+ INSERT ON transmission_interchanges BEGIN
+ INSERT INTO entities(entity_type, entity_id)
+ VALUES ("transmission_interchanges", new.id);
 
-END;
+ END;
 
-CREATE TRIGGER IF NOT EXISTS autofill_hydro_reservoir
-AFTER
-INSERT
-    ON hydro_reservoir
-BEGIN
-INSERT INTO
-    entities(entity_type, entity_id)
-VALUES
-    ("hydro_reservoir", new.id);
+ CREATE TRIGGER IF NOT EXISTS autofill_hydro_reservoir
+ AFTER
+ INSERT ON hydro_reservoir BEGIN
+ INSERT INTO entities(entity_type, entity_id)
+ VALUES ("hydro_reservoir", new.id);
 
-END;
+ END;
 
-CREATE TRIGGER IF NOT EXISTS autofill_supply_technologies
-AFTER
-INSERT
-    ON supply_technologies
-BEGIN
-INSERT INTO
-    entities(entity_type, entity_id)
-VALUES
-    ("supply_technologies", new.id);
+ CREATE TRIGGER IF NOT EXISTS autofill_supply_technologies
+ AFTER
+ INSERT ON supply_technologies BEGIN
+ INSERT INTO entities(entity_type, entity_id)
+ VALUES ("supply_technologies", new.id);
 
-END;
+ END;
 
-CREATE TRIGGER IF NOT EXISTS autofill_transport_technologies
-AFTER
-INSERT
-    ON transport_technologies
-BEGIN
-INSERT INTO
-    entities(entity_type, entity_id)
-VALUES
-    ("transport_technologies", new.id);
+ CREATE TRIGGER IF NOT EXISTS autofill_transport_technologies
+ AFTER
+ INSERT ON transport_technologies BEGIN
+ INSERT INTO entities(entity_type, entity_id)
+ VALUES ("transport_technologies", new.id);
 
-END;
+ END;
 
-CREATE TRIGGER IF NOT EXISTS autofill_supplemental_attributes
-AFTER
-INSERT
-    ON supplemental_attributes
-BEGIN
-INSERT INTO
-    entities(entity_type, entity_id)
-VALUES
-    ("supplemental_attributes", new.id);
+ CREATE TRIGGER IF NOT EXISTS autofill_supplemental_attributes
+ AFTER
+ INSERT ON supplemental_attributes BEGIN
+ INSERT INTO entities(entity_type, entity_id)
+ VALUES ("supplemental_attributes", new.id);
 
-END;
+ END;
 
+ CREATE TRIGGER IF NOT EXISTS autofill_loads
+ AFTER
+ INSERT ON supplemental_attributes BEGIN
+ INSERT INTO entities(entity_type, entity_id)
+ VALUES ("loads", new.id);
+
+ END;
+
+ */
 CREATE TRIGGER IF NOT EXISTS enforce_arc_entity_types_insert
 AFTER
 INSERT
