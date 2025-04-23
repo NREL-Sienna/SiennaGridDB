@@ -387,6 +387,28 @@ end
         PowerSystemCaseBuilder.PSISystems,
         "5_bus_matpower_RT",
     )
+    @testset "AGC to JSON" begin
+        agc = PSY.AGC(
+            name="agc",
+            available=true,
+            bias=1.6,
+            K_p=3.0,
+            K_i=1.0,
+            K_d=4.0,
+            delta_t=0.1,
+        )
+        PSY.add_component!(sys_5bus_matpower_RT, agc)
+        @test isa(agc, PSY.AGC)
+        test_convert = SiennaOpenAPIModels.psy2openapi(agc, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.AGC, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.available
+        @test test_convert.bias == 1.6
+        @test test_convert.K_i == 1.0
+        @test test_convert.delta_t == 0.1
+        @test isnothing(test_convert.area)
+        @test test_convert.initial_ace == 0.0
+    end
     @testset "PhaseShiftingTransformer to JSON" begin
         phase_shifting_transformer = PSY.get_component(
             PSY.PhaseShiftingTransformer,
