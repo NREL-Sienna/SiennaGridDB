@@ -9,6 +9,7 @@ function psy2openapi(reserve::PSY.ConstantReserve{T}, ids::IDGenerator) where {T
         max_output_fraction=reserve.max_output_fraction,
         max_participation_factor=reserve.max_participation_factor,
         deployed_fraction=reserve.deployed_fraction,
+        reserve_direction=get_reserve_direction(T),
     )
 end
 

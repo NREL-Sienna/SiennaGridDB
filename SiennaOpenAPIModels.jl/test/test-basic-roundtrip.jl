@@ -156,12 +156,11 @@ end
         test_convert = SiennaOpenAPIModels.psy2openapi(reserve, IDGenerator())
         test_roundtrip(SiennaOpenAPIModels.ConstantReserve, test_convert)
         @test test_convert.id == 1
-        @test test_convert.available
         @test test_convert.time_frame == 300.0
         @test test_convert.requirement == 77.0
         @test test_convert.sustained_time == 3600.0
         @test test_convert.max_output_fraction == 1.0
-        @test test_convert.deployed_fraction == 0.0
+        @test test_convert.reserve_direction == "UP"
     end
     @testset "EnergyReservoirStorage to JSON" begin
         energy_res =
