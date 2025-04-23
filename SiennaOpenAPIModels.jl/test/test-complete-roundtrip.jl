@@ -294,6 +294,25 @@ end
         PowerSystemCaseBuilder.PSISystems,
         "5_bus_matpower_RT",
     )
+    @testset "AGC to JSON and Back" begin
+        agc = PSY.AGC(
+            name="agc",
+            available=true,
+            bias=1.6,
+            K_p=3.0,
+            K_i=1.0,
+            K_d=4.0,
+            delta_t=0.1,
+        )
+        PSY.add_component!(sys_5bus_matpower_RT, agc)
+        @test isa(agc, PSY.AGC)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(agc, id_gen)
+        resolver =
+            SiennaOpenAPIModels.resolver_from_id_generator(id_gen, sys_5bus_matpower_RT)
+        agc_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(agc, agc_copy, exclude=Set([:internal]))
+    end
     @testset "PhaseShiftingTransformer to JSON and Back" begin
         phase = PSY.get_component(
             PSY.PhaseShiftingTransformer,
