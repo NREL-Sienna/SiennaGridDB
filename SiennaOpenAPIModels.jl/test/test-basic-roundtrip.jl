@@ -195,6 +195,24 @@ end
         @test test_convert.reserve_direction == "DOWN"
         @test test_convert.sustained_time == 3600.0
     end
+    @testset "VariableReserveNonSpinning to JSON" begin
+        reserve = PSY.VariableReserveNonSpinning(
+            name="variable_non_spinning",
+            available=true,
+            time_frame=300.0,
+            requirement=0.77,
+        )
+        PSY.add_component!(RTS_GMLC_RT_sys, reserve)
+        @test isa(reserve, PSY.VariableReserveNonSpinning)
+        test_convert = SiennaOpenAPIModels.psy2openapi(reserve, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.VariableReserveNonSpinning, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.available
+        @test test_convert.max_participation_factor == 1.0
+        @test test_convert.time_frame == 300.0
+        @test test_convert.requirement == 77.0
+        @test test_convert.sustained_time == 14400.0
+    end
 end
 
 @testset "sys10_pjm_ac_dc RoundTrip to JSON" begin
