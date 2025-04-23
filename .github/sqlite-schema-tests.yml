@@ -1,0 +1,22 @@
+name: Sqlite Schema tests
+
+on:
+  push:
+    branches:
+      - main
+    tags: ["*"]
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-sqlite@v1
+        with:
+          sqlite-version: 3.45.0
+      - uses: extractions/setup-just@v3
+      - run: just test
