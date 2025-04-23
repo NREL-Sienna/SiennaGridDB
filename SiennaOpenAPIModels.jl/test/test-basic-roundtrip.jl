@@ -144,6 +144,25 @@ end
         PowerSystemCaseBuilder.PSISystems,
         "RTS_GMLC_RT_sys",
     )
+    @testset "ConstantReserve UP to JSON" begin
+        reserve = PSY.ConstantReserve{PSY.ReserveUp}(
+            name="constant_reserve_up",
+            available=true,
+            time_frame=300.0,
+            requirement=0.77,
+        )
+        PSY.add_component!(RTS_GMLC_RT_sys, reserve)
+        @test reserve isa PSY.ConstantReserve{PSY.ReserveUp}
+        test_convert = SiennaOpenAPIModels.psy2openapi(reserve, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.ConstantReserve, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.available
+        @test test_convert.time_frame == 300.0
+        @test test_convert.requirement == 77.0
+        @test test_convert.sustained_time == 3600.0
+        @test test_convert.max_output_fraction == 1.0
+        @test test_convert.deployed_fraction == 0.0
+    end
     @testset "EnergyReservoirStorage to JSON" begin
         energy_res =
             PSY.get_component(PSY.EnergyReservoirStorage, RTS_GMLC_RT_sys, "313_STORAGE_1")
