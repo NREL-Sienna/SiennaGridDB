@@ -8,10 +8,7 @@ INSERT ON planning_regions
     ) BEGIN
 SELECT RAISE(
         ABORT,
-        printf(
-            'Entity ID %d with type planning_regions must exist in entities table before insertion',
-            NEW.id
-        )
+        'Entity ID must exist in entities table with type planning_regions before insertion'
     );
 END;
 
@@ -25,10 +22,7 @@ INSERT ON balancing_topologies
     ) BEGIN
 SELECT RAISE(
         ABORT,
-        printf(
-            'Entity ID %d with type balancing_topologies must exist in entities table before insertion',
-            NEW.id
-        )
+        'Entity ID must exist in entities table with type balancing_topologies before insertion'
     );
 END;
 
@@ -42,10 +36,7 @@ INSERT ON arcs
     ) BEGIN
 SELECT RAISE(
         ABORT,
-        printf(
-            'Entity ID %d with type arcs must exist in entities table before insertion',
-            NEW.id
-        )
+        'Entity ID must exist in entities table with type arcs before insertion'
     );
 END;
 
@@ -59,10 +50,7 @@ INSERT ON transmission_lines
     ) BEGIN
 SELECT RAISE(
         ABORT,
-        printf(
-            'Entity ID %d with type transmission_lines must exist in entities table before insertion',
-            NEW.id
-        )
+        'Entity ID must exist in entities table with type transmission_lines before insertion'
     );
 END;
 
@@ -76,10 +64,7 @@ INSERT ON transmission_interchanges
     ) BEGIN
 SELECT RAISE(
         ABORT,
-        printf(
-            'Entity ID %d with type transmission_interchanges must exist in entities table before insertion',
-            NEW.id
-        )
+        'Entity ID must exist in entities table with type transmission_interchanges before insertion'
     );
 END;
 
@@ -93,10 +78,7 @@ INSERT ON generation_units
     ) BEGIN
 SELECT RAISE(
         ABORT,
-        printf(
-            'Entity ID %d with type generation_units must exist in entities table before insertion',
-            NEW.id
-        )
+        'Entity ID must exist in entities table with type generation_units before insertion'
     );
 END;
 
@@ -110,10 +92,7 @@ INSERT ON storage_units
     ) BEGIN
 SELECT RAISE(
         ABORT,
-        printf(
-            'Entity ID %d with type storage_units must exist in entities table before insertion',
-            NEW.id
-        )
+        'Entity ID must exist in entities table with type storage_units before insertion'
     );
 END;
 
@@ -127,10 +106,7 @@ INSERT ON hydro_reservoir
     ) BEGIN
 SELECT RAISE(
         ABORT,
-        printf(
-            'Entity ID %d with type hydro_reservoir must exist in entities table before insertion',
-            NEW.id
-        )
+        'Entity ID must exist in entities table with type hydro_reservoir before insertion'
     );
 END;
 
@@ -144,10 +120,7 @@ INSERT ON supply_technologies
     ) BEGIN
 SELECT RAISE(
         ABORT,
-        printf(
-            'Entity ID %d with type supply_technologies must exist in entities table before insertion',
-            NEW.id
-        )
+        'Entity ID must exist in entities table with type supply_technologies before insertion'
     );
 END;
 
@@ -161,10 +134,7 @@ INSERT ON transport_technologies
     ) BEGIN
 SELECT RAISE(
         ABORT,
-        printf(
-            'Entity ID %d with type transport_technologies must exist in entities table before insertion',
-            NEW.id
-        )
+        'Entity ID must exist in entities table with type transport_technologies before insertion'
     );
 END;
 
@@ -178,10 +148,7 @@ INSERT ON supplemental_attributes
     ) BEGIN
 SELECT RAISE(
         ABORT,
-        printf(
-            'Entity ID %d with type supplemental_attributes must exist in entities table before insertion',
-            NEW.id
-        )
+        'Entity ID must exist in entities table with type supplemental_attributes before insertion'
     );
 END;
 
@@ -195,10 +162,7 @@ INSERT ON loads
     ) BEGIN
 SELECT RAISE(
         ABORT,
-        printf(
-            'Entity ID %d with type loads must exist in entities table before insertion',
-            NEW.id
-        )
+        'Entity ID must exist in entities table with type loads before insertion'
     );
 END;
 
