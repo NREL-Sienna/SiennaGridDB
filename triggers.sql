@@ -107,7 +107,7 @@ SELECT
         -- Check if from_id entity type is valid
         WHEN (
             SELECT
-                entity_type
+                entity_table
             FROM
                 entities
             WHERE
@@ -118,7 +118,7 @@ SELECT
         ) -- Check if to_id entity type is valid
         WHEN (
             SELECT
-                entity_type
+                entity_table
             FROM
                 entities
             WHERE
@@ -129,14 +129,14 @@ SELECT
         ) -- Check if from_id and to_id entity types match
         WHEN (
             SELECT
-                entity_type
+                entity_table
             FROM
                 entities
             WHERE
                 id = NEW.from_id
         ) != (
             SELECT
-                entity_type
+                entity_table
             FROM
                 entities
             WHERE
