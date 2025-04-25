@@ -1,3 +1,14 @@
+function openapi2psy(reserve::ConstantReserveGroup, resolver::Resolver)
+    if PSY.get_base_power(resolver.sys) == 0.0
+        error("base power is 0.0")
+    end
+    PSY.ConstantReserveGroup{get_reserve_enum(reserve.reserve_direction)}(
+        name=reserve.name,
+        available=reserve.available,
+        requirement=reserve.requirement / PSY.get_base_power(resolver.sys),
+    )
+end
+
 function openapi2psy(reserve::VariableReserve, resolver::Resolver)
     if PSY.get_base_power(resolver.sys) == 0.0
         error("base power is 0.0")

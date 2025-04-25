@@ -144,6 +144,20 @@ end
         PowerSystemCaseBuilder.PSISystems,
         "RTS_GMLC_RT_sys",
     )
+    @testset "ConstantReserveGroup SYMMETRIC to JSON" begin
+        reserve = PSY.ConstantReserveGroup{PSY.ReserveSymmetric}(
+            name="constant_reserve_group",
+            available=true,
+            requirement=0.77,
+        )
+        PSY.add_component!(RTS_GMLC_RT_sys, reserve)
+        @test reserve isa PSY.ConstantReserveGroup{PSY.ReserveSymmetric}
+        test_convert = SiennaOpenAPIModels.psy2openapi(reserve, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.ConstantReserveGroup, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.requirement == 77.0
+        @test test_convert.reserve_direction == "SYMMETRIC"
+    end
     @testset "EnergyReservoirStorage to JSON" begin
         energy_res =
             PSY.get_component(PSY.EnergyReservoirStorage, RTS_GMLC_RT_sys, "313_STORAGE_1")
