@@ -252,6 +252,24 @@ function openapi2psy(renewnon::RenewableNonDispatch, resolver::Resolver)
     )
 end
 
+function openapi2psy(source::Source, resolver::Resolver)
+    if source.base_power == 0.0
+        error("base power is 0.0")
+    end
+    PSY.Source(
+        name=source.name,
+        available=source.available,
+        bus=resolver(source.bus),
+        active_power=source.active_power / source.base_power,
+        reactive_power=source.reactive_power / source.base_power,
+        R_th=source.R_th,
+        X_th=source.X_th,
+        internal_voltage=source.internal_voltage,
+        internal_angle=source.internal_angle,
+        base_power=source.base_power,
+    )
+end
+
 function openapi2psy(standard_load::StandardLoad, resolver::Resolver)
     if standard_load.base_power == 0.0
         error("base power is 0.0")

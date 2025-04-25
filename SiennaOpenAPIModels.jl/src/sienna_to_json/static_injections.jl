@@ -237,6 +237,23 @@ function psy2openapi(renewnondispatch::PSY.RenewableNonDispatch, ids::IDGenerato
     )
 end
 
+function psy2openapi(source::PSY.Source, ids::IDGenerator)
+    Source(
+        id=getid!(ids, source),
+        name=source.name,
+        available=source.available,
+        bus=getid!(ids, source.bus),
+        active_power=source.active_power * PSY.get_base_power(source),
+        reactive_power=source.reactive_power * PSY.get_base_power(source),
+        R_th=source.R_th,
+        X_th=source.X_th,
+        internal_voltage=source.internal_voltage,
+        internal_angle=source.internal_angle,
+        base_power=source.base_power,
+        dynamic_injector=getid!(ids, source.dynamic_injector),
+    )
+end
+
 function psy2openapi(standard_load::PSY.StandardLoad, ids::IDGenerator)
     StandardLoad(
         id=getid!(ids, standard_load),
