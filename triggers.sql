@@ -2,7 +2,10 @@ CREATE TRIGGER IF NOT EXISTS check_planning_regions_entity_exists BEFORE
 INSERT ON planning_regions BEGIN
 SELECT RAISE(
         ABORT,
-        'Entity ID ' || NEW.id || ' with type planning_regions must exist in entities table before insertion'
+        printf(
+            'Entity ID %d with type planning_regions must exist in entities table before insertion',
+            NEW.id
+        )
     )
 WHERE NOT EXISTS (
         SELECT 1
@@ -17,7 +20,10 @@ CREATE TRIGGER IF NOT EXISTS check_balancing_topologies_entity_exists BEFORE
 INSERT ON balancing_topologies BEGIN
 SELECT RAISE(
         ABORT,
-        'Entity ID ' || NEW.id || ' with type balancing_topologies must exist in entities table before insertion'
+        printf(
+            'Entity ID %d with type balancing_topologies must exist in entities table before insertion',
+            NEW.id
+        )
     )
 WHERE NOT EXISTS (
         SELECT 1
@@ -32,7 +38,10 @@ CREATE TRIGGER IF NOT EXISTS check_arcs_entity_exists BEFORE
 INSERT ON arcs BEGIN
 SELECT RAISE(
         ABORT,
-        'Entity ID ' || NEW.id || ' with type arcs must exist in entities table before insertion'
+        printf(
+            'Entity ID %d with type arcs must exist in entities table before insertion',
+            NEW.id
+        )
     )
 WHERE NOT EXISTS (
         SELECT 1
@@ -47,7 +56,10 @@ CREATE TRIGGER IF NOT EXISTS check_transmission_lines_entity_exists BEFORE
 INSERT ON transmission_lines BEGIN
 SELECT RAISE(
         ABORT,
-        'Entity ID ' || NEW.id || ' with type transmission_lines must exist in entities table before insertion'
+        printf(
+            'Entity ID %d with type transmission_lines must exist in entities table before insertion',
+            NEW.id
+        )
     )
 WHERE NOT EXISTS (
         SELECT 1
@@ -62,7 +74,10 @@ CREATE TRIGGER IF NOT EXISTS check_transmission_interchanges_entity_exists BEFOR
 INSERT ON transmission_interchanges BEGIN
 SELECT RAISE(
         ABORT,
-        'Entity ID ' || NEW.id || ' with type transmission_interchanges must exist in entities table before insertion'
+        printf(
+            'Entity ID %d with type transmission_interchanges must exist in entities table before insertion',
+            NEW.id
+        )
     )
 WHERE NOT EXISTS (
         SELECT 1
@@ -77,7 +92,10 @@ CREATE TRIGGER IF NOT EXISTS check_generation_units_entity_exists BEFORE
 INSERT ON generation_units BEGIN
 SELECT RAISE(
         ABORT,
-        'Entity ID ' || NEW.id || ' with type generation_units must exist in entities table before insertion'
+        printf(
+            'Entity ID %d with type generation_units must exist in entities table before insertion',
+            NEW.id
+        )
     )
 WHERE NOT EXISTS (
         SELECT 1
@@ -92,7 +110,10 @@ CREATE TRIGGER IF NOT EXISTS check_storage_units_entity_exists BEFORE
 INSERT ON storage_units BEGIN
 SELECT RAISE(
         ABORT,
-        'Entity ID ' || NEW.id || ' with type storage_units must exist in entities table before insertion'
+        printf(
+            'Entity ID %d with type storage_units must exist in entities table before insertion',
+            NEW.id
+        )
     )
 WHERE NOT EXISTS (
         SELECT 1
@@ -107,7 +128,10 @@ CREATE TRIGGER IF NOT EXISTS check_hydro_reservoir_entity_exists BEFORE
 INSERT ON hydro_reservoir BEGIN
 SELECT RAISE(
         ABORT,
-        'Entity ID ' || NEW.id || ' with type hydro_reservoir must exist in entities table before insertion'
+        printf(
+            'Entity ID %d with type hydro_reservoir must exist in entities table before insertion',
+            NEW.id
+        )
     )
 WHERE NOT EXISTS (
         SELECT 1
@@ -122,7 +146,10 @@ CREATE TRIGGER IF NOT EXISTS check_supply_technologies_entity_exists BEFORE
 INSERT ON supply_technologies BEGIN
 SELECT RAISE(
         ABORT,
-        'Entity ID ' || NEW.id || ' with type supply_technologies must exist in entities table before insertion'
+        printf(
+            'Entity ID %d with type supply_technologies must exist in entities table before insertion',
+            NEW.id
+        )
     )
 WHERE NOT EXISTS (
         SELECT 1
@@ -137,7 +164,10 @@ CREATE TRIGGER IF NOT EXISTS check_transport_technologies_entity_exists BEFORE
 INSERT ON transport_technologies BEGIN
 SELECT RAISE(
         ABORT,
-        'Entity ID ' || NEW.id || ' with type transport_technologies must exist in entities table before insertion'
+        printf(
+            'Entity ID %d with type transport_technologies must exist in entities table before insertion',
+            NEW.id
+        )
     )
 WHERE NOT EXISTS (
         SELECT 1
@@ -152,7 +182,10 @@ CREATE TRIGGER IF NOT EXISTS check_supplemental_attributes_entity_exists BEFORE
 INSERT ON supplemental_attributes BEGIN
 SELECT RAISE(
         ABORT,
-        'Entity ID ' || NEW.id || ' with type supplemental_attributes must exist in entities table before insertion'
+        printf(
+            'Entity ID %d with type supplemental_attributes must exist in entities table before insertion',
+            NEW.id
+        )
     )
 WHERE NOT EXISTS (
         SELECT 1
@@ -167,7 +200,10 @@ CREATE TRIGGER IF NOT EXISTS check_loads_entity_exists BEFORE
 INSERT ON loads BEGIN
 SELECT RAISE(
         ABORT,
-        'Entity ID ' || NEW.id || ' with type loads must exist in entities table before insertion'
+        printf(
+            'Entity ID %d with type loads must exist in entities table before insertion',
+            NEW.id
+        )
     )
 WHERE NOT EXISTS (
         SELECT 1
