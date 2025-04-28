@@ -76,6 +76,8 @@ function openapi2psy(transformer::PhaseShiftingTransformer, resolver::Resolver)
         tap=transformer.tap,
         α=transformer.alpha,
         rating=divide(transformer.rating, PSY.get_base_power(resolver.sys)),
+        rating_b=divide(transformer.rating_b, PSY.get_base_power(resolver.sys)),
+        rating_c=divide(transformer.rating_c, PSY.get_base_power(resolver.sys)),
         phase_angle_limits=get_tuple_min_max(transformer.phase_angle_limits),
     )
 end

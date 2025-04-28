@@ -65,6 +65,8 @@ function psy2openapi(transformer::PSY.PhaseShiftingTransformer, ids::IDGenerator
         tap=transformer.tap,
         alpha=transformer.α,
         rating=scale(transformer.rating, PSY.get_base_power(transformer)),
+        rating_b=scale(transformer.rating_b, PSY.get_base_power(transformer)),
+        rating_c=scale(transformer.rating_c, PSY.get_base_power(transformer)),
         phase_angle_limits=get_min_max(transformer.phase_angle_limits),
     )
 end
