@@ -46,6 +46,8 @@ function psy2openapi(monitored::PSY.MonitoredLine, ids::IDGenerator)
         ),
         rating=monitored.rating * PSY.get_base_power(monitored),
         angle_limits=get_min_max(monitored.angle_limits),
+        rating_b=monitored.rating_b * PSY.get_base_power(monitored),
+        rating_c=monitored.rating_c * PSY.get_base_power(monitored),
         g=get_from_to(monitored.g),
     )
 end
