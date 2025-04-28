@@ -31,6 +31,8 @@ function openapi2psy(line::Line, resolver::Resolver)
         b=get_tuple_from_to(line.b),
         rating=line.rating / PSY.get_base_power(resolver.sys),
         angle_limits=get_tuple_min_max(line.angle_limits),
+        rating_b=line.rating_b / PSY.get_base_power(resolver.sys),
+        rating_c=line.rating_c / PSY.get_base_power(resolver.sys),
         g=get_tuple_from_to(line.g),
     )
 end
