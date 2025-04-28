@@ -36,8 +36,10 @@ include("modelincludes.jl")
 @batteries ConstantReserveNonSpinning
 @batteries CostCurve
 @batteries DCBus
+@batteries DiscreteControlledACBranch
 @batteries EnergyReservoirStorage
 @batteries ExponentialLoad
+@batteries FACTSControlDevice
 @batteries FixedAdmittance
 @batteries FromTo
 @batteries FromToToFrom
@@ -84,9 +86,11 @@ include("modelincludes.jl")
 @batteries ThermalStandard
 @batteries TModelHVDCLine
 @batteries Transformer2W
-@batteries TwoTerminalHVDCLine
-@batteries TwoTerminalHVDCLineLoss
-@batteries TwoTerminalVSCDCLine
+@batteries Transformer3W
+@batteries TwoTerminalLCCLine
+@batteries TwoTerminalGenericHVDCLine
+@batteries TwoTerminalGenericHVDCLineLoss
+@batteries TwoTerminalVSCLine
 @batteries UpDown
 @batteries ValueCurve
 @batteries VariableReserve
