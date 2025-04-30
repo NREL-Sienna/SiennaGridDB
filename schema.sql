@@ -55,9 +55,13 @@ DROP TABLE IF EXISTS transport_technologies;
 -- Table of certain entities of griddb schema.
 CREATE TABLE entities (
     id integer PRIMARY KEY,
+    entity_table text NOT NULL,
     entity_type text NOT NULL,
-    UNIQUE (id, entity_type)
+    FOREIGN KEY (entity_type) REFERENCES entity_types (name)
 );
+
+-- Table of possible entity types
+CREATE TABLE entity_types (name text PRIMARY KEY);
 
 -- NOTE: Sienna-griddb follows the convention of the EIA prime mover where we
 -- have a `prime_mover` and `fuel` to classify generators/storage units.

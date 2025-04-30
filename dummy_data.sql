@@ -12,24 +12,43 @@ INSERT INTO fuels(name, description)
 VALUES ("NG", "[N]atural [G]as"),
     ("Oil", "Oil");
 
-INSERT INTO entities (id, entity_type)
-VALUES (0, 'planning_regions'),
-    (1, 'planning_regions');
+INSERT INTO
+    entity_types (name)
+VALUES
+    ('Area'),
+    ('ACBus'),
+    ('ThermalStandard'),
+    ('HydroDispatch'),
+    ('RenewableDispatch'),
+    ('EnergyReservoirStorage'),
+    ('Arc'),
+    ('Line'),
+    ('SupplyTechnology'),
+    ('SupplementalAttribute');
+
+INSERT INTO
+    entities (id, entity_table, entity_type)
+VALUES
+    (0, 'planning_regions', 'Area'),
+    (1, 'planning_regions', 'Area');
 
 -- Areas are the higher level aggregation of balancing topologies
 INSERT INTO planning_regions (id, name, description)
 VALUES (0, 'North', 'Northern region'),
     (1, 'South', 'Southern region');
 
-INSERT INTO entities (id, entity_type)
-VALUES (2, 'balancing_topologies'),
-    (3, 'balancing_topologies'),
-    (4, 'balancing_topologies'),
-    (5, 'balancing_topologies'),
-    (6, 'balancing_topologies'),
-    (7, 'balancing_topologies'),
-    (8, 'balancing_topologies'),
-    (9, 'balancing_topologies');
+INSERT INTO
+    entities (id, entity_table, entity_type)
+VALUES
+    (2, 'balancing_topologies', 'ACBus'),
+    (3, 'balancing_topologies', 'ACBus'),
+    (4, 'balancing_topologies', 'ACBus'),
+    (5, 'balancing_topologies', 'ACBus'),
+    (6, 'balancing_topologies', 'ACBus'),
+    (7, 'balancing_topologies', 'ACBus'),
+    (8, 'balancing_topologies', 'ACBus'),
+    (9, 'balancing_topologies', 'ACBus');
+
 
 -- Balancing topologies are the lower level aggregation of generation units
 INSERT INTO balancing_topologies (id, name, area, description)
@@ -82,11 +101,13 @@ VALUES (
         'Commercial area with generation from wind and storage'
     );
 
-INSERT INTO entities (id, entity_type)
-VALUES (10, 'generation_units'),
-    (11, 'generation_units'),
-    (12, 'generation_units'),
-    (13, 'generation_units');
+INSERT INTO
+    entities (id, entity_table, entity_type)
+VALUES
+    (10, 'generation_units', 'ThermalStandard'),
+    (11, 'generation_units', 'HydroDispatch'),
+    (12, 'generation_units', 'RenewableDispatch'),
+    (13, 'generation_units', 'RenewableDispatch');
 
 -- Inserting data for generation units
 INSERT INTO generation_units (
@@ -103,10 +124,12 @@ VALUES (10, 'Unit 1', 'CT', 'NG', 6, 1, 200),
     (12, 'Unit 3', 'PV', NULL, 8, 1, 200),
     (13, 'Unit 4', 'WT', NULL, 9, 1, 200);
 
-INSERT INTO entities (id, entity_type)
-VALUES (14, 'storage_units'),
-    (15, 'storage_units'),
-    (16, 'storage_units');
+INSERT INTO
+    entities (id, entity_table, entity_type)
+VALUES
+    (14, 'storage_units', 'EnergyReservoir'),
+    (15, 'storage_units', 'EnergyReservoir'),
+    (16, 'storage_units', 'EnergyReservoir');
 
 -- Inserting data for storage units
 INSERT INTO storage_units (
@@ -150,10 +173,12 @@ VALUES (
         300
     );
 
-INSERT INTO entities (id, entity_type)
-VALUES (17, 'arcs'),
-    (18, 'arcs'),
-    (19, 'arcs');
+INSERT INTO
+    entities (id, entity_table, entity_type)
+VALUES
+    (17, 'arcs', 'Arc'),
+    (18, 'arcs', 'Arc'),
+    (19, 'arcs', 'Arc');
 
 -- Insert some arcs
 INSERT INTO arcs (id, from_id, to_id)
@@ -165,9 +190,11 @@ VALUES (18, 5, 4);
 INSERT INTO arcs (id, from_id, to_id)
 VALUES (19, 7, 8);
 
-INSERT INTO entities (id, entity_type)
-VALUES (20, 'transmission_lines'),
-    (21, 'transmission_lines');
+INSERT INTO
+    entities (id, entity_table, entity_type)
+VALUES
+    (20, 'transmission_lines', 'Line'),
+    (21, 'transmission_lines', 'Line');
 
 -- Inserting data for transmission lines
 INSERT INTO transmission_lines (
@@ -198,11 +225,13 @@ VALUES (
         22.0
     );
 
-INSERT INTO entities (id, entity_type)
-VALUES (22, 'supply_technologies'),
-    (23, 'supply_technologies'),
-    (24, 'supply_technologies'),
-    (25, 'supply_technologies');
+INSERT INTO
+    entities (id, entity_table, entity_type)
+VALUES
+    (22, 'supply_technologies', 'SupplyTechnology'),
+    (23, 'supply_technologies', 'SupplyTechnology'),
+    (24, 'supply_technologies', 'SupplyTechnology'),
+    (25, 'supply_technologies', 'SupplyTechnology');
 
 -- Inserting data for investment technologies
 INSERT INTO supply_technologies (
@@ -217,9 +246,19 @@ VALUES (22, "WT", NULL, "region_01", NULL),
     (24, "CT", "NG", "region_01", "Expensive"),
     (25, "PV", NULL, "region_02", NULL);
 
-INSERT INTO entities (id, entity_type)
-VALUES (26, 'supplemental_attributes'),
-    (27, 'supplemental_attributes');
+INSERT INTO
+    entities (id, entity_table, entity_type)
+VALUES
+    (
+        26,
+        'supplemental_attributes',
+        'SupplementalAttribute'
+    ),
+    (
+        27,
+        'supplemental_attributes',
+        'SupplementalAttribute'
+    );
 
 -- Supplemental attributes
 INSERT INTO supplemental_attributes (id, TYPE, value)
