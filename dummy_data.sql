@@ -24,7 +24,7 @@ VALUES
     ('ThermalStandard'),
     ('HydroDispatch'),
     ('RenewableDispatch'),
-    ('EnergyReservoir'),
+    ('EnergyReservoirStorage'),
     ('Arc'),
     ('Line'),
     ('SupplyTechnology'),
