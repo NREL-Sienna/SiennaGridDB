@@ -1,109 +1,175 @@
-/*
- CREATE TRIGGER IF NOT EXISTS autofill_planning_regions
- AFTER
- INSERT ON planning_regions BEGIN
- INSERT INTO entities(entity_type, entity_id)
- VALUES ("planning_regions", new.id);
+CREATE TRIGGER IF NOT EXISTS check_planning_regions_entity_exists BEFORE
+INSERT ON planning_regions
+    WHEN NOT EXISTS (
+        SELECT 1
+        FROM entities
+        WHERE id = NEW.id
+            AND entity_type = 'planning_regions'
+    ) BEGIN
+SELECT RAISE(
+        ABORT,
+        'Entity ID must exist in entities table with type planning_regions before insertion'
+    );
+END;
 
- END;
+CREATE TRIGGER IF NOT EXISTS check_balancing_topologies_entity_exists BEFORE
+INSERT ON balancing_topologies
+    WHEN NOT EXISTS (
+        SELECT 1
+        FROM entities
+        WHERE id = NEW.id
+            AND entity_type = 'balancing_topologies'
+    ) BEGIN
+SELECT RAISE(
+        ABORT,
+        'Entity ID must exist in entities table with type balancing_topologies before insertion'
+    );
+END;
 
- CREATE TRIGGER IF NOT EXISTS autofill_balancing_topologies
- AFTER
- INSERT ON balancing_topologies BEGIN
- INSERT INTO entities(entity_type, entity_id)
- VALUES ("balancing_topologies", new.id);
+CREATE TRIGGER IF NOT EXISTS check_arcs_entity_exists BEFORE
+INSERT ON arcs
+    WHEN NOT EXISTS (
+        SELECT 1
+        FROM entities
+        WHERE id = NEW.id
+            AND entity_type = 'arcs'
+    ) BEGIN
+SELECT RAISE(
+        ABORT,
+        'Entity ID must exist in entities table with type arcs before insertion'
+    );
+END;
 
- END;
+CREATE TRIGGER IF NOT EXISTS check_transmission_lines_entity_exists BEFORE
+INSERT ON transmission_lines
+    WHEN NOT EXISTS (
+        SELECT 1
+        FROM entities
+        WHERE id = NEW.id
+            AND entity_type = 'transmission_lines'
+    ) BEGIN
+SELECT RAISE(
+        ABORT,
+        'Entity ID must exist in entities table with type transmission_lines before insertion'
+    );
+END;
 
- CREATE TRIGGER IF NOT EXISTS autofill_generation_units
- AFTER
- INSERT ON generation_units BEGIN
- INSERT INTO entities(entity_type, entity_id)
- VALUES ("generation_units", new.id);
+CREATE TRIGGER IF NOT EXISTS check_transmission_interchanges_entity_exists BEFORE
+INSERT ON transmission_interchanges
+    WHEN NOT EXISTS (
+        SELECT 1
+        FROM entities
+        WHERE id = NEW.id
+            AND entity_type = 'transmission_interchanges'
+    ) BEGIN
+SELECT RAISE(
+        ABORT,
+        'Entity ID must exist in entities table with type transmission_interchanges before insertion'
+    );
+END;
 
- END;
+CREATE TRIGGER IF NOT EXISTS check_generation_units_entity_exists BEFORE
+INSERT ON generation_units
+    WHEN NOT EXISTS (
+        SELECT 1
+        FROM entities
+        WHERE id = NEW.id
+            AND entity_type = 'generation_units'
+    ) BEGIN
+SELECT RAISE(
+        ABORT,
+        'Entity ID must exist in entities table with type generation_units before insertion'
+    );
+END;
 
- CREATE TRIGGER IF NOT EXISTS autofill_storage_units
- AFTER
- INSERT ON storage_units BEGIN
- INSERT INTO entities(entity_type, entity_id)
- VALUES ("storage_units", new.id);
+CREATE TRIGGER IF NOT EXISTS check_storage_units_entity_exists BEFORE
+INSERT ON storage_units
+    WHEN NOT EXISTS (
+        SELECT 1
+        FROM entities
+        WHERE id = NEW.id
+            AND entity_type = 'storage_units'
+    ) BEGIN
+SELECT RAISE(
+        ABORT,
+        'Entity ID must exist in entities table with type storage_units before insertion'
+    );
+END;
 
- END;
+CREATE TRIGGER IF NOT EXISTS check_hydro_reservoir_entity_exists BEFORE
+INSERT ON hydro_reservoir
+    WHEN NOT EXISTS (
+        SELECT 1
+        FROM entities
+        WHERE id = NEW.id
+            AND entity_type = 'hydro_reservoir'
+    ) BEGIN
+SELECT RAISE(
+        ABORT,
+        'Entity ID must exist in entities table with type hydro_reservoir before insertion'
+    );
+END;
 
- CREATE TRIGGER IF NOT EXISTS autofill_arcs
- AFTER
- INSERT ON arcs BEGIN
- INSERT INTO entities(entity_type, entity_id)
- VALUES ("arcs", new.id);
+CREATE TRIGGER IF NOT EXISTS check_supply_technologies_entity_exists BEFORE
+INSERT ON supply_technologies
+    WHEN NOT EXISTS (
+        SELECT 1
+        FROM entities
+        WHERE id = NEW.id
+            AND entity_type = 'supply_technologies'
+    ) BEGIN
+SELECT RAISE(
+        ABORT,
+        'Entity ID must exist in entities table with type supply_technologies before insertion'
+    );
+END;
 
- END;
+CREATE TRIGGER IF NOT EXISTS check_transport_technologies_entity_exists BEFORE
+INSERT ON transport_technologies
+    WHEN NOT EXISTS (
+        SELECT 1
+        FROM entities
+        WHERE id = NEW.id
+            AND entity_type = 'transport_technologies'
+    ) BEGIN
+SELECT RAISE(
+        ABORT,
+        'Entity ID must exist in entities table with type transport_technologies before insertion'
+    );
+END;
 
- CREATE TRIGGER IF NOT EXISTS autofill_transmission_lines
- AFTER
- INSERT ON transmission_lines BEGIN
- INSERT INTO entities(entity_type, entity_id)
- VALUES ("transmission_lines", new.id);
+CREATE TRIGGER IF NOT EXISTS check_supplemental_attributes_entity_exists BEFORE
+INSERT ON supplemental_attributes
+    WHEN NOT EXISTS (
+        SELECT 1
+        FROM entities
+        WHERE id = NEW.id
+            AND entity_type = 'supplemental_attributes'
+    ) BEGIN
+SELECT RAISE(
+        ABORT,
+        'Entity ID must exist in entities table with type supplemental_attributes before insertion'
+    );
+END;
 
- END;
+CREATE TRIGGER IF NOT EXISTS check_loads_entity_exists BEFORE
+INSERT ON loads
+    WHEN NOT EXISTS (
+        SELECT 1
+        FROM entities
+        WHERE id = NEW.id
+            AND entity_type = 'loads'
+    ) BEGIN
+SELECT RAISE(
+        ABORT,
+        'Entity ID must exist in entities table with type loads before insertion'
+    );
+END;
 
- CREATE TRIGGER IF NOT EXISTS autofill_transmission_interchanges
- AFTER
- INSERT ON transmission_interchanges BEGIN
- INSERT INTO entities(entity_type, entity_id)
- VALUES ("transmission_interchanges", new.id);
-
- END;
-
- CREATE TRIGGER IF NOT EXISTS autofill_hydro_reservoir
- AFTER
- INSERT ON hydro_reservoir BEGIN
- INSERT INTO entities(entity_type, entity_id)
- VALUES ("hydro_reservoir", new.id);
-
- END;
-
- CREATE TRIGGER IF NOT EXISTS autofill_supply_technologies
- AFTER
- INSERT ON supply_technologies BEGIN
- INSERT INTO entities(entity_type, entity_id)
- VALUES ("supply_technologies", new.id);
-
- END;
-
- CREATE TRIGGER IF NOT EXISTS autofill_transport_technologies
- AFTER
- INSERT ON transport_technologies BEGIN
- INSERT INTO entities(entity_type, entity_id)
- VALUES ("transport_technologies", new.id);
-
- END;
-
- CREATE TRIGGER IF NOT EXISTS autofill_supplemental_attributes
- AFTER
- INSERT ON supplemental_attributes BEGIN
- INSERT INTO entities(entity_type, entity_id)
- VALUES ("supplemental_attributes", new.id);
-
- END;
-
- CREATE TRIGGER IF NOT EXISTS autofill_loads
- AFTER
- INSERT ON supplemental_attributes BEGIN
- INSERT INTO entities(entity_type, entity_id)
- VALUES ("loads", new.id);
-
- END;
-
- */
 CREATE TRIGGER IF NOT EXISTS enforce_arc_entity_types_insert
 AFTER
-INSERT
-    ON arcs
-BEGIN
--- Fetch entity types for from_id and to_id and perform checks
-SELECT
-    CASE
+INSERT ON arcs BEGIN -- Fetch entity types for from_id and to_id and perform checks
+SELECT CASE
         -- Check if from_id entity type is valid
         WHEN (
             SELECT
