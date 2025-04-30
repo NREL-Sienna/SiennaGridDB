@@ -4,7 +4,7 @@ INSERT ON planning_regions
         SELECT 1
         FROM entities
         WHERE id = NEW.id
-            AND entity_type = 'planning_regions'
+            AND entity_table = 'planning_regions'
     ) BEGIN
 SELECT RAISE(
         ABORT,
@@ -18,7 +18,7 @@ INSERT ON balancing_topologies
         SELECT 1
         FROM entities
         WHERE id = NEW.id
-            AND entity_type = 'balancing_topologies'
+            AND entity_table = 'balancing_topologies'
     ) BEGIN
 SELECT RAISE(
         ABORT,
@@ -32,7 +32,7 @@ INSERT ON arcs
         SELECT 1
         FROM entities
         WHERE id = NEW.id
-            AND entity_type = 'arcs'
+            AND entity_table = 'arcs'
     ) BEGIN
 SELECT RAISE(
         ABORT,
@@ -46,7 +46,7 @@ INSERT ON transmission_lines
         SELECT 1
         FROM entities
         WHERE id = NEW.id
-            AND entity_type = 'transmission_lines'
+            AND entity_table = 'transmission_lines'
     ) BEGIN
 SELECT RAISE(
         ABORT,
@@ -60,7 +60,7 @@ INSERT ON transmission_interchanges
         SELECT 1
         FROM entities
         WHERE id = NEW.id
-            AND entity_type = 'transmission_interchanges'
+            AND entity_table = 'transmission_interchanges'
     ) BEGIN
 SELECT RAISE(
         ABORT,
@@ -74,7 +74,7 @@ INSERT ON generation_units
         SELECT 1
         FROM entities
         WHERE id = NEW.id
-            AND entity_type = 'generation_units'
+            AND entity_table = 'generation_units'
     ) BEGIN
 SELECT RAISE(
         ABORT,
@@ -88,7 +88,7 @@ INSERT ON storage_units
         SELECT 1
         FROM entities
         WHERE id = NEW.id
-            AND entity_type = 'storage_units'
+            AND entity_table = 'storage_units'
     ) BEGIN
 SELECT RAISE(
         ABORT,
@@ -102,7 +102,7 @@ INSERT ON hydro_reservoir
         SELECT 1
         FROM entities
         WHERE id = NEW.id
-            AND entity_type = 'hydro_reservoir'
+            AND entity_table = 'hydro_reservoir'
     ) BEGIN
 SELECT RAISE(
         ABORT,
@@ -116,7 +116,7 @@ INSERT ON supply_technologies
         SELECT 1
         FROM entities
         WHERE id = NEW.id
-            AND entity_type = 'supply_technologies'
+            AND entity_table = 'supply_technologies'
     ) BEGIN
 SELECT RAISE(
         ABORT,
@@ -130,7 +130,7 @@ INSERT ON transport_technologies
         SELECT 1
         FROM entities
         WHERE id = NEW.id
-            AND entity_type = 'transport_technologies'
+            AND entity_table = 'transport_technologies'
     ) BEGIN
 SELECT RAISE(
         ABORT,
@@ -144,7 +144,7 @@ INSERT ON supplemental_attributes
         SELECT 1
         FROM entities
         WHERE id = NEW.id
-            AND entity_type = 'supplemental_attributes'
+            AND entity_table = 'supplemental_attributes'
     ) BEGIN
 SELECT RAISE(
         ABORT,
@@ -158,7 +158,7 @@ INSERT ON loads
         SELECT 1
         FROM entities
         WHERE id = NEW.id
-            AND entity_type = 'loads'
+            AND entity_table = 'loads'
     ) BEGIN
 SELECT RAISE(
         ABORT,

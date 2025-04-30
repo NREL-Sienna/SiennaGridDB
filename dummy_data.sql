@@ -127,9 +127,9 @@ VALUES (10, 'Unit 1', 'CT', 'NG', 6, 1, 200),
 INSERT INTO
     entities (id, entity_table, entity_type)
 VALUES
-    (14, 'storage_units', 'EnergyReservoir'),
-    (15, 'storage_units', 'EnergyReservoir'),
-    (16, 'storage_units', 'EnergyReservoir');
+    (14, 'storage_units', 'EnergyReservoirStorage'),
+    (15, 'storage_units', 'EnergyReservoirStorage'),
+    (16, 'storage_units', 'EnergyReservoirStorage');
 
 -- Inserting data for storage units
 INSERT INTO storage_units (
