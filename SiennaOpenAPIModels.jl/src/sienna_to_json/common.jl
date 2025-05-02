@@ -6,6 +6,10 @@ function get_complex_number(complex_number::ComplexF64)
     ComplexNumber(real=real(complex_number), imag=imag(complex_number))
 end
 
+function get_complex_number(complex_numbers::Vector{ComplexF64})
+    ComplexNumber(real=real(complex_number), imag=imag(complex_number))
+end
+
 function get_from_to(from_to::NamedTuple{(:from, :to), Tuple{Float64, Float64}})
     FromTo(from=from_to.from, to=from_to.to)
 end
