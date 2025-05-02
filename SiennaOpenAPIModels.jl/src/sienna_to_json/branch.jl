@@ -83,6 +83,8 @@ function psy2openapi(transformer::PSY.TapTransformer, ids::IDGenerator)
         primary_shunt=transformer.primary_shunt,
         tap=transformer.tap,
         rating=transformer.rating,
+        rating_b=transformer.rating_b,
+        rating_c=transformer.rating_c,
     )
 end
 

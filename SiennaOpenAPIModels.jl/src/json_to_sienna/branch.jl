@@ -96,6 +96,8 @@ function openapi2psy(taptransform::TapTransformer, resolver::Resolver)
         primary_shunt=taptransform.primary_shunt,
         tap=taptransform.tap,
         rating=taptransform.rating,
+        rating_b=taptransform.rating_b,
+        rating_c=taptransform.rating_c,
     )
 end
 
