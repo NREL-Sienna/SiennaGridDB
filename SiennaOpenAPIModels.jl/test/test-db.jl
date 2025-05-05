@@ -10,7 +10,7 @@ import Tables
 function attributes_to_dict(column_table)
     d = Dict()
     for row in Tables.rows(column_table)
-        d[row.key] = JSON.parse(row.value)
+        d[row.name] = JSON.parse(row.value)
     end
     return d
 end
@@ -51,7 +51,7 @@ end
         acbus = PSY.get_bus(c_sys5, 1)
         db = SQLite.DB()
         SiennaOpenAPIModels.make_sqlite!(db)
-        @test collect(DBInterface.execute(db, "SELECT * FROM bus")) == []
+        @test collect(DBInterface.execute(db, "SELECT * FROM balancing_topologies")) == []
         SiennaOpenAPIModels.send_table_to_db!(
             SiennaOpenAPIModels.ACBus,
             db,
@@ -59,22 +59,19 @@ end
             IDGenerator(),
         )
 
-        rows = Tables.rowtable(DBInterface.execute(db, "SELECT * FROM bus"))
+        rows =
+            Tables.rowtable(DBInterface.execute(db, "SELECT * FROM balancing_topologies"))
         @test length(rows) == 1
-        @test isequal(
-            first(rows),
-            (id=1, name="nodeA", obj_type="ACBus", area_id=missing, loadzone_id=missing),
-        )
+        @test isequal(first(rows), (id=1, name="nodeA", area=missing, description=missing))
         attributes = Tables.columntable(
             DBInterface.execute(
                 db,
-                "SELECT id, entity_id, entity_type, key, json(value) as value FROM attributes",
+                "SELECT id, entity_id, name, json(value) as value FROM attributes",
             ),
         )
         @test length(attributes.id) == 6
         @test length(unique(attributes.id)) == 6
         @test all(attributes.entity_id .== 1)
-        @test all(attributes.entity_type .== "bus")
         @test attributes_to_dict(attributes) == Dict(
             "voltage_limits" => Dict{String, Any}("max" => 1.05, "min" => 0.9),
             "base_voltage" => 230.0,
@@ -88,18 +85,20 @@ end
         db = SQLite.DB()
         SiennaOpenAPIModels.make_sqlite!(db)
         SiennaOpenAPIModels.sys2db!(db, c_sys5, IDGenerator())
-        acbuses = Tables.columntable(DBInterface.execute(db, "SELECT * FROM bus"))
+        acbuses = Tables.columntable(
+            DBInterface.execute(db, "SELECT * FROM balancing_topologies"),
+        )
         @test sort(acbuses.id) == [1, 2, 3, 4, 5]
-        loads = Tables.columntable(DBInterface.execute(db, "SELECT * FROM load"))
+        loads = Tables.columntable(DBInterface.execute(db, "SELECT * FROM loads"))
         @test length(loads.id) == 3
         @test length(unique(loads.id)) == 3
         loads_attribute = Tables.columntable(
             DBInterface.execute(db, "SELECT * FROM attributes where entity_id=1"),
         )
-        @test all(loads_attribute.entity_type .== "bus")
+        #@test all(loads_attribute.entity_type .== "bus")
     end
 
-    @testset "Sys to DB" begin
+    @testset "DB to Sys" begin
         db = SQLite.DB()
         SiennaOpenAPIModels.make_sqlite!(db)
         id_generator = IDGenerator()
@@ -132,7 +131,8 @@ end
     db = SQLite.DB()
     SiennaOpenAPIModels.make_sqlite!(db)
     SiennaOpenAPIModels.sys2db!(db, sys, IDGenerator())
-    acbuses = Tables.columntable(DBInterface.execute(db, "SELECT * FROM bus"))
+    acbuses =
+        Tables.columntable(DBInterface.execute(db, "SELECT * FROM balancing_topologies"))
     @test length(acbuses.id) == 118
 
     copy_of_sys = SiennaOpenAPIModels.make_system_from_db(db)
@@ -155,7 +155,13 @@ end
     db = SQLite.DB()
     SiennaOpenAPIModels.make_sqlite!(db)
     SiennaOpenAPIModels.sys2db!(db, sys, IDGenerator())
-    acbuses = Tables.columntable(DBInterface.execute(db, "SELECT * FROM bus"))
+    acbuses = Tables.columntable(
+        DBInterface.execute(
+            db,
+            "SELECT * FROM balancing_topologies bt LEFT JOIN entities e ON bt.id = e.id
+WHERE e.entity_type = 'ACBus'",
+        ),
+    )
     @test length(acbuses.id) == 73
 
     copy_of_sys = SiennaOpenAPIModels.make_system_from_db(db)
