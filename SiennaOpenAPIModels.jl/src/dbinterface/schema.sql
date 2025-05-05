@@ -281,3 +281,15 @@ CREATE TABLE loads (
     base_power DOUBLE,
     FOREIGN KEY(balancing_topology) REFERENCES balancing_topologies (id)
 );
+
+-- From Sienna docs:
+-- A static time series data is a single column of data where each time period has
+-- a single value assigned to a component field, such as its maximum active power.
+-- This data commonly is obtained from historical information or the realization
+-- of a time-varying quantity.
+CREATE TABLE static_time_series (
+    id integer PRIMARY KEY,
+    uuid text NULL UNIQUE,
+    timestamp datetime NOT NULL,
+    value real NOT NULL,
+);
