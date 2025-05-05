@@ -172,41 +172,29 @@ INSERT ON arcs BEGIN -- Fetch entity types for from_id and to_id and perform che
 SELECT CASE
         -- Check if from_id entity type is valid
         WHEN (
-            SELECT
-                entity_table
-            FROM
-                entities
-            WHERE
-                id = NEW.from_id
+            SELECT entity_table
+            FROM entities
+            WHERE id = NEW.from_id
         ) NOT IN ('balancing_topologies', 'planning_regions') THEN RAISE(
             ABORT,
             'Invalid from_id entity type: must be balancing_topologies or planning_regions'
         ) -- Check if to_id entity type is valid
         WHEN (
-            SELECT
-                entity_table
-            FROM
-                entities
-            WHERE
-                id = NEW.to_id
+            SELECT entity_table
+            FROM entities
+            WHERE id = NEW.to_id
         ) NOT IN ('balancing_topologies', 'planning_regions') THEN RAISE(
             ABORT,
             'Invalid to_id entity type: must be balancing_topologies or planning_regions'
         ) -- Check if from_id and to_id entity types match
         WHEN (
-            SELECT
-                entity_table
-            FROM
-                entities
-            WHERE
-                id = NEW.from_id
+            SELECT entity_table
+            FROM entities
+            WHERE id = NEW.from_id
         ) != (
-            SELECT
-                entity_table
-            FROM
-                entities
-            WHERE
-                id = NEW.to_id
+            SELECT entity_table
+            FROM entities
+            WHERE id = NEW.to_id
         ) THEN RAISE(
             ABORT,
             'Entity types for from_id and to_id must match'

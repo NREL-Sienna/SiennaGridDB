@@ -116,7 +116,7 @@ CREATE TABLE transmission_lines (
     id integer PRIMARY KEY REFERENCES entities (id),
     name text NOT NULL UNIQUE,
     arc_id integer,
-    continuous_rating real NOT NULL CHECK (continuous_rating >= 0),
+    continuous_rating real NULL CHECK (continuous_rating >= 0),
     ste_rating real NULL CHECK (ste_rating >= 0),
     lte_rating real NULL CHECK (lte_rating >= 0),
     line_length real NULL CHECK (line_length >= 0),
@@ -144,9 +144,9 @@ CREATE TABLE generation_units (
     prime_mover text NOT NULL REFERENCES prime_mover_types(name),
     fuel text NULL REFERENCES fuels(name),
     balancing_topology integer NOT NULL REFERENCES balancing_topologies (id),
-    rating real NOT NULL CHECK (rating > 0),
+    rating real NOT NULL CHECK (rating >= 0),
     base_power real NOT NULL CHECK (base_power > 0),
-    CHECK (base_power >= rating),
+    --CHECK (base_power >= rating),
     UNIQUE (name)
 ) strict;
 
