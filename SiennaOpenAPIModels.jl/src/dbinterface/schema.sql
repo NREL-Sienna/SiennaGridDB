@@ -265,7 +265,8 @@ CREATE TABLE time_series (
     initial_timestamp TEXT NOT NULL,
     resolution INTEGER NOT NULL,
     horizon INTEGER,
-    INTERVAL INTEGER window_count INTEGER,
+    INTERVAL INTEGER,
+    window_count INTEGER,
     length INTEGER,
     scaling_multiplier TEXT,
     -- enum: ["max_active_power", ]
@@ -291,5 +292,5 @@ CREATE TABLE static_time_series (
     id integer PRIMARY KEY,
     uuid text NULL UNIQUE,
     timestamp datetime NOT NULL,
-    value real NOT NULL,
+    value real NOT NULL
 );
