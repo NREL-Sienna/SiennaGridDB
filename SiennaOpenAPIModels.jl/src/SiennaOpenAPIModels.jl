@@ -72,6 +72,7 @@ include("modelincludes.jl")
 @batteries RenewableDispatch
 @batteries RenewableGenerationCost
 @batteries RenewableNonDispatch
+@batteries ShiftablePowerLoad
 @batteries Source
 @batteries StandardLoad
 @batteries StartUpShutDown
