@@ -77,6 +77,7 @@ include("modelincludes.jl")
 @batteries StorageCost
 @batteries StorageCostStartUp
 @batteries StorageCostStartUpOneOf
+@batteries SwitchedAdmittance
 @batteries TapTransformer
 @batteries ThermalGenerationCost
 @batteries ThermalGenerationCostStartUp

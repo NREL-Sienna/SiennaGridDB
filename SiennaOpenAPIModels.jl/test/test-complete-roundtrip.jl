@@ -55,6 +55,23 @@ using JSON
         renew_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
         @test IS.compare_values(renew, renew_copy, exclude=Set([:internal]))
     end
+    @testset "SwitchedAdmittance to JSON and Back" begin
+        switch = PSY.SwitchedAdmittance(
+            name="switch",
+            available=true,
+            bus=PSY.get_bus(c_sys5, 3),
+            Y=0.0 - 1.0im,
+            number_of_steps=1,
+            Y_increase=0.0 - 0.1im,
+        )
+        PSY.add_component!(c_sys5, switch)
+        @test isa(switch, PSY.SwitchedAdmittance)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(switch, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, c_sys5)
+        switch_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(switch, switch_copy, exclude=Set([:internal]))
+    end
     @testset "ThermalStandard to JSON and Back" begin
         thermal = PSY.get_component(PSY.ThermalStandard, c_sys5, "Solitude")
         @test isa(thermal, PSY.ThermalStandard)
