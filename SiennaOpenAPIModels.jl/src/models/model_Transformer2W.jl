@@ -59,27 +59,7 @@ Base.@kwdef mutable struct Transformer2W <: OpenAPI.APIModel
         rating_b,
         rating_c,
     )
-        OpenAPI.validate_property(Transformer2W, Symbol("id"), id)
-        OpenAPI.validate_property(Transformer2W, Symbol("name"), name)
-        OpenAPI.validate_property(Transformer2W, Symbol("available"), available)
-        OpenAPI.validate_property(
-            Transformer2W,
-            Symbol("active_power_flow"),
-            active_power_flow,
-        )
-        OpenAPI.validate_property(
-            Transformer2W,
-            Symbol("reactive_power_flow"),
-            reactive_power_flow,
-        )
-        OpenAPI.validate_property(Transformer2W, Symbol("arc"), arc)
-        OpenAPI.validate_property(Transformer2W, Symbol("r"), r)
-        OpenAPI.validate_property(Transformer2W, Symbol("x"), x)
-        OpenAPI.validate_property(Transformer2W, Symbol("primary_shunt"), primary_shunt)
-        OpenAPI.validate_property(Transformer2W, Symbol("rating"), rating)
-        OpenAPI.validate_property(Transformer2W, Symbol("rating_b"), rating_b)
-        OpenAPI.validate_property(Transformer2W, Symbol("rating_c"), rating_c)
-        return new(
+        o = new(
             id,
             name,
             available,
@@ -93,6 +73,8 @@ Base.@kwdef mutable struct Transformer2W <: OpenAPI.APIModel
             rating_b,
             rating_c,
         )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type Transformer2W
 
@@ -113,7 +95,7 @@ const _property_types_Transformer2W = Dict{Symbol, String}(
 OpenAPI.property_type(::Type{Transformer2W}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_Transformer2W[name]))}
 
-function check_required(o::Transformer2W)
+function OpenAPI.check_required(o::Transformer2W)
     o.id === nothing && (return false)
     o.name === nothing && (return false)
     o.available === nothing && (return false)
@@ -124,6 +106,29 @@ function check_required(o::Transformer2W)
     o.x === nothing && (return false)
     o.primary_shunt === nothing && (return false)
     true
+end
+
+function OpenAPI.validate_properties(o::Transformer2W)
+    OpenAPI.validate_property(Transformer2W, Symbol("id"), o.id)
+    OpenAPI.validate_property(Transformer2W, Symbol("name"), o.name)
+    OpenAPI.validate_property(Transformer2W, Symbol("available"), o.available)
+    OpenAPI.validate_property(
+        Transformer2W,
+        Symbol("active_power_flow"),
+        o.active_power_flow,
+    )
+    OpenAPI.validate_property(
+        Transformer2W,
+        Symbol("reactive_power_flow"),
+        o.reactive_power_flow,
+    )
+    OpenAPI.validate_property(Transformer2W, Symbol("arc"), o.arc)
+    OpenAPI.validate_property(Transformer2W, Symbol("r"), o.r)
+    OpenAPI.validate_property(Transformer2W, Symbol("x"), o.x)
+    OpenAPI.validate_property(Transformer2W, Symbol("primary_shunt"), o.primary_shunt)
+    OpenAPI.validate_property(Transformer2W, Symbol("rating"), o.rating)
+    OpenAPI.validate_property(Transformer2W, Symbol("rating_b"), o.rating_b)
+    OpenAPI.validate_property(Transformer2W, Symbol("rating_c"), o.rating_c)
 end
 
 function OpenAPI.validate_property(::Type{Transformer2W}, name::Symbol, val) end
