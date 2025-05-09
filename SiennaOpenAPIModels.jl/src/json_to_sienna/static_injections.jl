@@ -252,6 +252,28 @@ function openapi2psy(renewnon::RenewableNonDispatch, resolver::Resolver)
     )
 end
 
+function openapi2psy(power_load::ShiftablePowerLoad, resolver::Resolver)
+    if power_load.base_power == 0.0
+        error("base power is 0.0")
+    end
+    PSY.ShiftablePowerLoad(
+        name=power_load.name,
+        available=power_load.available,
+        bus=resolver(power_load.bus),
+        active_power=power_load.active_power / power_load.base_power,
+        upper_bound_active_power=power_load.upper_bound_active_power /
+                                 power_load.base_power,
+        lower_bound_active_power=power_load.lower_bound_active_power /
+                                 power_load.base_power,
+        reactive_power=power_load.reactive_power / power_load.base_power,
+        max_active_power=power_load.max_active_power / power_load.base_power,
+        max_reactive_power=power_load.max_reactive_power / power_load.base_power,
+        base_power=power_load.base_power,
+        load_balance_time_horizon=power_load.load_balance_time_horizon,
+        operation_cost=get_sienna_operation_cost(power_load.operation_cost),
+    )
+end
+
 function openapi2psy(standard_load::StandardLoad, resolver::Resolver)
     if standard_load.base_power == 0.0
         error("base power is 0.0")
