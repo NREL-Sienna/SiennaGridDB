@@ -168,3 +168,21 @@ function openapi2psy(hvdc::TwoTerminalHVDCLine, resolver::Resolver)
         loss=get_sienna_value_curve(hvdc.loss),
     )
 end
+
+function openapi2psy(vscdc::TwoTerminalVSCDCLine, resolver::Resolver)
+    if PSY.get_base_power(resolver.sys) == 0.0
+        error("base power is 0.0")
+    end
+    PSY.TwoTerminalVSCDCLine(
+        name=vscdc.name,
+        available=vscdc.available,
+        active_power_flow=vscdc.active_power_flow / PSY.get_base_power(resolver.sys),
+        arc=resolver(vscdc.arc),
+        rectifier_tap_limits=get_tuple_min_max(vscdc.rectifier_tap_limits),
+        rectifier_xrc=vscdc.rectifier_xrc,
+        rectifier_firing_angle=get_tuple_min_max(vscdc.rectifier_firing_angle),
+        inverter_tap_limits=get_tuple_min_max(vscdc.inverter_tap_limits),
+        inverter_xrc=vscdc.inverter_xrc,
+        inverter_extinction_angle=get_tuple_min_max(vscdc.inverter_extinction_angle),
+    )
+end

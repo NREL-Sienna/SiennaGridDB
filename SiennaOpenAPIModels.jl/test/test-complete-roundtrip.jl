@@ -64,6 +64,27 @@ using JSON
         thermal_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
         @test IS.compare_values(thermal, thermal_copy, exclude=Set([:internal]))
     end
+    @testset "TwoTerminalVSCDCLine to JSON and Back" begin
+        vscdc = PSY.TwoTerminalVSCDCLine(
+            name="vscdc",
+            available=true,
+            active_power_flow=0.0,
+            arc=PSY.get_component(PSY.Arc, c_sys5, "nodeB -> nodeC"),
+            rectifier_tap_limits=(min=-2.0, max=2.0),
+            rectifier_xrc=0.02,
+            rectifier_firing_angle=(min=-0.7, max=0.7),
+            inverter_tap_limits=(min=-2.0, max=2.0),
+            inverter_xrc=0.02,
+            inverter_extinction_angle=(min=-0.7, max=0.7),
+        )
+        PSY.add_component!(c_sys5, vscdc)
+        @test isa(vscdc, PSY.TwoTerminalVSCDCLine)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(vscdc, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, c_sys5)
+        vscdc_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(vscdc, vscdc_copy, exclude=Set([:internal]))
+    end
 end
 
 @testset "RTS_GMLC_RT_sys Complete RoundTrip to JSON" begin

@@ -144,3 +144,19 @@ function psy2openapi(hvdc::PSY.TwoTerminalHVDCLine, ids::IDGenerator)
         loss=TwoTerminalHVDCLineLoss(get_value_curve(hvdc.loss)),
     )
 end
+
+function psy2openapi(vscdc::PSY.TwoTerminalVSCDCLine, ids::IDGenerator)
+    TwoTerminalVSCDCLine(
+        id=getid!(ids, vscdc),
+        name=vscdc.name,
+        available=vscdc.available,
+        active_power_flow=vscdc.active_power_flow * PSY.get_base_power(vscdc),
+        arc=getid!(ids, vscdc.arc),
+        rectifier_tap_limits=get_min_max(vscdc.rectifier_tap_limits),
+        rectifier_xrc=vscdc.rectifier_xrc,
+        rectifier_firing_angle=get_min_max(vscdc.rectifier_firing_angle),
+        inverter_tap_limits=get_min_max(vscdc.inverter_tap_limits),
+        inverter_xrc=vscdc.inverter_xrc,
+        inverter_extinction_angle=get_min_max(vscdc.inverter_extinction_angle),
+    )
+end
