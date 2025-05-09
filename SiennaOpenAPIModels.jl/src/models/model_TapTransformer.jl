@@ -63,28 +63,7 @@ Base.@kwdef mutable struct TapTransformer <: OpenAPI.APIModel
         rating_b,
         rating_c,
     )
-        OpenAPI.validate_property(TapTransformer, Symbol("id"), id)
-        OpenAPI.validate_property(TapTransformer, Symbol("name"), name)
-        OpenAPI.validate_property(TapTransformer, Symbol("available"), available)
-        OpenAPI.validate_property(
-            TapTransformer,
-            Symbol("active_power_flow"),
-            active_power_flow,
-        )
-        OpenAPI.validate_property(
-            TapTransformer,
-            Symbol("reactive_power_flow"),
-            reactive_power_flow,
-        )
-        OpenAPI.validate_property(TapTransformer, Symbol("arc"), arc)
-        OpenAPI.validate_property(TapTransformer, Symbol("r"), r)
-        OpenAPI.validate_property(TapTransformer, Symbol("x"), x)
-        OpenAPI.validate_property(TapTransformer, Symbol("primary_shunt"), primary_shunt)
-        OpenAPI.validate_property(TapTransformer, Symbol("tap"), tap)
-        OpenAPI.validate_property(TapTransformer, Symbol("rating"), rating)
-        OpenAPI.validate_property(TapTransformer, Symbol("rating_b"), rating_b)
-        OpenAPI.validate_property(TapTransformer, Symbol("rating_c"), rating_c)
-        return new(
+        o = new(
             id,
             name,
             available,
@@ -99,6 +78,8 @@ Base.@kwdef mutable struct TapTransformer <: OpenAPI.APIModel
             rating_b,
             rating_c,
         )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type TapTransformer
 
@@ -120,7 +101,7 @@ const _property_types_TapTransformer = Dict{Symbol, String}(
 OpenAPI.property_type(::Type{TapTransformer}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_TapTransformer[name]))}
 
-function check_required(o::TapTransformer)
+function OpenAPI.check_required(o::TapTransformer)
     o.id === nothing && (return false)
     o.name === nothing && (return false)
     o.available === nothing && (return false)
@@ -132,6 +113,30 @@ function check_required(o::TapTransformer)
     o.primary_shunt === nothing && (return false)
     o.tap === nothing && (return false)
     true
+end
+
+function OpenAPI.validate_properties(o::TapTransformer)
+    OpenAPI.validate_property(TapTransformer, Symbol("id"), o.id)
+    OpenAPI.validate_property(TapTransformer, Symbol("name"), o.name)
+    OpenAPI.validate_property(TapTransformer, Symbol("available"), o.available)
+    OpenAPI.validate_property(
+        TapTransformer,
+        Symbol("active_power_flow"),
+        o.active_power_flow,
+    )
+    OpenAPI.validate_property(
+        TapTransformer,
+        Symbol("reactive_power_flow"),
+        o.reactive_power_flow,
+    )
+    OpenAPI.validate_property(TapTransformer, Symbol("arc"), o.arc)
+    OpenAPI.validate_property(TapTransformer, Symbol("r"), o.r)
+    OpenAPI.validate_property(TapTransformer, Symbol("x"), o.x)
+    OpenAPI.validate_property(TapTransformer, Symbol("primary_shunt"), o.primary_shunt)
+    OpenAPI.validate_property(TapTransformer, Symbol("tap"), o.tap)
+    OpenAPI.validate_property(TapTransformer, Symbol("rating"), o.rating)
+    OpenAPI.validate_property(TapTransformer, Symbol("rating_b"), o.rating_b)
+    OpenAPI.validate_property(TapTransformer, Symbol("rating_c"), o.rating_c)
 end
 
 function OpenAPI.validate_property(::Type{TapTransformer}, name::Symbol, val) end

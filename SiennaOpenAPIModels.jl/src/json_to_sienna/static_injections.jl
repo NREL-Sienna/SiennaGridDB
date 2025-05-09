@@ -105,20 +105,17 @@ function openapi2psy(hydro_res::HydroEnergyReservoir, resolver::Resolver)
     )
 end
 
-function openapi2psy(hydro::HydroPumpedStorage, resolver::Resolver)
+function openapi2psy(hydro::HydroPumpTurbine, resolver::Resolver)
     if hydro.base_power == 0.0
         error("base power is 0.0")
     end
-    PSY.HydroPumpedStorage(
+    PSY.HydroPumpTurbine(
         name=hydro.name,
         available=hydro.available,
         bus=resolver(hydro.bus),
         active_power=hydro.active_power / hydro.base_power,
         reactive_power=hydro.reactive_power / hydro.base_power,
         rating=hydro.rating / hydro.base_power,
-        base_power=hydro.base_power,
-        rating_pump=hydro.rating_pump / hydro.base_power,
-        prime_mover_type=get_prime_mover_enum(hydro.prime_mover_type),
         active_power_limits=divide(
             get_tuple_min_max(hydro.active_power_limits),
             hydro.base_power,
@@ -127,34 +124,73 @@ function openapi2psy(hydro::HydroPumpedStorage, resolver::Resolver)
             get_tuple_min_max(hydro.reactive_power_limits),
             hydro.base_power,
         ),
-        ramp_limits=divide(get_tuple_up_down(hydro.ramp_limits), hydro.base_power),
-        time_limits=get_tuple_up_down(hydro.time_limits),
         active_power_limits_pump=divide(
             get_tuple_min_max(hydro.active_power_limits_pump),
             hydro.base_power,
         ),
-        reactive_power_limits_pump=divide(
-            get_tuple_min_max(hydro.reactive_power_limits_pump),
-            hydro.base_power,
-        ),
-        ramp_limits_pump=divide(
-            get_tuple_up_down(hydro.ramp_limits_pump),
-            hydro.base_power,
-        ),
-        time_limits_pump=get_tuple_up_down(hydro.time_limits_pump),
-        storage_capacity=divide(
-            get_tuple_up_down(hydro.storage_capacity),
-            hydro.base_power,
-        ),
-        inflow=hydro.inflow / hydro.base_power,
-        outflow=hydro.outflow,
-        initial_storage=divide(get_tuple_up_down(hydro.initial_storage), hydro.base_power),
+        outflow_limits=get_tuple_min_max(hydro.outflow_limits),
+        head_reservoir=resolver(hydro.head_reservoir),
+        tail_reservoir=resolver(hydro.tail_reservoir),
+        powerhouse_elevation=hydro.powerhouse_elevation,
+        ramp_limits=divide(get_tuple_up_down(hydro.ramp_limits), hydro.base_power),
+        time_limits=get_tuple_up_down(hydro.time_limits),
+        base_power=hydro.base_power,
         operation_cost=get_sienna_operation_cost(hydro.operation_cost),
-        storage_target=get_tuple_up_down(hydro.storage_target),
-        pump_efficiency=hydro.pump_efficiency,
+        active_power_pump=hydro.active_power_pump / hydro.base_power,
+        efficiency=get_tuple_turbine_pump(hydro.efficiency),
+        transition_time=get_tuple_turbine_pump(hydro.transition_time),
+        minimum_time=get_tuple_turbine_pump(hydro.minimum_time),
         conversion_factor=hydro.conversion_factor,
-        status=get_pump_status_enum(hydro.status),
-        time_at_status=hydro.time_at_status,
+        must_run=hydro.must_run,
+        prime_mover_type=get_prime_mover_enum(hydro.prime_mover_type),
+    )
+end
+
+function openapi2psy(hydro::HydroReservoir, resolver::Resolver)
+    PSY.HydroReservoir(
+        name=hydro.name,
+        available=hydro.available,
+        storage_level_limits=get_tuple_min_max(hydro.storage_level_limits),
+        initial_level=hydro.initial_level,
+        spillage_limits=get_tuple_min_max(hydro.spillage_limits),
+        inflow=hydro.inflow,
+        outflow=hydro.outflow,
+        level_targets=hydro.level_targets,
+        travel_time=hydro.travel_time,
+        intake_elevation=hydro.intake_elevation,
+        head_to_volume_factor=get_sienna_value_curve(hydro.head_to_volume_factor),
+        level_data_type=get_res_data_enum(hydro.level_data_type),
+    )
+end
+
+function openapi2psy(hydro::HydroTurbine, resolver::Resolver)
+    if hydro.base_power == 0.0
+        error("base power is 0.0")
+    end
+    PSY.HydroTurbine(
+        name=hydro.name,
+        available=hydro.available,
+        bus=resolver(hydro.bus),
+        active_power=hydro.active_power / hydro.base_power,
+        reactive_power=hydro.reactive_power / hydro.base_power,
+        rating=hydro.rating / hydro.base_power,
+        active_power_limits=divide(
+            get_tuple_min_max(hydro.active_power_limits),
+            hydro.base_power,
+        ),
+        reactive_power_limits=divide(
+            get_tuple_min_max(hydro.reactive_power_limits),
+            hydro.base_power,
+        ),
+        outflow_limits=get_tuple_min_max(hydro.outflow_limits),
+        powerhouse_elevation=hydro.powerhouse_elevation,
+        ramp_limits=divide(get_tuple_up_down(hydro.ramp_limits), hydro.base_power),
+        time_limits=get_tuple_up_down(hydro.time_limits),
+        base_power=hydro.base_power,
+        operation_cost=get_sienna_operation_cost(hydro.operation_cost),
+        efficiency=hydro.efficiency,
+        conversion_factor=hydro.conversion_factor,
+        reservoirs=resolver(hydro.reservoirs), # this is a vector of reservoirs
     )
 end
 

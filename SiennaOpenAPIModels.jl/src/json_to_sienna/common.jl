@@ -31,6 +31,10 @@ function get_reserve_enum(direction::String)
     end
 end
 
+function get_res_data_enum(reservoir_data_type::String)
+    IS.deserialize(PSY.ReservoirDataType, reservoir_data_type)
+end
+
 function get_sienna_unit_system(units::String)
     IS.deserialize(PSY.UnitSystem, units)
 end
@@ -69,6 +73,12 @@ get_tuple_startup_shutdown(::Nothing) = nothing
 
 function get_tuple_startup_shutdown(obj::StartUpShutDown)
     return (startup=obj.startup, shutdown=obj.shutdown)
+end
+
+get_tuple_turbine_pump(::Nothing) = nothing
+
+function get_tuple_turbine_pump(obj::TurbinePump)
+    return (turbine=obj.turbine, pump=obj.pump)
 end
 
 get_tuple_up_down(::Nothing) = nothing
@@ -192,6 +202,10 @@ end
 
 get_sienna_value_curve(::Nothing) = nothing
 
+function get_sienna_value_curve(curve::Float64)
+    return curve
+end
+
 function get_sienna_value_curve(curve::AverageRateCurve)
     PSY.AverageRateCurve(
         function_data=PSY.AverageRateCurveFunctionData(
@@ -200,6 +214,10 @@ function get_sienna_value_curve(curve::AverageRateCurve)
         initial_input=curve.initial_input,
         input_at_zero=curve.input_at_zero,
     )
+end
+
+function get_sienna_value_curve(curve::HeadVolumeFactor)
+    get_sienna_value_curve(curve.value)
 end
 
 function get_sienna_value_curve(curve::IncrementalCurve)
