@@ -16,6 +16,7 @@
         tap=nothing,
         alpha=nothing,
         rating=nothing,
+        base_power=nothing,
         rating_b=nothing,
         rating_c=nothing,
         phase_angle_limits=nothing,
@@ -33,6 +34,7 @@
     - tap::Float64
     - alpha::Float64
     - rating::Float64
+    - base_power::Float64
     - rating_b::Float64
     - rating_c::Float64
     - phase_angle_limits::MinMax
@@ -50,6 +52,7 @@ Base.@kwdef mutable struct PhaseShiftingTransformer <: OpenAPI.APIModel
     tap::Union{Nothing, Float64} = nothing
     alpha::Union{Nothing, Float64} = nothing
     rating::Union{Nothing, Float64} = nothing
+    base_power::Union{Nothing, Float64} = nothing
     rating_b::Union{Nothing, Float64} = nothing
     rating_c::Union{Nothing, Float64} = nothing
     phase_angle_limits = nothing # spec type: Union{ Nothing, MinMax }
@@ -67,42 +70,12 @@ Base.@kwdef mutable struct PhaseShiftingTransformer <: OpenAPI.APIModel
         tap,
         alpha,
         rating,
+        base_power,
         rating_b,
         rating_c,
         phase_angle_limits,
     )
-        OpenAPI.validate_property(PhaseShiftingTransformer, Symbol("id"), id)
-        OpenAPI.validate_property(PhaseShiftingTransformer, Symbol("name"), name)
-        OpenAPI.validate_property(PhaseShiftingTransformer, Symbol("available"), available)
-        OpenAPI.validate_property(
-            PhaseShiftingTransformer,
-            Symbol("active_power_flow"),
-            active_power_flow,
-        )
-        OpenAPI.validate_property(
-            PhaseShiftingTransformer,
-            Symbol("reactive_power_flow"),
-            reactive_power_flow,
-        )
-        OpenAPI.validate_property(PhaseShiftingTransformer, Symbol("arc"), arc)
-        OpenAPI.validate_property(PhaseShiftingTransformer, Symbol("r"), r)
-        OpenAPI.validate_property(PhaseShiftingTransformer, Symbol("x"), x)
-        OpenAPI.validate_property(
-            PhaseShiftingTransformer,
-            Symbol("primary_shunt"),
-            primary_shunt,
-        )
-        OpenAPI.validate_property(PhaseShiftingTransformer, Symbol("tap"), tap)
-        OpenAPI.validate_property(PhaseShiftingTransformer, Symbol("alpha"), alpha)
-        OpenAPI.validate_property(PhaseShiftingTransformer, Symbol("rating"), rating)
-        OpenAPI.validate_property(PhaseShiftingTransformer, Symbol("rating_b"), rating_b)
-        OpenAPI.validate_property(PhaseShiftingTransformer, Symbol("rating_c"), rating_c)
-        OpenAPI.validate_property(
-            PhaseShiftingTransformer,
-            Symbol("phase_angle_limits"),
-            phase_angle_limits,
-        )
-        return new(
+        o = new(
             id,
             name,
             available,
@@ -115,10 +88,13 @@ Base.@kwdef mutable struct PhaseShiftingTransformer <: OpenAPI.APIModel
             tap,
             alpha,
             rating,
+            base_power,
             rating_b,
             rating_c,
             phase_angle_limits,
         )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type PhaseShiftingTransformer
 
@@ -135,6 +111,7 @@ const _property_types_PhaseShiftingTransformer = Dict{Symbol, String}(
     Symbol("tap") => "Float64",
     Symbol("alpha") => "Float64",
     Symbol("rating") => "Float64",
+    Symbol("base_power") => "Float64",
     Symbol("rating_b") => "Float64",
     Symbol("rating_c") => "Float64",
     Symbol("phase_angle_limits") => "MinMax",
@@ -142,7 +119,7 @@ const _property_types_PhaseShiftingTransformer = Dict{Symbol, String}(
 OpenAPI.property_type(::Type{PhaseShiftingTransformer}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_PhaseShiftingTransformer[name]))}
 
-function check_required(o::PhaseShiftingTransformer)
+function OpenAPI.check_required(o::PhaseShiftingTransformer)
     o.id === nothing && (return false)
     o.name === nothing && (return false)
     o.available === nothing && (return false)
@@ -153,7 +130,43 @@ function check_required(o::PhaseShiftingTransformer)
     o.primary_shunt === nothing && (return false)
     o.tap === nothing && (return false)
     o.alpha === nothing && (return false)
+    o.base_power === nothing && (return false)
     true
+end
+
+function OpenAPI.validate_properties(o::PhaseShiftingTransformer)
+    OpenAPI.validate_property(PhaseShiftingTransformer, Symbol("id"), o.id)
+    OpenAPI.validate_property(PhaseShiftingTransformer, Symbol("name"), o.name)
+    OpenAPI.validate_property(PhaseShiftingTransformer, Symbol("available"), o.available)
+    OpenAPI.validate_property(
+        PhaseShiftingTransformer,
+        Symbol("active_power_flow"),
+        o.active_power_flow,
+    )
+    OpenAPI.validate_property(
+        PhaseShiftingTransformer,
+        Symbol("reactive_power_flow"),
+        o.reactive_power_flow,
+    )
+    OpenAPI.validate_property(PhaseShiftingTransformer, Symbol("arc"), o.arc)
+    OpenAPI.validate_property(PhaseShiftingTransformer, Symbol("r"), o.r)
+    OpenAPI.validate_property(PhaseShiftingTransformer, Symbol("x"), o.x)
+    OpenAPI.validate_property(
+        PhaseShiftingTransformer,
+        Symbol("primary_shunt"),
+        o.primary_shunt,
+    )
+    OpenAPI.validate_property(PhaseShiftingTransformer, Symbol("tap"), o.tap)
+    OpenAPI.validate_property(PhaseShiftingTransformer, Symbol("alpha"), o.alpha)
+    OpenAPI.validate_property(PhaseShiftingTransformer, Symbol("rating"), o.rating)
+    OpenAPI.validate_property(PhaseShiftingTransformer, Symbol("base_power"), o.base_power)
+    OpenAPI.validate_property(PhaseShiftingTransformer, Symbol("rating_b"), o.rating_b)
+    OpenAPI.validate_property(PhaseShiftingTransformer, Symbol("rating_c"), o.rating_c)
+    OpenAPI.validate_property(
+        PhaseShiftingTransformer,
+        Symbol("phase_angle_limits"),
+        o.phase_angle_limits,
+    )
 end
 
 function OpenAPI.validate_property(::Type{PhaseShiftingTransformer}, name::Symbol, val) end
