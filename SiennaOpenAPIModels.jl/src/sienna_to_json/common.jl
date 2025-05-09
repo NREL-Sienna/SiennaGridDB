@@ -36,6 +36,14 @@ function get_startup_shutdown(
     StartUpShutDown(startup=startup_shutdown.startup, shutdown=startup_shutdown.shutdown)
 end
 
+get_turbine_pump(::Nothing) = nothing
+
+function get_turbine_pump(
+    turbine_pump::NamedTuple{(:turbine, :pump), Tuple{Float64, Float64}},
+)
+    TurbinePump(turbine=turbine_pump.turbine, pump=turbine_pump.pump)
+end
+
 get_up_down(::Nothing) = nothing
 
 function get_up_down(up_down::NamedTuple{(:up, :down), Tuple{Float64, Float64}})
@@ -155,6 +163,10 @@ function get_variable_cost(variable::PSY.FuelCurve)
 end
 
 get_value_curve(::Nothing) = nothing
+
+function get_value_curve(curve::Float64)
+    curve
+end
 
 function get_value_curve(curve::T) where {T <: PSY.ValueCurve}
     error("Unsupported type $T")

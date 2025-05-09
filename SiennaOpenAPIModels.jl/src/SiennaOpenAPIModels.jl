@@ -45,11 +45,14 @@ include("modelincludes.jl")
 @batteries FromToToFrom
 @batteries FuelCurve
 @batteries FuelCurveFuelCost
+@batteries HeadVolumeFactor
 @batteries HydroDispatch
 @batteries HydroEnergyReservoir
 @batteries HydroGenerationCost
-@batteries HydroPumpedStorage
+@batteries HydroPumpTurbine
+@batteries HydroReservoir
 @batteries HydroStorageGenerationCost
+@batteries HydroTurbine
 @batteries IncrementalCurve
 @batteries IncrementalCurveFunctionData
 @batteries InOut
@@ -87,6 +90,7 @@ include("modelincludes.jl")
 @batteries TModelHVDCLine
 @batteries Transformer2W
 @batteries Transformer3W
+@batteries TurbinePump
 @batteries TwoTerminalLCCLine
 @batteries TwoTerminalGenericHVDCLine
 @batteries TwoTerminalGenericHVDCLineLoss

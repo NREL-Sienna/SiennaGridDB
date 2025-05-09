@@ -47,32 +47,7 @@ Base.@kwdef mutable struct FACTSControlDevice <: OpenAPI.APIModel
         voltage_setpoint,
         dynamic_injector,
     )
-        OpenAPI.validate_property(FACTSControlDevice, Symbol("name"), name)
-        OpenAPI.validate_property(FACTSControlDevice, Symbol("id"), id)
-        OpenAPI.validate_property(FACTSControlDevice, Symbol("available"), available)
-        OpenAPI.validate_property(FACTSControlDevice, Symbol("bus"), bus)
-        OpenAPI.validate_property(FACTSControlDevice, Symbol("control_mode"), control_mode)
-        OpenAPI.validate_property(
-            FACTSControlDevice,
-            Symbol("max_shunt_current"),
-            max_shunt_current,
-        )
-        OpenAPI.validate_property(
-            FACTSControlDevice,
-            Symbol("reactive_power_required"),
-            reactive_power_required,
-        )
-        OpenAPI.validate_property(
-            FACTSControlDevice,
-            Symbol("voltage_setpoint"),
-            voltage_setpoint,
-        )
-        OpenAPI.validate_property(
-            FACTSControlDevice,
-            Symbol("dynamic_injector"),
-            dynamic_injector,
-        )
-        return new(
+        o = new(
             name,
             id,
             available,
@@ -83,6 +58,8 @@ Base.@kwdef mutable struct FACTSControlDevice <: OpenAPI.APIModel
             voltage_setpoint,
             dynamic_injector,
         )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type FACTSControlDevice
 
@@ -100,7 +77,7 @@ const _property_types_FACTSControlDevice = Dict{Symbol, String}(
 OpenAPI.property_type(::Type{FACTSControlDevice}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_FACTSControlDevice[name]))}
 
-function check_required(o::FACTSControlDevice)
+function OpenAPI.check_required(o::FACTSControlDevice)
     o.name === nothing && (return false)
     o.id === nothing && (return false)
     o.available === nothing && (return false)
@@ -109,6 +86,34 @@ function check_required(o::FACTSControlDevice)
     o.reactive_power_required === nothing && (return false)
     o.voltage_setpoint === nothing && (return false)
     true
+end
+
+function OpenAPI.validate_properties(o::FACTSControlDevice)
+    OpenAPI.validate_property(FACTSControlDevice, Symbol("name"), o.name)
+    OpenAPI.validate_property(FACTSControlDevice, Symbol("id"), o.id)
+    OpenAPI.validate_property(FACTSControlDevice, Symbol("available"), o.available)
+    OpenAPI.validate_property(FACTSControlDevice, Symbol("bus"), o.bus)
+    OpenAPI.validate_property(FACTSControlDevice, Symbol("control_mode"), o.control_mode)
+    OpenAPI.validate_property(
+        FACTSControlDevice,
+        Symbol("max_shunt_current"),
+        o.max_shunt_current,
+    )
+    OpenAPI.validate_property(
+        FACTSControlDevice,
+        Symbol("reactive_power_required"),
+        o.reactive_power_required,
+    )
+    OpenAPI.validate_property(
+        FACTSControlDevice,
+        Symbol("voltage_setpoint"),
+        o.voltage_setpoint,
+    )
+    OpenAPI.validate_property(
+        FACTSControlDevice,
+        Symbol("dynamic_injector"),
+        o.dynamic_injector,
+    )
 end
 
 function OpenAPI.validate_property(::Type{FACTSControlDevice}, name::Symbol, val)

@@ -101,8 +101,8 @@ function psy2openapi(hydro_res::PSY.HydroEnergyReservoir, ids::IDGenerator)
     )
 end
 
-function psy2openapi(hydro::PSY.HydroPumpedStorage, ids::IDGenerator)
-    HydroPumpedStorage(
+function psy2openapi(hydro::PSY.HydroPumpTurbine, ids::IDGenerator)
+    HydroPumpTurbine(
         id=getid!(ids, hydro),
         name=hydro.name,
         available=hydro.available,
@@ -110,41 +110,78 @@ function psy2openapi(hydro::PSY.HydroPumpedStorage, ids::IDGenerator)
         active_power=hydro.active_power * PSY.get_base_power(hydro),
         reactive_power=hydro.reactive_power * PSY.get_base_power(hydro),
         rating=hydro.rating * PSY.get_base_power(hydro),
-        base_power=hydro.base_power,
-        prime_mover_type=string(hydro.prime_mover_type),
         active_power_limits=get_min_max(
             scale(hydro.active_power_limits, PSY.get_base_power(hydro)),
         ),
         reactive_power_limits=get_min_max(
             scale(hydro.reactive_power_limits, PSY.get_base_power(hydro)),
         ),
-        ramp_limits=get_up_down(scale(hydro.ramp_limits, PSY.get_base_power(hydro))),
-        time_limits=get_up_down(hydro.time_limits),
-        rating_pump=hydro.rating_pump * PSY.get_base_power(hydro),
         active_power_limits_pump=get_min_max(
             scale(hydro.active_power_limits_pump, PSY.get_base_power(hydro)),
         ),
-        reactive_power_limits_pump=get_min_max(
-            scale(hydro.reactive_power_limits_pump, PSY.get_base_power(hydro)),
-        ),
-        ramp_limits_pump=get_up_down(
-            scale(hydro.ramp_limits_pump, PSY.get_base_power(hydro)),
-        ),
-        time_limits_pump=get_up_down(hydro.time_limits_pump),
-        storage_capacity=get_up_down(
-            scale(hydro.storage_capacity, PSY.get_base_power(hydro)),
-        ),
-        inflow=hydro.inflow * PSY.get_base_power(hydro),
-        outflow=hydro.outflow,
-        initial_storage=get_up_down(
-            scale(hydro.initial_storage, PSY.get_base_power(hydro)),
-        ),
+        outflow_limits=get_min_max(hydro.outflow_limits),
+        head_reservoir=getid!(ids, hydro.head_reservoir),
+        tail_reservoir=getid!(ids, hydro.tail_reservoir),
+        powerhouse_elevation=hydro.powerhouse_elevation,
+        ramp_limits=get_up_down(scale(hydro.ramp_limits, PSY.get_base_power(hydro))),
+        time_limits=get_up_down(hydro.time_limits),
+        base_power=hydro.base_power,
         operation_cost=HydroStorageGenerationCost(get_operation_cost(hydro.operation_cost)),
-        storage_target=get_up_down(hydro.storage_target),
-        pump_efficiency=hydro.pump_efficiency,
+        active_power_pump=hydro.active_power_pump * PSY.get_base_power(hydro),
+        efficiency=get_turbine_pump(hydro.efficiency),
+        transition_time=get_turbine_pump(hydro.transition_time),
+        minimum_time=get_turbine_pump(hydro.minimum_time),
         conversion_factor=hydro.conversion_factor,
-        status=string(hydro.status),
-        time_at_status=hydro.time_at_status,
+        must_run=hydro.must_run,
+        prime_mover_type=string(hydro.prime_mover_type),
+        dynamic_injector=getid!(ids, hydro.dynamic_injector),
+    )
+end
+
+function psy2openapi(hydro::PSY.HydroReservoir, ids::IDGenerator)
+    HydroReservoir(
+        id=getid!(ids, hydro),
+        name=hydro.name,
+        available=hydro.available,
+        storage_level_limits=get_up_down(hydro.storage_level_limits),
+        initial_level=hydro.initial_level,
+        spillage_limits=get_up_down(hydro.spillage_limits),
+        inflow=hydro.inflow,
+        outflow=hydro.outflow,
+        level_targets=hydro.level_targets,
+        travel_time=hydro.travel_time,
+        intake_elevation=hydro.intake_elevation,
+        head_to_volume_factor=HeadVolumeFactor(
+            get_value_curve(hydro.head_to_volume_factor),
+        ),
+        level_data_type=string(hydro.level_data_type),
+    )
+end
+
+function psy2openapi(hydro::PSY.HydroTurbine, ids::IDGenerator)
+    HydroTurbine(
+        id=getid!(ids, hydro),
+        name=hydro.name,
+        available=hydro.available,
+        bus=getid!(ids, hydro.bus),
+        active_power=hydro.active_power * PSY.get_base_power(hydro),
+        reactive_power=hydro.reactive_power * PSY.get_base_power(hydro),
+        rating=hydro.rating * PSY.get_base_power(hydro),
+        active_power_limits=get_min_max(
+            scale(hydro.active_power_limits, PSY.get_base_power(hydro)),
+        ),
+        reactive_power_limits=get_min_max(
+            scale(hydro.reactive_power_limits, PSY.get_base_power(hydro)),
+        ),
+        outflow_limits=get_min_max(hydro.outflow_limits),
+        powerhouse_elevation=hydro.powerhouse_elevation,
+        ramp_limits=get_up_down(scale(hydro.ramp_limits, PSY.get_base_power(hydro))),
+        time_limits=get_up_down(hydro.time_limits),
+        base_power=hydro.base_power,
+        operation_cost=get_operation_cost(hydro.operation_cost),
+        efficiency=hydro.efficiency,
+        conversion_factor=hydro.conversion_factor,
+        reservoirs=getid!(ids, hydro.reservoirs), # this is a vector of reservoirs
         dynamic_injector=getid!(ids, hydro.dynamic_injector),
     )
 end
