@@ -16,6 +16,7 @@ Name | Type | Description | Notes
 **tap** | **Float64** |  | [default to nothing]
 **alpha** | **Float64** |  | [default to nothing]
 **rating** | **Float64** |  | [optional] [default to nothing]
+**base_power** | **Float64** |  | [default to nothing]
 **rating_b** | **Float64** |  | [optional] [default to nothing]
 **rating_c** | **Float64** |  | [optional] [default to nothing]
 **phase_angle_limits** | [***MinMax**](MinMax.md) |  | [optional] [default to nothing]
