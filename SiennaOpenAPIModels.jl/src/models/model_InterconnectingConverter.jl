@@ -63,48 +63,7 @@ Base.@kwdef mutable struct InterconnectingConverter <: OpenAPI.APIModel
         rating,
         dynamic_injector,
     )
-        OpenAPI.validate_property(InterconnectingConverter, Symbol("name"), name)
-        OpenAPI.validate_property(InterconnectingConverter, Symbol("id"), id)
-        OpenAPI.validate_property(InterconnectingConverter, Symbol("available"), available)
-        OpenAPI.validate_property(InterconnectingConverter, Symbol("bus"), bus)
-        OpenAPI.validate_property(InterconnectingConverter, Symbol("dc_bus"), dc_bus)
-        OpenAPI.validate_property(
-            InterconnectingConverter,
-            Symbol("active_power"),
-            active_power,
-        )
-        OpenAPI.validate_property(
-            InterconnectingConverter,
-            Symbol("active_power_limits"),
-            active_power_limits,
-        )
-        OpenAPI.validate_property(
-            InterconnectingConverter,
-            Symbol("base_power"),
-            base_power,
-        )
-        OpenAPI.validate_property(
-            InterconnectingConverter,
-            Symbol("dc_current"),
-            dc_current,
-        )
-        OpenAPI.validate_property(
-            InterconnectingConverter,
-            Symbol("max_dc_current"),
-            max_dc_current,
-        )
-        OpenAPI.validate_property(
-            InterconnectingConverter,
-            Symbol("loss_function"),
-            loss_function,
-        )
-        OpenAPI.validate_property(InterconnectingConverter, Symbol("rating"), rating)
-        OpenAPI.validate_property(
-            InterconnectingConverter,
-            Symbol("dynamic_injector"),
-            dynamic_injector,
-        )
-        return new(
+        o = new(
             name,
             id,
             available,
@@ -119,6 +78,8 @@ Base.@kwdef mutable struct InterconnectingConverter <: OpenAPI.APIModel
             rating,
             dynamic_injector,
         )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type InterconnectingConverter
 
@@ -140,7 +101,7 @@ const _property_types_InterconnectingConverter = Dict{Symbol, String}(
 OpenAPI.property_type(::Type{InterconnectingConverter}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_InterconnectingConverter[name]))}
 
-function check_required(o::InterconnectingConverter)
+function OpenAPI.check_required(o::InterconnectingConverter)
     o.name === nothing && (return false)
     o.id === nothing && (return false)
     o.available === nothing && (return false)
@@ -151,6 +112,42 @@ function check_required(o::InterconnectingConverter)
     o.base_power === nothing && (return false)
     o.rating === nothing && (return false)
     true
+end
+
+function OpenAPI.validate_properties(o::InterconnectingConverter)
+    OpenAPI.validate_property(InterconnectingConverter, Symbol("name"), o.name)
+    OpenAPI.validate_property(InterconnectingConverter, Symbol("id"), o.id)
+    OpenAPI.validate_property(InterconnectingConverter, Symbol("available"), o.available)
+    OpenAPI.validate_property(InterconnectingConverter, Symbol("bus"), o.bus)
+    OpenAPI.validate_property(InterconnectingConverter, Symbol("dc_bus"), o.dc_bus)
+    OpenAPI.validate_property(
+        InterconnectingConverter,
+        Symbol("active_power"),
+        o.active_power,
+    )
+    OpenAPI.validate_property(
+        InterconnectingConverter,
+        Symbol("active_power_limits"),
+        o.active_power_limits,
+    )
+    OpenAPI.validate_property(InterconnectingConverter, Symbol("base_power"), o.base_power)
+    OpenAPI.validate_property(InterconnectingConverter, Symbol("dc_current"), o.dc_current)
+    OpenAPI.validate_property(
+        InterconnectingConverter,
+        Symbol("max_dc_current"),
+        o.max_dc_current,
+    )
+    OpenAPI.validate_property(
+        InterconnectingConverter,
+        Symbol("loss_function"),
+        o.loss_function,
+    )
+    OpenAPI.validate_property(InterconnectingConverter, Symbol("rating"), o.rating)
+    OpenAPI.validate_property(
+        InterconnectingConverter,
+        Symbol("dynamic_injector"),
+        o.dynamic_injector,
+    )
 end
 
 function OpenAPI.validate_property(::Type{InterconnectingConverter}, name::Symbol, val) end

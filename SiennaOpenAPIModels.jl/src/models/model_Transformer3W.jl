@@ -159,108 +159,7 @@ Base.@kwdef mutable struct Transformer3W <: OpenAPI.APIModel
         rating_secondary,
         rating_tertiary,
     )
-        OpenAPI.validate_property(Transformer3W, Symbol("id"), id)
-        OpenAPI.validate_property(Transformer3W, Symbol("name"), name)
-        OpenAPI.validate_property(Transformer3W, Symbol("available"), available)
-        OpenAPI.validate_property(
-            Transformer3W,
-            Symbol("primary_secondary_arc"),
-            primary_secondary_arc,
-        )
-        OpenAPI.validate_property(
-            Transformer3W,
-            Symbol("secondary_tertiary_arc"),
-            secondary_tertiary_arc,
-        )
-        OpenAPI.validate_property(
-            Transformer3W,
-            Symbol("primary_tertiary_arc"),
-            primary_tertiary_arc,
-        )
-        OpenAPI.validate_property(Transformer3W, Symbol("star_bus"), star_bus)
-        OpenAPI.validate_property(
-            Transformer3W,
-            Symbol("active_power_flow_primary"),
-            active_power_flow_primary,
-        )
-        OpenAPI.validate_property(
-            Transformer3W,
-            Symbol("reactive_power_flow_primary"),
-            reactive_power_flow_primary,
-        )
-        OpenAPI.validate_property(
-            Transformer3W,
-            Symbol("active_power_flow_secondary"),
-            active_power_flow_secondary,
-        )
-        OpenAPI.validate_property(
-            Transformer3W,
-            Symbol("reactive_power_flow_secondary"),
-            reactive_power_flow_secondary,
-        )
-        OpenAPI.validate_property(
-            Transformer3W,
-            Symbol("active_power_flow_tertiary"),
-            active_power_flow_tertiary,
-        )
-        OpenAPI.validate_property(
-            Transformer3W,
-            Symbol("reactive_power_flow_tertiary"),
-            reactive_power_flow_tertiary,
-        )
-        OpenAPI.validate_property(Transformer3W, Symbol("r_primary"), r_primary)
-        OpenAPI.validate_property(Transformer3W, Symbol("x_primary"), x_primary)
-        OpenAPI.validate_property(Transformer3W, Symbol("r_secondary"), r_secondary)
-        OpenAPI.validate_property(Transformer3W, Symbol("x_secondary"), x_secondary)
-        OpenAPI.validate_property(Transformer3W, Symbol("r_tertiary"), r_tertiary)
-        OpenAPI.validate_property(Transformer3W, Symbol("x_tertiary"), x_tertiary)
-        OpenAPI.validate_property(Transformer3W, Symbol("rating"), rating)
-        OpenAPI.validate_property(Transformer3W, Symbol("r_12"), r_12)
-        OpenAPI.validate_property(Transformer3W, Symbol("x_12"), x_12)
-        OpenAPI.validate_property(Transformer3W, Symbol("r_23"), r_23)
-        OpenAPI.validate_property(Transformer3W, Symbol("x_23"), x_23)
-        OpenAPI.validate_property(Transformer3W, Symbol("r_13"), r_13)
-        OpenAPI.validate_property(Transformer3W, Symbol("x_13"), x_13)
-        OpenAPI.validate_property(Transformer3W, Symbol("g"), g)
-        OpenAPI.validate_property(Transformer3W, Symbol("b"), b)
-        OpenAPI.validate_property(
-            Transformer3W,
-            Symbol("primary_turns_ratio"),
-            primary_turns_ratio,
-        )
-        OpenAPI.validate_property(
-            Transformer3W,
-            Symbol("secondary_turns_ratio"),
-            secondary_turns_ratio,
-        )
-        OpenAPI.validate_property(
-            Transformer3W,
-            Symbol("tertiary_turns_ratio"),
-            tertiary_turns_ratio,
-        )
-        OpenAPI.validate_property(
-            Transformer3W,
-            Symbol("available_primary"),
-            available_primary,
-        )
-        OpenAPI.validate_property(
-            Transformer3W,
-            Symbol("available_secondary"),
-            available_secondary,
-        )
-        OpenAPI.validate_property(
-            Transformer3W,
-            Symbol("available_tertiary"),
-            available_tertiary,
-        )
-        OpenAPI.validate_property(Transformer3W, Symbol("rating_primary"), rating_primary)
-        OpenAPI.validate_property(
-            Transformer3W,
-            Symbol("rating_secondary"),
-            rating_secondary,
-        )
-        OpenAPI.validate_property(Transformer3W, Symbol("rating_tertiary"), rating_tertiary)
-        return new(
+        o = new(
             id,
             name,
             available,
@@ -299,6 +198,8 @@ Base.@kwdef mutable struct Transformer3W <: OpenAPI.APIModel
             rating_secondary,
             rating_tertiary,
         )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type Transformer3W
 
@@ -344,7 +245,7 @@ const _property_types_Transformer3W = Dict{Symbol, String}(
 OpenAPI.property_type(::Type{Transformer3W}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_Transformer3W[name]))}
 
-function check_required(o::Transformer3W)
+function OpenAPI.check_required(o::Transformer3W)
     o.id === nothing && (return false)
     o.name === nothing && (return false)
     o.available === nothing && (return false)
@@ -371,6 +272,106 @@ function check_required(o::Transformer3W)
     o.r_13 === nothing && (return false)
     o.x_13 === nothing && (return false)
     true
+end
+
+function OpenAPI.validate_properties(o::Transformer3W)
+    OpenAPI.validate_property(Transformer3W, Symbol("id"), o.id)
+    OpenAPI.validate_property(Transformer3W, Symbol("name"), o.name)
+    OpenAPI.validate_property(Transformer3W, Symbol("available"), o.available)
+    OpenAPI.validate_property(
+        Transformer3W,
+        Symbol("primary_secondary_arc"),
+        o.primary_secondary_arc,
+    )
+    OpenAPI.validate_property(
+        Transformer3W,
+        Symbol("secondary_tertiary_arc"),
+        o.secondary_tertiary_arc,
+    )
+    OpenAPI.validate_property(
+        Transformer3W,
+        Symbol("primary_tertiary_arc"),
+        o.primary_tertiary_arc,
+    )
+    OpenAPI.validate_property(Transformer3W, Symbol("star_bus"), o.star_bus)
+    OpenAPI.validate_property(
+        Transformer3W,
+        Symbol("active_power_flow_primary"),
+        o.active_power_flow_primary,
+    )
+    OpenAPI.validate_property(
+        Transformer3W,
+        Symbol("reactive_power_flow_primary"),
+        o.reactive_power_flow_primary,
+    )
+    OpenAPI.validate_property(
+        Transformer3W,
+        Symbol("active_power_flow_secondary"),
+        o.active_power_flow_secondary,
+    )
+    OpenAPI.validate_property(
+        Transformer3W,
+        Symbol("reactive_power_flow_secondary"),
+        o.reactive_power_flow_secondary,
+    )
+    OpenAPI.validate_property(
+        Transformer3W,
+        Symbol("active_power_flow_tertiary"),
+        o.active_power_flow_tertiary,
+    )
+    OpenAPI.validate_property(
+        Transformer3W,
+        Symbol("reactive_power_flow_tertiary"),
+        o.reactive_power_flow_tertiary,
+    )
+    OpenAPI.validate_property(Transformer3W, Symbol("r_primary"), o.r_primary)
+    OpenAPI.validate_property(Transformer3W, Symbol("x_primary"), o.x_primary)
+    OpenAPI.validate_property(Transformer3W, Symbol("r_secondary"), o.r_secondary)
+    OpenAPI.validate_property(Transformer3W, Symbol("x_secondary"), o.x_secondary)
+    OpenAPI.validate_property(Transformer3W, Symbol("r_tertiary"), o.r_tertiary)
+    OpenAPI.validate_property(Transformer3W, Symbol("x_tertiary"), o.x_tertiary)
+    OpenAPI.validate_property(Transformer3W, Symbol("rating"), o.rating)
+    OpenAPI.validate_property(Transformer3W, Symbol("r_12"), o.r_12)
+    OpenAPI.validate_property(Transformer3W, Symbol("x_12"), o.x_12)
+    OpenAPI.validate_property(Transformer3W, Symbol("r_23"), o.r_23)
+    OpenAPI.validate_property(Transformer3W, Symbol("x_23"), o.x_23)
+    OpenAPI.validate_property(Transformer3W, Symbol("r_13"), o.r_13)
+    OpenAPI.validate_property(Transformer3W, Symbol("x_13"), o.x_13)
+    OpenAPI.validate_property(Transformer3W, Symbol("g"), o.g)
+    OpenAPI.validate_property(Transformer3W, Symbol("b"), o.b)
+    OpenAPI.validate_property(
+        Transformer3W,
+        Symbol("primary_turns_ratio"),
+        o.primary_turns_ratio,
+    )
+    OpenAPI.validate_property(
+        Transformer3W,
+        Symbol("secondary_turns_ratio"),
+        o.secondary_turns_ratio,
+    )
+    OpenAPI.validate_property(
+        Transformer3W,
+        Symbol("tertiary_turns_ratio"),
+        o.tertiary_turns_ratio,
+    )
+    OpenAPI.validate_property(
+        Transformer3W,
+        Symbol("available_primary"),
+        o.available_primary,
+    )
+    OpenAPI.validate_property(
+        Transformer3W,
+        Symbol("available_secondary"),
+        o.available_secondary,
+    )
+    OpenAPI.validate_property(
+        Transformer3W,
+        Symbol("available_tertiary"),
+        o.available_tertiary,
+    )
+    OpenAPI.validate_property(Transformer3W, Symbol("rating_primary"), o.rating_primary)
+    OpenAPI.validate_property(Transformer3W, Symbol("rating_secondary"), o.rating_secondary)
+    OpenAPI.validate_property(Transformer3W, Symbol("rating_tertiary"), o.rating_tertiary)
 end
 
 function OpenAPI.validate_property(::Type{Transformer3W}, name::Symbol, val) end
