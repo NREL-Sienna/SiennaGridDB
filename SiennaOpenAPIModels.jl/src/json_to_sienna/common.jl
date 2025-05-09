@@ -11,6 +11,10 @@ function get_fuel_type_enum(fuel_type::String)
     IS.deserialize(PSY.ThermalFuels, fuel_type)
 end
 
+function get_load_conform_enum(conformity::String)
+    IS.deserialize(PSY.LoadConformity, conformity)
+end
+
 function get_prime_mover_enum(prime_mover_type::String)
     IS.deserialize(PSY.PrimeMovers, prime_mover_type)
 end

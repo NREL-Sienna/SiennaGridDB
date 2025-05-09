@@ -60,6 +60,7 @@ include("modelincludes.jl")
 @batteries Line
 @batteries LinearFunctionData
 @batteries LoadCost
+@batteries LoadConformity
 @batteries LoadZone
 @batteries MinMax
 @batteries MonitoredLine

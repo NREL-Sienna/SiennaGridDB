@@ -47,28 +47,7 @@ Base.@kwdef mutable struct SwitchedAdmittance <: OpenAPI.APIModel
         admittance_limits,
         dynamic_injector,
     )
-        OpenAPI.validate_property(SwitchedAdmittance, Symbol("id"), id)
-        OpenAPI.validate_property(SwitchedAdmittance, Symbol("name"), name)
-        OpenAPI.validate_property(SwitchedAdmittance, Symbol("available"), available)
-        OpenAPI.validate_property(SwitchedAdmittance, Symbol("bus"), bus)
-        OpenAPI.validate_property(SwitchedAdmittance, Symbol("Y"), Y)
-        OpenAPI.validate_property(
-            SwitchedAdmittance,
-            Symbol("number_of_steps"),
-            number_of_steps,
-        )
-        OpenAPI.validate_property(SwitchedAdmittance, Symbol("Y_increase"), Y_increase)
-        OpenAPI.validate_property(
-            SwitchedAdmittance,
-            Symbol("admittance_limits"),
-            admittance_limits,
-        )
-        OpenAPI.validate_property(
-            SwitchedAdmittance,
-            Symbol("dynamic_injector"),
-            dynamic_injector,
-        )
-        return new(
+        o = new(
             id,
             name,
             available,
@@ -79,6 +58,8 @@ Base.@kwdef mutable struct SwitchedAdmittance <: OpenAPI.APIModel
             admittance_limits,
             dynamic_injector,
         )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type SwitchedAdmittance
 
@@ -96,13 +77,37 @@ const _property_types_SwitchedAdmittance = Dict{Symbol, String}(
 OpenAPI.property_type(::Type{SwitchedAdmittance}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_SwitchedAdmittance[name]))}
 
-function check_required(o::SwitchedAdmittance)
+function OpenAPI.check_required(o::SwitchedAdmittance)
     o.id === nothing && (return false)
     o.name === nothing && (return false)
     o.available === nothing && (return false)
     o.bus === nothing && (return false)
     o.Y === nothing && (return false)
     true
+end
+
+function OpenAPI.validate_properties(o::SwitchedAdmittance)
+    OpenAPI.validate_property(SwitchedAdmittance, Symbol("id"), o.id)
+    OpenAPI.validate_property(SwitchedAdmittance, Symbol("name"), o.name)
+    OpenAPI.validate_property(SwitchedAdmittance, Symbol("available"), o.available)
+    OpenAPI.validate_property(SwitchedAdmittance, Symbol("bus"), o.bus)
+    OpenAPI.validate_property(SwitchedAdmittance, Symbol("Y"), o.Y)
+    OpenAPI.validate_property(
+        SwitchedAdmittance,
+        Symbol("number_of_steps"),
+        o.number_of_steps,
+    )
+    OpenAPI.validate_property(SwitchedAdmittance, Symbol("Y_increase"), o.Y_increase)
+    OpenAPI.validate_property(
+        SwitchedAdmittance,
+        Symbol("admittance_limits"),
+        o.admittance_limits,
+    )
+    OpenAPI.validate_property(
+        SwitchedAdmittance,
+        Symbol("dynamic_injector"),
+        o.dynamic_injector,
+    )
 end
 
 function OpenAPI.validate_property(::Type{SwitchedAdmittance}, name::Symbol, val) end

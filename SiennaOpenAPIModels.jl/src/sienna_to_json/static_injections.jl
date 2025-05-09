@@ -31,6 +31,24 @@ function psy2openapi(energy_res::PSY.EnergyReservoirStorage, ids::IDGenerator)
     )
 end
 
+function psy2openapi(load::PSY.ExponentialLoad, ids::IDGenerator)
+    ExponentialLoad(
+        id=getid!(ids, load),
+        name=load.name,
+        available=load.available,
+        bus=getid!(ids, load.bus),
+        active_power=load.active_power * PSY.get_base_power(load),
+        reactive_power=load.reactive_power * PSY.get_base_power(load),
+        alpha=load.α,
+        beta=load.β,
+        conformity=string(load.conformity),
+        base_power=load.base_power,
+        max_active_power=load.max_active_power * PSY.get_base_power(load),
+        max_reactive_power=load.max_reactive_power * PSY.get_base_power(load),
+        dynamic_injector=getid!(ids, load.dynamic_injector),
+    )
+end
+
 function psy2openapi(fixedadmit::PSY.FixedAdmittance, ids::IDGenerator)
     FixedAdmittance(
         id=getid!(ids, fixedadmit),
@@ -196,6 +214,7 @@ function psy2openapi(power_load::PSY.PowerLoad, ids::IDGenerator)
         base_power=power_load.base_power,
         max_active_power=power_load.max_active_power * PSY.get_base_power(power_load),
         max_reactive_power=power_load.max_reactive_power * PSY.get_base_power(power_load),
+        conformity=string(power_load.conformity),
         dynamic_injector=getid!(ids, power_load.dynamic_injector),
     )
 end
@@ -267,6 +286,7 @@ function psy2openapi(standard_load::PSY.StandardLoad, ids::IDGenerator)
                                  PSY.get_base_power(standard_load),
         max_current_reactive_power=standard_load.max_current_reactive_power *
                                    PSY.get_base_power(standard_load),
+        conformity=string(standard_load.conformity),
         base_power=standard_load.base_power,
         dynamic_injector=getid!(ids, standard_load.dynamic_injector),
     )
