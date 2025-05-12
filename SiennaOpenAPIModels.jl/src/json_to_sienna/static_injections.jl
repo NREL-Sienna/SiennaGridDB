@@ -1,3 +1,15 @@
+function openapi2psy(facts::FACTSControlDevice, resolver::Resolver)
+    PSY.FACTSControlDevice(
+        name=facts.name,
+        available=facts.available,
+        bus=resolver(facts.bus),
+        control_mode=get_factsmode_enum(facts.control_mode),
+        voltage_setpoint=facts.voltage_setpoint,
+        max_shunt_current=facts.max_shunt_current,
+        reactive_power_required=facts.reactive_power_required,
+    )
+end
+
 function openapi2psy(energy_res::EnergyReservoirStorage, resolver::Resolver)
     if energy_res.base_power == 0.0
         error("base power is 0.0")

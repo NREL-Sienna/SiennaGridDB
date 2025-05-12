@@ -7,6 +7,10 @@ function get_bustype_enum(bustype::String)
     IS.deserialize(PSY.ACBusTypes, bustype)
 end
 
+function get_factsmode_enum(factsmode::String)
+    IS.deserialize(PSY.FACTSOperationModes, factsmode)
+end
+
 function get_fuel_type_enum(fuel_type::String)
     IS.deserialize(PSY.ThermalFuels, fuel_type)
 end

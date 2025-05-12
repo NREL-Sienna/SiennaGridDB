@@ -1,3 +1,17 @@
+function psy2openapi(facts::PSY.FACTSControlDevice, ids::IDGenerator)
+    FACTSControlDevice(
+        id=getid!(ids, facts),
+        name=facts.name,
+        available=facts.available,
+        bus=getid!(ids, facts.bus),
+        control_mode=string(facts.control_mode),
+        voltage_setpoint=facts.voltage_setpoint,
+        max_shunt_current=facts.max_shunt_current,
+        reactive_power_required=facts.reactive_power_required,
+        dynamic_injector=getid!(ids, facts.dynamic_injector),
+    )
+end
+
 function psy2openapi(energy_res::PSY.EnergyReservoirStorage, ids::IDGenerator)
     EnergyReservoirStorage(
         id=getid!(ids, energy_res),
