@@ -28,6 +28,27 @@ using JSON
         arc_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
         @test IS.compare_values(arc, arc_copy, exclude=Set([:internal]))
     end
+    @testset "ExponentialLoad to JSON and Back" begin
+        exp_load = PSY.ExponentialLoad(
+            name="exp_load",
+            available=true,
+            bus=PSY.get_bus(c_sys5, "nodeE"),
+            active_power=4.0,
+            reactive_power=1.3147,
+            α=0.0,
+            β=0.0,
+            base_power=100.0,
+            max_active_power=3.801843804166639,
+            max_reactive_power=1.3147,
+        )
+        PSY.add_component!(c_sys5, exp_load)
+        @test isa(exp_load, PSY.ExponentialLoad)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(exp_load, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, c_sys5)
+        exp_load_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(exp_load, exp_load_copy, exclude=Set([:internal]))
+    end
     @testset "Line to JSON and Back" begin
         line = PSY.get_component(PSY.Line, c_sys5, "4")
         @test isa(line, PSY.Line)
@@ -55,6 +76,23 @@ using JSON
         renew_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
         @test IS.compare_values(renew, renew_copy, exclude=Set([:internal]))
     end
+    @testset "SwitchedAdmittance to JSON and Back" begin
+        switch = PSY.SwitchedAdmittance(
+            name="switch",
+            available=true,
+            bus=PSY.get_bus(c_sys5, 3),
+            Y=0.0 - 1.0im,
+            number_of_steps=1,
+            Y_increase=0.0 - 0.1im,
+        )
+        PSY.add_component!(c_sys5, switch)
+        @test isa(switch, PSY.SwitchedAdmittance)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(switch, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, c_sys5)
+        switch_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(switch, switch_copy, exclude=Set([:internal]))
+    end
     @testset "ThermalStandard to JSON and Back" begin
         thermal = PSY.get_component(PSY.ThermalStandard, c_sys5, "Solitude")
         @test isa(thermal, PSY.ThermalStandard)
@@ -63,6 +101,27 @@ using JSON
         resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, c_sys5)
         thermal_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
         @test IS.compare_values(thermal, thermal_copy, exclude=Set([:internal]))
+    end
+    @testset "TwoTerminalVSCDCLine to JSON and Back" begin
+        vscdc = PSY.TwoTerminalVSCDCLine(
+            name="vscdc",
+            available=true,
+            active_power_flow=0.0,
+            arc=PSY.get_component(PSY.Arc, c_sys5, "nodeB -> nodeC"),
+            rectifier_tap_limits=(min=-2.0, max=2.0),
+            rectifier_xrc=0.02,
+            rectifier_firing_angle=(min=-0.7, max=0.7),
+            inverter_tap_limits=(min=-2.0, max=2.0),
+            inverter_xrc=0.02,
+            inverter_extinction_angle=(min=-0.7, max=0.7),
+        )
+        PSY.add_component!(c_sys5, vscdc)
+        @test isa(vscdc, PSY.TwoTerminalVSCDCLine)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(vscdc, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, c_sys5)
+        vscdc_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(vscdc, vscdc_copy, exclude=Set([:internal]))
     end
 end
 
@@ -80,6 +139,21 @@ end
         )
         PSY.add_component!(RTS_GMLC_RT_sys, reserve)
         @test isa(reserve, PSY.ConstantReserve{PSY.ReserveUp})
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(reserve, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, RTS_GMLC_RT_sys)
+        reserve_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(reserve, reserve_copy, exclude=Set([:internal]))
+    end
+    @testset "ConstantReserveNonSpinning to JSON" begin
+        reserve = PSY.ConstantReserveNonSpinning(
+            name="reserve_non_spinning",
+            available=true,
+            time_frame=300.0,
+            requirement=0.77,
+        )
+        PSY.add_component!(RTS_GMLC_RT_sys, reserve)
+        @test isa(reserve, PSY.ConstantReserveNonSpinning)
         id_gen = IDGenerator()
         test_convert = SiennaOpenAPIModels.psy2openapi(reserve, id_gen)
         resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, RTS_GMLC_RT_sys)
@@ -132,6 +206,21 @@ end
         resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, RTS_GMLC_RT_sys)
         reg_down_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
         @test IS.compare_values(reg_down, reg_down_copy, exclude=Set([:internal]))
+    end
+    @testset "VariableReserveNonSpinning to JSON and Back" begin
+        reserve = PSY.VariableReserveNonSpinning(
+            name="variable_non_spinning",
+            available=true,
+            time_frame=300.0,
+            requirement=0.77,
+        )
+        PSY.add_component!(RTS_GMLC_RT_sys, reserve)
+        @test isa(reserve, PSY.VariableReserveNonSpinning)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(reserve, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, RTS_GMLC_RT_sys)
+        reserve_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(reserve, reserve_copy, exclude=Set([:internal]))
     end
 end
 
@@ -193,6 +282,15 @@ end
         resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, sys)
         load_zone_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
         @test IS.compare_values(load_zone, load_zone_copy, exclude=Set([:internal]))
+    end
+    @testset "Source to JSON and Back" begin
+        source = PSY.get_component(PSY.Source, sys, "generator-102-1")
+        @test isa(source, PSY.Source)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(source, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, sys)
+        source_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(source, source_copy, exclude=Set([:internal]))
     end
 end
 
@@ -309,6 +407,25 @@ end
         PowerSystemCaseBuilder.PSISystems,
         "5_bus_matpower_RT",
     )
+    @testset "AGC to JSON and Back" begin
+        agc = PSY.AGC(
+            name="agc",
+            available=true,
+            bias=1.6,
+            K_p=3.0,
+            K_i=1.0,
+            K_d=4.0,
+            delta_t=0.1,
+        )
+        PSY.add_component!(sys_5bus_matpower_RT, agc)
+        @test isa(agc, PSY.AGC)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(agc, id_gen)
+        resolver =
+            SiennaOpenAPIModels.resolver_from_id_generator(id_gen, sys_5bus_matpower_RT)
+        agc_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(agc, agc_copy, exclude=Set([:internal]))
+    end
     @testset "PhaseShiftingTransformer to JSON and Back" begin
         phase = PSY.get_component(
             PSY.PhaseShiftingTransformer,

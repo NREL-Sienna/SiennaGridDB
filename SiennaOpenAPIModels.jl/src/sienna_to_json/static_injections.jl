@@ -31,6 +31,23 @@ function psy2openapi(energy_res::PSY.EnergyReservoirStorage, ids::IDGenerator)
     )
 end
 
+function psy2openapi(load::PSY.ExponentialLoad, ids::IDGenerator)
+    ExponentialLoad(
+        id=getid!(ids, load),
+        name=load.name,
+        available=load.available,
+        bus=getid!(ids, load.bus),
+        active_power=load.active_power * PSY.get_base_power(load),
+        reactive_power=load.reactive_power * PSY.get_base_power(load),
+        alpha=load.α,
+        beta=load.β,
+        base_power=load.base_power,
+        max_active_power=load.max_active_power * PSY.get_base_power(load),
+        max_reactive_power=load.max_reactive_power * PSY.get_base_power(load),
+        dynamic_injector=getid!(ids, load.dynamic_injector),
+    )
+end
+
 function psy2openapi(fixedadmit::PSY.FixedAdmittance, ids::IDGenerator)
     FixedAdmittance(
         id=getid!(ids, fixedadmit),
@@ -237,6 +254,23 @@ function psy2openapi(renewnondispatch::PSY.RenewableNonDispatch, ids::IDGenerato
     )
 end
 
+function psy2openapi(source::PSY.Source, ids::IDGenerator)
+    Source(
+        id=getid!(ids, source),
+        name=source.name,
+        available=source.available,
+        bus=getid!(ids, source.bus),
+        active_power=source.active_power * PSY.get_base_power(source),
+        reactive_power=source.reactive_power * PSY.get_base_power(source),
+        R_th=source.R_th,
+        X_th=source.X_th,
+        internal_voltage=source.internal_voltage,
+        internal_angle=source.internal_angle,
+        base_power=source.base_power,
+        dynamic_injector=getid!(ids, source.dynamic_injector),
+    )
+end
+
 function psy2openapi(standard_load::PSY.StandardLoad, ids::IDGenerator)
     StandardLoad(
         id=getid!(ids, standard_load),
@@ -269,6 +303,19 @@ function psy2openapi(standard_load::PSY.StandardLoad, ids::IDGenerator)
                                    PSY.get_base_power(standard_load),
         base_power=standard_load.base_power,
         dynamic_injector=getid!(ids, standard_load.dynamic_injector),
+    )
+end
+
+function psy2openapi(switch::PSY.SwitchedAdmittance, ids::IDGenerator)
+    SwitchedAdmittance(
+        id=getid!(ids, switch),
+        name=switch.name,
+        available=switch.available,
+        bus=getid!(ids, switch.bus),
+        Y=get_complex_number(switch.Y),
+        number_of_steps=switch.number_of_steps,
+        Y_increase=get_complex_number(switch.Y_increase),
+        dynamic_injector=getid!(ids, switch.dynamic_injector),
     )
 end
 
