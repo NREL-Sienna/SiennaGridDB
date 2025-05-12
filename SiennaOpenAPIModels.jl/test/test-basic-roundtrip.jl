@@ -345,6 +345,17 @@ end
         @test test_convert.peak_active_power == 100.0 * 2.20
         @test test_convert.peak_reactive_power == 100.0 * 0.40
     end
+    @testset "Source to JSON" begin
+        source = PSY.get_component(PSY.Source, sys, "generator-102-1")
+        @test isa(source, PSY.Source)
+        test_convert = SiennaOpenAPIModels.psy2openapi(source, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.Source, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.name == "generator-102-1"
+        @test test_convert.active_power == 100.0
+        @test test_convert.X_th == 0.7
+        @test test_convert.internal_angle == 0.0
+    end
 end
 
 @testset "c_sys5_all RoundTrip to JSON" begin
