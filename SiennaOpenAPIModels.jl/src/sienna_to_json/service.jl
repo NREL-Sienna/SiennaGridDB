@@ -28,6 +28,16 @@ function psy2openapi(reserve::PSY.ConstantReserve{T}, ids::IDGenerator) where {T
     )
 end
 
+function psy2openapi(reserve::PSY.ConstantReserveGroup{T}, ids::IDGenerator) where {T}
+    ConstantReserveGroup(
+        id=getid!(ids, reserve),
+        name=reserve.name,
+        available=reserve.available,
+        requirement=reserve.requirement * PSY.get_base_power(reserve),
+        reserve_direction=get_reserve_direction(T),
+    )
+end
+
 function psy2openapi(reserve::PSY.ConstantReserveNonSpinning, ids::IDGenerator)
     ConstantReserveNonSpinning(
         id=getid!(ids, reserve),

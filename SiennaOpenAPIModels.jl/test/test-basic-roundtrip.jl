@@ -230,6 +230,20 @@ end
         @test test_convert.max_output_fraction == 1.0
         @test test_convert.reserve_direction == "UP"
     end
+    @testset "ConstantReserveGroup SYMMETRIC to JSON" begin
+        reserve = PSY.ConstantReserveGroup{PSY.ReserveSymmetric}(
+            name="constant_reserve_group",
+            available=true,
+            requirement=0.77,
+        )
+        PSY.add_component!(RTS_GMLC_RT_sys, reserve)
+        @test reserve isa PSY.ConstantReserveGroup{PSY.ReserveSymmetric}
+        test_convert = SiennaOpenAPIModels.psy2openapi(reserve, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.ConstantReserveGroup, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.requirement == 77.0
+        @test test_convert.reserve_direction == "SYMMETRIC"
+    end
     @testset "ConstantReserveNonSpinning to JSON" begin
         reserve = PSY.ConstantReserveNonSpinning(
             name="reserve_non_spinning",
