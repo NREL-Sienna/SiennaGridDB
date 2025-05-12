@@ -68,6 +68,16 @@ function get_operation_cost(cost::PSY.HydroGenerationCost)
     )
 end
 
+function get_operation_cost(cost::PSY.ImportExportCost)
+    ImportExportCost(
+        cost_type="IMPORTEXPORT",
+        import_offer_curves=get_variable_cost(cost.import_offer_curves),
+        export_offer_curves=get_variable_cost(cost.export_offer_curves),
+        energy_import_weekly_limit=cost.energy_import_weekly_limit,
+        energy_export_weekly_limit=cost.energy_export_weekly_limit,
+    )
+end
+
 function get_operation_cost(cost::PSY.LoadCost)
     LoadCost(
         cost_type="LOAD",
@@ -81,6 +91,7 @@ function get_operation_cost(cost::PSY.RenewableGenerationCost)
         cost_type="RENEWABLE",
         curtailment_cost=get_variable_cost(cost.curtailment_cost),
         variable=get_variable_cost(cost.variable),
+        fixed=cost.fixed,
     )
 end
 
