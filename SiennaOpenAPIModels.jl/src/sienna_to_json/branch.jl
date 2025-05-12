@@ -13,6 +13,22 @@ function psy2openapi(area_interchange::PSY.AreaInterchange, ids::IDGenerator)
     )
 end
 
+function psy2openapi(branch::PSY.DiscreteControlledACBranch, ids::IDGenerator)
+    DiscreteControlledACBranch(
+        id=getid!(ids, branch),
+        name=branch.name,
+        available=branch.available,
+        active_power_flow=branch.active_power_flow * PSY.get_base_power(branch),
+        reactive_power_flow=branch.reactive_power_flow * PSY.get_base_power(branch),
+        arc=getid!(ids, branch.arc),
+        r=branch.r,
+        x=branch.x,
+        rating=branch.rating * PSY.get_base_power(branch),
+        discrete_branch_type=string(branch.discrete_branch_type),
+        branch_status=string(branch.branch_status),
+    )
+end
+
 function psy2openapi(line::PSY.Line, ids::IDGenerator)
     Line(
         id=getid!(ids, line),
@@ -86,7 +102,7 @@ function psy2openapi(transformer::PSY.TapTransformer, ids::IDGenerator)
     )
 end
 
-function psy2openapi(tmodel::PSY.TModelHVDCLine, ids::IDGenerator)
+function psy2openapi(tmodel::PSY.TModelHVDCLine, idbranchDGenerator)
     TModelHVDCLine(
         id=getid!(ids, tmodel),
         name=tmodel.name,

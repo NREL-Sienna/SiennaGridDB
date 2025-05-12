@@ -16,6 +16,24 @@ function openapi2psy(area_interchange::AreaInterchange, resolver::Resolver)
     )
 end
 
+function openapi2psy(branch::DiscreteControlledACBranch, resolver::Resolver)
+    if PSY.get_base_power(resolver.sys) == 0.0
+        error("base power is 0.0")
+    end
+    PSY.DiscreteControlledACBranch(
+        name=branch.name,
+        available=branch.available,
+        active_power_flow=branch.active_power_flow / PSY.get_base_power(resolver.sys),
+        reactive_power_flow=branch.reactive_power_flow / PSY.get_base_power(resolver.sys),
+        arc=resolver(branch.arc),
+        r=branch.r,
+        x=branch.x,
+        rating=branch.rating / PSY.get_base_power(resolver.sys),
+        discrete_branch_type=get_branchtype_enum(branch.discrete_branch_type),
+        branch_status=get_branchstatus_enum(branch.branch_status),
+    )
+end
+
 function openapi2psy(line::Line, resolver::Resolver)
     if PSY.get_base_power(resolver.sys) == 0.0
         error("base power is 0.0")
