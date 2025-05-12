@@ -35,6 +35,24 @@ function openapi2psy(energy_res::EnergyReservoirStorage, resolver::Resolver)
     )
 end
 
+function openapi2psy(load::ExponentialLoad, resolver::Resolver)
+    if load.base_power == 0.0
+        error("base power is 0.0")
+    end
+    PSY.ExponentialLoad(
+        name=load.name,
+        available=load.available,
+        bus=resolver(load.bus),
+        active_power=load.active_power / load.base_power,
+        reactive_power=load.reactive_power / load.base_power,
+        α=load.alpha,
+        β=load.beta,
+        base_power=load.base_power,
+        max_active_power=load.max_active_power / load.base_power,
+        max_reactive_power=load.max_reactive_power / load.base_power,
+    )
+end
+
 function openapi2psy(fixed::FixedAdmittance, resolver::Resolver)
     PSY.FixedAdmittance(
         name=fixed.name,

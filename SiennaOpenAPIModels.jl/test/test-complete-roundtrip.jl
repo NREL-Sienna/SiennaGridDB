@@ -28,6 +28,27 @@ using JSON
         arc_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
         @test IS.compare_values(arc, arc_copy, exclude=Set([:internal]))
     end
+    @testset "ExponentialLoad to JSON and Back" begin
+        exp_load = PSY.ExponentialLoad(
+            name="exp_load",
+            available=true,
+            bus=PSY.get_bus(c_sys5, "nodeE"),
+            active_power=4.0,
+            reactive_power=1.3147,
+            α=0.0,
+            β=0.0,
+            base_power=100.0,
+            max_active_power=3.801843804166639,
+            max_reactive_power=1.3147,
+        )
+        PSY.add_component!(c_sys5, exp_load)
+        @test isa(exp_load, PSY.ExponentialLoad)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(exp_load, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, c_sys5)
+        exp_load_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(exp_load, exp_load_copy, exclude=Set([:internal]))
+    end
     @testset "Line to JSON and Back" begin
         line = PSY.get_component(PSY.Line, c_sys5, "4")
         @test isa(line, PSY.Line)
