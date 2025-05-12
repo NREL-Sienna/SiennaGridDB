@@ -1,3 +1,17 @@
+function openapi2psy(agc::AGC, resolver::Resolver)
+    PSY.AGC(
+        name=agc.name,
+        available=agc.available,
+        bias=agc.bias,
+        K_p=agc.K_p,
+        K_i=agc.K_i,
+        K_d=agc.K_d,
+        delta_t=agc.delta_t,
+        area=resolver(agc.area),
+        initial_ace=agc.initial_ace,
+    )
+end
+
 function openapi2psy(reserve::ConstantReserveNonSpinning, resolver::Resolver)
     if PSY.get_base_power(resolver.sys) == 0.0
         error("base power is 0.0")
