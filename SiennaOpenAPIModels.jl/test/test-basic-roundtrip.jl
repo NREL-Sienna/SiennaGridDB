@@ -181,6 +181,30 @@ end
         @test test_convert.bus == 2
         @test test_convert.active_power == 520.0  # test units
     end
+    @testset "TwoTerminalVSCDCLine to JSON" begin
+        vscdc = PSY.TwoTerminalVSCDCLine(
+            name="vscdc",
+            available=true,
+            active_power_flow=0.0,
+            arc=PSY.get_component(PSY.Arc, c_sys5, "nodeB -> nodeC"),
+            rectifier_tap_limits=(min=-2.0, max=2.0),
+            rectifier_xrc=0.02,
+            rectifier_firing_angle=(min=-0.7, max=0.7),
+            inverter_tap_limits=(min=-2.0, max=2.0),
+            inverter_xrc=0.02,
+            inverter_extinction_angle=(min=-0.7, max=0.7),
+        )
+        PSY.add_component!(c_sys5, vscdc)
+        @test isa(vscdc, PSY.TwoTerminalVSCDCLine)
+        test_convert = SiennaOpenAPIModels.psy2openapi(vscdc, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.TwoTerminalVSCDCLine, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.available
+        @test test_convert.arc == 2
+        @test test_convert.rectifier_tap_limits.max == 2.0
+        @test test_convert.rectifier_xrc == 0.02
+        @test test_convert.inverter_extinction_angle.min == -0.7
+    end
 end
 
 @testset "RTS_GMLC_RT_sys RoundTrip to JSON" begin
