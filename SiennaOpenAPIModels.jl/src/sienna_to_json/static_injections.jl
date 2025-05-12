@@ -289,6 +289,19 @@ function psy2openapi(standard_load::PSY.StandardLoad, ids::IDGenerator)
     )
 end
 
+function psy2openapi(switch::PSY.SwitchedAdmittance, ids::IDGenerator)
+    SwitchedAdmittance(
+        id=getid!(ids, switch),
+        name=switch.name,
+        available=switch.available,
+        bus=getid!(ids, switch.bus),
+        Y=get_complex_number(switch.Y),
+        number_of_steps=switch.number_of_steps,
+        Y_increase=get_complex_number(switch.Y_increase),
+        dynamic_injector=getid!(ids, switch.dynamic_injector),
+    )
+end
+
 function psy2openapi(multi::PSY.ThermalMultiStart, ids::IDGenerator)
     ThermalMultiStart(
         id=getid!(ids, multi),

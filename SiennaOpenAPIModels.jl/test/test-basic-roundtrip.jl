@@ -153,9 +153,28 @@ end
         @test test_convert.constant_active_power == 16.0
         @test test_convert.max_constant_active_power == 24.0
     end
+    @testset "SwitchedAdmittance to JSON" begin
+        switch = PSY.SwitchedAdmittance(
+            name="switch",
+            available=true,
+            bus=PSY.get_bus(c_sys5, 3),
+            Y=0.0 - 1.0im,
+            number_of_steps=1,
+            Y_increase=0.0 - 0.1im,
+        )
+        PSY.add_component!(c_sys5, switch)
+        @test isa(switch, PSY.SwitchedAdmittance)
+        test_convert = SiennaOpenAPIModels.psy2openapi(switch, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.SwitchedAdmittance, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.available
+        @test test_convert.bus == 2
+        @test test_convert.Y.imag == -1.0
+        @test test_convert.Y_increase.real == 0.0
+    end
     @testset "ThermalStandard to JSON" begin
         thermal_standard = PSY.get_component(PSY.ThermalStandard, c_sys5, "Solitude")
-
+        @test isa(thermal_standard, PSY.ThermalStandard)
         test_convert = SiennaOpenAPIModels.psy2openapi(thermal_standard, IDGenerator())
         test_roundtrip(SiennaOpenAPIModels.ThermalStandard, test_convert)
         @test test_convert.id == 1
