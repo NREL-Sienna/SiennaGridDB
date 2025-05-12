@@ -4,53 +4,66 @@
 @doc raw"""TwoTerminalGenericHVDCLine
 
     TwoTerminalGenericHVDCLine(;
-        active_power_limits_from=nothing,
-        active_power_limits_to=nothing,
+        id=nothing,
+        name=nothing,
+        available=nothing,
         active_power_flow=nothing,
         arc=nothing,
-        available=nothing,
-        id=nothing,
-        loss=nothing,
-        name=nothing,
+        active_power_limits_from=nothing,
+        active_power_limits_to=nothing,
         reactive_power_limits_from=nothing,
         reactive_power_limits_to=nothing,
+        loss=nothing,
     )
 
-    - active_power_limits_from::MinMax
-    - active_power_limits_to::MinMax
+    - id::Int64
+    - name::String
+    - available::Bool
     - active_power_flow::Float64
     - arc::Int64
-    - available::Bool
-    - id::Int64
-    - loss::TwoTerminalGenericHVDCLineLoss
-    - name::String
+    - active_power_limits_from::MinMax
+    - active_power_limits_to::MinMax
     - reactive_power_limits_from::MinMax
     - reactive_power_limits_to::MinMax
+    - loss::TwoTerminalGenericHVDCLineLoss
 """
 Base.@kwdef mutable struct TwoTerminalGenericHVDCLine <: OpenAPI.APIModel
-    active_power_limits_from = nothing # spec type: Union{ Nothing, MinMax }
-    active_power_limits_to = nothing # spec type: Union{ Nothing, MinMax }
+    id::Union{Nothing, Int64} = nothing
+    name::Union{Nothing, String} = nothing
+    available::Union{Nothing, Bool} = nothing
     active_power_flow::Union{Nothing, Float64} = nothing
     arc::Union{Nothing, Int64} = nothing
-    available::Union{Nothing, Bool} = nothing
-    id::Union{Nothing, Int64} = nothing
-    loss = nothing # spec type: Union{ Nothing, TwoTerminalGenericHVDCLineLoss }
-    name::Union{Nothing, String} = nothing
+    active_power_limits_from = nothing # spec type: Union{ Nothing, MinMax }
+    active_power_limits_to = nothing # spec type: Union{ Nothing, MinMax }
     reactive_power_limits_from = nothing # spec type: Union{ Nothing, MinMax }
     reactive_power_limits_to = nothing # spec type: Union{ Nothing, MinMax }
+    loss = nothing # spec type: Union{ Nothing, TwoTerminalGenericHVDCLineLoss }
 
     function TwoTerminalGenericHVDCLine(
-        active_power_limits_from,
-        active_power_limits_to,
+        id,
+        name,
+        available,
         active_power_flow,
         arc,
-        available,
-        id,
-        loss,
-        name,
+        active_power_limits_from,
+        active_power_limits_to,
         reactive_power_limits_from,
         reactive_power_limits_to,
+        loss,
     )
+        OpenAPI.validate_property(TwoTerminalGenericHVDCLine, Symbol("id"), id)
+        OpenAPI.validate_property(TwoTerminalGenericHVDCLine, Symbol("name"), name)
+        OpenAPI.validate_property(
+            TwoTerminalGenericHVDCLine,
+            Symbol("available"),
+            available,
+        )
+        OpenAPI.validate_property(
+            TwoTerminalGenericHVDCLine,
+            Symbol("active_power_flow"),
+            active_power_flow,
+        )
+        OpenAPI.validate_property(TwoTerminalGenericHVDCLine, Symbol("arc"), arc)
         OpenAPI.validate_property(
             TwoTerminalGenericHVDCLine,
             Symbol("active_power_limits_from"),
@@ -63,20 +76,6 @@ Base.@kwdef mutable struct TwoTerminalGenericHVDCLine <: OpenAPI.APIModel
         )
         OpenAPI.validate_property(
             TwoTerminalGenericHVDCLine,
-            Symbol("active_power_flow"),
-            active_power_flow,
-        )
-        OpenAPI.validate_property(TwoTerminalGenericHVDCLine, Symbol("arc"), arc)
-        OpenAPI.validate_property(
-            TwoTerminalGenericHVDCLine,
-            Symbol("available"),
-            available,
-        )
-        OpenAPI.validate_property(TwoTerminalGenericHVDCLine, Symbol("id"), id)
-        OpenAPI.validate_property(TwoTerminalGenericHVDCLine, Symbol("loss"), loss)
-        OpenAPI.validate_property(TwoTerminalGenericHVDCLine, Symbol("name"), name)
-        OpenAPI.validate_property(
-            TwoTerminalGenericHVDCLine,
             Symbol("reactive_power_limits_from"),
             reactive_power_limits_from,
         )
@@ -85,44 +84,45 @@ Base.@kwdef mutable struct TwoTerminalGenericHVDCLine <: OpenAPI.APIModel
             Symbol("reactive_power_limits_to"),
             reactive_power_limits_to,
         )
+        OpenAPI.validate_property(TwoTerminalGenericHVDCLine, Symbol("loss"), loss)
         return new(
-            active_power_limits_from,
-            active_power_limits_to,
+            id,
+            name,
+            available,
             active_power_flow,
             arc,
-            available,
-            id,
-            loss,
-            name,
+            active_power_limits_from,
+            active_power_limits_to,
             reactive_power_limits_from,
             reactive_power_limits_to,
+            loss,
         )
     end
 end # type TwoTerminalGenericHVDCLine
 
 const _property_types_TwoTerminalGenericHVDCLine = Dict{Symbol, String}(
-    Symbol("active_power_limits_from") => "MinMax",
-    Symbol("active_power_limits_to") => "MinMax",
+    Symbol("id") => "Int64",
+    Symbol("name") => "String",
+    Symbol("available") => "Bool",
     Symbol("active_power_flow") => "Float64",
     Symbol("arc") => "Int64",
-    Symbol("available") => "Bool",
-    Symbol("id") => "Int64",
-    Symbol("loss") => "TwoTerminalGenericHVDCLineLoss",
-    Symbol("name") => "String",
+    Symbol("active_power_limits_from") => "MinMax",
+    Symbol("active_power_limits_to") => "MinMax",
     Symbol("reactive_power_limits_from") => "MinMax",
     Symbol("reactive_power_limits_to") => "MinMax",
+    Symbol("loss") => "TwoTerminalGenericHVDCLineLoss",
 )
 OpenAPI.property_type(::Type{TwoTerminalGenericHVDCLine}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_TwoTerminalGenericHVDCLine[name]))}
 
 function check_required(o::TwoTerminalGenericHVDCLine)
-    o.active_power_limits_from === nothing && (return false)
-    o.active_power_limits_to === nothing && (return false)
-    o.active_power_flow === nothing && (return false)
-    o.arc === nothing && (return false)
-    o.available === nothing && (return false)
     o.id === nothing && (return false)
     o.name === nothing && (return false)
+    o.available === nothing && (return false)
+    o.active_power_flow === nothing && (return false)
+    o.arc === nothing && (return false)
+    o.active_power_limits_from === nothing && (return false)
+    o.active_power_limits_to === nothing && (return false)
     o.reactive_power_limits_from === nothing && (return false)
     o.reactive_power_limits_to === nothing && (return false)
     true

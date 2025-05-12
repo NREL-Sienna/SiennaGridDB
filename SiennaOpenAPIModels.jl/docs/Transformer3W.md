@@ -1,0 +1,45 @@
+# Transformer3W
+
+## Properties
+
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**id** | **Int64** |  | [default to nothing]
+**name** | **String** |  | [default to nothing]
+**available** | **Bool** |  | [default to nothing]
+**primary_secondary_arc** | **Int64** |  | [default to nothing]
+**secondary_tertiary_arc** | **Int64** |  | [default to nothing]
+**primary_tertiary_arc** | **Int64** |  | [default to nothing]
+**star_bus** | **Int64** |  | [default to nothing]
+**active_power_flow_primary** | **Float64** |  | [default to nothing]
+**reactive_power_flow_primary** | **Float64** |  | [default to nothing]
+**active_power_flow_secondary** | **Float64** |  | [default to nothing]
+**reactive_power_flow_secondary** | **Float64** |  | [default to nothing]
+**active_power_flow_tertiary** | **Float64** |  | [default to nothing]
+**reactive_power_flow_tertiary** | **Float64** |  | [default to nothing]
+**r_primary** | **Float64** |  | [default to nothing]
+**x_primary** | **Float64** |  | [default to nothing]
+**r_secondary** | **Float64** |  | [default to nothing]
+**x_secondary** | **Float64** |  | [default to nothing]
+**r_tertiary** | **Float64** |  | [default to nothing]
+**x_tertiary** | **Float64** |  | [default to nothing]
+**rating** | **Float64** |  | [optional] [default to nothing]
+**r_12** | **Float64** |  | [default to nothing]
+**x_12** | **Float64** |  | [default to nothing]
+**r_23** | **Float64** |  | [default to nothing]
+**x_23** | **Float64** |  | [default to nothing]
+**r_13** | **Float64** |  | [default to nothing]
+**x_13** | **Float64** |  | [default to nothing]
+**g** | **Float64** |  | [optional] [default to 0.0]
+**b** | **Float64** |  | [optional] [default to 0.0]
+**primary_turns_ratio** | **Float64** |  | [optional] [default to 1.0]
+**secondary_turns_ratio** | **Float64** |  | [optional] [default to 1.0]
+**tertiary_turns_ratio** | **Float64** |  | [optional] [default to 1.0]
+**available_primary** | **Bool** |  | [optional] [default to true]
+**available_secondary** | **Bool** |  | [optional] [default to true]
+**available_tertiary** | **Bool** |  | [optional] [default to true]
+**rating_primary** | **Float64** |  | [optional] [default to 0.0]
+**rating_secondary** | **Float64** |  | [optional] [default to 0.0]
+**rating_tertiary** | **Float64** |  | [optional] [default to 0.0]
+
+[[Back to Model list]](../README.md#models) [[Back to API list]](../README.md#api-endpoints) [[Back to README]](../README.md)
