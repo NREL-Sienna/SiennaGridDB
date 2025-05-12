@@ -109,6 +109,21 @@ end
         PowerSystemCaseBuilder.PSISystems,
         "RTS_GMLC_RT_sys",
     )
+    @testset "ConstantReserveNonSpinning to JSON" begin
+        reserve = PSY.ConstantReserveNonSpinning(
+            name="reserve_non_spinning",
+            available=true,
+            time_frame=300.0,
+            requirement=0.77,
+        )
+        PSY.add_component!(RTS_GMLC_RT_sys, reserve)
+        @test isa(reserve, PSY.ConstantReserveNonSpinning)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(reserve, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, RTS_GMLC_RT_sys)
+        reserve_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(reserve, reserve_copy, exclude=Set([:internal]))
+    end
     @testset "EnergyReservoirStorage to JSON and Back" begin
         energy_res =
             PSY.get_component(PSY.EnergyReservoirStorage, RTS_GMLC_RT_sys, "313_STORAGE_1")

@@ -12,6 +12,22 @@ function openapi2psy(agc::AGC, resolver::Resolver)
     )
 end
 
+function openapi2psy(reserve::ConstantReserveNonSpinning, resolver::Resolver)
+    if PSY.get_base_power(resolver.sys) == 0.0
+        error("base power is 0.0")
+    end
+    PSY.ConstantReserveNonSpinning(
+        name=reserve.name,
+        available=reserve.available,
+        time_frame=reserve.time_frame,
+        requirement=reserve.requirement / PSY.get_base_power(resolver.sys),
+        sustained_time=reserve.sustained_time,
+        max_output_fraction=reserve.max_output_fraction,
+        max_participation_factor=reserve.max_participation_factor,
+        deployed_fraction=reserve.deployed_fraction,
+    )
+end
+
 function openapi2psy(reserve::VariableReserve, resolver::Resolver)
     if PSY.get_base_power(resolver.sys) == 0.0
         error("base power is 0.0")
