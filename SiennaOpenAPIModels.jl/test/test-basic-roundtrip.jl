@@ -80,6 +80,31 @@ end
         @test test_convert.from == 2
         @test test_convert.to == 3
     end
+    @testset "ExponentialLoad to JSON" begin
+        exp_load = PSY.ExponentialLoad(
+            name="exp_load",
+            available=true,
+            bus=PSY.get_bus(c_sys5, "nodeE"),
+            active_power=4.0,
+            reactive_power=1.3147,
+            α=0.0,
+            β=0.0,
+            base_power=100.0,
+            max_active_power=3.801843804166639,
+            max_reactive_power=1.3147,
+        )
+        PSY.add_component!(c_sys5, exp_load)
+        @test isa(exp_load, PSY.ExponentialLoad)
+        test_convert = SiennaOpenAPIModels.psy2openapi(exp_load, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.ExponentialLoad, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.available
+        @test test_convert.bus == 2
+        @test test_convert.active_power == 400.0
+        @test test_convert.alpha == 0.0
+        @test test_convert.beta == 0.0
+        @test test_convert.max_reactive_power == 131.47
+    end
     @testset "Line to JSON" begin
         line = PSY.get_component(PSY.Line, c_sys5, "4")
         @test isa(line, PSY.Line)
@@ -128,14 +153,57 @@ end
         @test test_convert.constant_active_power == 16.0
         @test test_convert.max_constant_active_power == 24.0
     end
+    @testset "SwitchedAdmittance to JSON" begin
+        switch = PSY.SwitchedAdmittance(
+            name="switch",
+            available=true,
+            bus=PSY.get_bus(c_sys5, 3),
+            Y=0.0 - 1.0im,
+            number_of_steps=1,
+            Y_increase=0.0 - 0.1im,
+        )
+        PSY.add_component!(c_sys5, switch)
+        @test isa(switch, PSY.SwitchedAdmittance)
+        test_convert = SiennaOpenAPIModels.psy2openapi(switch, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.SwitchedAdmittance, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.available
+        @test test_convert.bus == 2
+        @test test_convert.Y.imag == -1.0
+        @test test_convert.Y_increase.real == 0.0
+    end
     @testset "ThermalStandard to JSON" begin
         thermal_standard = PSY.get_component(PSY.ThermalStandard, c_sys5, "Solitude")
-
+        @test isa(thermal_standard, PSY.ThermalStandard)
         test_convert = SiennaOpenAPIModels.psy2openapi(thermal_standard, IDGenerator())
         test_roundtrip(SiennaOpenAPIModels.ThermalStandard, test_convert)
         @test test_convert.id == 1
         @test test_convert.bus == 2
         @test test_convert.active_power == 520.0  # test units
+    end
+    @testset "TwoTerminalVSCDCLine to JSON" begin
+        vscdc = PSY.TwoTerminalVSCDCLine(
+            name="vscdc",
+            available=true,
+            active_power_flow=0.0,
+            arc=PSY.get_component(PSY.Arc, c_sys5, "nodeB -> nodeC"),
+            rectifier_tap_limits=(min=-2.0, max=2.0),
+            rectifier_xrc=0.02,
+            rectifier_firing_angle=(min=-0.7, max=0.7),
+            inverter_tap_limits=(min=-2.0, max=2.0),
+            inverter_xrc=0.02,
+            inverter_extinction_angle=(min=-0.7, max=0.7),
+        )
+        PSY.add_component!(c_sys5, vscdc)
+        @test isa(vscdc, PSY.TwoTerminalVSCDCLine)
+        test_convert = SiennaOpenAPIModels.psy2openapi(vscdc, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.TwoTerminalVSCDCLine, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.available
+        @test test_convert.arc == 2
+        @test test_convert.rectifier_tap_limits.max == 2.0
+        @test test_convert.rectifier_xrc == 0.02
+        @test test_convert.inverter_extinction_angle.min == -0.7
     end
 end
 
@@ -157,6 +225,25 @@ end
         @test test_convert.id == 1
         @test test_convert.requirement == 77.0
         @test test_convert.reserve_direction == "SYMMETRIC"
+    end
+    @testset "ConstantReserveNonSpinning to JSON" begin
+        reserve = PSY.ConstantReserveNonSpinning(
+            name="reserve_non_spinning",
+            available=true,
+            time_frame=300.0,
+            requirement=0.77,
+        )
+        PSY.add_component!(RTS_GMLC_RT_sys, reserve)
+        @test isa(reserve, PSY.ConstantReserveNonSpinning)
+        test_convert = SiennaOpenAPIModels.psy2openapi(reserve, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.ConstantReserveNonSpinning, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.available
+        @test test_convert.time_frame == 300.0
+        @test test_convert.requirement == 77.0
+        @test test_convert.sustained_time == 3600.0
+        @test test_convert.max_output_fraction == 1.0
+        @test test_convert.deployed_fraction == 0.0
     end
     @testset "EnergyReservoirStorage to JSON" begin
         energy_res =
@@ -208,6 +295,24 @@ end
         @test test_convert.requirement == 77.0
         @test test_convert.reserve_direction == "DOWN"
         @test test_convert.sustained_time == 3600.0
+    end
+    @testset "VariableReserveNonSpinning to JSON" begin
+        reserve = PSY.VariableReserveNonSpinning(
+            name="variable_non_spinning",
+            available=true,
+            time_frame=300.0,
+            requirement=0.77,
+        )
+        PSY.add_component!(RTS_GMLC_RT_sys, reserve)
+        @test isa(reserve, PSY.VariableReserveNonSpinning)
+        test_convert = SiennaOpenAPIModels.psy2openapi(reserve, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.VariableReserveNonSpinning, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.available
+        @test test_convert.max_participation_factor == 1.0
+        @test test_convert.time_frame == 300.0
+        @test test_convert.requirement == 77.0
+        @test test_convert.sustained_time == 14400.0
     end
 end
 
@@ -277,6 +382,17 @@ end
         # Finally a floating point nummber rounding error matters...
         @test test_convert.peak_active_power == 100.0 * 2.20
         @test test_convert.peak_reactive_power == 100.0 * 0.40
+    end
+    @testset "Source to JSON" begin
+        source = PSY.get_component(PSY.Source, sys, "generator-102-1")
+        @test isa(source, PSY.Source)
+        test_convert = SiennaOpenAPIModels.psy2openapi(source, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.Source, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.name == "generator-102-1"
+        @test test_convert.active_power == 100.0
+        @test test_convert.X_th == 0.7
+        @test test_convert.internal_angle == 0.0
     end
 end
 
@@ -401,6 +517,28 @@ end
         PowerSystemCaseBuilder.PSISystems,
         "5_bus_matpower_RT",
     )
+    @testset "AGC to JSON" begin
+        agc = PSY.AGC(
+            name="agc",
+            available=true,
+            bias=1.6,
+            K_p=3.0,
+            K_i=1.0,
+            K_d=4.0,
+            delta_t=0.1,
+        )
+        PSY.add_component!(sys_5bus_matpower_RT, agc)
+        @test isa(agc, PSY.AGC)
+        test_convert = SiennaOpenAPIModels.psy2openapi(agc, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.AGC, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.available
+        @test test_convert.bias == 1.6
+        @test test_convert.K_i == 1.0
+        @test test_convert.delta_t == 0.1
+        @test isnothing(test_convert.area)
+        @test test_convert.initial_ace == 0.0
+    end
     @testset "PhaseShiftingTransformer to JSON" begin
         phase_shifting_transformer = PSY.get_component(
             PSY.PhaseShiftingTransformer,

@@ -35,6 +35,24 @@ function openapi2psy(energy_res::EnergyReservoirStorage, resolver::Resolver)
     )
 end
 
+function openapi2psy(load::ExponentialLoad, resolver::Resolver)
+    if load.base_power == 0.0
+        error("base power is 0.0")
+    end
+    PSY.ExponentialLoad(
+        name=load.name,
+        available=load.available,
+        bus=resolver(load.bus),
+        active_power=load.active_power / load.base_power,
+        reactive_power=load.reactive_power / load.base_power,
+        α=load.alpha,
+        β=load.beta,
+        base_power=load.base_power,
+        max_active_power=load.max_active_power / load.base_power,
+        max_reactive_power=load.max_reactive_power / load.base_power,
+    )
+end
+
 function openapi2psy(fixed::FixedAdmittance, resolver::Resolver)
     PSY.FixedAdmittance(
         name=fixed.name,
@@ -252,6 +270,24 @@ function openapi2psy(renewnon::RenewableNonDispatch, resolver::Resolver)
     )
 end
 
+function openapi2psy(source::Source, resolver::Resolver)
+    if source.base_power == 0.0
+        error("base power is 0.0")
+    end
+    PSY.Source(
+        name=source.name,
+        available=source.available,
+        bus=resolver(source.bus),
+        active_power=source.active_power / source.base_power,
+        reactive_power=source.reactive_power / source.base_power,
+        R_th=source.R_th,
+        X_th=source.X_th,
+        internal_voltage=source.internal_voltage,
+        internal_angle=source.internal_angle,
+        base_power=source.base_power,
+    )
+end
+
 function openapi2psy(standard_load::StandardLoad, resolver::Resolver)
     if standard_load.base_power == 0.0
         error("base power is 0.0")
@@ -284,6 +320,20 @@ function openapi2psy(standard_load::StandardLoad, resolver::Resolver)
         max_current_reactive_power=standard_load.max_current_reactive_power /
                                    standard_load.base_power,
         base_power=standard_load.base_power,
+    )
+end
+
+function openapi2psy(switch::SwitchedAdmittance, resolver::Resolver)
+    if PSY.get_base_power(resolver.sys) == 0.0
+        error("base power is 0.0")
+    end
+    PSY.SwitchedAdmittance(
+        name=switch.name,
+        available=switch.available,
+        bus=resolver(switch.bus),
+        Y=get_julia_complex(switch.Y),
+        number_of_steps=switch.number_of_steps,
+        Y_increase=get_julia_complex(switch.Y_increase),
     )
 end
 
