@@ -272,6 +272,24 @@ function psy2openapi(standard_load::PSY.StandardLoad, ids::IDGenerator)
     )
 end
 
+function psy2openapi(synch::PSY.SynchronousCondenser, ids::IDGenerator)
+    SynchronousCondenser(
+        id=getid!(ids, synch),
+        name=synch.name,
+        available=synch.available,
+        bus=getid!(ids, synch.bus),
+        reactive_power=synch.reactive_power * PSY.get_base_power(synch),
+        rating=synch.rating * PSY.get_base_power(synch),
+        reactive_power_limits=get_min_max(
+            scale(synch.reactive_power_limits, PSY.get_base_power(synch)),
+        ),
+        base_power=synch.base_power,
+        must_run=synch.must_run,
+        active_power_losses=synch.active_power * PSY.get_base_power(synch),
+        dynamic_injector=getid!(ids, renewnondispatch.dynamic_injector),
+    )
+end
+
 function psy2openapi(multi::PSY.ThermalMultiStart, ids::IDGenerator)
     ThermalMultiStart(
         id=getid!(ids, multi),

@@ -287,6 +287,26 @@ function openapi2psy(standard_load::StandardLoad, resolver::Resolver)
     )
 end
 
+function openapi2psy(synch::SynchronousCondenser, resolver::Resolver)
+    if synch.base_power == 0.0
+        error("base power is 0.0")
+    end
+    PSY.SynchronousCondenser(
+        name=synch.name,
+        available=synch.available,
+        bus=resolver(synch.bus),
+        reactive_power=synch.reactive_power / synch.base_power,
+        rating=synch.rating / synch.base_power,
+        reactive_power_limits=divide(
+            get_tuple_min_max(synch.reactive_power_limits),
+            synch.base_power,
+        ),
+        base_power=synch.base_power,
+        must_run=synch.must_run,
+        active_power_losses=synch.active_power / synch.base_power,
+    )
+end
+
 function openapi2psy(multi::ThermalMultiStart, resolver::Resolver)
     if multi.base_power == 0.0
         error("base power is 0.0")
