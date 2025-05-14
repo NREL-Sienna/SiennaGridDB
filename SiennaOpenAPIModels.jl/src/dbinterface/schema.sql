@@ -169,7 +169,7 @@ CREATE TABLE storage_units (
     ) DEFAULT 1.0,
     rating real NOT NULL DEFAULT 1 CHECK (rating > 0),
     base_power real NOT NULL CHECK (base_power > 0),
-    CHECK (base_power >= rating),
+    --CHECK (base_power >= rating),
     UNIQUE(name)
 ) strict;
 
