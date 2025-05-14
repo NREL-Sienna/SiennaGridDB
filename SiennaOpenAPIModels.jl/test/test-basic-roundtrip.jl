@@ -519,7 +519,7 @@ end
     )
     @testset "HydroPumpTurbine to JSON" begin
         pumped_hydro_energy_storage =
-            PSY.get_component(PSY.HydroPumpedTurbine, c_sys5_phes_ed, "HydroPumpTurbine")
+            PSY.get_component(PSY.HydroPumpTurbine, c_sys5_phes_ed, "HydroPumpTurbine")
         @test isa(pumped_hydro_energy_storage, PSY.HydroPumpTurbine)
         test_convert =
             SiennaOpenAPIModels.psy2openapi(pumped_hydro_energy_storage, IDGenerator())
