@@ -71,30 +71,7 @@ Base.@kwdef mutable struct MonitoredLine <: OpenAPI.APIModel
         angle_limits,
         g,
     )
-        OpenAPI.validate_property(MonitoredLine, Symbol("id"), id)
-        OpenAPI.validate_property(MonitoredLine, Symbol("name"), name)
-        OpenAPI.validate_property(MonitoredLine, Symbol("available"), available)
-        OpenAPI.validate_property(
-            MonitoredLine,
-            Symbol("active_power_flow"),
-            active_power_flow,
-        )
-        OpenAPI.validate_property(
-            MonitoredLine,
-            Symbol("reactive_power_flow"),
-            reactive_power_flow,
-        )
-        OpenAPI.validate_property(MonitoredLine, Symbol("arc"), arc)
-        OpenAPI.validate_property(MonitoredLine, Symbol("r"), r)
-        OpenAPI.validate_property(MonitoredLine, Symbol("x"), x)
-        OpenAPI.validate_property(MonitoredLine, Symbol("b"), b)
-        OpenAPI.validate_property(MonitoredLine, Symbol("flow_limits"), flow_limits)
-        OpenAPI.validate_property(MonitoredLine, Symbol("rating"), rating)
-        OpenAPI.validate_property(MonitoredLine, Symbol("rating_b"), rating_b)
-        OpenAPI.validate_property(MonitoredLine, Symbol("rating_c"), rating_c)
-        OpenAPI.validate_property(MonitoredLine, Symbol("angle_limits"), angle_limits)
-        OpenAPI.validate_property(MonitoredLine, Symbol("g"), g)
-        return new(
+        o = new(
             id,
             name,
             available,
@@ -111,6 +88,8 @@ Base.@kwdef mutable struct MonitoredLine <: OpenAPI.APIModel
             angle_limits,
             g,
         )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type MonitoredLine
 
@@ -134,7 +113,7 @@ const _property_types_MonitoredLine = Dict{Symbol, String}(
 OpenAPI.property_type(::Type{MonitoredLine}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_MonitoredLine[name]))}
 
-function check_required(o::MonitoredLine)
+function OpenAPI.check_required(o::MonitoredLine)
     o.id === nothing && (return false)
     o.name === nothing && (return false)
     o.available === nothing && (return false)
@@ -148,6 +127,32 @@ function check_required(o::MonitoredLine)
     o.rating === nothing && (return false)
     o.angle_limits === nothing && (return false)
     true
+end
+
+function OpenAPI.validate_properties(o::MonitoredLine)
+    OpenAPI.validate_property(MonitoredLine, Symbol("id"), o.id)
+    OpenAPI.validate_property(MonitoredLine, Symbol("name"), o.name)
+    OpenAPI.validate_property(MonitoredLine, Symbol("available"), o.available)
+    OpenAPI.validate_property(
+        MonitoredLine,
+        Symbol("active_power_flow"),
+        o.active_power_flow,
+    )
+    OpenAPI.validate_property(
+        MonitoredLine,
+        Symbol("reactive_power_flow"),
+        o.reactive_power_flow,
+    )
+    OpenAPI.validate_property(MonitoredLine, Symbol("arc"), o.arc)
+    OpenAPI.validate_property(MonitoredLine, Symbol("r"), o.r)
+    OpenAPI.validate_property(MonitoredLine, Symbol("x"), o.x)
+    OpenAPI.validate_property(MonitoredLine, Symbol("b"), o.b)
+    OpenAPI.validate_property(MonitoredLine, Symbol("flow_limits"), o.flow_limits)
+    OpenAPI.validate_property(MonitoredLine, Symbol("rating"), o.rating)
+    OpenAPI.validate_property(MonitoredLine, Symbol("rating_b"), o.rating_b)
+    OpenAPI.validate_property(MonitoredLine, Symbol("rating_c"), o.rating_c)
+    OpenAPI.validate_property(MonitoredLine, Symbol("angle_limits"), o.angle_limits)
+    OpenAPI.validate_property(MonitoredLine, Symbol("g"), o.g)
 end
 
 function OpenAPI.validate_property(::Type{MonitoredLine}, name::Symbol, val) end
