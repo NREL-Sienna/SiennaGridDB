@@ -1,13 +1,13 @@
 const OPENAPI_FIELDS_TO_DB = Dict(
-    ("transmission", "arc") => "arc_id",
+    ("transmission_lines", "arc") => "arc_id",
     ("generation_units", "bus") => "balancing_topology",
     ("storage_units", "bus") => "balancing_topology",
     ("supply_technologies", "bus") => "balancing_topology",
     ("loads", "bus") => "balancing_topology",
     ("generation_units", "prime_mover_type") => "prime_mover",
     ("storage_units", "prime_mover_type") => "prime_mover",
-    ("arc", "from") => "from_id",
-    ("arc", "to") => "to_id",
+    ("arcs", "from") => "from_id",
+    ("arcs", "to") => "to_id",
     ("transmission_lines", "rating") => "continuous_rating",
     ("storage_units", "storage_capacity") => "max_capacity",
 )

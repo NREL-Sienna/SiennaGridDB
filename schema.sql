@@ -116,7 +116,7 @@ CREATE TABLE transmission_lines (
     id integer PRIMARY KEY REFERENCES entities (id),
     name text NOT NULL UNIQUE,
     arc_id integer,
-    continuous_rating real NOT NULL CHECK (continuous_rating >= 0),
+    continuous_rating real NULL CHECK (continuous_rating >= 0),
     ste_rating real NULL CHECK (ste_rating >= 0),
     lte_rating real NULL CHECK (lte_rating >= 0),
     line_length real NULL CHECK (line_length >= 0),
@@ -144,9 +144,9 @@ CREATE TABLE generation_units (
     prime_mover text NOT NULL REFERENCES prime_mover_types(name),
     fuel text NULL REFERENCES fuels(name),
     balancing_topology integer NOT NULL REFERENCES balancing_topologies (id),
-    rating real NOT NULL CHECK (rating > 0),
+    rating real NOT NULL CHECK (rating >= 0),
     base_power real NOT NULL CHECK (base_power > 0),
-    CHECK (base_power >= rating),
+    --CHECK (base_power >= rating),
     UNIQUE (name)
 ) strict;
 
@@ -265,7 +265,8 @@ CREATE TABLE time_series (
     initial_timestamp TEXT NOT NULL,
     resolution INTEGER NOT NULL,
     horizon INTEGER,
-    INTERVAL INTEGER window_count INTEGER,
+    INTERVAL INTEGER,
+    window_count INTEGER,
     length INTEGER,
     scaling_multiplier TEXT,
     -- enum: ["max_active_power", ]
@@ -280,4 +281,16 @@ CREATE TABLE loads (
     balancing_topology INTEGER NOT NULL,
     base_power DOUBLE,
     FOREIGN KEY(balancing_topology) REFERENCES balancing_topologies (id)
+);
+
+-- From Sienna docs:
+-- A static time series data is a single column of data where each time period has
+-- a single value assigned to a component field, such as its maximum active power.
+-- This data commonly is obtained from historical information or the realization
+-- of a time-varying quantity.
+CREATE TABLE static_time_series (
+    id integer PRIMARY KEY,
+    uuid text NULL UNIQUE,
+    timestamp datetime NOT NULL,
+    value real NOT NULL
 );

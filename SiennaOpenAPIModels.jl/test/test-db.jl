@@ -168,3 +168,22 @@ WHERE e.entity_type = 'ACBus'",
     @test copy_of_sys isa PSY.System
     test_component_each_type(sys, copy_of_sys)
 end
+
+@testset "Two Area PJM DA System to DB" begin
+    sys = PowerSystemCaseBuilder.build_system(
+        PowerSystemCaseBuilder.PSISystems,
+        "two_area_pjm_DA",
+    )
+
+    db = SQLite.DB()
+    SiennaOpenAPIModels.make_sqlite!(db)
+    SiennaOpenAPIModels.sys2db!(db, sys, IDGenerator())
+    interchanges = Tables.columntable(
+        DBInterface.execute(db, "SELECT * FROM transmission_interchanges"),
+    )
+    @test length(interchanges.id) == 1
+
+    copy_of_sys = SiennaOpenAPIModels.make_system_from_db(db)
+    @test copy_of_sys isa PSY.System
+    test_component_each_type(sys, copy_of_sys)
+end
