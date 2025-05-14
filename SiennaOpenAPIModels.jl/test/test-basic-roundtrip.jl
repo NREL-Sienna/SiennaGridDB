@@ -174,11 +174,11 @@ end
         @test test_convert.power_factor == 1.0
         @test test_convert.base_power == 101.7
     end
-    @testset "TwoTerminalHVDCLine to JSON" begin
-        hvdc = PSY.get_component(PSY.TwoTerminalHVDCLine, RTS_GMLC_RT_sys, "DC1")
-        @test isa(hvdc, PSY.TwoTerminalHVDCLine)
+    @testset "TwoTerminalGenericHVDCLine to JSON" begin
+        hvdc = PSY.get_component(PSY.TwoTerminalGenericHVDCLine, RTS_GMLC_RT_sys, "DC1")
+        @test isa(hvdc, PSY.TwoTerminalGenericHVDCLine)
         test_convert = SiennaOpenAPIModels.psy2openapi(hvdc, IDGenerator())
-        test_roundtrip(SiennaOpenAPIModels.TwoTerminalHVDCLine, test_convert)
+        test_roundtrip(SiennaOpenAPIModels.TwoTerminalGenericHVDCLine, test_convert)
         @test test_convert.id == 1
         @test test_convert.available
         @test test_convert.active_power_flow == 0.0
@@ -426,13 +426,13 @@ end
         PowerSystemCaseBuilder.PSITestSystems,
         "c_sys5_phes_ed",
     )
-    @testset "HydroPumpedStorage to JSON" begin
+    @testset "HydroPumpTurbine to JSON" begin
         pumped_hydro_energy_storage =
-            PSY.get_component(PSY.HydroPumpedStorage, c_sys5_phes_ed, "HydroPumpedStorage")
-        @test isa(pumped_hydro_energy_storage, PSY.HydroPumpedStorage)
+            PSY.get_component(PSY.HydroPumpedTurbine, c_sys5_phes_ed, "HydroPumpTurbine")
+        @test isa(pumped_hydro_energy_storage, PSY.HydroPumpTurbine)
         test_convert =
             SiennaOpenAPIModels.psy2openapi(pumped_hydro_energy_storage, IDGenerator())
-        test_roundtrip(SiennaOpenAPIModels.HydroPumpedStorage, test_convert)
+        test_roundtrip(SiennaOpenAPIModels.HydroPumpTurbine, test_convert)
         @test test_convert.id == 1
         @test test_convert.bus == 2
         @test test_convert.base_power == 50.0

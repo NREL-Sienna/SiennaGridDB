@@ -101,8 +101,8 @@ function psy2openapi(hydro_res::PSY.HydroEnergyReservoir, ids::IDGenerator)
     )
 end
 
-function psy2openapi(hydro::PSY.HydroPumpedStorage, ids::IDGenerator)
-    HydroPumpedStorage(
+function psy2openapi(hydro::PSY.HydroPumpTurbine, ids::IDGenerator)
+    HydroPumpTurbine(
         id=getid!(ids, hydro),
         name=hydro.name,
         available=hydro.available,

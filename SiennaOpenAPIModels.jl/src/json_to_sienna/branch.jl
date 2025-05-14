@@ -140,11 +140,11 @@ function openapi2psy(transform::Transformer2W, resolver::Resolver)
     )
 end
 
-function openapi2psy(hvdc::TwoTerminalHVDCLine, resolver::Resolver)
+function openapi2psy(hvdc::TwoTerminalGenericHVDCLine, resolver::Resolver)
     if PSY.get_base_power(resolver.sys) == 0.0
         error("base power is 0.0")
     end
-    PSY.TwoTerminalHVDCLine(
+    PSY.TwoTerminalGenericHVDCLine(
         name=hvdc.name,
         available=hvdc.available,
         active_power_flow=hvdc.active_power_flow / PSY.get_base_power(resolver.sys),

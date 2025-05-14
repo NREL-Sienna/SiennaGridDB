@@ -105,11 +105,11 @@ function openapi2psy(hydro_res::HydroEnergyReservoir, resolver::Resolver)
     )
 end
 
-function openapi2psy(hydro::HydroPumpedStorage, resolver::Resolver)
+function openapi2psy(hydro::HydroPumpTurbine, resolver::Resolver)
     if hydro.base_power == 0.0
         error("base power is 0.0")
     end
-    PSY.HydroPumpedStorage(
+    PSY.HydroPumpTurbine(
         name=hydro.name,
         available=hydro.available,
         bus=resolver(hydro.bus),
