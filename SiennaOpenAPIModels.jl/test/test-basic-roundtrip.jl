@@ -144,6 +144,57 @@ end
         PowerSystemCaseBuilder.PSISystems,
         "RTS_GMLC_RT_sys",
     )
+    @testset "ConstantReserve UP to JSON" begin
+        reserve = PSY.ConstantReserve{PSY.ReserveUp}(
+            name="constant_reserve_up",
+            available=true,
+            time_frame=300.0,
+            requirement=0.77,
+        )
+        PSY.add_component!(RTS_GMLC_RT_sys, reserve)
+        @test reserve isa PSY.ConstantReserve{PSY.ReserveUp}
+        test_convert = SiennaOpenAPIModels.psy2openapi(reserve, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.ConstantReserve, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.time_frame == 300.0
+        @test test_convert.requirement == 77.0
+        @test test_convert.sustained_time == 3600.0
+        @test test_convert.max_output_fraction == 1.0
+        @test test_convert.reserve_direction == "UP"
+    end
+    @testset "ConstantReserveGroup SYMMETRIC to JSON" begin
+        reserve = PSY.ConstantReserveGroup{PSY.ReserveSymmetric}(
+            name="constant_reserve_group",
+            available=true,
+            requirement=0.77,
+        )
+        PSY.add_component!(RTS_GMLC_RT_sys, reserve)
+        @test reserve isa PSY.ConstantReserveGroup{PSY.ReserveSymmetric}
+        test_convert = SiennaOpenAPIModels.psy2openapi(reserve, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.ConstantReserveGroup, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.requirement == 77.0
+        @test test_convert.reserve_direction == "SYMMETRIC"
+    end
+    @testset "ConstantReserveNonSpinning to JSON" begin
+        reserve = PSY.ConstantReserveNonSpinning(
+            name="reserve_non_spinning",
+            available=true,
+            time_frame=300.0,
+            requirement=0.77,
+        )
+        PSY.add_component!(RTS_GMLC_RT_sys, reserve)
+        @test isa(reserve, PSY.ConstantReserveNonSpinning)
+        test_convert = SiennaOpenAPIModels.psy2openapi(reserve, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.ConstantReserveNonSpinning, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.available
+        @test test_convert.time_frame == 300.0
+        @test test_convert.requirement == 77.0
+        @test test_convert.sustained_time == 3600.0
+        @test test_convert.max_output_fraction == 1.0
+        @test test_convert.deployed_fraction == 0.0
+    end
     @testset "EnergyReservoirStorage to JSON" begin
         energy_res =
             PSY.get_component(PSY.EnergyReservoirStorage, RTS_GMLC_RT_sys, "313_STORAGE_1")
@@ -194,6 +245,24 @@ end
         @test test_convert.requirement == 77.0
         @test test_convert.reserve_direction == "DOWN"
         @test test_convert.sustained_time == 3600.0
+    end
+    @testset "VariableReserveNonSpinning to JSON" begin
+        reserve = PSY.VariableReserveNonSpinning(
+            name="variable_non_spinning",
+            available=true,
+            time_frame=300.0,
+            requirement=0.77,
+        )
+        PSY.add_component!(RTS_GMLC_RT_sys, reserve)
+        @test isa(reserve, PSY.VariableReserveNonSpinning)
+        test_convert = SiennaOpenAPIModels.psy2openapi(reserve, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.VariableReserveNonSpinning, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.available
+        @test test_convert.max_participation_factor == 1.0
+        @test test_convert.time_frame == 300.0
+        @test test_convert.requirement == 77.0
+        @test test_convert.sustained_time == 14400.0
     end
 end
 
@@ -387,6 +456,28 @@ end
         PowerSystemCaseBuilder.PSISystems,
         "5_bus_matpower_RT",
     )
+    @testset "AGC to JSON" begin
+        agc = PSY.AGC(
+            name="agc",
+            available=true,
+            bias=1.6,
+            K_p=3.0,
+            K_i=1.0,
+            K_d=4.0,
+            delta_t=0.1,
+        )
+        PSY.add_component!(sys_5bus_matpower_RT, agc)
+        @test isa(agc, PSY.AGC)
+        test_convert = SiennaOpenAPIModels.psy2openapi(agc, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.AGC, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.available
+        @test test_convert.bias == 1.6
+        @test test_convert.K_i == 1.0
+        @test test_convert.delta_t == 0.1
+        @test isnothing(test_convert.area)
+        @test test_convert.initial_ace == 0.0
+    end
     @testset "PhaseShiftingTransformer to JSON" begin
         phase_shifting_transformer = PSY.get_component(
             PSY.PhaseShiftingTransformer,
