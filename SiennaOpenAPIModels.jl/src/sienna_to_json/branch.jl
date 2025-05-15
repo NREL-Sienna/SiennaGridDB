@@ -27,8 +27,8 @@ function psy2openapi(line::PSY.Line, ids::IDGenerator)
         b=get_from_to(line.b),
         rating=(line.rating * PSY.get_base_power(line)),
         angle_limits=get_min_max(line.angle_limits),
-        rating_b=line.rating_b * PSY.get_base_power(line),
-        rating_c=line.rating_c * PSY.get_base_power(line),
+        rating_b=scale(line.rating_b, PSY.get_base_power(line)),
+        rating_c=scale(line.rating_c, PSY.get_base_power(line)),
         g=get_from_to(line.g),
     )
 end
