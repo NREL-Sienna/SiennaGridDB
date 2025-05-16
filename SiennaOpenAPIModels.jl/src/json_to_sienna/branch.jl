@@ -5,9 +5,8 @@ function openapi2psy(area_interchange::AreaInterchange, resolver::Resolver)
     PSY.AreaInterchange(
         name=area_interchange.name,
         available=area_interchange.available,
-        active_power_flow=(
-            area_interchange.active_power_flow / PSY.get_base_power(resolver.sys)
-        ),
+        active_power_flow=area_interchange.active_power_flow /
+                          PSY.get_base_power(resolver.sys),
         flow_limits=divide(
             get_tuple_fromto_tofrom(area_interchange.flow_limits),
             PSY.get_base_power(resolver.sys),
@@ -24,13 +23,13 @@ function openapi2psy(line::Line, resolver::Resolver)
     PSY.Line(;
         name=line.name,
         available=line.available,
-        active_power_flow=(line.active_power_flow / PSY.get_base_power(resolver.sys)),
-        reactive_power_flow=(line.reactive_power_flow / PSY.get_base_power(resolver.sys)),
+        active_power_flow=line.active_power_flow / PSY.get_base_power(resolver.sys),
+        reactive_power_flow=line.reactive_power_flow / PSY.get_base_power(resolver.sys),
         arc=resolver(line.arc),
         r=line.r,
         x=line.x,
         b=get_tuple_from_to(line.b),
-        rating=(line.rating / PSY.get_base_power(resolver.sys)),
+        rating=line.rating / PSY.get_base_power(resolver.sys),
         angle_limits=get_tuple_min_max(line.angle_limits),
         g=get_tuple_from_to(line.g),
     )
@@ -43,10 +42,9 @@ function openapi2psy(monitored::MonitoredLine, resolver::Resolver)
     PSY.MonitoredLine(
         name=monitored.name,
         available=monitored.available,
-        active_power_flow=(monitored.active_power_flow / PSY.get_base_power(resolver.sys)),
-        reactive_power_flow=(
-            monitored.reactive_power_flow / PSY.get_base_power(resolver.sys)
-        ),
+        active_power_flow=monitored.active_power_flow / PSY.get_base_power(resolver.sys),
+        reactive_power_flow=monitored.reactive_power_flow /
+                            PSY.get_base_power(resolver.sys),
         arc=resolver(monitored.arc),
         r=monitored.r,
         x=monitored.x,
@@ -55,7 +53,7 @@ function openapi2psy(monitored::MonitoredLine, resolver::Resolver)
             get_tuple_fromto_tofrom(monitored.flow_limits),
             PSY.get_base_power(resolver.sys),
         ),
-        rating=(monitored.rating / PSY.get_base_power(resolver.sys)),
+        rating=monitored.rating / PSY.get_base_power(resolver.sys),
         angle_limits=get_tuple_min_max(monitored.angle_limits),
         g=get_tuple_from_to(monitored.g),
     )
@@ -68,12 +66,9 @@ function openapi2psy(transformer::PhaseShiftingTransformer, resolver::Resolver)
     PSY.PhaseShiftingTransformer(
         name=transformer.name,
         available=transformer.available,
-        active_power_flow=(
-            transformer.active_power_flow / PSY.get_base_power(resolver.sys)
-        ),
-        reactive_power_flow=(
-            transformer.reactive_power_flow / PSY.get_base_power(resolver.sys)
-        ),
+        active_power_flow=transformer.active_power_flow / PSY.get_base_power(resolver.sys),
+        reactive_power_flow=transformer.reactive_power_flow /
+                            PSY.get_base_power(resolver.sys),
         arc=resolver(transformer.arc),
         r=transformer.r,
         x=transformer.x,
@@ -92,12 +87,9 @@ function openapi2psy(taptransform::TapTransformer, resolver::Resolver)
     PSY.TapTransformer(;
         name=taptransform.name,
         available=taptransform.available,
-        active_power_flow=(
-            taptransform.active_power_flow / PSY.get_base_power(resolver.sys)
-        ),
-        reactive_power_flow=(
-            taptransform.reactive_power_flow / PSY.get_base_power(resolver.sys)
-        ),
+        active_power_flow=taptransform.active_power_flow / PSY.get_base_power(resolver.sys),
+        reactive_power_flow=taptransform.reactive_power_flow /
+                            PSY.get_base_power(resolver.sys),
         arc=resolver(taptransform.arc),
         r=taptransform.r,
         x=taptransform.x,
@@ -114,7 +106,7 @@ function openapi2psy(tmodel::TModelHVDCLine, resolver::Resolver)
     PSY.TModelHVDCLine(
         name=tmodel.name,
         available=tmodel.available,
-        active_power_flow=(tmodel.active_power_flow / PSY.get_base_power(resolver.sys)),
+        active_power_flow=tmodel.active_power_flow / PSY.get_base_power(resolver.sys),
         arc=resolver(tmodel.arc),
         r=tmodel.r,
         l=tmodel.l,
@@ -137,10 +129,9 @@ function openapi2psy(transform::Transformer2W, resolver::Resolver)
     PSY.Transformer2W(;
         name=transform.name,
         available=transform.available,
-        active_power_flow=(transform.active_power_flow / PSY.get_base_power(resolver.sys)),
-        reactive_power_flow=(
-            transform.reactive_power_flow / PSY.get_base_power(resolver.sys)
-        ),
+        active_power_flow=transform.active_power_flow / PSY.get_base_power(resolver.sys),
+        reactive_power_flow=transform.reactive_power_flow /
+                            PSY.get_base_power(resolver.sys),
         arc=resolver(transform.arc),
         r=transform.r,
         x=transform.x,
@@ -156,7 +147,7 @@ function openapi2psy(hvdc::TwoTerminalGenericHVDCLine, resolver::Resolver)
     PSY.TwoTerminalGenericHVDCLine(
         name=hvdc.name,
         available=hvdc.available,
-        active_power_flow=(hvdc.active_power_flow / PSY.get_base_power(resolver.sys)),
+        active_power_flow=hvdc.active_power_flow / PSY.get_base_power(resolver.sys),
         arc=resolver(hvdc.arc),
         active_power_limits_from=divide(
             get_tuple_min_max(hvdc.active_power_limits_from),
