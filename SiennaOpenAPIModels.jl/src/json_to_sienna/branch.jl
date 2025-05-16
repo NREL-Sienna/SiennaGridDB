@@ -86,24 +86,23 @@ function openapi2psy(transformer::PhaseShiftingTransformer, resolver::Resolver)
 end
 
 function openapi2psy(taptransform::TapTransformer, resolver::Resolver)
-    if PSY.get_base_power(resolver.sys) == 0.0
+    if taptransform.base_power == 0.0
         error("base power is 0.0")
     end
     PSY.TapTransformer(;
         name=taptransform.name,
         available=taptransform.available,
-        active_power_flow=(
-            taptransform.active_power_flow / PSY.get_base_power(resolver.sys)
-        ),
-        reactive_power_flow=(
-            taptransform.reactive_power_flow / PSY.get_base_power(resolver.sys)
-        ),
+        active_power_flow=(taptransform.active_power_flow / taptransform.base_power),
+        reactive_power_flow=(taptransform.reactive_power_flow / taptransform.base_power),
         arc=resolver(taptransform.arc),
         r=taptransform.r,
         x=taptransform.x,
         primary_shunt=taptransform.primary_shunt,
         tap=taptransform.tap,
         rating=taptransform.rating,
+        base_power=taptransform.base_power,
+        rating_b=divide(taptransform.rating_b, taptransform.base_power),
+        rating_c=divide(taptransform.rating_c, taptransform.base_power),
     )
 end
 
