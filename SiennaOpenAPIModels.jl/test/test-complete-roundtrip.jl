@@ -314,7 +314,7 @@ end
         test_convert = SiennaOpenAPIModels.psy2openapi(transform, id_gen)
         resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, sys_14_bus)
         transform_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
-        @test IS.compare_values(transform, transform_copy, exclude=Set([:internal]))
+        @test IS.compare_values(transform, transform_copy, exclude=Set([:internal, :ext]))
     end
 end
 

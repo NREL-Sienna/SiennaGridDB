@@ -131,21 +131,22 @@ function openapi2psy(tmodel::TModelHVDCLine, resolver::Resolver)
 end
 
 function openapi2psy(transform::Transformer2W, resolver::Resolver)
-    if PSY.get_base_power(resolver.sys) == 0.0
+    if transform.base_power == 0.0
         error("base power is 0.0")
     end
     PSY.Transformer2W(;
         name=transform.name,
         available=transform.available,
-        active_power_flow=(transform.active_power_flow / PSY.get_base_power(resolver.sys)),
-        reactive_power_flow=(
-            transform.reactive_power_flow / PSY.get_base_power(resolver.sys)
-        ),
+        active_power_flow=(transform.active_power_flow / transform.base_power),
+        reactive_power_flow=(transform.reactive_power_flow / transform.base_power),
         arc=resolver(transform.arc),
         r=transform.r,
         x=transform.x,
         primary_shunt=transform.primary_shunt,
-        rating=divide(transform.rating, PSY.get_base_power(resolver.sys)),
+        rating=divide(transform.rating, transform.base_power),
+        base_power=transform.base_power,
+        rating_b=divide(transform.rating_b, transform.base_power),
+        rating_c=divide(transform.rating_c, transform.base_power),
     )
 end
 
