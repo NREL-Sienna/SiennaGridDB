@@ -6,11 +6,11 @@ function psy2openapi(energy_res::PSY.EnergyReservoirStorage, ids::IDGenerator)
         bus=getid!(ids, energy_res.bus),
         prime_mover_type=string(energy_res.prime_mover_type),
         storage_technology_type=string(energy_res.storage_technology_type),
-        storage_capacity=energy_res.storage_capacity * PSY.get_base_power(energy_res),
+        storage_capacity=(energy_res.storage_capacity * PSY.get_base_power(energy_res)),
         storage_level_limits=get_min_max(energy_res.storage_level_limits),
         initial_storage_capacity_level=energy_res.initial_storage_capacity_level,
-        rating=energy_res.rating * PSY.get_base_power(energy_res),
-        active_power=energy_res.active_power * PSY.get_base_power(energy_res),
+        rating=(energy_res.rating * PSY.get_base_power(energy_res)),
+        active_power=(energy_res.active_power * PSY.get_base_power(energy_res)),
         input_active_power_limits=get_min_max(
             scale(energy_res.input_active_power_limits, PSY.get_base_power(energy_res)),
         ),
@@ -18,7 +18,7 @@ function psy2openapi(energy_res::PSY.EnergyReservoirStorage, ids::IDGenerator)
             scale(energy_res.output_active_power_limits, PSY.get_base_power(energy_res)),
         ),
         efficiency=get_in_out(energy_res.efficiency),
-        reactive_power=energy_res.reactive_power * PSY.get_base_power(energy_res),
+        reactive_power=(energy_res.reactive_power * PSY.get_base_power(energy_res)),
         reactive_power_limits=get_min_max(
             scale(energy_res.reactive_power_limits, PSY.get_base_power(energy_res)),
         ),
@@ -48,8 +48,8 @@ function psy2openapi(hydro::PSY.HydroDispatch, ids::IDGenerator)
         name=hydro.name,
         available=hydro.available,
         bus=getid!(ids, hydro.bus),
-        active_power=hydro.active_power * PSY.get_base_power(hydro),
-        reactive_power=hydro.reactive_power * PSY.get_base_power(hydro),
+        active_power=(hydro.active_power * PSY.get_base_power(hydro)),
+        reactive_power=(hydro.reactive_power * PSY.get_base_power(hydro)),
         active_power_limits=get_min_max(
             scale(hydro.active_power_limits, PSY.get_base_power(hydro)),
         ),
@@ -59,7 +59,7 @@ function psy2openapi(hydro::PSY.HydroDispatch, ids::IDGenerator)
         prime_mover_type=string(hydro.prime_mover_type),
         ramp_limits=get_up_down(scale(hydro.ramp_limits, PSY.get_base_power(hydro))),
         operation_cost=get_operation_cost(hydro.operation_cost),
-        rating=hydro.rating * PSY.get_base_power(hydro),
+        rating=(hydro.rating * PSY.get_base_power(hydro)),
         base_power=hydro.base_power,
         time_limits=get_up_down(hydro.time_limits),
         dynamic_injector=getid!(ids, hydro.dynamic_injector),
@@ -72,9 +72,9 @@ function psy2openapi(hydro_res::PSY.HydroEnergyReservoir, ids::IDGenerator)
         name=hydro_res.name,
         available=hydro_res.available,
         bus=getid!(ids, hydro_res.bus),
-        active_power=hydro_res.active_power * PSY.get_base_power(hydro_res),
-        reactive_power=hydro_res.reactive_power * PSY.get_base_power(hydro_res),
-        rating=hydro_res.rating * PSY.get_base_power(hydro_res),
+        active_power=(hydro_res.active_power * PSY.get_base_power(hydro_res)),
+        reactive_power=(hydro_res.reactive_power * PSY.get_base_power(hydro_res)),
+        rating=(hydro_res.rating * PSY.get_base_power(hydro_res)),
         prime_mover_type=string(hydro_res.prime_mover_type),
         active_power_limits=get_min_max(
             scale(hydro_res.active_power_limits, PSY.get_base_power(hydro_res)),
@@ -87,9 +87,9 @@ function psy2openapi(hydro_res::PSY.HydroEnergyReservoir, ids::IDGenerator)
         ),
         time_limits=get_up_down(hydro_res.time_limits),
         base_power=hydro_res.base_power,
-        storage_capacity=hydro_res.storage_capacity * PSY.get_base_power(hydro_res),
-        inflow=hydro_res.inflow * PSY.get_base_power(hydro_res),
-        initial_storage=hydro_res.initial_storage * PSY.get_base_power(hydro_res),
+        storage_capacity=(hydro_res.storage_capacity * PSY.get_base_power(hydro_res)),
+        inflow=(hydro_res.inflow * PSY.get_base_power(hydro_res)),
+        initial_storage=(hydro_res.initial_storage * PSY.get_base_power(hydro_res)),
         operation_cost=HydroStorageGenerationCost(
             get_operation_cost(hydro_res.operation_cost),
         ),
@@ -107,9 +107,9 @@ function psy2openapi(hydro::PSY.HydroPumpTurbine, ids::IDGenerator)
         name=hydro.name,
         available=hydro.available,
         bus=getid!(ids, hydro.bus),
-        active_power=hydro.active_power * PSY.get_base_power(hydro),
-        reactive_power=hydro.reactive_power * PSY.get_base_power(hydro),
-        rating=hydro.rating * PSY.get_base_power(hydro),
+        active_power=(hydro.active_power * PSY.get_base_power(hydro)),
+        reactive_power=(hydro.reactive_power * PSY.get_base_power(hydro)),
+        rating=(hydro.rating * PSY.get_base_power(hydro)),
         base_power=hydro.base_power,
         prime_mover_type=string(hydro.prime_mover_type),
         active_power_limits=get_min_max(
@@ -120,7 +120,7 @@ function psy2openapi(hydro::PSY.HydroPumpTurbine, ids::IDGenerator)
         ),
         ramp_limits=get_up_down(scale(hydro.ramp_limits, PSY.get_base_power(hydro))),
         time_limits=get_up_down(hydro.time_limits),
-        rating_pump=hydro.rating_pump * PSY.get_base_power(hydro),
+        rating_pump=(hydro.rating_pump * PSY.get_base_power(hydro)),
         active_power_limits_pump=get_min_max(
             scale(hydro.active_power_limits_pump, PSY.get_base_power(hydro)),
         ),
@@ -134,7 +134,7 @@ function psy2openapi(hydro::PSY.HydroPumpTurbine, ids::IDGenerator)
         storage_capacity=get_up_down(
             scale(hydro.storage_capacity, PSY.get_base_power(hydro)),
         ),
-        inflow=hydro.inflow * PSY.get_base_power(hydro),
+        inflow=(hydro.inflow * PSY.get_base_power(hydro)),
         outflow=hydro.outflow,
         initial_storage=get_up_down(
             scale(hydro.initial_storage, PSY.get_base_power(hydro)),
@@ -156,8 +156,8 @@ function psy2openapi(inter::PSY.InterconnectingConverter, ids::IDGenerator)
         available=inter.available,
         bus=getid!(ids, inter.bus),
         dc_bus=getid!(ids, inter.dc_bus),
-        active_power=inter.active_power * PSY.get_base_power(inter),
-        rating=inter.rating * PSY.get_base_power(inter),
+        active_power=(inter.active_power * PSY.get_base_power(inter)),
+        rating=(inter.rating * PSY.get_base_power(inter)),
         active_power_limits=get_min_max(
             scale(inter.active_power_limits, PSY.get_base_power(inter)),
         ),
@@ -175,10 +175,10 @@ function psy2openapi(interrupt::PSY.InterruptiblePowerLoad, ids::IDGenerator)
         name=interrupt.name,
         available=interrupt.available,
         bus=getid!(ids, interrupt.bus),
-        active_power=interrupt.active_power * PSY.get_base_power(interrupt),
-        reactive_power=interrupt.reactive_power * PSY.get_base_power(interrupt),
-        max_active_power=interrupt.max_active_power * PSY.get_base_power(interrupt),
-        max_reactive_power=interrupt.max_reactive_power * PSY.get_base_power(interrupt),
+        active_power=(interrupt.active_power * PSY.get_base_power(interrupt)),
+        reactive_power=(interrupt.reactive_power * PSY.get_base_power(interrupt)),
+        max_active_power=(interrupt.max_active_power * PSY.get_base_power(interrupt)),
+        max_reactive_power=(interrupt.max_reactive_power * PSY.get_base_power(interrupt)),
         base_power=interrupt.base_power,
         operation_cost=get_operation_cost(interrupt.operation_cost),
         dynamic_injector=getid!(ids, interrupt.dynamic_injector),
@@ -191,11 +191,11 @@ function psy2openapi(power_load::PSY.PowerLoad, ids::IDGenerator)
         name=power_load.name,
         available=power_load.available,
         bus=getid!(ids, power_load.bus),
-        active_power=power_load.active_power * PSY.get_base_power(power_load),
-        reactive_power=power_load.reactive_power * PSY.get_base_power(power_load),
+        active_power=(power_load.active_power * PSY.get_base_power(power_load)),
+        reactive_power=(power_load.reactive_power * PSY.get_base_power(power_load)),
         base_power=power_load.base_power,
-        max_active_power=power_load.max_active_power * PSY.get_base_power(power_load),
-        max_reactive_power=power_load.max_reactive_power * PSY.get_base_power(power_load),
+        max_active_power=(power_load.max_active_power * PSY.get_base_power(power_load)),
+        max_reactive_power=(power_load.max_reactive_power * PSY.get_base_power(power_load)),
         dynamic_injector=getid!(ids, power_load.dynamic_injector),
     )
 end
@@ -206,9 +206,9 @@ function psy2openapi(renewable::PSY.RenewableDispatch, ids::IDGenerator)
         name=renewable.name,
         available=renewable.available,
         bus=getid!(ids, renewable.bus),
-        active_power=renewable.active_power * PSY.get_base_power(renewable),
-        reactive_power=renewable.reactive_power * PSY.get_base_power(renewable),
-        rating=renewable.rating * PSY.get_base_power(renewable),
+        active_power=(renewable.active_power * PSY.get_base_power(renewable)),
+        reactive_power=(renewable.reactive_power * PSY.get_base_power(renewable)),
+        rating=(renewable.rating * PSY.get_base_power(renewable)),
         prime_mover_type=string(renewable.prime_mover_type),
         reactive_power_limits=get_min_max(
             scale(renewable.reactive_power_limits, PSY.get_base_power(renewable)),
@@ -226,14 +226,39 @@ function psy2openapi(renewnondispatch::PSY.RenewableNonDispatch, ids::IDGenerato
         name=renewnondispatch.name,
         available=renewnondispatch.available,
         bus=getid!(ids, renewnondispatch.bus),
-        active_power=renewnondispatch.active_power * PSY.get_base_power(renewnondispatch),
-        reactive_power=renewnondispatch.reactive_power *
-                       PSY.get_base_power(renewnondispatch),
-        rating=renewnondispatch.rating * PSY.get_base_power(renewnondispatch),
+        active_power=(renewnondispatch.active_power * PSY.get_base_power(renewnondispatch)),
+        reactive_power=(
+            renewnondispatch.reactive_power * PSY.get_base_power(renewnondispatch)
+        ),
+        rating=(renewnondispatch.rating * PSY.get_base_power(renewnondispatch)),
         prime_mover_type=string(renewnondispatch.prime_mover_type),
         power_factor=renewnondispatch.power_factor,
         base_power=renewnondispatch.base_power,
         dynamic_injector=getid!(ids, renewnondispatch.dynamic_injector),
+    )
+end
+
+function psy2openapi(source::PSY.Source, ids::IDGenerator)
+    Source(
+        id=getid!(ids, source),
+        name=source.name,
+        available=source.available,
+        bus=getid!(ids, source.bus),
+        active_power=(source.active_power * PSY.get_base_power(source)),
+        reactive_power=(source.reactive_power * PSY.get_base_power(source)),
+        active_power_limits=get_min_max(
+            scale(source.active_power_limits, PSY.get_base_power(source)),
+        ),
+        reactive_power_limits=get_min_max(
+            scale(source.reactive_power_limits, PSY.get_base_power(source)),
+        ),
+        R_th=source.R_th,
+        X_th=source.X_th,
+        internal_voltage=source.internal_voltage,
+        internal_angle=source.internal_angle,
+        base_power=source.base_power,
+        operation_cost=get_operation_cost(source.operation_cost),
+        dynamic_injector=getid!(ids, source.dynamic_injector),
     )
 end
 
@@ -243,30 +268,42 @@ function psy2openapi(standard_load::PSY.StandardLoad, ids::IDGenerator)
         name=standard_load.name,
         available=standard_load.available,
         bus=getid!(ids, standard_load.bus),
-        constant_active_power=standard_load.constant_active_power *
-                              PSY.get_base_power(standard_load),
-        constant_reactive_power=standard_load.constant_reactive_power *
-                                PSY.get_base_power(standard_load),
-        impedance_active_power=standard_load.impedance_active_power *
-                               PSY.get_base_power(standard_load),
-        impedance_reactive_power=standard_load.impedance_reactive_power *
-                                 PSY.get_base_power(standard_load),
-        current_active_power=standard_load.current_active_power *
-                             PSY.get_base_power(standard_load),
-        current_reactive_power=standard_load.current_reactive_power *
-                               PSY.get_base_power(standard_load),
-        max_constant_active_power=standard_load.max_constant_active_power *
-                                  PSY.get_base_power(standard_load),
-        max_constant_reactive_power=standard_load.max_constant_reactive_power *
-                                    PSY.get_base_power(standard_load),
-        max_impedance_active_power=standard_load.max_impedance_active_power *
-                                   PSY.get_base_power(standard_load),
-        max_impedance_reactive_power=standard_load.max_impedance_reactive_power *
-                                     PSY.get_base_power(standard_load),
-        max_current_active_power=standard_load.max_current_active_power *
-                                 PSY.get_base_power(standard_load),
-        max_current_reactive_power=standard_load.max_current_reactive_power *
-                                   PSY.get_base_power(standard_load),
+        constant_active_power=(
+            standard_load.constant_active_power * PSY.get_base_power(standard_load)
+        ),
+        constant_reactive_power=(
+            standard_load.constant_reactive_power * PSY.get_base_power(standard_load)
+        ),
+        impedance_active_power=(
+            standard_load.impedance_active_power * PSY.get_base_power(standard_load)
+        ),
+        impedance_reactive_power=(
+            standard_load.impedance_reactive_power * PSY.get_base_power(standard_load)
+        ),
+        current_active_power=(
+            standard_load.current_active_power * PSY.get_base_power(standard_load)
+        ),
+        current_reactive_power=(
+            standard_load.current_reactive_power * PSY.get_base_power(standard_load)
+        ),
+        max_constant_active_power=(
+            standard_load.max_constant_active_power * PSY.get_base_power(standard_load)
+        ),
+        max_constant_reactive_power=(
+            standard_load.max_constant_reactive_power * PSY.get_base_power(standard_load)
+        ),
+        max_impedance_active_power=(
+            standard_load.max_impedance_active_power * PSY.get_base_power(standard_load)
+        ),
+        max_impedance_reactive_power=(
+            standard_load.max_impedance_reactive_power * PSY.get_base_power(standard_load)
+        ),
+        max_current_active_power=(
+            standard_load.max_current_active_power * PSY.get_base_power(standard_load)
+        ),
+        max_current_reactive_power=(
+            standard_load.max_current_reactive_power * PSY.get_base_power(standard_load)
+        ),
         base_power=standard_load.base_power,
         dynamic_injector=getid!(ids, standard_load.dynamic_injector),
     )
@@ -279,9 +316,9 @@ function psy2openapi(multi::PSY.ThermalMultiStart, ids::IDGenerator)
         available=multi.available,
         status=multi.status,
         bus=getid!(ids, multi.bus),
-        active_power=multi.active_power * PSY.get_base_power(multi),
-        reactive_power=multi.reactive_power * PSY.get_base_power(multi),
-        rating=multi.rating * PSY.get_base_power(multi),
+        active_power=(multi.active_power * PSY.get_base_power(multi)),
+        reactive_power=(multi.reactive_power * PSY.get_base_power(multi)),
+        rating=(multi.rating * PSY.get_base_power(multi)),
         prime_mover_type=string(multi.prime_mover_type),
         fuel=string(multi.fuel),
         active_power_limits=get_min_max(
@@ -311,14 +348,15 @@ function psy2openapi(thermal_standard::PSY.ThermalStandard, ids::IDGenerator)
         name=thermal_standard.name,
         prime_mover_type=string(thermal_standard.prime_mover_type),
         fuel_type=string(thermal_standard.fuel),
-        rating=thermal_standard.rating * PSY.get_base_power(thermal_standard),
+        rating=(thermal_standard.rating * PSY.get_base_power(thermal_standard)),
         base_power=thermal_standard.base_power,
         available=thermal_standard.available,
         status=thermal_standard.status,
         time_at_status=thermal_standard.time_at_status,
-        active_power=thermal_standard.active_power * PSY.get_base_power(thermal_standard),
-        reactive_power=thermal_standard.reactive_power *
-                       PSY.get_base_power(thermal_standard),
+        active_power=(thermal_standard.active_power * PSY.get_base_power(thermal_standard)),
+        reactive_power=(
+            thermal_standard.reactive_power * PSY.get_base_power(thermal_standard)
+        ),
         active_power_limits=get_min_max(
             scale(
                 thermal_standard.active_power_limits,

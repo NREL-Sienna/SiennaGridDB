@@ -106,6 +106,15 @@ function get_sienna_operation_cost(cost::HydroStorageGenerationCost)
     get_sienna_operation_cost(cost.value)
 end
 
+function get_sienna_operation_cost(cost::ImportExportCost)
+    PSY.ImportExportCost(
+        import_offer_curves=get_sienna_variable_cost(cost.import_offer_curves),
+        export_offer_curves=get_sienna_variable_cost(cost.export_offer_curves),
+        energy_import_weekly_limit=cost.energy_import_weekly_limit,
+        energy_export_weekly_limit=cost.energy_export_weekly_limit,
+    )
+end
+
 function get_sienna_operation_cost(cost::LoadCost)
     PSY.LoadCost(variable=get_sienna_variable_cost(cost.variable), fixed=cost.fixed)
 end

@@ -238,6 +238,15 @@ end
         load_zone_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
         @test IS.compare_values(load_zone, load_zone_copy, exclude=Set([:internal]))
     end
+    @testset "Source to JSON and Back" begin
+        source = PSY.get_component(PSY.Source, sys, "generator-102-1")
+        @test isa(source, PSY.Source)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(source, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, sys)
+        source_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(source, source_copy, exclude=Set([:internal]))
+    end
 end
 
 @testset "c_sys5_all Complete Roundtrip to JSON" begin
