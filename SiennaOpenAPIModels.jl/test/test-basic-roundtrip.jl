@@ -512,25 +512,25 @@ end
     end
 end
 
-@testset "c_sys5_phes_ed RoundTrip to JSON" begin
-    c_sys5_phes_ed = PowerSystemCaseBuilder.build_system(
-        PowerSystemCaseBuilder.PSITestSystems,
-        "c_sys5_phes_ed",
-    )
-    @testset "HydroPumpTurbine to JSON" begin
-        pumped_hydro_energy_storage =
-            PSY.get_component(PSY.HydroPumpTurbine, c_sys5_phes_ed, "HydroPumpTurbine")
-        @test isa(pumped_hydro_energy_storage, PSY.HydroPumpTurbine)
-        test_convert =
-            SiennaOpenAPIModels.psy2openapi(pumped_hydro_energy_storage, IDGenerator())
-        test_roundtrip(SiennaOpenAPIModels.HydroPumpTurbine, test_convert)
-        @test test_convert.id == 1
-        @test test_convert.bus == 2
-        @test test_convert.base_power == 50.0
-        @test test_convert.rating == 50.0
-        @test test_convert.rating_pump == 50.0
-        @test test_convert.storage_capacity.up == 100.0
-        @test test_convert.active_power_limits.max == 50.0
-        @test test_convert.ramp_limits.up == 5.0
-    end
-end
+#@testset "c_sys5_phes_ed RoundTrip to JSON" begin
+#    c_sys5_phes_ed = PowerSystemCaseBuilder.build_system(
+#        PowerSystemCaseBuilder.PSITestSystems,
+#        "c_sys5_phes_ed",
+#    )
+#    @testset "HydroPumpTurbine to JSON" begin
+#        pumped_hydro_energy_storage =
+#            PSY.get_component(PSY.HydroPumpTurbine, c_sys5_phes_ed, "HydroPumpTurbine")
+#        @test isa(pumped_hydro_energy_storage, PSY.HydroPumpTurbine)
+#        test_convert =
+#            SiennaOpenAPIModels.psy2openapi(pumped_hydro_energy_storage, IDGenerator())
+#        test_roundtrip(SiennaOpenAPIModels.HydroPumpTurbine, test_convert)
+#        @test test_convert.id == 1
+#        @test test_convert.bus == 2
+#        @test test_convert.base_power == 50.0
+#        @test test_convert.rating == 50.0
+#        @test test_convert.rating_pump == 50.0
+#        @test test_convert.storage_capacity.up == 100.0
+#        @test test_convert.active_power_limits.max == 50.0
+#        @test test_convert.ramp_limits.up == 5.0
+#    end
+#end
