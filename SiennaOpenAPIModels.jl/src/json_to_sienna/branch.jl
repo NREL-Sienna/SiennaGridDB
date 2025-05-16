@@ -136,7 +136,7 @@ function openapi2psy(transform::Transformer2W, resolver::Resolver)
         r=transform.r,
         x=transform.x,
         primary_shunt=transform.primary_shunt,
-        rating=transform.rating / PSY.get_base_power(resolver.sys),
+        rating=divide(transform.rating, PSY.get_base_power(resolver.sys)),
     )
 end
 
