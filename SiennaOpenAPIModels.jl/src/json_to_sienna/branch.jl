@@ -57,6 +57,8 @@ function openapi2psy(monitored::MonitoredLine, resolver::Resolver)
         ),
         rating=(monitored.rating / PSY.get_base_power(resolver.sys)),
         angle_limits=get_tuple_min_max(monitored.angle_limits),
+        rating_b=divide(monitored.rating_b, PSY.get_base_power(resolver.sys)),
+        rating_c=divide(monitored.rating_c, PSY.get_base_power(resolver.sys)),
         g=get_tuple_from_to(monitored.g),
     )
 end
