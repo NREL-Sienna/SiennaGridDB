@@ -81,6 +81,7 @@ function get_operation_cost(cost::PSY.RenewableGenerationCost)
         cost_type="RENEWABLE",
         curtailment_cost=get_variable_cost(cost.curtailment_cost),
         variable=get_variable_cost(cost.variable),
+        fixed=cost.fixed,
     )
 end
 

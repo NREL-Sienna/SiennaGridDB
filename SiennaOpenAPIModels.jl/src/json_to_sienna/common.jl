@@ -114,6 +114,7 @@ function get_sienna_operation_cost(cost::RenewableGenerationCost)
     PSY.RenewableGenerationCost(
         curtailment_cost=get_sienna_variable_cost(cost.curtailment_cost),
         variable=get_sienna_variable_cost(cost.variable),
+        fixed=cost.fixed,
     )
 end
 
