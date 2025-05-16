@@ -534,3 +534,22 @@ end
 #        @test test_convert.ramp_limits.up == 5.0
 #    end
 #end
+
+@testset "psse_240_parsing_sys RoundTrip to JSON" begin
+    psse_240_parsing_sys = PowerSystemCaseBuilder.build_system(
+        PowerSystemCaseBuilder.PSYTestSystems,
+        "psse_240_parsing_sys",
+    )
+    @testset "SwitchedAdmittance to JSON" begin
+        switch = PSY.get_component(PSY.SwitchedAdmittance, psse_240_parsing_sys, "6104-3")
+        @test isa(switch, PSY.SwitchedAdmittance)
+        test_convert = SiennaOpenAPIModels.psy2openapi(switch, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.SwitchedAdmittance, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.number_of_steps == [5]
+        @test test_convert.Y.imag == 2.224
+        @test test_convert.Y_increase[1].imag == 1.0
+        @test test_convert.admittance_limits.max == 1.5
+        @test isnothing(test_convert.dynamic_injector)
+    end
+end

@@ -419,3 +419,20 @@ end
         @test IS.compare_values(pumped, pumped_copy, exclude=Set([:internal]))
     end
 end
+
+@testset "psse_240_parsing_sys Complete RoundTrip to JSON" begin
+    psse_240_parsing_sys = PowerSystemCaseBuilder.build_system(
+        PowerSystemCaseBuilder.PSYTestSystems,
+        "psse_240_parsing_sys",
+    )
+    @testset "SwitchedAdmittance to JSON and Back" begin
+        switch = PSY.get_component(PSY.SwitchedAdmittance, psse_240_parsing_sys, "6104-3")
+        @test isa(switch, PSY.SwitchedAdmittance)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(switch, id_gen)
+        resolver =
+            SiennaOpenAPIModels.resolver_from_id_generator(id_gen, psse_240_parsing_sys)
+        switch_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(switch, switch_copy, exclude=Set([:internal]))
+    end
+end
