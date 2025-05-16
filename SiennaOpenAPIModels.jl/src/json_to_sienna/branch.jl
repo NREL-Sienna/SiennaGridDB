@@ -62,25 +62,24 @@ function openapi2psy(monitored::MonitoredLine, resolver::Resolver)
 end
 
 function openapi2psy(transformer::PhaseShiftingTransformer, resolver::Resolver)
-    if PSY.get_base_power(resolver.sys) == 0.0
+    if transformer.base_power == 0.0
         error("base power is 0.0")
     end
     PSY.PhaseShiftingTransformer(
         name=transformer.name,
         available=transformer.available,
-        active_power_flow=(
-            transformer.active_power_flow / PSY.get_base_power(resolver.sys)
-        ),
-        reactive_power_flow=(
-            transformer.reactive_power_flow / PSY.get_base_power(resolver.sys)
-        ),
+        active_power_flow=(transformer.active_power_flow / transformer.base_power),
+        reactive_power_flow=(transformer.reactive_power_flow / transformer.base_power),
         arc=resolver(transformer.arc),
         r=transformer.r,
         x=transformer.x,
         primary_shunt=transformer.primary_shunt,
         tap=transformer.tap,
         α=transformer.alpha,
-        rating=divide(transformer.rating, PSY.get_base_power(resolver.sys)),
+        rating=divide(transformer.rating, transformer.base_power),
+        base_power=transformer.base_power,
+        rating_b=divide(transformer.rating_b, transformer.base_power),
+        rating_c=divide(transformer.rating_c, transformer.base_power),
         phase_angle_limits=get_tuple_min_max(transformer.phase_angle_limits),
     )
 end
