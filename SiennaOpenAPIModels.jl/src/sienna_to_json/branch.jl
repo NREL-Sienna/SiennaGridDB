@@ -13,6 +13,22 @@ function psy2openapi(area_interchange::PSY.AreaInterchange, ids::IDGenerator)
     )
 end
 
+function psy2openapi(branch::PSY.DiscreteControlledACBranch, ids::IDGenerator)
+    DiscreteControlledACBranch(
+        id=getid!(ids, branch),
+        name=branch.name,
+        available=branch.available,
+        active_power_flow=branch.active_power_flow * PSY.get_base_power(branch),
+        reactive_power_flow=branch.reactive_power_flow * PSY.get_base_power(branch),
+        arc=getid!(ids, branch.arc),
+        r=branch.r,
+        x=branch.x,
+        rating=branch.rating * PSY.get_base_power(branch),
+        discrete_branch_type=string(branch.discrete_branch_type),
+        branch_status=string(branch.branch_status),
+    )
+end
+
 function psy2openapi(line::PSY.Line, ids::IDGenerator)
     Line(
         id=getid!(ids, line),
@@ -26,6 +42,8 @@ function psy2openapi(line::PSY.Line, ids::IDGenerator)
         b=get_from_to(line.b),
         rating=line.rating * PSY.get_base_power(line),
         angle_limits=get_min_max(line.angle_limits),
+        rating_b=scale(line.rating_b, PSY.get_base_power(line)),
+        rating_c=scale(line.rating_c, PSY.get_base_power(line)),
         g=get_from_to(line.g),
     )
 end
@@ -46,6 +64,8 @@ function psy2openapi(monitored::PSY.MonitoredLine, ids::IDGenerator)
         ),
         rating=monitored.rating * PSY.get_base_power(monitored),
         angle_limits=get_min_max(monitored.angle_limits),
+        rating_b=scale(monitored.rating_b, PSY.get_base_power(monitored)),
+        rating_c=scale(monitored.rating_c, PSY.get_base_power(monitored)),
         g=get_from_to(monitored.g),
     )
 end
@@ -65,6 +85,9 @@ function psy2openapi(transformer::PSY.PhaseShiftingTransformer, ids::IDGenerator
         tap=transformer.tap,
         alpha=transformer.α,
         rating=scale(transformer.rating, PSY.get_base_power(transformer)),
+        base_power=transformer.base_power,
+        rating_b=scale(transformer.rating_b, PSY.get_base_power(transformer)),
+        rating_c=scale(transformer.rating_c, PSY.get_base_power(transformer)),
         phase_angle_limits=get_min_max(transformer.phase_angle_limits),
     )
 end
@@ -83,6 +106,9 @@ function psy2openapi(transformer::PSY.TapTransformer, ids::IDGenerator)
         primary_shunt=transformer.primary_shunt,
         tap=transformer.tap,
         rating=transformer.rating,
+        base_power=transformer.base_power,
+        rating_b=scale(transformer.rating_b, PSY.get_base_power(transformer)),
+        rating_c=scale(transformer.rating_c, PSY.get_base_power(transformer)),
     )
 end
 
@@ -118,6 +144,9 @@ function psy2openapi(transformer2w::PSY.Transformer2W, ids::IDGenerator)
         r=transformer2w.r,
         x=transformer2w.x,
         rating=scale(transformer2w.rating, PSY.get_base_power(transformer2w)),
+        base_power=transformer2w.base_power,
+        rating_b=scale(transformer2w.rating_b, PSY.get_base_power(transformer2w)),
+        rating_c=scale(transformer2w.rating_c, PSY.get_base_power(transformer2w)),
         primary_shunt=transformer2w.primary_shunt,
     )
 end

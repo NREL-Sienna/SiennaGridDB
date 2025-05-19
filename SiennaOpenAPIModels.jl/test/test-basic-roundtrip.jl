@@ -80,6 +80,30 @@ end
         @test test_convert.from == 2
         @test test_convert.to == 3
     end
+    @testset "DiscreteControlledACBranch to JSON" begin
+        discrete = PSY.DiscreteControlledACBranch(
+            name="discrete_ac",
+            available=true,
+            active_power_flow=0.5,
+            reactive_power_flow=0.0,
+            arc=first(PSY.get_components(PSY.Arc, c_sys5)),
+            r=0.00108,
+            x=0.0108,
+            rating=15.0,
+        )
+        PSY.add_component!(c_sys5, discrete)
+        @test isa(discrete, PSY.DiscreteControlledACBranch)
+        test_convert = SiennaOpenAPIModels.psy2openapi(discrete, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.DiscreteControlledACBranch, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.arc == 2
+        @test test_convert.active_power_flow == 50.0
+        @test test_convert.reactive_power_flow == 0.0
+        @test test_convert.r == 0.00108
+        @test test_convert.rating == 1500
+        @test test_convert.discrete_branch_type == "OTHER"
+        @test test_convert.branch_status == "CLOSED"
+    end
     @testset "Line to JSON" begin
         line = PSY.get_component(PSY.Line, c_sys5, "4")
         @test isa(line, PSY.Line)

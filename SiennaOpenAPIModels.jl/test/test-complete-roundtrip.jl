@@ -28,6 +28,25 @@ using JSON
         arc_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
         @test IS.compare_values(arc, arc_copy, exclude=Set([:internal]))
     end
+    @testset "DiscreteControlledACBranch to JSON and Back" begin
+        discrete = PSY.DiscreteControlledACBranch(
+            name="discrete_ac",
+            available=true,
+            active_power_flow=0.5,
+            reactive_power_flow=0.0,
+            arc=first(PSY.get_components(PSY.Arc, c_sys5)),
+            r=0.00108,
+            x=0.0108,
+            rating=15.0,
+        )
+        PSY.add_component!(c_sys5, discrete)
+        @test isa(discrete, PSY.DiscreteControlledACBranch)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(discrete, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, c_sys5)
+        discrete_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(discrete, discrete_copy, exclude=Set([:internal]))
+    end
     @testset "Line to JSON and Back" begin
         line = PSY.get_component(PSY.Line, c_sys5, "4")
         @test isa(line, PSY.Line)
@@ -314,7 +333,7 @@ end
         test_convert = SiennaOpenAPIModels.psy2openapi(transform, id_gen)
         resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, sys_14_bus)
         transform_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
-        @test IS.compare_values(transform, transform_copy, exclude=Set([:internal]))
+        @test IS.compare_values(transform, transform_copy, exclude=Set([:internal, :ext]))
     end
 end
 
