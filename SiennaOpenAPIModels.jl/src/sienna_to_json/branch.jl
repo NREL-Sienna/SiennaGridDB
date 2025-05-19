@@ -117,7 +117,7 @@ function psy2openapi(transformer2w::PSY.Transformer2W, ids::IDGenerator)
         arc=getid!(ids, transformer2w.arc),
         r=transformer2w.r,
         x=transformer2w.x,
-        rating=transformer2w.rating * PSY.get_base_power(transformer2w),
+        rating=scale(transformer2w.rating, PSY.get_base_power(transformer2w)),
         primary_shunt=transformer2w.primary_shunt,
     )
 end
