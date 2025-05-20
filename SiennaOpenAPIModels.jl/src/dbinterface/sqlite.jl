@@ -97,6 +97,13 @@ function get_row(::AbstractString, ::Tables.Schema, c::HydroPumpedStorage)
     )
 end
 
+function insert_uuid!(attribute_statement, table_name, id, uuid)
+    DBInterface.execute(
+        attribute_statement,
+        (id, table_name, "uuid", JSON.json(string(uuid))),
+    )
+end
+
 function add_components_to_tables!(
     ::Type{T},
     table_name::AbstractString,
@@ -108,6 +115,7 @@ function add_components_to_tables!(
     ids::IDGenerator,
 ) where {T <: OpenAPI.APIModel}
     for c in components
+        uuid = IS.get_uuid(c)
         c = psy2openapi(c, ids)
         row = get_row(table_name, schema, c)
         try
@@ -121,6 +129,7 @@ function add_components_to_tables!(
             end
         end
         insert_attributes!(T, table_name, schema, attribute_statement, c)
+        insert_uuid!(attribute_statement, table_name, c.id, uuid)
     end
 end
 
@@ -157,6 +166,7 @@ function send_table_to_db!(::Type{AreaInterchange}, db, components, ids)
     entity_statement = prepare_entity_insert(db, table_name, obj_type)
 
     for c in components
+        uuid = IS.get_uuid(c)
         c = psy2openapi(c, ids)
         new_id = getid!(ids, UUIDs.uuid4())
         DBInterface.execute(arc_entity_statement, (new_id,))
@@ -165,6 +175,7 @@ function send_table_to_db!(::Type{AreaInterchange}, db, components, ids)
         DBInterface.execute(entity_statement, (c.id,))
         DBInterface.execute(table_statement, row)
         insert_attributes!(AreaInterchange, table_name, schema, attribute_statement, c)
+        insert_uuid!(attribute_statement, table_name, c.id, uuid)
     end
 end
 
@@ -268,6 +279,9 @@ function add_components_to_sys!(
         dict = make_openapi_dict(OpenAPI_T, table_name, row, extra_attributes)
         openapi_obj = OpenAPI.from_json(OpenAPI_T, dict)
         sienna_obj = openapi2psy(openapi_obj, resolver)
+        if haskey(dict, "uuid")
+            IS.set_uuid!(IS.get_internal(sienna_obj), Base.UUID(dict["uuid"]))
+        end
         PowerSystems.add_component!(sys, sienna_obj)
         resolver.id2uuid[row.id] = IS.get_uuid(sienna_obj)
     end
@@ -298,6 +312,9 @@ function add_components_to_sys!(
         )
         openapi_obj = OpenAPI.from_json(AreaInterchange, dict)
         sienna_obj = openapi2psy(openapi_obj, resolver)
+        if haskey(dict, "uuid")
+            IS.set_uuid!(IS.get_internal(sienna_obj), Base.UUID(dict["uuid"]))
+        end
         PowerSystems.add_component!(sys, sienna_obj)
         resolver.id2uuid[row.id] = IS.get_uuid(sienna_obj)
     end
