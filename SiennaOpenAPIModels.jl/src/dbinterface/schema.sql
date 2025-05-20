@@ -157,7 +157,7 @@ CREATE TABLE storage_units (
     name text NOT NULL,
     prime_mover text NOT NULL REFERENCES prime_mover_types(name),
     -- Energy capacity
-    max_capacity real NOT NULL CHECK (max_capacity > 0),
+    max_capacity real NOT NULL,
     balancing_topology integer NOT NULL REFERENCES balancing_topologies (id),
     efficiency_up real CHECK (
         efficiency_up > 0
