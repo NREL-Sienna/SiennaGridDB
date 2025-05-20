@@ -438,3 +438,21 @@ end
         @test IS.compare_values(pumped, pumped_copy, exclude=Set([:internal]))
     end
 end
+
+@testset "pti_vsc_hvdc_test_sys RoundTrip to JSON" begin
+    pti_vsc_hvdc_test_sys = PowerSystemCaseBuilder.build_system(
+        PowerSystemCaseBuilder.PSSEParsingTestSystems,
+        "pti_vsc_hvdc_test_sys",
+    )
+    @testset "TwoTerminalVSCLine to JSON" begin
+        vsc =
+            only(collect(PSY.get_components(PSY.TwoTerminalVSCLine, pti_vsc_hvdc_test_sys)))
+        @test isa(vsc, PSY.TwoTerminalVSCLine)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(vsc, id_gen)
+        resolver =
+            SiennaOpenAPIModels.resolver_from_id_generator(id_gen, pti_vsc_hvdc_test_sys)
+        vsc_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(vsc, vsc_copy, exclude=Set([:internal, :ext]))
+    end
+end

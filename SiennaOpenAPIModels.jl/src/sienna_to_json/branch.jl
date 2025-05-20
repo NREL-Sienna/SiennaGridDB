@@ -173,3 +173,44 @@ function psy2openapi(hvdc::PSY.TwoTerminalGenericHVDCLine, ids::IDGenerator)
         loss=TwoTerminalLoss(get_value_curve(hvdc.loss)),
     )
 end
+
+function psy2openapi(vsc::PSY.TwoTerminalVSCLine, ids::IDGenerator)
+    TwoTerminalVSCLine(
+        id=getid!(ids, vsc),
+        name=vsc.name,
+        available=vsc.available,
+        arc=getid!(ids, vsc.arc),
+        active_power_flow=vsc.active_power_flow * PSY.get_base_power(vsc),
+        rating=vsc.rating * PSY.get_base_power(vsc),
+        active_power_limits_from=get_min_max(
+            scale(vsc.active_power_limits_from, PSY.get_base_power(vsc)),
+        ),
+        active_power_limits_to=get_min_max(
+            scale(vsc.active_power_limits_to, PSY.get_base_power(vsc)),
+        ),
+        g=vsc.g,
+        dc_current=vsc.dc_current,
+        reactive_power_from=vsc.reactive_power_from * PSY.get_base_power(vsc),
+        dc_voltage_control_from=vsc.dc_voltage_control_from,
+        ac_voltage_control_from=vsc.ac_voltage_control_from,
+        dc_setpoint_from=vsc.dc_setpoint_from,
+        ac_setpoint_from=vsc.ac_setpoint_from,
+        converter_loss_from=get_value_curve(vsc.converter_loss_from),
+        max_dc_current_from=vsc.max_dc_current_from,
+        rating_from=vsc.rating_from * PSY.get_base_power(vsc),
+        reactive_power_limits_from=get_min_max(vsc.reactive_power_limits_from),
+        power_factor_weighting_fraction_from=vsc.power_factor_weighting_fraction_from,
+        voltage_limits_from=get_min_max(vsc.voltage_limits_from),
+        reactive_power_to=vsc.reactive_power_to * PSY.get_base_power(vsc),
+        dc_voltage_control_to=vsc.dc_voltage_control_to,
+        ac_voltage_control_to=vsc.ac_voltage_control_to,
+        dc_setpoint_to=vsc.dc_setpoint_to,
+        ac_setpoint_to=vsc.ac_setpoint_to,
+        converter_loss_to=get_value_curve(vsc.converter_loss_to),
+        max_dc_current_to=vsc.max_dc_current_to,
+        rating_to=vsc.rating_to,
+        reactive_power_limits_to=get_min_max(vsc.reactive_power_limits_to),
+        power_factor_weighting_fraction_to=vsc.power_factor_weighting_fraction_to,
+        voltage_limits_to=get_min_max(vsc.voltage_limits_to),
+    )
+end

@@ -536,6 +536,35 @@ end
     end
 end
 
+@testset "pti_vsc_hvdc_test_sys RoundTrip to JSON" begin
+    pti_vsc_hvdc_test_sys = PowerSystemCaseBuilder.build_system(
+        PowerSystemCaseBuilder.PSSEParsingTestSystems,
+        "pti_vsc_hvdc_test_sys",
+    )
+    @testset "TwoTerminalVSCLine to JSON" begin
+        vsc =
+            only(collect(PSY.get_components(PSY.TwoTerminalVSCLine, pti_vsc_hvdc_test_sys)))
+        @test isa(vsc, PSY.TwoTerminalVSCLine)
+        test_convert = SiennaOpenAPIModels.psy2openapi(vsc, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.TwoTerminalVSCLine, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.arc == 2
+        @test test_convert.active_power_flow == -20.0
+        @test test_convert.rating == 250.0
+        @test test_convert.reactive_power_limits_from.min == -1.0
+        @test test_convert.active_power_limits_from.min == -229.128784747792
+        @test test_convert.reactive_power_from == 0.0
+        @test test_convert.dc_voltage_control_from
+        @test test_convert.ac_setpoint_from == 1.05
+        @test test_convert.max_dc_current_from == 1000.0
+        @test test_convert.rating_from == 250.0
+        @test test_convert.rating_to == 2.5
+        @test test_convert.reactive_power_limits_to.max == 1.0
+        @test test_convert.power_factor_weighting_fraction_to == 0.5
+        @test test_convert.voltage_limits_to.max == 999.9
+    end
+end
+
 #@testset "c_sys5_phes_ed RoundTrip to JSON" begin
 #    c_sys5_phes_ed = PowerSystemCaseBuilder.build_system(
 #        PowerSystemCaseBuilder.PSITestSystems,
