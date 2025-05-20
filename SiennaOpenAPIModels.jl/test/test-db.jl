@@ -187,3 +187,20 @@ end
     @test copy_of_sys isa PSY.System
     test_component_each_type(sys, copy_of_sys)
 end
+
+@testset "c_sys5_phes_ed to DB" begin
+    sys = PowerSystemCaseBuilder.build_system(
+        PowerSystemCaseBuilder.PSITestSystems,
+        "c_sys5_phes_ed",
+    )
+
+    db = SQLite.DB()
+    SiennaOpenAPIModels.make_sqlite!(db)
+    SiennaOpenAPIModels.sys2db!(db, sys, IDGenerator())
+    storages = Tables.columntable(DBInterface.execute(db, "SELECT * FROM storage_units"))
+    @test length(storages.id) == 1
+
+    copy_of_sys = SiennaOpenAPIModels.make_system_from_db(db)
+    @test copy_of_sys isa PSY.System
+    test_component_each_type(sys, copy_of_sys)
+end

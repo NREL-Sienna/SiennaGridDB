@@ -23,19 +23,82 @@ function get_row_field(c::OpenAPI.APIModel, table_name::AbstractString, col_name
     end
 end
 
-function insert_attributes!(attribute_statement, schema::Tables.Schema, c::OpenAPI.APIModel)
+function ignoreattribute(
+    ::Type{T},
+    table_name::AbstractString,
+    schema::Tables.Schema,
+    k::AbstractString,
+) where {T <: OpenAPI.APIModel}
+    col_name = get(OPENAPI_FIELDS_TO_DB, (table_name, k), k)
+    return in(Symbol(col_name), schema.names)
+end
+
+function insert_attributes!(
+    ::Type{T},
+    table_name::AbstractString,
+    schema::Tables.Schema,
+    attribute_statement,
+    c::OpenAPI.APIModel,
+) where {T <: OpenAPI.APIModel}
     for (k, v) in JSON.parse(OpenAPI.to_json(c))
-        col_name = get(OPENAPI_FIELDS_TO_DB, k, k)
-        if !in(Symbol(col_name), schema.names)
-            DBInterface.execute(
-                attribute_statement,
-                (c.id, "JULIA-MADE", col_name, JSON.json(v)),  # Not sure how to make this stable and right
-            )
+        if !ignoreattribute(T, table_name, schema, k)
+            DBInterface.execute(attribute_statement, (c.id, "FromSienna", k, JSON.json(v)))
         end
     end
 end
 
+function get_row(table_name::AbstractString, schema::Tables.Schema, c::OpenAPI.APIModel)
+    return tuple(
+        (
+            get_row_field(c, table_name, col_name) for
+            (col_name, col_type) in zip(schema.names, schema.types)
+        )...,
+    )
+end
+
+function ignoreattribute(
+    ::Type{EnergyReservoirStorage},
+    table_name::AbstractString,
+    schema::Tables.Schema,
+    k::AbstractString,
+)
+    if k == "efficiency"
+        return true
+    end
+    col_name = get(OPENAPI_FIELDS_TO_DB, (table_name, k), k)
+    return in(Symbol(col_name), schema.names)
+end
+
+function get_row(::AbstractString, ::Tables.Schema, c::EnergyReservoirStorage)
+    return (
+        c.id,
+        c.name,
+        c.prime_mover_type,
+        c.storage_capacity,
+        c.bus,
+        c.efficiency.in,
+        c.efficiency.out,
+        c.rating,
+        c.base_power,
+    )
+end
+
+function get_row(::AbstractString, ::Tables.Schema, c::HydroPumpedStorage)
+    return (
+        c.id,
+        c.name,
+        c.prime_mover_type,
+        c.storage_capacity.up,
+        c.bus,
+        nothing,
+        nothing,
+        c.rating,
+        c.base_power,
+    )
+end
+
 function add_components_to_tables!(
+    ::Type{T},
     table_name::AbstractString,
     schema::Tables.Schema,
     table_statement::DBInterface.Statement,
@@ -43,15 +106,10 @@ function add_components_to_tables!(
     attribute_statement::DBInterface.Statement,
     components,
     ids::IDGenerator,
-)
+) where {T <: OpenAPI.APIModel}
     for c in components
         c = psy2openapi(c, ids)
-        row = tuple(
-            (
-                get_row_field(c, table_name, col_name) for
-                (col_name, col_type) in zip(schema.names, schema.types)
-            )...,
-        )
+        row = get_row(table_name, schema, c)
         try
             DBInterface.execute(entity_statement, (c.id,))
             DBInterface.execute(table_statement, row)
@@ -62,7 +120,7 @@ function add_components_to_tables!(
                 rethrow(e)
             end
         end
-        insert_attributes!(attribute_statement, schema, c)
+        insert_attributes!(T, table_name, schema, attribute_statement, c)
     end
 end
 
@@ -106,7 +164,7 @@ function send_table_to_db!(::Type{AreaInterchange}, db, components, ids)
         row = (c.id, c.name, new_id, c.flow_limits.to_from, c.flow_limits.from_to)
         DBInterface.execute(entity_statement, (c.id,))
         DBInterface.execute(table_statement, row)
-        insert_attributes!(attribute_statement, schema, c)
+        insert_attributes!(AreaInterchange, table_name, schema, attribute_statement, c)
     end
 end
 
@@ -115,6 +173,7 @@ function send_table_to_db!(::Type{T}, db, components, ids) where {T}
     obj_type = last(split(string(T), "."))
     schema = TABLE_SCHEMAS[table_name]
     return add_components_to_tables!(
+        T,
         table_name,
         schema,
         prepare_schema_insert(db, table_name, schema),
@@ -155,6 +214,47 @@ function get_entity_attributes(db)
     return attributes_dict
 end
 
+function make_openapi_dict(
+    ::Type{T},
+    table_name::AbstractString,
+    row,
+    extra_attributes::Dict{String, Any},
+) where {T <: OpenAPI.APIModel}
+    return merge(
+        Dict(
+            get(DB_TO_OPENAPI_FIELDS, (table_name, string(k)), string(k)) =>
+                coalesce(v, nothing) for (k, v) in zip(propertynames(row), row)
+        ),
+        extra_attributes,
+    )
+end
+
+function make_openapi_dict(
+    ::Type{EnergyReservoirStorage},
+    table_name::AbstractString,
+    row,
+    extra_attributes::Dict{String, Any},
+)
+    efficiency_dict = if !isnothing(row.efficiency_up) && !isnothing(row.efficiency_down)
+        Dict{String, Any}(
+            "efficiency" => Dict{String, Any}(
+                "in" => row.efficiency_up,
+                "out" => row.efficiency_down,
+            ),
+        )
+    else
+        Dict{String, Any}()
+    end
+    return merge(
+        Dict(
+            get(DB_TO_OPENAPI_FIELDS, (table_name, string(k)), string(k)) =>
+                coalesce(v, nothing) for (k, v) in zip(propertynames(row), row)
+        ),
+        efficiency_dict,
+        extra_attributes,
+    )
+end
+
 function add_components_to_sys!(
     ::Type{OpenAPI_T},
     sys::PSY.System,
@@ -165,13 +265,7 @@ function add_components_to_sys!(
 ) where {OpenAPI_T}
     for row in rows
         extra_attributes = get(attributes, row.id, Dict{String, Any}())
-        dict = merge(
-            Dict(
-                get(DB_TO_OPENAPI_FIELDS, (table_name, string(k)), string(k)) =>
-                    coalesce(v, nothing) for (k, v) in zip(propertynames(row), row)
-            ),
-            extra_attributes,
-        )
+        dict = make_openapi_dict(OpenAPI_T, table_name, row, extra_attributes)
         openapi_obj = OpenAPI.from_json(OpenAPI_T, dict)
         sienna_obj = openapi2psy(openapi_obj, resolver)
         PowerSystems.add_component!(sys, sienna_obj)
@@ -260,7 +354,8 @@ function db2sys!(sys::PSY.System, db, resolver::Resolver)
            table_name == "entities" ||
            table_name == "prime_mover_types" ||
            table_name == "fuels" ||
-           table_name == "entity_types"
+           table_name == "entity_types" ||
+           table_name == "time_series"
             continue
         end
         result = DBInterface.execute(db, "SELECT count(*) from $table_name")

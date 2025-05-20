@@ -9,7 +9,6 @@ const OPENAPI_FIELDS_TO_DB = Dict(
     ("arcs", "from") => "from_id",
     ("arcs", "to") => "to_id",
     ("transmission_lines", "rating") => "continuous_rating",
-    ("storage_units", "storage_capacity") => "max_capacity",
 )
 
 const DB_TO_OPENAPI_FIELDS = Dict((s[1], t) => s[2] for (s, t) in OPENAPI_FIELDS_TO_DB)
