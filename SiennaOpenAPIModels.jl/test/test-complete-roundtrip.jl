@@ -439,19 +439,32 @@ end
     end
 end
 
-@testset "pti_vsc_hvdc_test_sys RoundTrip to JSON" begin
-    pti_vsc_hvdc_test_sys = PowerSystemCaseBuilder.build_system(
+@testset "pti_frankenstein_70_sys Complete RoundTrip to JSON" begin
+    pti_frankenstein_70_sys = PowerSystemCaseBuilder.build_system(
         PowerSystemCaseBuilder.PSSEParsingTestSystems,
-        "pti_vsc_hvdc_test_sys",
+        "pti_frankenstein_70_sys",
     )
-    @testset "TwoTerminalVSCLine to JSON" begin
-        vsc =
-            only(collect(PSY.get_components(PSY.TwoTerminalVSCLine, pti_vsc_hvdc_test_sys)))
+    @testset "TwoTerminalLCCLine to JSON and Back" begin
+        lcc = only(
+            collect(PSY.get_components(PSY.TwoTerminalLCCLine, pti_frankenstein_70_sys)),
+        )
+        @test isa(lcc, PSY.TwoTerminalLCCLine)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(lcc, id_gen)
+        resolver =
+            SiennaOpenAPIModels.resolver_from_id_generator(id_gen, pti_frankenstein_70_sys)
+        lcc_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(lcc, lcc_copy, exclude=Set([:internal, :ext]))
+    end
+    @testset "TwoTerminalVSCLine to JSON and Back" begin
+        vsc = only(
+            collect(PSY.get_components(PSY.TwoTerminalVSCLine, pti_frankenstein_70_sys)),
+        )
         @test isa(vsc, PSY.TwoTerminalVSCLine)
         id_gen = IDGenerator()
         test_convert = SiennaOpenAPIModels.psy2openapi(vsc, id_gen)
         resolver =
-            SiennaOpenAPIModels.resolver_from_id_generator(id_gen, pti_vsc_hvdc_test_sys)
+            SiennaOpenAPIModels.resolver_from_id_generator(id_gen, pti_frankenstein_70_sys)
         vsc_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
         @test IS.compare_values(vsc, vsc_copy, exclude=Set([:internal, :ext]))
     end

@@ -197,6 +197,66 @@ function openapi2psy(hvdc::TwoTerminalGenericHVDCLine, resolver::Resolver)
     )
 end
 
+function openapi2psy(lcc::TwoTerminalLCCLine, resolver::Resolver)
+    if PSY.get_base_power(resolver.sys) == 0.0
+        error("base power is 0.0")
+    end
+    PSY.TwoTerminalLCCLine(
+        name=lcc.name,
+        available=lcc.available,
+        arc=resolver(lcc.arc),
+        active_power_flow=lcc.active_power_flow / PSY.get_base_power(resolver.sys),
+        r=lcc.r,
+        transfer_setpoint=lcc.transfer_setpoint,
+        scheduled_dc_voltage=lcc.scheduled_dc_voltage,
+        rectifier_bridges=lcc.rectifier_bridges,
+        rectifier_delay_angle_limits=get_tuple_min_max(lcc.rectifier_delay_angle_limits),
+        rectifier_rc=lcc.rectifier_rc,
+        rectifier_xc=lcc.rectifier_xc,
+        rectifier_base_voltage=lcc.rectifier_base_voltage,
+        inverter_bridges=lcc.inverter_bridges,
+        inverter_extinction_angle_limits=get_tuple_min_max(
+            lcc.inverter_extinction_angle_limits,
+        ),
+        inverter_rc=lcc.inverter_rc,
+        inverter_xc=lcc.inverter_xc,
+        inverter_base_voltage=lcc.inverter_base_voltage,
+        power_mode=lcc.power_mode,
+        switch_mode_voltage=lcc.switch_mode_voltage,
+        compounding_resistance=lcc.compounding_resistance,
+        min_compounding_voltage=lcc.min_compounding_voltage,
+        rectifier_transformer_ratio=lcc.rectifier_transformer_ratio,
+        rectifier_tap_setting=lcc.rectifier_tap_setting,
+        rectifier_tap_limits=get_tuple_min_max(lcc.rectifier_tap_limits),
+        rectifier_tap_step=lcc.rectifier_tap_step,
+        rectifier_delay_angle=lcc.rectifier_delay_angle,
+        rectifier_capacitor_reactance=lcc.rectifier_capacitor_reactance,
+        inverter_transformer_ratio=lcc.inverter_transformer_ratio,
+        inverter_tap_setting=lcc.inverter_tap_setting,
+        inverter_tap_limits=get_tuple_min_max(lcc.inverter_tap_limits),
+        inverter_tap_step=lcc.inverter_tap_step,
+        inverter_extinction_angle=lcc.inverter_extinction_angle,
+        inverter_capacitor_reactance=lcc.inverter_capacitor_reactance,
+        active_power_limits_from=divide(
+            get_tuple_min_max(lcc.active_power_limits_from),
+            PSY.get_base_power(resolver.sys),
+        ),
+        active_power_limits_to=divide(
+            get_tuple_min_max(lcc.active_power_limits_to),
+            PSY.get_base_power(resolver.sys),
+        ),
+        reactive_power_limits_from=divide(
+            get_tuple_min_max(lcc.reactive_power_limits_from),
+            PSY.get_base_power(resolver.sys),
+        ),
+        reactive_power_limits_to=divide(
+            get_tuple_min_max(lcc.reactive_power_limits_to),
+            PSY.get_base_power(resolver.sys),
+        ),
+        loss=get_sienna_value_curve(lcc.loss),
+    )
+end
+
 function openapi2psy(vsc::TwoTerminalVSCLine, resolver::Resolver)
     if PSY.get_base_power(resolver.sys) == 0.0
         error("base power is 0.0")
