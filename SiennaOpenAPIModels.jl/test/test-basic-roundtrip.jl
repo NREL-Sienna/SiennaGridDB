@@ -80,6 +80,87 @@ end
         @test test_convert.from == 2
         @test test_convert.to == 3
     end
+    @testset "HydroPumpTurbine to JSON" begin
+        head_hydro_res = PSY.HydroReservoir(
+            name="head",
+            available=true,
+            storage_level_limits=(min=0.0, max=50.0),
+            initial_level=32.0,
+            spillage_limits=nothing,
+            inflow=3.0,
+            outflow=5.0,
+            level_targets=nothing,
+            travel_time=nothing,
+            intake_elevation=32.0,
+            head_to_volume_factor=100.0,
+        )
+        PSY.add_component!(c_sys5, head_hydro_res)
+        tail_hydro_res = PSY.HydroReservoir(
+            name="tail",
+            available=true,
+            storage_level_limits=(min=0.0, max=50.0),
+            initial_level=32.0,
+            spillage_limits=nothing,
+            inflow=3.0,
+            outflow=5.0,
+            level_targets=nothing,
+            travel_time=nothing,
+            intake_elevation=32.0,
+            head_to_volume_factor=100.0,
+        )
+        PSY.add_component!(c_sys5, tail_hydro_res)
+        hydro_pump = PSY.HydroPumpTurbine(
+            name="hydro_pump",
+            available=true,
+            bus=PSY.get_bus(c_sys5, 2),
+            active_power=32.0,
+            reactive_power=3.0,
+            rating=5.0,
+            active_power_limits=(min=0.0, max=50.0),
+            reactive_power_limits=(min=0.0, max=5.0),
+            active_power_limits_pump=(min=0.0, max=50.0),
+            outflow_limits=(min=0.0, max=50.0),
+            head_reservoir=PSY.get_component(PSY.HydroReservoir, c_sys5, "head"),
+            tail_reservoir=PSY.get_component(PSY.HydroReservoir, c_sys5, "tail"),
+            powerhouse_elevation=32.0,
+            ramp_limits=(up=0.0, down=50.0),
+            time_limits=(up=0.0, down=5.0),
+            base_power=100.0,
+        )
+        PSY.add_component!(c_sys5, hydro_pump)
+        @test isa(hydro_pump, PSY.HydroPumpTurbine)
+        test_convert = SiennaOpenAPIModels.psy2openapi(hydro_pump, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.HydroPumpTurbine, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.available
+        @test test_convert.bus == 2
+        @test test_convert.active_power == 3200.0
+        @test test_convert.time_limits.down == 5.0
+    end
+    @testset "HydroReservoir to JSON" begin
+        hydro_res = PSY.HydroReservoir(
+            name="hydro_res",
+            available=true,
+            storage_level_limits=(min=0.0, max=50.0),
+            initial_level=32.0,
+            spillage_limits=nothing,
+            inflow=3.0,
+            outflow=5.0,
+            level_targets=nothing,
+            travel_time=nothing,
+            intake_elevation=32.0,
+            head_to_volume_factor=100.0,
+        )
+        PSY.add_component!(c_sys5, hydro_res)
+        @test isa(hydro_res, PSY.HydroReservoir)
+        test_convert = SiennaOpenAPIModels.psy2openapi(hydro_res, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.HydroReservoir, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.available
+        @test test_convert.storage_level_limits.max == 50.0
+        @test test_convert.initial_level == 32.0
+        @test isnothing(test_convert.level_targets)
+    end
     @testset "Line to JSON" begin
         line = PSY.get_component(PSY.Line, c_sys5, "4")
         @test isa(line, PSY.Line)
@@ -534,3 +615,22 @@ end
 #        @test test_convert.ramp_limits.up == 5.0
 #    end
 #end
+
+@testset "psse_240_parsing_sys RoundTrip to JSON" begin
+    psse_240_parsing_sys = PowerSystemCaseBuilder.build_system(
+        PowerSystemCaseBuilder.PSYTestSystems,
+        "psse_240_parsing_sys",
+    )
+    @testset "SwitchedAdmittance to JSON" begin
+        switch = PSY.get_component(PSY.SwitchedAdmittance, psse_240_parsing_sys, "6104-3")
+        @test isa(switch, PSY.SwitchedAdmittance)
+        test_convert = SiennaOpenAPIModels.psy2openapi(switch, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.SwitchedAdmittance, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.number_of_steps == [5]
+        @test test_convert.Y.imag == 2.224
+        @test test_convert.Y_increase[1].imag == 1.0
+        @test test_convert.admittance_limits.max == 1.5
+        @test isnothing(test_convert.dynamic_injector)
+    end
+end

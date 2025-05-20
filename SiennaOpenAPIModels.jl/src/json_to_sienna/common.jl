@@ -7,8 +7,16 @@ function get_bustype_enum(bustype::String)
     IS.deserialize(PSY.ACBusTypes, bustype)
 end
 
+function get_factsmode_enum(factsmode::String)
+    IS.deserialize(PSY.FACTSOperationModes, factsmode)
+end
+
 function get_fuel_type_enum(fuel_type::String)
     IS.deserialize(PSY.ThermalFuels, fuel_type)
+end
+
+function get_load_conform_enum(conformity::String)
+    IS.deserialize(PSY.LoadConformity, conformity)
 end
 
 function get_prime_mover_enum(prime_mover_type::String)
@@ -17,6 +25,10 @@ end
 
 function get_pump_status_enum(status::String)
     IS.deserialize(PSY.PumpHydroStatus, status)
+end
+
+function get_res_data_enum(reservoir_data_type::String)
+    IS.deserialize(PSY.ReservoirDataType, reservoir_data_type)
 end
 
 function get_reserve_enum(direction::String)
@@ -71,6 +83,12 @@ function get_tuple_startup_shutdown(obj::StartUpShutDown)
     return (startup=obj.startup, shutdown=obj.shutdown)
 end
 
+get_tuple_turbine_pump(::Nothing) = nothing
+
+function get_tuple_turbine_pump(obj::TurbinePump)
+    return (turbine=obj.turbine, pump=obj.pump)
+end
+
 get_tuple_up_down(::Nothing) = nothing
 
 function get_tuple_up_down(obj::UpDown)
@@ -106,6 +124,15 @@ function get_sienna_operation_cost(cost::HydroStorageGenerationCost)
     get_sienna_operation_cost(cost.value)
 end
 
+function get_sienna_operation_cost(cost::ImportExportCost)
+    PSY.ImportExportCost(
+        import_offer_curves=get_sienna_variable_cost(cost.import_offer_curves),
+        export_offer_curves=get_sienna_variable_cost(cost.export_offer_curves),
+        energy_import_weekly_limit=cost.energy_import_weekly_limit,
+        energy_export_weekly_limit=cost.energy_export_weekly_limit,
+    )
+end
+
 function get_sienna_operation_cost(cost::LoadCost)
     PSY.LoadCost(variable=get_sienna_variable_cost(cost.variable), fixed=cost.fixed)
 end
@@ -114,6 +141,7 @@ function get_sienna_operation_cost(cost::RenewableGenerationCost)
     PSY.RenewableGenerationCost(
         curtailment_cost=get_sienna_variable_cost(cost.curtailment_cost),
         variable=get_sienna_variable_cost(cost.variable),
+        fixed=cost.fixed,
     )
 end
 
@@ -192,6 +220,10 @@ end
 
 get_sienna_value_curve(::Nothing) = nothing
 
+function get_sienna_value_curve(curve::Float64)
+    return curve
+end
+
 function get_sienna_value_curve(curve::AverageRateCurve)
     PSY.AverageRateCurve(
         function_data=PSY.AverageRateCurveFunctionData(
@@ -200,6 +232,10 @@ function get_sienna_value_curve(curve::AverageRateCurve)
         initial_input=curve.initial_input,
         input_at_zero=curve.input_at_zero,
     )
+end
+
+function get_sienna_value_curve(curve::HeadVolumeFactor)
+    get_sienna_value_curve(curve.value)
 end
 
 function get_sienna_value_curve(curve::IncrementalCurve)
