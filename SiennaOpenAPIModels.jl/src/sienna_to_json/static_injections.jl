@@ -213,7 +213,7 @@ function psy2openapi(hydro::PSY.HydroTurbine, ids::IDGenerator)
         operation_cost=get_operation_cost(hydro.operation_cost),
         efficiency=hydro.efficiency,
         conversion_factor=hydro.conversion_factor,
-        reservoirs=getid!(ids, hydro.reservoirs), # this is a vector of reservoirs
+        reservoirs=map(c -> getid!(ids, c), hydro.reservoirs), # this is a vector of reservoirs
         dynamic_injector=getid!(ids, hydro.dynamic_injector),
     )
 end
@@ -415,8 +415,8 @@ function psy2openapi(synch::PSY.SynchronousCondenser, ids::IDGenerator)
         ),
         base_power=synch.base_power,
         must_run=synch.must_run,
-        active_power_losses=synch.active_power * PSY.get_base_power(synch),
-        dynamic_injector=getid!(ids, renewnondispatch.dynamic_injector),
+        active_power_losses=synch.active_power_losses * PSY.get_base_power(synch),
+        dynamic_injector=getid!(ids, synch.dynamic_injector),
     )
 end
 
