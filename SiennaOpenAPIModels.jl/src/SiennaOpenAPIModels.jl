@@ -94,6 +94,7 @@ include("modelincludes.jl")
 @batteries TModelHVDCLine
 @batteries Transformer2W
 @batteries Transformer3W
+@batteries TurbinePump
 @batteries TwoTerminalLCCLine
 @batteries TwoTerminalGenericHVDCLine
 @batteries TwoTerminalLoss
