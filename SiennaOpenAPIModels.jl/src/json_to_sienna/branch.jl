@@ -16,6 +16,24 @@ function openapi2psy(area_interchange::AreaInterchange, resolver::Resolver)
     )
 end
 
+function openapi2psy(branch::DiscreteControlledACBranch, resolver::Resolver)
+    if PSY.get_base_power(resolver.sys) == 0.0
+        error("base power is 0.0")
+    end
+    PSY.DiscreteControlledACBranch(
+        name=branch.name,
+        available=branch.available,
+        active_power_flow=branch.active_power_flow / PSY.get_base_power(resolver.sys),
+        reactive_power_flow=branch.reactive_power_flow / PSY.get_base_power(resolver.sys),
+        arc=resolver(branch.arc),
+        r=branch.r,
+        x=branch.x,
+        rating=branch.rating / PSY.get_base_power(resolver.sys),
+        discrete_branch_type=get_branchtype_enum(branch.discrete_branch_type),
+        branch_status=get_branchstatus_enum(branch.branch_status),
+    )
+end
+
 function openapi2psy(line::Line, resolver::Resolver)
     if PSY.get_base_power(resolver.sys) == 0.0
         error("base power is 0.0")
@@ -31,6 +49,8 @@ function openapi2psy(line::Line, resolver::Resolver)
         b=get_tuple_from_to(line.b),
         rating=line.rating / PSY.get_base_power(resolver.sys),
         angle_limits=get_tuple_min_max(line.angle_limits),
+        rating_b=divide(line.rating_b, PSY.get_base_power(resolver.sys)),
+        rating_c=divide(line.rating_c, PSY.get_base_power(resolver.sys)),
         g=get_tuple_from_to(line.g),
     )
 end
@@ -55,47 +75,53 @@ function openapi2psy(monitored::MonitoredLine, resolver::Resolver)
         ),
         rating=monitored.rating / PSY.get_base_power(resolver.sys),
         angle_limits=get_tuple_min_max(monitored.angle_limits),
+        rating_b=divide(monitored.rating_b, PSY.get_base_power(resolver.sys)),
+        rating_c=divide(monitored.rating_c, PSY.get_base_power(resolver.sys)),
         g=get_tuple_from_to(monitored.g),
     )
 end
 
 function openapi2psy(transformer::PhaseShiftingTransformer, resolver::Resolver)
-    if PSY.get_base_power(resolver.sys) == 0.0
+    if transformer.base_power == 0.0
         error("base power is 0.0")
     end
     PSY.PhaseShiftingTransformer(
         name=transformer.name,
         available=transformer.available,
-        active_power_flow=transformer.active_power_flow / PSY.get_base_power(resolver.sys),
-        reactive_power_flow=transformer.reactive_power_flow /
-                            PSY.get_base_power(resolver.sys),
+        active_power_flow=transformer.active_power_flow / transformer.base_power,
+        reactive_power_flow=transformer.reactive_power_flow / transformer.base_power,
         arc=resolver(transformer.arc),
         r=transformer.r,
         x=transformer.x,
         primary_shunt=transformer.primary_shunt,
         tap=transformer.tap,
         α=transformer.alpha,
-        rating=divide(transformer.rating, PSY.get_base_power(resolver.sys)),
+        rating=divide(transformer.rating, transformer.base_power),
+        base_power=transformer.base_power,
+        rating_b=divide(transformer.rating_b, transformer.base_power),
+        rating_c=divide(transformer.rating_c, transformer.base_power),
         phase_angle_limits=get_tuple_min_max(transformer.phase_angle_limits),
     )
 end
 
 function openapi2psy(taptransform::TapTransformer, resolver::Resolver)
-    if PSY.get_base_power(resolver.sys) == 0.0
+    if taptransform.base_power == 0.0
         error("base power is 0.0")
     end
     PSY.TapTransformer(;
         name=taptransform.name,
         available=taptransform.available,
-        active_power_flow=taptransform.active_power_flow / PSY.get_base_power(resolver.sys),
-        reactive_power_flow=taptransform.reactive_power_flow /
-                            PSY.get_base_power(resolver.sys),
+        active_power_flow=taptransform.active_power_flow / taptransform.base_power,
+        reactive_power_flow=taptransform.reactive_power_flow / taptransform.base_power,
         arc=resolver(taptransform.arc),
         r=taptransform.r,
         x=taptransform.x,
         primary_shunt=taptransform.primary_shunt,
         tap=taptransform.tap,
         rating=taptransform.rating,
+        base_power=taptransform.base_power,
+        rating_b=divide(taptransform.rating_b, taptransform.base_power),
+        rating_c=divide(taptransform.rating_c, taptransform.base_power),
     )
 end
 
@@ -123,20 +149,22 @@ function openapi2psy(tmodel::TModelHVDCLine, resolver::Resolver)
 end
 
 function openapi2psy(transform::Transformer2W, resolver::Resolver)
-    if PSY.get_base_power(resolver.sys) == 0.0
+    if transform.base_power == 0.0
         error("base power is 0.0")
     end
     PSY.Transformer2W(;
         name=transform.name,
         available=transform.available,
-        active_power_flow=transform.active_power_flow / PSY.get_base_power(resolver.sys),
-        reactive_power_flow=transform.reactive_power_flow /
-                            PSY.get_base_power(resolver.sys),
+        active_power_flow=transform.active_power_flow / transform.base_power,
+        reactive_power_flow=transform.reactive_power_flow / transform.base_power,
         arc=resolver(transform.arc),
         r=transform.r,
         x=transform.x,
         primary_shunt=transform.primary_shunt,
-        rating=divide(transform.rating, PSY.get_base_power(resolver.sys)),
+        rating=divide(transform.rating, transform.base_power),
+        base_power=transform.base_power,
+        rating_b=divide(transform.rating_b, transform.base_power),
+        rating_c=divide(transform.rating_c, transform.base_power),
     )
 end
 
@@ -166,5 +194,110 @@ function openapi2psy(hvdc::TwoTerminalGenericHVDCLine, resolver::Resolver)
             PSY.get_base_power(resolver.sys),
         ),
         loss=get_sienna_value_curve(hvdc.loss),
+    )
+end
+
+function openapi2psy(lcc::TwoTerminalLCCLine, resolver::Resolver)
+    if PSY.get_base_power(resolver.sys) == 0.0
+        error("base power is 0.0")
+    end
+    PSY.TwoTerminalLCCLine(
+        name=lcc.name,
+        available=lcc.available,
+        arc=resolver(lcc.arc),
+        active_power_flow=lcc.active_power_flow / PSY.get_base_power(resolver.sys),
+        r=lcc.r,
+        transfer_setpoint=lcc.transfer_setpoint,
+        scheduled_dc_voltage=lcc.scheduled_dc_voltage,
+        rectifier_bridges=lcc.rectifier_bridges,
+        rectifier_delay_angle_limits=get_tuple_min_max(lcc.rectifier_delay_angle_limits),
+        rectifier_rc=lcc.rectifier_rc,
+        rectifier_xc=lcc.rectifier_xc,
+        rectifier_base_voltage=lcc.rectifier_base_voltage,
+        inverter_bridges=lcc.inverter_bridges,
+        inverter_extinction_angle_limits=get_tuple_min_max(
+            lcc.inverter_extinction_angle_limits,
+        ),
+        inverter_rc=lcc.inverter_rc,
+        inverter_xc=lcc.inverter_xc,
+        inverter_base_voltage=lcc.inverter_base_voltage,
+        power_mode=lcc.power_mode,
+        switch_mode_voltage=lcc.switch_mode_voltage,
+        compounding_resistance=lcc.compounding_resistance,
+        min_compounding_voltage=lcc.min_compounding_voltage,
+        rectifier_transformer_ratio=lcc.rectifier_transformer_ratio,
+        rectifier_tap_setting=lcc.rectifier_tap_setting,
+        rectifier_tap_limits=get_tuple_min_max(lcc.rectifier_tap_limits),
+        rectifier_tap_step=lcc.rectifier_tap_step,
+        rectifier_delay_angle=lcc.rectifier_delay_angle,
+        rectifier_capacitor_reactance=lcc.rectifier_capacitor_reactance,
+        inverter_transformer_ratio=lcc.inverter_transformer_ratio,
+        inverter_tap_setting=lcc.inverter_tap_setting,
+        inverter_tap_limits=get_tuple_min_max(lcc.inverter_tap_limits),
+        inverter_tap_step=lcc.inverter_tap_step,
+        inverter_extinction_angle=lcc.inverter_extinction_angle,
+        inverter_capacitor_reactance=lcc.inverter_capacitor_reactance,
+        active_power_limits_from=divide(
+            get_tuple_min_max(lcc.active_power_limits_from),
+            PSY.get_base_power(resolver.sys),
+        ),
+        active_power_limits_to=divide(
+            get_tuple_min_max(lcc.active_power_limits_to),
+            PSY.get_base_power(resolver.sys),
+        ),
+        reactive_power_limits_from=divide(
+            get_tuple_min_max(lcc.reactive_power_limits_from),
+            PSY.get_base_power(resolver.sys),
+        ),
+        reactive_power_limits_to=divide(
+            get_tuple_min_max(lcc.reactive_power_limits_to),
+            PSY.get_base_power(resolver.sys),
+        ),
+        loss=get_sienna_value_curve(lcc.loss),
+    )
+end
+
+function openapi2psy(vsc::TwoTerminalVSCLine, resolver::Resolver)
+    if PSY.get_base_power(resolver.sys) == 0.0
+        error("base power is 0.0")
+    end
+    PSY.TwoTerminalVSCLine(
+        name=vsc.name,
+        available=vsc.available,
+        arc=resolver(vsc.arc),
+        active_power_flow=vsc.active_power_flow / PSY.get_base_power(resolver.sys),
+        rating=vsc.rating / PSY.get_base_power(resolver.sys),
+        active_power_limits_from=divide(
+            get_tuple_min_max(vsc.active_power_limits_from),
+            PSY.get_base_power(resolver.sys),
+        ),
+        active_power_limits_to=divide(
+            get_tuple_min_max(vsc.active_power_limits_to),
+            PSY.get_base_power(resolver.sys),
+        ),
+        g=vsc.g,
+        dc_current=vsc.dc_current,
+        reactive_power_from=vsc.reactive_power_from / PSY.get_base_power(resolver.sys),
+        dc_voltage_control_from=vsc.dc_voltage_control_from,
+        ac_voltage_control_from=vsc.ac_voltage_control_from,
+        dc_setpoint_from=vsc.dc_setpoint_from,
+        ac_setpoint_from=vsc.ac_setpoint_from,
+        converter_loss_from=get_sienna_value_curve(vsc.converter_loss_from),
+        max_dc_current_from=vsc.max_dc_current_from,
+        rating_from=vsc.rating_from / PSY.get_base_power(resolver.sys),
+        reactive_power_limits_from=get_tuple_min_max(vsc.reactive_power_limits_from),
+        power_factor_weighting_fraction_from=vsc.power_factor_weighting_fraction_from,
+        voltage_limits_from=get_tuple_min_max(vsc.voltage_limits_from),
+        reactive_power_to=vsc.reactive_power_to / PSY.get_base_power(resolver.sys),
+        dc_voltage_control_to=vsc.dc_voltage_control_to,
+        ac_voltage_control_to=vsc.ac_voltage_control_to,
+        dc_setpoint_to=vsc.dc_setpoint_to,
+        ac_setpoint_to=vsc.ac_setpoint_to,
+        converter_loss_to=get_sienna_value_curve(vsc.converter_loss_to),
+        max_dc_current_to=vsc.max_dc_current_to,
+        rating_to=vsc.rating_to,
+        reactive_power_limits_to=get_tuple_min_max(vsc.reactive_power_limits_to),
+        power_factor_weighting_fraction_to=vsc.power_factor_weighting_fraction_to,
+        voltage_limits_to=get_tuple_min_max(vsc.voltage_limits_to),
     )
 end
