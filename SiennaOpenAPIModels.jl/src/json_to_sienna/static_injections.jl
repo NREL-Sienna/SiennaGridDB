@@ -433,7 +433,7 @@ function openapi2psy(synch::SynchronousCondenser, resolver::Resolver)
         ),
         base_power=synch.base_power,
         must_run=synch.must_run,
-        active_power_losses=synch.active_power / synch.base_power,
+        active_power_losses=synch.active_power_losses / synch.base_power,
     )
 end
 
