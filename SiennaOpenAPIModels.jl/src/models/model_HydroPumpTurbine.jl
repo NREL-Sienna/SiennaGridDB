@@ -43,8 +43,8 @@
     - reactive_power_limits::MinMax
     - active_power_limits_pump::MinMax
     - outflow_limits::MinMax
-    - head_reservoir::HydroReservoir
-    - tail_reservoir::HydroReservoir
+    - head_reservoir::Int64
+    - tail_reservoir::Int64
     - powerhouse_elevation::Float64
     - ramp_limits::UpDown
     - time_limits::UpDown
@@ -71,8 +71,8 @@ Base.@kwdef mutable struct HydroPumpTurbine <: OpenAPI.APIModel
     reactive_power_limits = nothing # spec type: Union{ Nothing, MinMax }
     active_power_limits_pump = nothing # spec type: Union{ Nothing, MinMax }
     outflow_limits = nothing # spec type: Union{ Nothing, MinMax }
-    head_reservoir = nothing # spec type: Union{ Nothing, HydroReservoir }
-    tail_reservoir = nothing # spec type: Union{ Nothing, HydroReservoir }
+    head_reservoir::Union{Nothing, Int64} = nothing
+    tail_reservoir::Union{Nothing, Int64} = nothing
     powerhouse_elevation::Union{Nothing, Float64} = nothing
     ramp_limits = nothing # spec type: Union{ Nothing, UpDown }
     time_limits = nothing # spec type: Union{ Nothing, UpDown }
@@ -160,8 +160,8 @@ const _property_types_HydroPumpTurbine = Dict{Symbol, String}(
     Symbol("reactive_power_limits") => "MinMax",
     Symbol("active_power_limits_pump") => "MinMax",
     Symbol("outflow_limits") => "MinMax",
-    Symbol("head_reservoir") => "HydroReservoir",
-    Symbol("tail_reservoir") => "HydroReservoir",
+    Symbol("head_reservoir") => "Int64",
+    Symbol("tail_reservoir") => "Int64",
     Symbol("powerhouse_elevation") => "Float64",
     Symbol("ramp_limits") => "UpDown",
     Symbol("time_limits") => "UpDown",

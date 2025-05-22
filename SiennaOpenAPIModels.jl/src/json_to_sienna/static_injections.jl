@@ -35,6 +35,37 @@ function openapi2psy(energy_res::EnergyReservoirStorage, resolver::Resolver)
     )
 end
 
+function openapi2psy(load::ExponentialLoad, resolver::Resolver)
+    if load.base_power == 0.0
+        error("base power is 0.0")
+    end
+    PSY.ExponentialLoad(
+        name=load.name,
+        available=load.available,
+        bus=resolver(load.bus),
+        active_power=load.active_power / load.base_power,
+        reactive_power=load.reactive_power / load.base_power,
+        α=load.alpha,
+        β=load.beta,
+        conformity=get_load_conform_enum(load.conformity),
+        base_power=load.base_power,
+        max_active_power=load.max_active_power / load.base_power,
+        max_reactive_power=load.max_reactive_power / load.base_power,
+    )
+end
+
+function openapi2psy(facts::FACTSControlDevice, resolver::Resolver)
+    PSY.FACTSControlDevice(
+        name=facts.name,
+        available=facts.available,
+        bus=resolver(facts.bus),
+        control_mode=get_factsmode_enum(facts.control_mode),
+        voltage_setpoint=facts.voltage_setpoint,
+        max_shunt_current=facts.max_shunt_current,
+        reactive_power_required=facts.reactive_power_required,
+    )
+end
+
 function openapi2psy(fixed::FixedAdmittance, resolver::Resolver)
     PSY.FixedAdmittance(
         name=fixed.name,
@@ -116,9 +147,6 @@ function openapi2psy(hydro::HydroPumpTurbine, resolver::Resolver)
         active_power=hydro.active_power / hydro.base_power,
         reactive_power=hydro.reactive_power / hydro.base_power,
         rating=hydro.rating / hydro.base_power,
-        base_power=hydro.base_power,
-        rating_pump=hydro.rating_pump / hydro.base_power,
-        prime_mover_type=get_prime_mover_enum(hydro.prime_mover_type),
         active_power_limits=divide(
             get_tuple_min_max(hydro.active_power_limits),
             hydro.base_power,
@@ -127,34 +155,73 @@ function openapi2psy(hydro::HydroPumpTurbine, resolver::Resolver)
             get_tuple_min_max(hydro.reactive_power_limits),
             hydro.base_power,
         ),
-        ramp_limits=divide(get_tuple_up_down(hydro.ramp_limits), hydro.base_power),
-        time_limits=get_tuple_up_down(hydro.time_limits),
         active_power_limits_pump=divide(
             get_tuple_min_max(hydro.active_power_limits_pump),
             hydro.base_power,
         ),
-        reactive_power_limits_pump=divide(
-            get_tuple_min_max(hydro.reactive_power_limits_pump),
-            hydro.base_power,
-        ),
-        ramp_limits_pump=divide(
-            get_tuple_up_down(hydro.ramp_limits_pump),
-            hydro.base_power,
-        ),
-        time_limits_pump=get_tuple_up_down(hydro.time_limits_pump),
-        storage_capacity=divide(
-            get_tuple_up_down(hydro.storage_capacity),
-            hydro.base_power,
-        ),
-        inflow=hydro.inflow / hydro.base_power,
-        outflow=hydro.outflow,
-        initial_storage=divide(get_tuple_up_down(hydro.initial_storage), hydro.base_power),
+        outflow_limits=get_tuple_min_max(hydro.outflow_limits),
+        head_reservoir=resolver(hydro.head_reservoir),
+        tail_reservoir=resolver(hydro.tail_reservoir),
+        powerhouse_elevation=hydro.powerhouse_elevation,
+        ramp_limits=divide(get_tuple_up_down(hydro.ramp_limits), hydro.base_power),
+        time_limits=get_tuple_up_down(hydro.time_limits),
+        base_power=hydro.base_power,
         operation_cost=get_sienna_operation_cost(hydro.operation_cost),
-        storage_target=get_tuple_up_down(hydro.storage_target),
-        pump_efficiency=hydro.pump_efficiency,
+        active_power_pump=hydro.active_power_pump / hydro.base_power,
+        efficiency=get_tuple_turbine_pump(hydro.efficiency),
+        transition_time=get_tuple_turbine_pump(hydro.transition_time),
+        minimum_time=get_tuple_turbine_pump(hydro.minimum_time),
         conversion_factor=hydro.conversion_factor,
-        status=get_pump_status_enum(hydro.status),
-        time_at_status=hydro.time_at_status,
+        must_run=hydro.must_run,
+        prime_mover_type=get_prime_mover_enum(hydro.prime_mover_type),
+    )
+end
+
+function openapi2psy(hydro::HydroReservoir, resolver::Resolver)
+    PSY.HydroReservoir(
+        name=hydro.name,
+        available=hydro.available,
+        storage_level_limits=get_tuple_min_max(hydro.storage_level_limits),
+        initial_level=hydro.initial_level,
+        spillage_limits=get_tuple_min_max(hydro.spillage_limits),
+        inflow=hydro.inflow,
+        outflow=hydro.outflow,
+        level_targets=hydro.level_targets,
+        travel_time=hydro.travel_time,
+        intake_elevation=hydro.intake_elevation,
+        head_to_volume_factor=get_sienna_value_curve(hydro.head_to_volume_factor),
+        level_data_type=get_res_data_enum(hydro.level_data_type),
+    )
+end
+
+function openapi2psy(hydro::HydroTurbine, resolver::Resolver)
+    if hydro.base_power == 0.0
+        error("base power is 0.0")
+    end
+    PSY.HydroTurbine(
+        name=hydro.name,
+        available=hydro.available,
+        bus=resolver(hydro.bus),
+        active_power=hydro.active_power / hydro.base_power,
+        reactive_power=hydro.reactive_power / hydro.base_power,
+        rating=hydro.rating / hydro.base_power,
+        active_power_limits=divide(
+            get_tuple_min_max(hydro.active_power_limits),
+            hydro.base_power,
+        ),
+        reactive_power_limits=divide(
+            get_tuple_min_max(hydro.reactive_power_limits),
+            hydro.base_power,
+        ),
+        outflow_limits=get_tuple_min_max(hydro.outflow_limits),
+        powerhouse_elevation=hydro.powerhouse_elevation,
+        ramp_limits=divide(get_tuple_up_down(hydro.ramp_limits), hydro.base_power),
+        time_limits=get_tuple_up_down(hydro.time_limits),
+        base_power=hydro.base_power,
+        operation_cost=get_sienna_operation_cost(hydro.operation_cost),
+        efficiency=hydro.efficiency,
+        conversion_factor=hydro.conversion_factor,
+        reservoirs=map(resolver, hydro.reservoirs), # this is a vector of reservoirs
     )
 end
 
@@ -210,6 +277,7 @@ function openapi2psy(load::PowerLoad, resolver::Resolver)
         base_power=load.base_power,
         max_active_power=load.max_active_power / load.base_power,
         max_reactive_power=load.max_reactive_power / load.base_power,
+        conformity=get_load_conform_enum(load.conformity),
     )
 end
 
@@ -252,6 +320,55 @@ function openapi2psy(renewnon::RenewableNonDispatch, resolver::Resolver)
     )
 end
 
+function openapi2psy(power_load::ShiftablePowerLoad, resolver::Resolver)
+    if power_load.base_power == 0.0
+        error("base power is 0.0")
+    end
+    PSY.ShiftablePowerLoad(
+        name=power_load.name,
+        available=power_load.available,
+        bus=resolver(power_load.bus),
+        active_power=power_load.active_power / power_load.base_power,
+        upper_bound_active_power=power_load.upper_bound_active_power /
+                                 power_load.base_power,
+        lower_bound_active_power=power_load.lower_bound_active_power /
+                                 power_load.base_power,
+        reactive_power=power_load.reactive_power / power_load.base_power,
+        max_active_power=power_load.max_active_power / power_load.base_power,
+        max_reactive_power=power_load.max_reactive_power / power_load.base_power,
+        base_power=power_load.base_power,
+        load_balance_time_horizon=power_load.load_balance_time_horizon,
+        operation_cost=get_sienna_operation_cost(power_load.operation_cost),
+    )
+end
+
+function openapi2psy(source::Source, resolver::Resolver)
+    if source.base_power == 0.0
+        error("base power is 0.0")
+    end
+    PSY.Source(
+        name=source.name,
+        available=source.available,
+        bus=resolver(source.bus),
+        active_power=(source.active_power / source.base_power),
+        reactive_power=(source.reactive_power / source.base_power),
+        active_power_limits=divide(
+            get_tuple_min_max(source.active_power_limits),
+            source.base_power,
+        ),
+        reactive_power_limits=divide(
+            get_tuple_min_max(source.reactive_power_limits),
+            source.base_power,
+        ),
+        R_th=source.R_th,
+        X_th=source.X_th,
+        internal_voltage=source.internal_voltage,
+        internal_angle=source.internal_angle,
+        base_power=source.base_power,
+        operation_cost=get_sienna_operation_cost(source.operation_cost),
+    )
+end
+
 function openapi2psy(standard_load::StandardLoad, resolver::Resolver)
     if standard_load.base_power == 0.0
         error("base power is 0.0")
@@ -283,7 +400,40 @@ function openapi2psy(standard_load::StandardLoad, resolver::Resolver)
                                  standard_load.base_power,
         max_current_reactive_power=standard_load.max_current_reactive_power /
                                    standard_load.base_power,
+        conformity=get_load_conform_enum(standard_load.conformity),
         base_power=standard_load.base_power,
+    )
+end
+
+function openapi2psy(switch::SwitchedAdmittance, resolver::Resolver)
+    PSY.SwitchedAdmittance(
+        name=switch.name,
+        available=switch.available,
+        bus=resolver(switch.bus),
+        Y=get_julia_complex(switch.Y),
+        number_of_steps=switch.number_of_steps,
+        Y_increase=map(get_julia_complex, switch.Y_increase),
+        admittance_limits=get_tuple_min_max(switch.admittance_limits),
+    )
+end
+
+function openapi2psy(synch::SynchronousCondenser, resolver::Resolver)
+    if synch.base_power == 0.0
+        error("base power is 0.0")
+    end
+    PSY.SynchronousCondenser(
+        name=synch.name,
+        available=synch.available,
+        bus=resolver(synch.bus),
+        reactive_power=synch.reactive_power / synch.base_power,
+        rating=synch.rating / synch.base_power,
+        reactive_power_limits=divide(
+            get_tuple_min_max(synch.reactive_power_limits),
+            synch.base_power,
+        ),
+        base_power=synch.base_power,
+        must_run=synch.must_run,
+        active_power_losses=synch.active_power_losses / synch.base_power,
     )
 end
 

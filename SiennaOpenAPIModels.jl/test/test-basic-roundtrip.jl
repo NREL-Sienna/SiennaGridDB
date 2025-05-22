@@ -80,6 +80,113 @@ end
         @test test_convert.from == 2
         @test test_convert.to == 3
     end
+    @testset "HydroPumpTurbine to JSON" begin
+        head_hydro_res = PSY.HydroReservoir(
+            name="head",
+            available=true,
+            storage_level_limits=(min=0.0, max=50.0),
+            initial_level=32.0,
+            spillage_limits=nothing,
+            inflow=3.0,
+            outflow=5.0,
+            level_targets=nothing,
+            travel_time=nothing,
+            intake_elevation=32.0,
+            head_to_volume_factor=100.0,
+        )
+        PSY.add_component!(c_sys5, head_hydro_res)
+        tail_hydro_res = PSY.HydroReservoir(
+            name="tail",
+            available=true,
+            storage_level_limits=(min=0.0, max=50.0),
+            initial_level=32.0,
+            spillage_limits=nothing,
+            inflow=3.0,
+            outflow=5.0,
+            level_targets=nothing,
+            travel_time=nothing,
+            intake_elevation=32.0,
+            head_to_volume_factor=100.0,
+        )
+        PSY.add_component!(c_sys5, tail_hydro_res)
+        hydro_pump = PSY.HydroPumpTurbine(
+            name="hydro_pump",
+            available=true,
+            bus=PSY.get_bus(c_sys5, 2),
+            active_power=32.0,
+            reactive_power=3.0,
+            rating=5.0,
+            active_power_limits=(min=0.0, max=50.0),
+            reactive_power_limits=(min=0.0, max=5.0),
+            active_power_limits_pump=(min=0.0, max=50.0),
+            outflow_limits=(min=0.0, max=50.0),
+            head_reservoir=PSY.get_component(PSY.HydroReservoir, c_sys5, "head"),
+            tail_reservoir=PSY.get_component(PSY.HydroReservoir, c_sys5, "tail"),
+            powerhouse_elevation=32.0,
+            ramp_limits=(up=0.0, down=50.0),
+            time_limits=(up=0.0, down=5.0),
+            base_power=100.0,
+        )
+        PSY.add_component!(c_sys5, hydro_pump)
+        @test isa(hydro_pump, PSY.HydroPumpTurbine)
+        test_convert = SiennaOpenAPIModels.psy2openapi(hydro_pump, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.HydroPumpTurbine, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.available
+        @test test_convert.bus == 2
+        @test test_convert.active_power == 3200.0
+        @test test_convert.time_limits.down == 5.0
+    end
+    @testset "HydroReservoir to JSON" begin
+        hydro_res = PSY.HydroReservoir(
+            name="hydro_res",
+            available=true,
+            storage_level_limits=(min=0.0, max=50.0),
+            initial_level=32.0,
+            spillage_limits=nothing,
+            inflow=3.0,
+            outflow=5.0,
+            level_targets=nothing,
+            travel_time=nothing,
+            intake_elevation=32.0,
+            head_to_volume_factor=100.0,
+        )
+        PSY.add_component!(c_sys5, hydro_res)
+        @test isa(hydro_res, PSY.HydroReservoir)
+        test_convert = SiennaOpenAPIModels.psy2openapi(hydro_res, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.HydroReservoir, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.available
+        @test test_convert.storage_level_limits.max == 50.0
+        @test test_convert.initial_level == 32.0
+        @test isnothing(test_convert.level_targets)
+    end
+    @testset "HydroTurbine to JSON" begin
+        turbine = PSY.HydroTurbine(
+            name="hydro_turbine",
+            available=true,
+            bus=PSY.get_bus(c_sys5, 2),
+            active_power=32.0,
+            reactive_power=3.0,
+            rating=5.0,
+            active_power_limits=(min=0.0, max=50.0),
+            reactive_power_limits=(min=0.0, max=5.0),
+            outflow_limits=(min=0.0, max=50.0),
+            powerhouse_elevation=32.0,
+            ramp_limits=(up=0.0, down=50.0),
+            time_limits=(up=0.0, down=5.0),
+            base_power=100.0,
+        )
+        PSY.add_component!(c_sys5, turbine)
+        @test isa(turbine, PSY.HydroTurbine)
+        test_convert = SiennaOpenAPIModels.psy2openapi(turbine, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.HydroTurbine, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.available
+        @test test_convert.bus == 2
+        @test test_convert.active_power == 3200.0
+        @test test_convert.time_limits.down == 5.0
+    end
     @testset "Line to JSON" begin
         line = PSY.get_component(PSY.Line, c_sys5, "4")
         @test isa(line, PSY.Line)
@@ -127,6 +234,26 @@ end
         @test test_convert.bus == 2
         @test test_convert.constant_active_power == 16.0
         @test test_convert.max_constant_active_power == 24.0
+    end
+    @testset "SynchronousCondenser to JSON" begin
+        synch = PSY.SynchronousCondenser(
+            name="synch",
+            bus=PSY.get_bus(c_sys5, 2),
+            available=true,
+            reactive_power=0.5,
+            reactive_power_limits=(min=0.0, max=5.0),
+            rating=1.0,
+            base_power=32.0,
+        )
+        PSY.add_component!(c_sys5, synch)
+        @test isa(synch, PSY.SynchronousCondenser)
+        test_convert = SiennaOpenAPIModels.psy2openapi(synch, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.SynchronousCondenser, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.bus == 2
+        @test test_convert.available
+        @test test_convert.reactive_power == 16.0
+        @test test_convert.reactive_power_limits.max == 160.0
     end
     @testset "ThermalStandard to JSON" begin
         thermal_standard = PSY.get_component(PSY.ThermalStandard, c_sys5, "Solitude")
@@ -333,6 +460,19 @@ end
         @test test_convert.peak_active_power == 100.0 * 2.20
         @test test_convert.peak_reactive_power == 100.0 * 0.40
     end
+    @testset "Source to JSON" begin
+        source = PSY.get_component(PSY.Source, sys, "generator-102-1")
+        @test isa(source, PSY.Source)
+        test_convert = SiennaOpenAPIModels.psy2openapi(source, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.Source, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.name == "generator-102-1"
+        @test test_convert.active_power == 100.0
+        @test test_convert.active_power_limits.min == 0.0
+        @test test_convert.reactive_power_limits.max == 0.0
+        @test test_convert.X_th == 0.7
+        @test test_convert.internal_angle == 0.0
+    end
 end
 
 @testset "c_sys5_all RoundTrip to JSON" begin
@@ -495,6 +635,24 @@ end
     end
 end
 
+@testset "2_Bus_Load_Tutorial RoundTrip to JSON" begin
+    bus2_load_tutorial = PowerSystemCaseBuilder.build_system(
+        PowerSystemCaseBuilder.PSIDSystems,
+        "2 Bus Load Tutorial",
+    )
+    @testset "ExponentialLoad to JSON" begin
+        exload = only(collect(PSY.get_components(PSY.ExponentialLoad, bus2_load_tutorial)))
+        @test isa(exload, PSY.ExponentialLoad)
+        test_convert = SiennaOpenAPIModels.psy2openapi(exload, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.ExponentialLoad, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.alpha == 0.0
+        @test test_convert.active_power == 10.0
+        @test test_convert.max_reactive_power == 3.2799999999999994
+        @test isnothing(test_convert.dynamic_injector)
+    end
+end
+
 @testset "c_sys5_pglib RoundTrip to JSON" begin
     c_sys5_pglib = PowerSystemCaseBuilder.build_system(
         PowerSystemCaseBuilder.PSITestSystems,
@@ -512,25 +670,38 @@ end
     end
 end
 
-#@testset "c_sys5_phes_ed RoundTrip to JSON" begin
-#    c_sys5_phes_ed = PowerSystemCaseBuilder.build_system(
-#        PowerSystemCaseBuilder.PSITestSystems,
-#        "c_sys5_phes_ed",
-#    )
-#    @testset "HydroPumpTurbine to JSON" begin
-#        pumped_hydro_energy_storage =
-#            PSY.get_component(PSY.HydroPumpTurbine, c_sys5_phes_ed, "HydroPumpTurbine")
-#        @test isa(pumped_hydro_energy_storage, PSY.HydroPumpTurbine)
-#        test_convert =
-#            SiennaOpenAPIModels.psy2openapi(pumped_hydro_energy_storage, IDGenerator())
-#        test_roundtrip(SiennaOpenAPIModels.HydroPumpTurbine, test_convert)
-#        @test test_convert.id == 1
-#        @test test_convert.bus == 2
-#        @test test_convert.base_power == 50.0
-#        @test test_convert.rating == 50.0
-#        @test test_convert.rating_pump == 50.0
-#        @test test_convert.storage_capacity.up == 100.0
-#        @test test_convert.active_power_limits.max == 50.0
-#        @test test_convert.ramp_limits.up == 5.0
-#    end
-#end
+@testset "psse_240_parsing_sys RoundTrip to JSON" begin
+    psse_240_parsing_sys = PowerSystemCaseBuilder.build_system(
+        PowerSystemCaseBuilder.PSYTestSystems,
+        "psse_240_parsing_sys",
+    )
+    @testset "SwitchedAdmittance to JSON" begin
+        switch = PSY.get_component(PSY.SwitchedAdmittance, psse_240_parsing_sys, "6104-3")
+        @test isa(switch, PSY.SwitchedAdmittance)
+        test_convert = SiennaOpenAPIModels.psy2openapi(switch, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.SwitchedAdmittance, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.number_of_steps == [5]
+        @test test_convert.Y.imag == 2.224
+        @test test_convert.Y_increase[1].imag == 1.0
+        @test test_convert.admittance_limits.max == 1.5
+        @test isnothing(test_convert.dynamic_injector)
+    end
+end
+
+@testset "pti_frankenstein_70_sys RoundTrip to JSON" begin
+    pti_frankenstein_70_sys = PowerSystemCaseBuilder.build_system(
+        PowerSystemCaseBuilder.PSSEParsingTestSystems,
+        "pti_frankenstein_70_sys",
+    )
+    @testset "FACTSControlDevice to JSON" begin
+        facts = PSY.get_component(PSY.FACTSControlDevice, pti_frankenstein_70_sys, "1004_1")
+        @test isa(facts, PSY.FACTSControlDevice)
+        test_convert = SiennaOpenAPIModels.psy2openapi(facts, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.FACTSControlDevice, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.control_mode == "NML"
+        @test test_convert.max_shunt_current == 204.0
+        @test test_convert.reactive_power_required == 100.0
+    end
+end
