@@ -14,9 +14,9 @@
         scheduled_dc_voltage=nothing,
         rectifier_bridges=nothing,
         rectifier_delay_angle_limits=nothing,
-        recrifier_rc=nothing,
-        recrifier_xc=nothing,
-        recrifier_base_voltage=nothing,
+        rectifier_rc=nothing,
+        rectifier_xc=nothing,
+        rectifier_base_voltage=nothing,
         inverter_bridges=nothing,
         inverter_extinction_angle_limits=nothing,
         inverter_rc=nothing,
@@ -55,9 +55,9 @@
     - scheduled_dc_voltage::Float64
     - rectifier_bridges::Int64
     - rectifier_delay_angle_limits::MinMax
-    - recrifier_rc::Float64
-    - recrifier_xc::Float64
-    - recrifier_base_voltage::Float64
+    - rectifier_rc::Float64
+    - rectifier_xc::Float64
+    - rectifier_base_voltage::Float64
     - inverter_bridges::Int64
     - inverter_extinction_angle_limits::MinMax
     - inverter_rc::Float64
@@ -96,9 +96,9 @@ Base.@kwdef mutable struct TwoTerminalLCCLine <: OpenAPI.APIModel
     scheduled_dc_voltage::Union{Nothing, Float64} = nothing
     rectifier_bridges::Union{Nothing, Int64} = nothing
     rectifier_delay_angle_limits = nothing # spec type: Union{ Nothing, MinMax }
-    recrifier_rc::Union{Nothing, Float64} = nothing
-    recrifier_xc::Union{Nothing, Float64} = nothing
-    recrifier_base_voltage::Union{Nothing, Float64} = nothing
+    rectifier_rc::Union{Nothing, Float64} = nothing
+    rectifier_xc::Union{Nothing, Float64} = nothing
+    rectifier_base_voltage::Union{Nothing, Float64} = nothing
     inverter_bridges::Union{Nothing, Int64} = nothing
     inverter_extinction_angle_limits = nothing # spec type: Union{ Nothing, MinMax }
     inverter_rc::Union{Nothing, Float64} = nothing
@@ -137,9 +137,9 @@ Base.@kwdef mutable struct TwoTerminalLCCLine <: OpenAPI.APIModel
         scheduled_dc_voltage,
         rectifier_bridges,
         rectifier_delay_angle_limits,
-        recrifier_rc,
-        recrifier_xc,
-        recrifier_base_voltage,
+        rectifier_rc,
+        rectifier_xc,
+        rectifier_base_voltage,
         inverter_bridges,
         inverter_extinction_angle_limits,
         inverter_rc,
@@ -178,9 +178,9 @@ Base.@kwdef mutable struct TwoTerminalLCCLine <: OpenAPI.APIModel
             scheduled_dc_voltage,
             rectifier_bridges,
             rectifier_delay_angle_limits,
-            recrifier_rc,
-            recrifier_xc,
-            recrifier_base_voltage,
+            rectifier_rc,
+            rectifier_xc,
+            rectifier_base_voltage,
             inverter_bridges,
             inverter_extinction_angle_limits,
             inverter_rc,
@@ -224,9 +224,9 @@ const _property_types_TwoTerminalLCCLine = Dict{Symbol, String}(
     Symbol("scheduled_dc_voltage") => "Float64",
     Symbol("rectifier_bridges") => "Int64",
     Symbol("rectifier_delay_angle_limits") => "MinMax",
-    Symbol("recrifier_rc") => "Float64",
-    Symbol("recrifier_xc") => "Float64",
-    Symbol("recrifier_base_voltage") => "Float64",
+    Symbol("rectifier_rc") => "Float64",
+    Symbol("rectifier_xc") => "Float64",
+    Symbol("rectifier_base_voltage") => "Float64",
     Symbol("inverter_bridges") => "Int64",
     Symbol("inverter_extinction_angle_limits") => "MinMax",
     Symbol("inverter_rc") => "Float64",
@@ -268,6 +268,9 @@ function OpenAPI.check_required(o::TwoTerminalLCCLine)
     o.scheduled_dc_voltage === nothing && (return false)
     o.rectifier_bridges === nothing && (return false)
     o.rectifier_delay_angle_limits === nothing && (return false)
+    o.rectifier_rc === nothing && (return false)
+    o.rectifier_xc === nothing && (return false)
+    o.rectifier_base_voltage === nothing && (return false)
     o.inverter_bridges === nothing && (return false)
     o.inverter_extinction_angle_limits === nothing && (return false)
     o.inverter_rc === nothing && (return false)
@@ -307,12 +310,12 @@ function OpenAPI.validate_properties(o::TwoTerminalLCCLine)
         Symbol("rectifier_delay_angle_limits"),
         o.rectifier_delay_angle_limits,
     )
-    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("recrifier_rc"), o.recrifier_rc)
-    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("recrifier_xc"), o.recrifier_xc)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("rectifier_rc"), o.rectifier_rc)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("rectifier_xc"), o.rectifier_xc)
     OpenAPI.validate_property(
         TwoTerminalLCCLine,
-        Symbol("recrifier_base_voltage"),
-        o.recrifier_base_voltage,
+        Symbol("rectifier_base_voltage"),
+        o.rectifier_base_voltage,
     )
     OpenAPI.validate_property(
         TwoTerminalLCCLine,
