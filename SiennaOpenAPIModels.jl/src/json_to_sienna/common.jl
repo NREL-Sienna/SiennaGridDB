@@ -7,6 +7,14 @@ function get_bustype_enum(bustype::String)
     IS.deserialize(PSY.ACBusTypes, bustype)
 end
 
+function get_branchstatus_enum(branchstatus::String)
+    IS.deserialize(PSY.DiscreteControlledBranchStatus, branchstatus)
+end
+
+function get_branchtype_enum(branchtype::String)
+    IS.deserialize(PSY.DiscreteControlledBranchType, branchtype)
+end
+
 function get_factsmode_enum(factsmode::String)
     IS.deserialize(PSY.FACTSOperationModes, factsmode)
 end

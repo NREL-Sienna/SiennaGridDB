@@ -28,6 +28,25 @@ using JSON
         arc_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
         @test IS.compare_values(arc, arc_copy, exclude=Set([:internal, :ext]))
     end
+    @testset "DiscreteControlledACBranch to JSON and Back" begin
+        discrete = PSY.DiscreteControlledACBranch(
+            name="discrete_ac",
+            available=true,
+            active_power_flow=0.5,
+            reactive_power_flow=0.0,
+            arc=first(PSY.get_components(PSY.Arc, c_sys5)),
+            r=0.00108,
+            x=0.0108,
+            rating=15.0,
+        )
+        PSY.add_component!(c_sys5, discrete)
+        @test isa(discrete, PSY.DiscreteControlledACBranch)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(discrete, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, c_sys5)
+        discrete_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(discrete, discrete_copy, exclude=Set([:internal, :ext]))
+    end
     @testset "HydroPumpTurbine to JSON" begin
         head_hydro_res = PSY.HydroReservoir(
             name="head",
@@ -155,7 +174,6 @@ using JSON
         resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, c_sys5)
         renew_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
         @test IS.compare_values(renew, renew_copy, exclude=Set([:internal, :ext]))
-    end
     @testset "SynchronousCondenser to JSON" begin
         synch = PSY.SynchronousCondenser(
             name="synch",
@@ -570,7 +588,7 @@ end
     end
 end
 
-@testset "pti_frankenstein_70_sys RoundTrip to JSON" begin
+@testset "pti_frankenstein_70_sys Complete RoundTrip to JSON" begin
     pti_frankenstein_70_sys = PowerSystemCaseBuilder.build_system(
         PowerSystemCaseBuilder.PSSEParsingTestSystems,
         "pti_frankenstein_70_sys",
@@ -584,5 +602,29 @@ end
             SiennaOpenAPIModels.resolver_from_id_generator(id_gen, pti_frankenstein_70_sys)
         facts_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
         @test IS.compare_values(facts, facts_copy, exclude=Set([:internal, :ext]))
+    end
+    @testset "TwoTerminalLCCLine to JSON and Back" begin
+        lcc = only(
+            collect(PSY.get_components(PSY.TwoTerminalLCCLine, pti_frankenstein_70_sys)),
+        )
+        @test isa(lcc, PSY.TwoTerminalLCCLine)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(lcc, id_gen)
+        resolver =
+            SiennaOpenAPIModels.resolver_from_id_generator(id_gen, pti_frankenstein_70_sys)
+        lcc_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(lcc, lcc_copy, exclude=Set([:internal, :ext]))
+    end
+    @testset "TwoTerminalVSCLine to JSON and Back" begin
+        vsc = only(
+            collect(PSY.get_components(PSY.TwoTerminalVSCLine, pti_frankenstein_70_sys)),
+        )
+        @test isa(vsc, PSY.TwoTerminalVSCLine)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(vsc, id_gen)
+        resolver =
+            SiennaOpenAPIModels.resolver_from_id_generator(id_gen, pti_frankenstein_70_sys)
+        vsc_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(vsc, vsc_copy, exclude=Set([:internal, :ext]))
     end
 end

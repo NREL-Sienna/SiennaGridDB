@@ -81,6 +81,30 @@ end
         @test test_convert.from == 2
         @test test_convert.to == 3
     end
+    @testset "DiscreteControlledACBranch to JSON" begin
+        discrete = PSY.DiscreteControlledACBranch(
+            name="discrete_ac",
+            available=true,
+            active_power_flow=0.5,
+            reactive_power_flow=0.0,
+            arc=first(PSY.get_components(PSY.Arc, c_sys5)),
+            r=0.00108,
+            x=0.0108,
+            rating=15.0,
+        )
+        PSY.add_component!(c_sys5, discrete)
+        @test isa(discrete, PSY.DiscreteControlledACBranch)
+        test_convert = SiennaOpenAPIModels.psy2openapi(discrete, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.DiscreteControlledACBranch, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.arc == 2
+        @test test_convert.active_power_flow == 50.0
+        @test test_convert.reactive_power_flow == 0.0
+        @test test_convert.r == 0.00108
+        @test test_convert.rating == 1500
+        @test test_convert.discrete_branch_type == "OTHER"
+        @test test_convert.branch_status == "CLOSED"
+    end
     @testset "HydroPumpTurbine to JSON" begin
         head_hydro_res = PSY.HydroReservoir(
             name="head",
@@ -705,5 +729,48 @@ end
         @test test_convert.control_mode == "NML"
         @test test_convert.max_shunt_current == 204.0
         @test test_convert.reactive_power_required == 100.0
+    end
+    @testset "TwoTerminalLCCLine to JSON" begin
+        lcc = only(
+            collect(PSY.get_components(PSY.TwoTerminalLCCLine, pti_frankenstein_70_sys)),
+        )
+        @test isa(lcc, PSY.TwoTerminalLCCLine)
+        test_convert = SiennaOpenAPIModels.psy2openapi(lcc, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.TwoTerminalLCCLine, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.arc == 2
+        @test test_convert.r == 0.0001890359168241966
+        @test test_convert.transfer_setpoint == -20.0
+        @test test_convert.rectifier_base_voltage == 230.0
+        @test test_convert.inverter_extinction_angle_limits.min == 0.3036872898470133
+        @test test_convert.power_mode == false
+        @test test_convert.min_compounding_voltage == 0.0
+        @test test_convert.rectifier_tap_limits.max == 1.0
+        @test test_convert.inverter_tap_step == 0.00625
+        @test test_convert.active_power_limits_from.min == 0.0
+        @test test_convert.reactive_power_limits_to.max == 0.0
+    end
+    @testset "TwoTerminalVSCLine to JSON" begin
+        vsc = only(
+            collect(PSY.get_components(PSY.TwoTerminalVSCLine, pti_frankenstein_70_sys)),
+        )
+        @test isa(vsc, PSY.TwoTerminalVSCLine)
+        test_convert = SiennaOpenAPIModels.psy2openapi(vsc, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.TwoTerminalVSCLine, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.arc == 2
+        @test test_convert.active_power_flow == -20.0
+        @test test_convert.rating == 100.0 * 2.26
+        @test test_convert.active_power_limits_from.min == -202.6721490486544
+        @test test_convert.reactive_power_from == 0.0
+        @test test_convert.dc_voltage_control_from
+        @test test_convert.ac_setpoint_from == 1.034
+        @test test_convert.max_dc_current_from == 1499.79
+        @test test_convert.rating_from == 100.0 * 2.26
+        @test test_convert.reactive_power_limits_from.min == -1.0
+        @test test_convert.rating_to == 2.26
+        @test test_convert.reactive_power_limits_to.max == 1.0
+        @test test_convert.power_factor_weighting_fraction_to == 0.5
+        @test test_convert.voltage_limits_to.max == 999.9
     end
 end
