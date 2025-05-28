@@ -234,10 +234,6 @@ function get_sienna_value_curve(curve::AverageRateCurve)
     )
 end
 
-function get_sienna_value_curve(curve::HeadVolumeFactor)
-    get_sienna_value_curve(curve.value)
-end
-
 function get_sienna_value_curve(curve::IncrementalCurve)
     PSY.IncrementalCurve(
         function_data=get_sienna_function_data(curve.function_data),

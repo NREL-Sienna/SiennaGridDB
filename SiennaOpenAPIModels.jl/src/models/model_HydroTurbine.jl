@@ -42,7 +42,7 @@
     - operation_cost::HydroGenerationCost
     - efficiency::Float64
     - conversion_factor::Float64
-    - reservoirs::Vector{HydroReservoir}
+    - reservoirs::Vector{Int64}
     - dynamic_injector::Any
 """
 Base.@kwdef mutable struct HydroTurbine <: OpenAPI.APIModel
@@ -63,7 +63,7 @@ Base.@kwdef mutable struct HydroTurbine <: OpenAPI.APIModel
     operation_cost = nothing # spec type: Union{ Nothing, HydroGenerationCost }
     efficiency::Union{Nothing, Float64} = 1.0
     conversion_factor::Union{Nothing, Float64} = 1.0
-    reservoirs::Union{Nothing, Vector} = nothing # spec type: Union{ Nothing, Vector{HydroReservoir} }
+    reservoirs::Union{Nothing, Vector{Int64}} = nothing
     dynamic_injector::Union{Nothing, Any} = nothing
 
     function HydroTurbine(
@@ -131,7 +131,7 @@ const _property_types_HydroTurbine = Dict{Symbol, String}(
     Symbol("operation_cost") => "HydroGenerationCost",
     Symbol("efficiency") => "Float64",
     Symbol("conversion_factor") => "Float64",
-    Symbol("reservoirs") => "Vector{HydroReservoir}",
+    Symbol("reservoirs") => "Vector{Int64}",
     Symbol("dynamic_injector") => "Any",
 )
 OpenAPI.property_type(::Type{HydroTurbine}, name::Symbol) =

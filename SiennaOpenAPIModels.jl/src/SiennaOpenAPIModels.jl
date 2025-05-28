@@ -45,7 +45,6 @@ include("modelincludes.jl")
 @batteries FromToToFrom
 @batteries FuelCurve
 @batteries FuelCurveFuelCost
-@batteries HeadVolumeFactor
 @batteries HydroDispatch
 @batteries HydroEnergyReservoir
 @batteries HydroGenerationCost

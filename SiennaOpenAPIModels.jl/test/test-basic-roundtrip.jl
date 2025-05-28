@@ -4,6 +4,7 @@ using PowerSystemCaseBuilder
 import PowerSystems
 const PSY = PowerSystems
 using JSON
+using Infiltrator
 
 function jsondiff(j1::S, j2::S) where {S <: Union{String, Int64, Float64, Bool}}
     if j1 == j2
@@ -149,7 +150,7 @@ end
             level_targets=nothing,
             travel_time=nothing,
             intake_elevation=32.0,
-            head_to_volume_factor=100.0,
+            head_to_volume_factor=PSY.InputOutputCurve(PSY.LinearFunctionData(100.0)),
         )
         PSY.add_component!(c_sys5, hydro_res)
         @test isa(hydro_res, PSY.HydroReservoir)
@@ -160,6 +161,7 @@ end
         @test test_convert.storage_level_limits.max == 50.0
         @test test_convert.initial_level == 32.0
         @test isnothing(test_convert.level_targets)
+        @infiltrate
     end
     @testset "HydroTurbine to JSON" begin
         turbine = PSY.HydroTurbine(

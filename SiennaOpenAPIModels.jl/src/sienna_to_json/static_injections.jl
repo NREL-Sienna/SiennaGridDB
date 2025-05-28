@@ -183,9 +183,7 @@ function psy2openapi(hydro::PSY.HydroReservoir, ids::IDGenerator)
         level_targets=hydro.level_targets,
         travel_time=hydro.travel_time,
         intake_elevation=hydro.intake_elevation,
-        head_to_volume_factor=HeadVolumeFactor(
-            get_value_curve(hydro.head_to_volume_factor),
-        ),
+        head_to_volume_factor=ValueCurve(get_value_curve(hydro.head_to_volume_factor)),
         level_data_type=string(hydro.level_data_type),
     )
 end
