@@ -4,10 +4,12 @@ on:
   push:
     branches:
       - main
+      - psy5
     tags: ["*"]
   pull_request:
     branches:
       - main
+      - psy5
   workflow_dispatch:
 
 jobs:
