@@ -174,6 +174,7 @@ using JSON
         resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, c_sys5)
         renew_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
         @test IS.compare_values(renew, renew_copy, exclude=Set([:internal, :ext]))
+    end
     @testset "SynchronousCondenser to JSON" begin
         synch = PSY.SynchronousCondenser(
             name="synch",
