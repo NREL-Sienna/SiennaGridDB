@@ -16,6 +16,7 @@ UUIDs = "cf7118a7-6976-5b1a-9a39-7adc72f591a4"
 
 [sources]
 PowerSystems = {url = "https://github.com/NREL-Sienna/PowerSystems.jl", rev = "psy5"}
+InfrastructureSystems = {url = "https://github.com/NREL-Sienna/InfrastructureSystems.jl", rev = "main"}
 
 [compat]
 DBInterface = "2.6.1"
