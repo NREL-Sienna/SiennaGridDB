@@ -29,8 +29,8 @@ jobs:
       - name: Clone PowerSystemsTestData
         uses: actions/checkout@v2
         with:
-          repository: NREL-Sienna/PowerSystemsTestData-3.3
-          path: /home/runner/work/SiennaGridDB/SiennaGridDB/
+          repository: NREL-Sienna/PowerSystemsTestData
+          path: PowerSystemsTestData-3.3
       - name: Copy Overrides.toml
         run: |
           mkdir -p ~/.julia/artifacts
