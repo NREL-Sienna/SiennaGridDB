@@ -30,7 +30,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: NREL-Sienna/PowerSystemsTestData.jl
-          path: downstream
+          path: .
       - name: Copy Overrides.toml
         run: |
           mkdir -p ~/.julia/artifacts
