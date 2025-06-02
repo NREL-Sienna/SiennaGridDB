@@ -23,9 +23,6 @@ jobs:
           arch: x64
       - name: Use Julia cache
         uses: julia-actions/cache@v2
-      - uses: julia-actions/julia-buildpkg@v1
-        with:
-          project: SiennaOpenAPIModels.jl
       - name: Clone PowerSystemsTestData
         uses: actions/checkout@v2
         with:
@@ -34,7 +31,10 @@ jobs:
       - name: Copy Overrides.toml
         run: |
           mkdir -p ~/.julia/artifacts
-          cp Overrides.toml ~/.julia/artifacts/
+          cp .github/workflows/Overrides.toml ~/.julia/artifacts/
+      - uses: julia-actions/julia-buildpkg@v1
+        with:
+          project: SiennaOpenAPIModels.jl
       - uses: julia-actions/julia-runtest@v1
         with:
           project: SiennaOpenAPIModels.jl
