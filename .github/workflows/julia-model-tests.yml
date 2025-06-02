@@ -26,6 +26,15 @@ jobs:
       - uses: julia-actions/julia-buildpkg@v1
         with:
           project: SiennaOpenAPIModels.jl
+      - name: Clone PowerSystemsTestData
+        uses: actions/checkout@v2
+        with:
+          repository: NREL-Sienna/PowerSystemsTestData.jl
+          path: downstream
+      - name: Copy Overrides.toml
+        run: |
+          mkdir -p ~/.julia/artifacts
+          cp Overrides.toml ~/.julia/artifacts/
       - uses: julia-actions/julia-runtest@v1
         with:
           project: SiennaOpenAPIModels.jl
