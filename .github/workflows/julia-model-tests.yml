@@ -30,7 +30,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: NREL-Sienna/PowerSystemsTestData-3.3
-          path: /home/runner/SiennaGridDB/SiennaGridDB/
+          path: /home/runner/work/SiennaGridDB/SiennaGridDB/
       - name: Copy Overrides.toml
         run: |
           mkdir -p ~/.julia/artifacts
