@@ -204,7 +204,6 @@ using JSON
     end
 end
 
-#=
 @testset "RTS_GMLC_RT_sys Complete RoundTrip to JSON" begin
     RTS_GMLC_RT_sys = PowerSystemCaseBuilder.build_system(
         PowerSystemCaseBuilder.PSISystems,
@@ -317,7 +316,6 @@ end
         @test IS.compare_values(reserve, reserve_copy, exclude=Set([:internal, :ext]))
     end
 end
-=#
 
 @testset "sys10_pjm_ac_dc Complete Roundtrip to JSON" begin
     sys10_pjm_ac_dc = PowerSystemCaseBuilder.build_system(
