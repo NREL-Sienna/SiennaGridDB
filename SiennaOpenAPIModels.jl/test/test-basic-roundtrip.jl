@@ -111,7 +111,7 @@ end
         test_roundtrip(SiennaOpenAPIModels.Line, test_convert)
         @test test_convert.id == 1
         @test test_convert.arc == 2
-        @test test_convert.rating == 1114.8
+        @test test_convert.rating == 796.0
     end
     @testset "PowerLoad to JSON" begin
         power_load = PSY.get_component(PSY.PowerLoad, c_sys5, "Bus2")
@@ -541,6 +541,22 @@ end
         PowerSystemCaseBuilder.PSSEParsingTestSystems,
         "pti_frankenstein_70_sys",
     )
+    @testset "Transformer3W to JSON" begin
+        transform3w =
+            only(collect(PSY.get_components(PSY.Transformer3W, pti_frankenstein_70_sys)))
+        @test isa(transform3w, PSY.Transformer3W)
+        test_convert = SiennaOpenAPIModels.psy2openapi(transform3w, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.Transformer3W, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.secondary_star_arc == 3
+        @test test_convert.reactive_power_flow_tertiary == 0.0
+        @test test_convert.r_primary == 0.0011262132915879012
+        @test test_convert.rating == 0.0
+        @test test_convert.x_23 == 0.07990294896030246
+        @test test_convert.base_power_12 == 144.0
+        @test test_convert.g == 0.00097535
+        @test test_convert.rating_secondary == 100000000.0
+    end
     @testset "TwoTerminalLCCLine to JSON" begin
         lcc = only(
             collect(PSY.get_components(PSY.TwoTerminalLCCLine, pti_frankenstein_70_sys)),

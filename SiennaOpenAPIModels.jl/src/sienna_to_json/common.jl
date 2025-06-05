@@ -58,6 +58,16 @@ end
 scale(::Nothing, ::Float64) = nothing
 scale(x::Float64, scalar::Float64) = scalar * x
 
+# Function to properly scale r, x, g, and b
+
+function get_Z_fraction(v::Float64, s::Float64)
+    return v^2 / s
+end
+
+function get_Z_fraction(v::Nothing, s::Float64)
+    error("base voltage of from bus is nothing")
+end
+
 # Functions that get operation costs
 
 function get_operation_cost(cost::PSY.HydroGenerationCost)

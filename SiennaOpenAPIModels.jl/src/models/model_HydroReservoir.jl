@@ -30,7 +30,7 @@
     - level_targets::Float64
     - travel_time::Float64
     - intake_elevation::Float64
-    - head_to_volume_factor::HeadVolumeFactor
+    - head_to_volume_factor::ValueCurve
     - level_data_type::String
 """
 Base.@kwdef mutable struct HydroReservoir <: OpenAPI.APIModel
@@ -45,7 +45,7 @@ Base.@kwdef mutable struct HydroReservoir <: OpenAPI.APIModel
     level_targets::Union{Nothing, Float64} = nothing
     travel_time::Union{Nothing, Float64} = nothing
     intake_elevation::Union{Nothing, Float64} = nothing
-    head_to_volume_factor = nothing # spec type: Union{ Nothing, HeadVolumeFactor }
+    head_to_volume_factor = nothing # spec type: Union{ Nothing, ValueCurve }
     level_data_type::Union{Nothing, String} = "USABLE_VOLUME"
 
     function HydroReservoir(
@@ -95,7 +95,7 @@ const _property_types_HydroReservoir = Dict{Symbol, String}(
     Symbol("level_targets") => "Float64",
     Symbol("travel_time") => "Float64",
     Symbol("intake_elevation") => "Float64",
-    Symbol("head_to_volume_factor") => "HeadVolumeFactor",
+    Symbol("head_to_volume_factor") => "ValueCurve",
     Symbol("level_data_type") => "String",
 )
 OpenAPI.property_type(::Type{HydroReservoir}, name::Symbol) =
