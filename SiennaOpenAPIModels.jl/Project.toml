@@ -14,8 +14,13 @@ StructHelpers = "4093c41a-2008-41fd-82b8-e3f9d02b504f"
 Tables = "bd369af6-aec1-5ad0-b16a-f7cc5008161c"
 UUIDs = "cf7118a7-6976-5b1a-9a39-7adc72f591a4"
 
+[sources]
+InfrastructureSystems = {rev = "main", url = "https://github.com/NREL-Sienna/InfrastructureSystems.jl"}
+PowerSystems = {rev = "psy5", url = "https://github.com/NREL-Sienna/PowerSystems.jl"}
+
 [compat]
 DBInterface = "2.6.1"
+InfrastructureSystems = "2.6.0"
 JSON = "0.21.4"
 SQLite = "1.6.1"
 Tables = "1.12.0"

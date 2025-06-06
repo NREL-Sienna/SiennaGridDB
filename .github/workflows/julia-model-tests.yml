@@ -4,10 +4,12 @@ on:
   push:
     branches:
       - main
+      - psy5
     tags: ["*"]
   pull_request:
     branches:
       - main
+      - psy5
   workflow_dispatch:
 
 jobs:
@@ -21,6 +23,15 @@ jobs:
           arch: x64
       - name: Use Julia cache
         uses: julia-actions/cache@v2
+      - name: Clone PowerSystemsTestData
+        uses: actions/checkout@v2
+        with:
+          repository: NREL-Sienna/PowerSystemsTestData
+          path: PowerSystemsTestData-3.3
+      - name: Copy Overrides.toml
+        run: |
+          mkdir -p ~/.julia/artifacts
+          cp .github/workflows/Overrides.toml ~/.julia/artifacts/
       - uses: julia-actions/julia-buildpkg@v1
         with:
           project: SiennaOpenAPIModels.jl
