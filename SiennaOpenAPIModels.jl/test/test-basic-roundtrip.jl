@@ -718,6 +718,22 @@ end
         PowerSystemCaseBuilder.PSSEParsingTestSystems,
         "pti_frankenstein_70_sys",
     )
+    @testset "Transformer3W to JSON" begin
+        transform3w =
+            only(collect(PSY.get_components(PSY.Transformer3W, pti_frankenstein_70_sys)))
+        @test isa(transform3w, PSY.Transformer3W)
+        test_convert = SiennaOpenAPIModels.psy2openapi(transform3w, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.Transformer3W, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.secondary_star_arc == 3
+        @test test_convert.reactive_power_flow_tertiary == 0.0
+        @test test_convert.r_primary == 0.41372696614583315
+        @test test_convert.rating == 0.0
+        @test test_convert.x_23 == 6.047854206805293
+        @test test_convert.base_power_12 == 144.0
+        @test test_convert.g == 2.6550170132325145e-6
+        @test test_convert.rating_secondary == 100000000.0
+    end
     @testset "FACTSControlDevice to JSON" begin
         facts = PSY.get_component(PSY.FACTSControlDevice, pti_frankenstein_70_sys, "1004_1")
         @test isa(facts, PSY.FACTSControlDevice)

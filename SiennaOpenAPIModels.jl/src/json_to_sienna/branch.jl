@@ -168,6 +168,104 @@ function openapi2psy(transform::Transformer2W, resolver::Resolver)
     )
 end
 
+function openapi2psy(trans3w::Transformer3W, resolver::Resolver)
+    if trans3w.base_power_12 == 0.0
+        error("primary base power is 0.0")
+    elseif trans3w.base_power_23 == 0.0
+        error("secondary base power is 0.0")
+    elseif trans3w.base_power_13 == 0.0
+        error("tertiary base power is 0.0")
+    end
+    PSY.Transformer3W(
+        name=trans3w.name,
+        available=trans3w.available,
+        primary_star_arc=resolver(trans3w.primary_star_arc),
+        secondary_star_arc=resolver(trans3w.secondary_star_arc),
+        tertiary_star_arc=resolver(trans3w.tertiary_star_arc),
+        star_bus=resolver(trans3w.star_bus),
+        active_power_flow_primary=trans3w.active_power_flow_primary / trans3w.base_power_12,
+        reactive_power_flow_primary=trans3w.reactive_power_flow_primary /
+                                    trans3w.base_power_12,
+        active_power_flow_secondary=trans3w.active_power_flow_secondary /
+                                    trans3w.base_power_23,
+        reactive_power_flow_secondary=trans3w.reactive_power_flow_secondary /
+                                      trans3w.base_power_23,
+        active_power_flow_tertiary=trans3w.active_power_flow_tertiary /
+                                   trans3w.base_power_13,
+        reactive_power_flow_tertiary=trans3w.reactive_power_flow_tertiary /
+                                     trans3w.base_power_13,
+        r_primary=trans3w.r_primary / get_Z_fraction(
+            resolver(trans3w.primary_star_arc).from.base_voltage,
+            trans3w.base_power_12,
+        ),
+        x_primary=trans3w.x_primary / get_Z_fraction(
+            resolver(trans3w.primary_star_arc).from.base_voltage,
+            trans3w.base_power_12,
+        ),
+        r_secondary=trans3w.r_secondary / get_Z_fraction(
+            resolver(trans3w.secondary_star_arc).from.base_voltage,
+            trans3w.base_power_23,
+        ),
+        x_secondary=trans3w.x_secondary / get_Z_fraction(
+            resolver(trans3w.secondary_star_arc).from.base_voltage,
+            trans3w.base_power_23,
+        ),
+        r_tertiary=trans3w.r_tertiary / get_Z_fraction(
+            resolver(trans3w.tertiary_star_arc).from.base_voltage,
+            trans3w.base_power_13,
+        ),
+        x_tertiary=trans3w.x_tertiary / get_Z_fraction(
+            resolver(trans3w.tertiary_star_arc).from.base_voltage,
+            trans3w.base_power_13,
+        ),
+        rating=divide(trans3w.rating, trans3w.base_power_12),
+        r_12=trans3w.r_12 / get_Z_fraction(
+            resolver(trans3w.primary_star_arc).from.base_voltage,
+            trans3w.base_power_12,
+        ),
+        x_12=trans3w.x_12 / get_Z_fraction(
+            resolver(trans3w.primary_star_arc).from.base_voltage,
+            trans3w.base_power_12,
+        ),
+        r_23=trans3w.r_23 / get_Z_fraction(
+            resolver(trans3w.secondary_star_arc).from.base_voltage,
+            trans3w.base_power_23,
+        ),
+        x_23=trans3w.x_23 / get_Z_fraction(
+            resolver(trans3w.secondary_star_arc).from.base_voltage,
+            trans3w.base_power_23,
+        ),
+        r_13=trans3w.r_13 / get_Z_fraction(
+            resolver(trans3w.tertiary_star_arc).from.base_voltage,
+            trans3w.base_power_13,
+        ),
+        x_13=trans3w.x_13 / get_Z_fraction(
+            resolver(trans3w.tertiary_star_arc).from.base_voltage,
+            trans3w.base_power_13,
+        ),
+        base_power_12=trans3w.base_power_12,
+        base_power_23=trans3w.base_power_23,
+        base_power_13=trans3w.base_power_13,
+        g=trans3w.g * get_Z_fraction(
+            resolver(trans3w.primary_star_arc).from.base_voltage,
+            trans3w.base_power_12,
+        ),
+        b=trans3w.b * get_Z_fraction(
+            resolver(trans3w.primary_star_arc).from.base_voltage,
+            trans3w.base_power_12,
+        ),
+        primary_turns_ratio=trans3w.primary_turns_ratio,
+        secondary_turns_ratio=trans3w.secondary_turns_ratio,
+        tertiary_turns_ratio=trans3w.tertiary_turns_ratio,
+        available_primary=trans3w.available_primary,
+        available_secondary=trans3w.available_secondary,
+        available_tertiary=trans3w.available_tertiary,
+        rating_primary=trans3w.rating_primary / trans3w.base_power_12,
+        rating_secondary=trans3w.rating_secondary / trans3w.base_power_23,
+        rating_tertiary=trans3w.rating_tertiary / trans3w.base_power_13,
+    )
+end
+
 function openapi2psy(hvdc::TwoTerminalGenericHVDCLine, resolver::Resolver)
     if PSY.get_base_power(resolver.sys) == 0.0
         error("base power is 0.0")

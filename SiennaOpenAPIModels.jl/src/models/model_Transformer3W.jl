@@ -7,9 +7,9 @@
         id=nothing,
         name=nothing,
         available=nothing,
-        primary_secondary_arc=nothing,
-        secondary_tertiary_arc=nothing,
-        primary_tertiary_arc=nothing,
+        primary_star_arc=nothing,
+        secondary_star_arc=nothing,
+        tertiary_star_arc=nothing,
         star_bus=nothing,
         active_power_flow_primary=nothing,
         reactive_power_flow_primary=nothing,
@@ -30,6 +30,9 @@
         x_23=nothing,
         r_13=nothing,
         x_13=nothing,
+        base_power_12=nothing,
+        base_power_23=nothing,
+        base_power_13=nothing,
         g=0.0,
         b=0.0,
         primary_turns_ratio=1.0,
@@ -46,9 +49,9 @@
     - id::Int64
     - name::String
     - available::Bool
-    - primary_secondary_arc::Int64
-    - secondary_tertiary_arc::Int64
-    - primary_tertiary_arc::Int64
+    - primary_star_arc::Int64
+    - secondary_star_arc::Int64
+    - tertiary_star_arc::Int64
     - star_bus::Int64
     - active_power_flow_primary::Float64
     - reactive_power_flow_primary::Float64
@@ -69,6 +72,9 @@
     - x_23::Float64
     - r_13::Float64
     - x_13::Float64
+    - base_power_12::Float64
+    - base_power_23::Float64
+    - base_power_13::Float64
     - g::Float64
     - b::Float64
     - primary_turns_ratio::Float64
@@ -85,9 +91,9 @@ Base.@kwdef mutable struct Transformer3W <: OpenAPI.APIModel
     id::Union{Nothing, Int64} = nothing
     name::Union{Nothing, String} = nothing
     available::Union{Nothing, Bool} = nothing
-    primary_secondary_arc::Union{Nothing, Int64} = nothing
-    secondary_tertiary_arc::Union{Nothing, Int64} = nothing
-    primary_tertiary_arc::Union{Nothing, Int64} = nothing
+    primary_star_arc::Union{Nothing, Int64} = nothing
+    secondary_star_arc::Union{Nothing, Int64} = nothing
+    tertiary_star_arc::Union{Nothing, Int64} = nothing
     star_bus::Union{Nothing, Int64} = nothing
     active_power_flow_primary::Union{Nothing, Float64} = nothing
     reactive_power_flow_primary::Union{Nothing, Float64} = nothing
@@ -108,6 +114,9 @@ Base.@kwdef mutable struct Transformer3W <: OpenAPI.APIModel
     x_23::Union{Nothing, Float64} = nothing
     r_13::Union{Nothing, Float64} = nothing
     x_13::Union{Nothing, Float64} = nothing
+    base_power_12::Union{Nothing, Float64} = nothing
+    base_power_23::Union{Nothing, Float64} = nothing
+    base_power_13::Union{Nothing, Float64} = nothing
     g::Union{Nothing, Float64} = 0.0
     b::Union{Nothing, Float64} = 0.0
     primary_turns_ratio::Union{Nothing, Float64} = 1.0
@@ -124,9 +133,9 @@ Base.@kwdef mutable struct Transformer3W <: OpenAPI.APIModel
         id,
         name,
         available,
-        primary_secondary_arc,
-        secondary_tertiary_arc,
-        primary_tertiary_arc,
+        primary_star_arc,
+        secondary_star_arc,
+        tertiary_star_arc,
         star_bus,
         active_power_flow_primary,
         reactive_power_flow_primary,
@@ -147,6 +156,9 @@ Base.@kwdef mutable struct Transformer3W <: OpenAPI.APIModel
         x_23,
         r_13,
         x_13,
+        base_power_12,
+        base_power_23,
+        base_power_13,
         g,
         b,
         primary_turns_ratio,
@@ -163,9 +175,9 @@ Base.@kwdef mutable struct Transformer3W <: OpenAPI.APIModel
             id,
             name,
             available,
-            primary_secondary_arc,
-            secondary_tertiary_arc,
-            primary_tertiary_arc,
+            primary_star_arc,
+            secondary_star_arc,
+            tertiary_star_arc,
             star_bus,
             active_power_flow_primary,
             reactive_power_flow_primary,
@@ -186,6 +198,9 @@ Base.@kwdef mutable struct Transformer3W <: OpenAPI.APIModel
             x_23,
             r_13,
             x_13,
+            base_power_12,
+            base_power_23,
+            base_power_13,
             g,
             b,
             primary_turns_ratio,
@@ -207,9 +222,9 @@ const _property_types_Transformer3W = Dict{Symbol, String}(
     Symbol("id") => "Int64",
     Symbol("name") => "String",
     Symbol("available") => "Bool",
-    Symbol("primary_secondary_arc") => "Int64",
-    Symbol("secondary_tertiary_arc") => "Int64",
-    Symbol("primary_tertiary_arc") => "Int64",
+    Symbol("primary_star_arc") => "Int64",
+    Symbol("secondary_star_arc") => "Int64",
+    Symbol("tertiary_star_arc") => "Int64",
     Symbol("star_bus") => "Int64",
     Symbol("active_power_flow_primary") => "Float64",
     Symbol("reactive_power_flow_primary") => "Float64",
@@ -230,6 +245,9 @@ const _property_types_Transformer3W = Dict{Symbol, String}(
     Symbol("x_23") => "Float64",
     Symbol("r_13") => "Float64",
     Symbol("x_13") => "Float64",
+    Symbol("base_power_12") => "Float64",
+    Symbol("base_power_23") => "Float64",
+    Symbol("base_power_13") => "Float64",
     Symbol("g") => "Float64",
     Symbol("b") => "Float64",
     Symbol("primary_turns_ratio") => "Float64",
@@ -249,9 +267,9 @@ function OpenAPI.check_required(o::Transformer3W)
     o.id === nothing && (return false)
     o.name === nothing && (return false)
     o.available === nothing && (return false)
-    o.primary_secondary_arc === nothing && (return false)
-    o.secondary_tertiary_arc === nothing && (return false)
-    o.primary_tertiary_arc === nothing && (return false)
+    o.primary_star_arc === nothing && (return false)
+    o.secondary_star_arc === nothing && (return false)
+    o.tertiary_star_arc === nothing && (return false)
     o.star_bus === nothing && (return false)
     o.active_power_flow_primary === nothing && (return false)
     o.reactive_power_flow_primary === nothing && (return false)
@@ -271,6 +289,9 @@ function OpenAPI.check_required(o::Transformer3W)
     o.x_23 === nothing && (return false)
     o.r_13 === nothing && (return false)
     o.x_13 === nothing && (return false)
+    o.base_power_12 === nothing && (return false)
+    o.base_power_23 === nothing && (return false)
+    o.base_power_13 === nothing && (return false)
     true
 end
 
@@ -278,20 +299,16 @@ function OpenAPI.validate_properties(o::Transformer3W)
     OpenAPI.validate_property(Transformer3W, Symbol("id"), o.id)
     OpenAPI.validate_property(Transformer3W, Symbol("name"), o.name)
     OpenAPI.validate_property(Transformer3W, Symbol("available"), o.available)
+    OpenAPI.validate_property(Transformer3W, Symbol("primary_star_arc"), o.primary_star_arc)
     OpenAPI.validate_property(
         Transformer3W,
-        Symbol("primary_secondary_arc"),
-        o.primary_secondary_arc,
+        Symbol("secondary_star_arc"),
+        o.secondary_star_arc,
     )
     OpenAPI.validate_property(
         Transformer3W,
-        Symbol("secondary_tertiary_arc"),
-        o.secondary_tertiary_arc,
-    )
-    OpenAPI.validate_property(
-        Transformer3W,
-        Symbol("primary_tertiary_arc"),
-        o.primary_tertiary_arc,
+        Symbol("tertiary_star_arc"),
+        o.tertiary_star_arc,
     )
     OpenAPI.validate_property(Transformer3W, Symbol("star_bus"), o.star_bus)
     OpenAPI.validate_property(
@@ -337,6 +354,9 @@ function OpenAPI.validate_properties(o::Transformer3W)
     OpenAPI.validate_property(Transformer3W, Symbol("x_23"), o.x_23)
     OpenAPI.validate_property(Transformer3W, Symbol("r_13"), o.r_13)
     OpenAPI.validate_property(Transformer3W, Symbol("x_13"), o.x_13)
+    OpenAPI.validate_property(Transformer3W, Symbol("base_power_12"), o.base_power_12)
+    OpenAPI.validate_property(Transformer3W, Symbol("base_power_23"), o.base_power_23)
+    OpenAPI.validate_property(Transformer3W, Symbol("base_power_13"), o.base_power_13)
     OpenAPI.validate_property(Transformer3W, Symbol("g"), o.g)
     OpenAPI.validate_property(Transformer3W, Symbol("b"), o.b)
     OpenAPI.validate_property(
