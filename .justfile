@@ -11,7 +11,7 @@ assert-sqlite-version:
 
 create-schema db=db-name: assert-sqlite-version
     @echo "Creating schema"
-    @rm {{db}}
+    @touch {{db}} && rm {{db}}
     @{{sqlite-command}} {{db}} < schema.sql
 
 create-triggers db=db-name: create-schema
