@@ -107,10 +107,13 @@ function OpenAPI.check_required(o::ShiftablePowerLoad)
     o.available === nothing && (return false)
     o.bus === nothing && (return false)
     o.active_power === nothing && (return false)
+    o.upper_bound_active_power === nothing && (return false)
+    o.lower_bound_active_power === nothing && (return false)
     o.reactive_power === nothing && (return false)
     o.max_active_power === nothing && (return false)
     o.max_reactive_power === nothing && (return false)
     o.base_power === nothing && (return false)
+    o.load_balance_time_horizon === nothing && (return false)
     o.operation_cost === nothing && (return false)
     true
 end

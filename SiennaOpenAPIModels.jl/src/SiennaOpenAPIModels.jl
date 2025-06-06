@@ -49,8 +49,10 @@ include("modelincludes.jl")
 @batteries HydroEnergyReservoir
 @batteries HydroGenerationCost
 @batteries HydroPumpTurbine
+@batteries HydroReservoir
 @batteries HydroStorageGenerationCost
 @batteries HydroTurbine
+@batteries ImportExportCost
 @batteries IncrementalCurve
 @batteries IncrementalCurveFunctionData
 @batteries InOut
@@ -73,6 +75,7 @@ include("modelincludes.jl")
 @batteries RenewableDispatch
 @batteries RenewableGenerationCost
 @batteries RenewableNonDispatch
+@batteries ShiftablePowerLoad
 @batteries Source
 @batteries StandardLoad
 @batteries StartUpShutDown
@@ -80,6 +83,8 @@ include("modelincludes.jl")
 @batteries StorageCost
 @batteries StorageCostStartUp
 @batteries StorageCostStartUpOneOf
+@batteries SwitchedAdmittance
+@batteries SynchronousCondenser
 @batteries TapTransformer
 @batteries ThermalGenerationCost
 @batteries ThermalGenerationCostStartUp
@@ -88,6 +93,7 @@ include("modelincludes.jl")
 @batteries TModelHVDCLine
 @batteries Transformer2W
 @batteries Transformer3W
+@batteries TurbinePump
 @batteries TwoTerminalLCCLine
 @batteries TwoTerminalGenericHVDCLine
 @batteries TwoTerminalLoss

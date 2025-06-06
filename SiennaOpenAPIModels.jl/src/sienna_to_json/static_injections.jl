@@ -31,6 +31,38 @@ function psy2openapi(energy_res::PSY.EnergyReservoirStorage, ids::IDGenerator)
     )
 end
 
+function psy2openapi(load::PSY.ExponentialLoad, ids::IDGenerator)
+    ExponentialLoad(
+        id=getid!(ids, load),
+        name=load.name,
+        available=load.available,
+        bus=getid!(ids, load.bus),
+        active_power=load.active_power * PSY.get_base_power(load),
+        reactive_power=load.reactive_power * PSY.get_base_power(load),
+        alpha=load.α,
+        beta=load.β,
+        conformity=string(load.conformity),
+        base_power=load.base_power,
+        max_active_power=load.max_active_power * PSY.get_base_power(load),
+        max_reactive_power=load.max_reactive_power * PSY.get_base_power(load),
+        dynamic_injector=getid!(ids, load.dynamic_injector),
+    )
+end
+
+function psy2openapi(facts::PSY.FACTSControlDevice, ids::IDGenerator)
+    FACTSControlDevice(
+        id=getid!(ids, facts),
+        name=facts.name,
+        available=facts.available,
+        bus=getid!(ids, facts.bus),
+        control_mode=string(facts.control_mode),
+        voltage_setpoint=facts.voltage_setpoint,
+        max_shunt_current=facts.max_shunt_current,
+        reactive_power_required=facts.reactive_power_required,
+        dynamic_injector=getid!(ids, facts.dynamic_injector),
+    )
+end
+
 function psy2openapi(fixedadmit::PSY.FixedAdmittance, ids::IDGenerator)
     FixedAdmittance(
         id=getid!(ids, fixedadmit),
@@ -110,41 +142,76 @@ function psy2openapi(hydro::PSY.HydroPumpTurbine, ids::IDGenerator)
         active_power=hydro.active_power * PSY.get_base_power(hydro),
         reactive_power=hydro.reactive_power * PSY.get_base_power(hydro),
         rating=hydro.rating * PSY.get_base_power(hydro),
-        base_power=hydro.base_power,
-        prime_mover_type=string(hydro.prime_mover_type),
         active_power_limits=get_min_max(
             scale(hydro.active_power_limits, PSY.get_base_power(hydro)),
         ),
         reactive_power_limits=get_min_max(
             scale(hydro.reactive_power_limits, PSY.get_base_power(hydro)),
         ),
-        ramp_limits=get_up_down(scale(hydro.ramp_limits, PSY.get_base_power(hydro))),
-        time_limits=get_up_down(hydro.time_limits),
-        rating_pump=hydro.rating_pump * PSY.get_base_power(hydro),
         active_power_limits_pump=get_min_max(
             scale(hydro.active_power_limits_pump, PSY.get_base_power(hydro)),
         ),
-        reactive_power_limits_pump=get_min_max(
-            scale(hydro.reactive_power_limits_pump, PSY.get_base_power(hydro)),
-        ),
-        ramp_limits_pump=get_up_down(
-            scale(hydro.ramp_limits_pump, PSY.get_base_power(hydro)),
-        ),
-        time_limits_pump=get_up_down(hydro.time_limits_pump),
-        storage_capacity=get_up_down(
-            scale(hydro.storage_capacity, PSY.get_base_power(hydro)),
-        ),
-        inflow=hydro.inflow * PSY.get_base_power(hydro),
-        outflow=hydro.outflow,
-        initial_storage=get_up_down(
-            scale(hydro.initial_storage, PSY.get_base_power(hydro)),
-        ),
+        outflow_limits=get_min_max(hydro.outflow_limits),
+        head_reservoir=getid!(ids, hydro.head_reservoir),
+        tail_reservoir=getid!(ids, hydro.tail_reservoir),
+        powerhouse_elevation=hydro.powerhouse_elevation,
+        ramp_limits=get_up_down(scale(hydro.ramp_limits, PSY.get_base_power(hydro))),
+        time_limits=get_up_down(hydro.time_limits),
+        base_power=hydro.base_power,
         operation_cost=HydroStorageGenerationCost(get_operation_cost(hydro.operation_cost)),
-        storage_target=get_up_down(hydro.storage_target),
-        pump_efficiency=hydro.pump_efficiency,
+        active_power_pump=hydro.active_power_pump * PSY.get_base_power(hydro),
+        efficiency=get_turbine_pump(hydro.efficiency),
+        transition_time=get_turbine_pump(hydro.transition_time),
+        minimum_time=get_turbine_pump(hydro.minimum_time),
         conversion_factor=hydro.conversion_factor,
-        status=string(hydro.status),
-        time_at_status=hydro.time_at_status,
+        must_run=hydro.must_run,
+        prime_mover_type=string(hydro.prime_mover_type),
+        dynamic_injector=getid!(ids, hydro.dynamic_injector),
+    )
+end
+
+function psy2openapi(hydro::PSY.HydroReservoir, ids::IDGenerator)
+    HydroReservoir(
+        id=getid!(ids, hydro),
+        name=hydro.name,
+        available=hydro.available,
+        storage_level_limits=get_min_max(hydro.storage_level_limits),
+        initial_level=hydro.initial_level,
+        spillage_limits=get_min_max(hydro.spillage_limits),
+        inflow=hydro.inflow,
+        outflow=hydro.outflow,
+        level_targets=hydro.level_targets,
+        travel_time=hydro.travel_time,
+        intake_elevation=hydro.intake_elevation,
+        head_to_volume_factor=ValueCurve(get_value_curve(hydro.head_to_volume_factor)),
+        level_data_type=string(hydro.level_data_type),
+    )
+end
+
+function psy2openapi(hydro::PSY.HydroTurbine, ids::IDGenerator)
+    HydroTurbine(
+        id=getid!(ids, hydro),
+        name=hydro.name,
+        available=hydro.available,
+        bus=getid!(ids, hydro.bus),
+        active_power=hydro.active_power * PSY.get_base_power(hydro),
+        reactive_power=hydro.reactive_power * PSY.get_base_power(hydro),
+        rating=hydro.rating * PSY.get_base_power(hydro),
+        active_power_limits=get_min_max(
+            scale(hydro.active_power_limits, PSY.get_base_power(hydro)),
+        ),
+        reactive_power_limits=get_min_max(
+            scale(hydro.reactive_power_limits, PSY.get_base_power(hydro)),
+        ),
+        outflow_limits=get_min_max(hydro.outflow_limits),
+        powerhouse_elevation=hydro.powerhouse_elevation,
+        ramp_limits=get_up_down(scale(hydro.ramp_limits, PSY.get_base_power(hydro))),
+        time_limits=get_up_down(hydro.time_limits),
+        base_power=hydro.base_power,
+        operation_cost=get_operation_cost(hydro.operation_cost),
+        efficiency=hydro.efficiency,
+        conversion_factor=hydro.conversion_factor,
+        reservoirs=map(c -> getid!(ids, c), hydro.reservoirs), # this is a vector of reservoirs
         dynamic_injector=getid!(ids, hydro.dynamic_injector),
     )
 end
@@ -196,6 +263,7 @@ function psy2openapi(power_load::PSY.PowerLoad, ids::IDGenerator)
         base_power=power_load.base_power,
         max_active_power=power_load.max_active_power * PSY.get_base_power(power_load),
         max_reactive_power=power_load.max_reactive_power * PSY.get_base_power(power_load),
+        conformity=string(power_load.conformity),
         dynamic_injector=getid!(ids, power_load.dynamic_injector),
     )
 end
@@ -237,6 +305,51 @@ function psy2openapi(renewnondispatch::PSY.RenewableNonDispatch, ids::IDGenerato
     )
 end
 
+function psy2openapi(power_load::PSY.ShiftablePowerLoad, ids::IDGenerator)
+    ShiftablePowerLoad(
+        id=getid!(ids, power_load),
+        name=power_load.name,
+        available=power_load.available,
+        bus=getid!(ids, power_load.bus),
+        active_power=power_load.active_power * PSY.get_base_power(power_load),
+        upper_bound_active_power=power_load.upper_bound_active_power *
+                                 PSY.get_base_power(power_load),
+        lower_bound_active_power=power_load.lower_bound_active_power *
+                                 PSY.get_base_power(power_load),
+        reactive_power=power_load.reactive_power * PSY.get_base_power(power_load),
+        max_active_power=power_load.max_active_power * PSY.get_base_power(power_load),
+        max_reactive_power=power_load.max_reactive_power * PSY.get_base_power(power_load),
+        base_power=power_load.base_power,
+        load_balance_time_horizon=power_load.load_balance_time_horizon,
+        operation_cost=get_operation_cost(power_load.operation_cost),
+        dynamic_injector=getid!(ids, power_load.dynamic_injector),
+    )
+end
+
+function psy2openapi(source::PSY.Source, ids::IDGenerator)
+    Source(
+        id=getid!(ids, source),
+        name=source.name,
+        available=source.available,
+        bus=getid!(ids, source.bus),
+        active_power=(source.active_power * PSY.get_base_power(source)),
+        reactive_power=(source.reactive_power * PSY.get_base_power(source)),
+        active_power_limits=get_min_max(
+            scale(source.active_power_limits, PSY.get_base_power(source)),
+        ),
+        reactive_power_limits=get_min_max(
+            scale(source.reactive_power_limits, PSY.get_base_power(source)),
+        ),
+        R_th=source.R_th,
+        X_th=source.X_th,
+        internal_voltage=source.internal_voltage,
+        internal_angle=source.internal_angle,
+        base_power=source.base_power,
+        operation_cost=get_operation_cost(source.operation_cost),
+        dynamic_injector=getid!(ids, source.dynamic_injector),
+    )
+end
+
 function psy2openapi(standard_load::PSY.StandardLoad, ids::IDGenerator)
     StandardLoad(
         id=getid!(ids, standard_load),
@@ -267,8 +380,41 @@ function psy2openapi(standard_load::PSY.StandardLoad, ids::IDGenerator)
                                  PSY.get_base_power(standard_load),
         max_current_reactive_power=standard_load.max_current_reactive_power *
                                    PSY.get_base_power(standard_load),
+        conformity=string(standard_load.conformity),
         base_power=standard_load.base_power,
         dynamic_injector=getid!(ids, standard_load.dynamic_injector),
+    )
+end
+
+function psy2openapi(switch::PSY.SwitchedAdmittance, ids::IDGenerator)
+    SwitchedAdmittance(
+        id=getid!(ids, switch),
+        name=switch.name,
+        available=switch.available,
+        bus=getid!(ids, switch.bus),
+        Y=get_complex_number(switch.Y),
+        number_of_steps=switch.number_of_steps,
+        Y_increase=map(get_complex_number, switch.Y_increase),
+        admittance_limits=get_min_max(switch.admittance_limits),
+        dynamic_injector=getid!(ids, switch.dynamic_injector),
+    )
+end
+
+function psy2openapi(synch::PSY.SynchronousCondenser, ids::IDGenerator)
+    SynchronousCondenser(
+        id=getid!(ids, synch),
+        name=synch.name,
+        available=synch.available,
+        bus=getid!(ids, synch.bus),
+        reactive_power=synch.reactive_power * PSY.get_base_power(synch),
+        rating=synch.rating * PSY.get_base_power(synch),
+        reactive_power_limits=get_min_max(
+            scale(synch.reactive_power_limits, PSY.get_base_power(synch)),
+        ),
+        base_power=synch.base_power,
+        must_run=synch.must_run,
+        active_power_losses=synch.active_power_losses * PSY.get_base_power(synch),
+        dynamic_injector=getid!(ids, synch.dynamic_injector),
     )
 end
 

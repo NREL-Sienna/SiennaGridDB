@@ -36,6 +36,14 @@ function get_startup_shutdown(
     StartUpShutDown(startup=startup_shutdown.startup, shutdown=startup_shutdown.shutdown)
 end
 
+get_turbine_pump(::Nothing) = nothing
+
+function get_turbine_pump(
+    turbine_pump::NamedTuple{(:turbine, :pump), Tuple{Float64, Float64}},
+)
+    TurbinePump(turbine=turbine_pump.turbine, pump=turbine_pump.pump)
+end
+
 get_up_down(::Nothing) = nothing
 
 function get_up_down(up_down::NamedTuple{(:up, :down), Tuple{Float64, Float64}})
@@ -68,6 +76,16 @@ function get_operation_cost(cost::PSY.HydroGenerationCost)
     )
 end
 
+function get_operation_cost(cost::PSY.ImportExportCost)
+    ImportExportCost(
+        cost_type="IMPORTEXPORT",
+        import_offer_curves=get_variable_cost(cost.import_offer_curves),
+        export_offer_curves=get_variable_cost(cost.export_offer_curves),
+        energy_import_weekly_limit=cost.energy_import_weekly_limit,
+        energy_export_weekly_limit=cost.energy_export_weekly_limit,
+    )
+end
+
 function get_operation_cost(cost::PSY.LoadCost)
     LoadCost(
         cost_type="LOAD",
@@ -81,6 +99,7 @@ function get_operation_cost(cost::PSY.RenewableGenerationCost)
         cost_type="RENEWABLE",
         curtailment_cost=get_variable_cost(cost.curtailment_cost),
         variable=get_variable_cost(cost.variable),
+        fixed=cost.fixed,
     )
 end
 
@@ -158,6 +177,10 @@ get_value_curve(::Nothing) = nothing
 
 function get_value_curve(curve::T) where {T <: PSY.ValueCurve}
     error("Unsupported type $T")
+end
+
+function get_value_curve(curve::Float64)
+    curve
 end
 
 function get_value_curve(curve::PSY.AverageRateCurve)

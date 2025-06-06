@@ -21,7 +21,7 @@ Name | Type | Description | Notes
 **operation_cost** | [***HydroGenerationCost**](HydroGenerationCost.md) |  | [optional] [default to nothing]
 **efficiency** | **Float64** |  | [optional] [default to 1.0]
 **conversion_factor** | **Float64** |  | [optional] [default to 1.0]
-**reservoirs** | [**Vector{HydroReservoir}**](HydroReservoir.md) |  | [optional] [default to nothing]
+**reservoirs** | **Vector{Int64}** |  | [optional] [default to nothing]
 **dynamic_injector** | **Any** |  | [optional] [default to nothing]
 
 [[Back to Model list]](../README.md#models) [[Back to API list]](../README.md#api-endpoints) [[Back to README]](../README.md)
