@@ -550,11 +550,11 @@ end
         @test test_convert.id == 1
         @test test_convert.secondary_star_arc == 3
         @test test_convert.reactive_power_flow_tertiary == 0.0
-        @test test_convert.r_primary == 0.0011262132915879012
+        @test test_convert.r_primary == 0.41372696614583315
         @test test_convert.rating == 0.0
-        @test test_convert.x_23 == 0.07990294896030246
+        @test test_convert.x_23 == 6.047854206805293
         @test test_convert.base_power_12 == 144.0
-        @test test_convert.g == 0.00097535
+        @test test_convert.g == 2.6550170132325145e-6
         @test test_convert.rating_secondary == 100000000.0
     end
     @testset "TwoTerminalLCCLine to JSON" begin

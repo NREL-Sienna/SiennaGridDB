@@ -7,6 +7,9 @@ import PowerSystems
 const PSY = PowerSystems
 using JSON
 
+custom_isequivalent(x, y) = isequal(x, y) || (x == y)
+custom_isequivalent(x::AbstractFloat, y::AbstractFloat) = isequal(x, y) || (x == y) || x ≈ y
+
 @testset "c_sys5_pjm Complete RoundTrip to JSON" begin
     c_sys5 =
         PowerSystemCaseBuilder.build_system(PowerSystemCaseBuilder.PSISystems, "c_sys5_pjm")
@@ -432,6 +435,22 @@ end
         PowerSystemCaseBuilder.PSSEParsingTestSystems,
         "pti_frankenstein_70_sys",
     )
+    @testset "Transformer3W to JSON" begin
+        transform3w =
+            only(collect(PSY.get_components(PSY.Transformer3W, pti_frankenstein_70_sys)))
+        @test isa(transform3w, PSY.Transformer3W)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(transform3w, id_gen)
+        resolver =
+            SiennaOpenAPIModels.resolver_from_id_generator(id_gen, pti_frankenstein_70_sys)
+        transform3w_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(
+            custom_isequivalent,
+            transform3w,
+            transform3w_copy,
+            exclude=Set([:internal, :ext]),
+        )
+    end
     @testset "TwoTerminalLCCLine to JSON and Back" begin
         lcc = only(
             collect(PSY.get_components(PSY.TwoTerminalLCCLine, pti_frankenstein_70_sys)),

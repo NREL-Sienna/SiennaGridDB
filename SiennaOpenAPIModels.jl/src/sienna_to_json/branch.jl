@@ -179,70 +179,56 @@ function psy2openapi(trans3w::PSY.Transformer3W, ids::IDGenerator)
                                    PSY.get_base_power_13(trans3w),
         reactive_power_flow_tertiary=trans3w.reactive_power_flow_tertiary *
                                      PSY.get_base_power_13(trans3w),
-        r_primary=trans3w.r_primary *
-                  get_Z_fraction(
+        r_primary=trans3w.r_primary * get_Z_fraction(
             PSY.get_base_voltage(PSY.get_primary_star_arc(trans3w).from),
             PSY.get_base_power_12(trans3w),
-        )x_primary =
-            trans3w.x_primary *
-            get_Z_fraction(
-                PSY.get_base_voltage(PSY.get_primary_star_arc(trans3w).from),
-                PSY.get_base_power_12(trans3w),
-            )r_secondary =
-                trans3w.r_secondary *
-                get_Z_fraction(
-                    PSY.get_base_voltage(PSY.get_secondary_star_arc(trans3w).from),
-                    PSY.get_base_power_23(trans3w),
-                )x_secondary =
-                    trans3w.x_secondary *
-                    get_Z_fraction(
-                        PSY.get_base_voltage(PSY.get_secondary_star_arc(trans3w).from),
-                        PSY.get_base_power_23(trans3w),
-                    )r_tertiary =
-                        trans3w.r_tertiary *
-                        get_Z_fraction(
-                            PSY.get_base_voltage(PSY.get_tertiary_star_arc(trans3w).from),
-                            PSY.get_base_power_13(trans3w),
-                        )x_tertiary =
-                            trans3w.x_tertiary *
-                            get_Z_fraction(
-                                PSY.get_base_voltage(
-                                    PSY.get_tertiary_star_arc(trans3w).from,
-                                ),
-                                PSY.get_base_power_13(trans3w),
-                            )rating = scale(trans3w.rating, PSY.get_base_power(trans3w)),
-        r_12=trans3w.r_12 *
-             get_Z_fraction(
+        ),
+        x_primary=trans3w.x_primary * get_Z_fraction(
             PSY.get_base_voltage(PSY.get_primary_star_arc(trans3w).from),
             PSY.get_base_power_12(trans3w),
-        )x_12 =
-            trans3w.x_12 *
-            get_Z_fraction(
-                PSY.get_base_voltage(PSY.get_primary_star_arc(trans3w).from),
-                PSY.get_base_power_12(trans3w),
-            )r_23 =
-                trans3w.r_23 *
-                get_Z_fraction(
-                    PSY.get_base_voltage(PSY.get_secondary_star_arc(trans3w).from),
-                    PSY.get_base_power_23(trans3w),
-                )x_23 =
-                    trans3w.x_23 *
-                    get_Z_fraction(
-                        PSY.get_base_voltage(PSY.get_secondary_star_arc(trans3w).from),
-                        PSY.get_base_power_23(trans3w),
-                    )r_13 =
-                        trans3w.r_13 *
-                        get_Z_fraction(
-                            PSY.get_base_voltage(PSY.get_tertiary_star_arc(trans3w).from),
-                            PSY.get_base_power_13(trans3w),
-                        )x_13 =
-                            trans3w.x_13 *
-                            get_Z_fraction(
-                                PSY.get_base_voltage(
-                                    PSY.get_tertiary_star_arc(trans3w).from,
-                                ),
-                                PSY.get_base_power_13(trans3w),
-                            )base_power_12 = trans3w.base_power_12,
+        ),
+        r_secondary=trans3w.r_secondary * get_Z_fraction(
+            PSY.get_base_voltage(PSY.get_secondary_star_arc(trans3w).from),
+            PSY.get_base_power_23(trans3w),
+        ),
+        x_secondary=trans3w.x_secondary * get_Z_fraction(
+            PSY.get_base_voltage(PSY.get_secondary_star_arc(trans3w).from),
+            PSY.get_base_power_23(trans3w),
+        ),
+        r_tertiary=trans3w.r_tertiary * get_Z_fraction(
+            PSY.get_base_voltage(PSY.get_tertiary_star_arc(trans3w).from),
+            PSY.get_base_power_13(trans3w),
+        ),
+        x_tertiary=trans3w.x_tertiary * get_Z_fraction(
+            PSY.get_base_voltage(PSY.get_tertiary_star_arc(trans3w).from),
+            PSY.get_base_power_13(trans3w),
+        ),
+        rating=scale(trans3w.rating, PSY.get_base_power_12(trans3w)),
+        r_12=trans3w.r_12 * get_Z_fraction(
+            PSY.get_base_voltage(PSY.get_primary_star_arc(trans3w).from),
+            PSY.get_base_power_12(trans3w),
+        ),
+        x_12=trans3w.x_12 * get_Z_fraction(
+            PSY.get_base_voltage(PSY.get_primary_star_arc(trans3w).from),
+            PSY.get_base_power_12(trans3w),
+        ),
+        r_23=trans3w.r_23 * get_Z_fraction(
+            PSY.get_base_voltage(PSY.get_secondary_star_arc(trans3w).from),
+            PSY.get_base_power_23(trans3w),
+        ),
+        x_23=trans3w.x_23 * get_Z_fraction(
+            PSY.get_base_voltage(PSY.get_secondary_star_arc(trans3w).from),
+            PSY.get_base_power_23(trans3w),
+        ),
+        r_13=trans3w.r_13 * get_Z_fraction(
+            PSY.get_base_voltage(PSY.get_tertiary_star_arc(trans3w).from),
+            PSY.get_base_power_13(trans3w),
+        ),
+        x_13=trans3w.x_13 * get_Z_fraction(
+            PSY.get_base_voltage(PSY.get_tertiary_star_arc(trans3w).from),
+            PSY.get_base_power_13(trans3w),
+        ),
+        base_power_12=trans3w.base_power_12,
         base_power_23=trans3w.base_power_23,
         base_power_13=trans3w.base_power_13,
         g=trans3w.g / get_Z_fraction(
