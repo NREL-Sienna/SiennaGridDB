@@ -9,8 +9,7 @@
         available=nothing,
         bus=nothing,
         active_power=nothing,
-        upper_bound_active_power=nothing,
-        lower_bound_active_power=nothing,
+        active_power_limits=nothing,
         reactive_power=nothing,
         max_active_power=nothing,
         max_reactive_power=nothing,
@@ -24,8 +23,7 @@
     - available::Bool
     - bus::Int64
     - active_power::Float64
-    - upper_bound_active_power::Float64
-    - lower_bound_active_power::Float64
+    - active_power_limits::MinMax
     - reactive_power::Float64
     - max_active_power::Float64
     - max_reactive_power::Float64
@@ -39,8 +37,7 @@ Base.@kwdef mutable struct ShiftablePowerLoad <: OpenAPI.APIModel
     available::Union{Nothing, Bool} = nothing
     bus::Union{Nothing, Int64} = nothing
     active_power::Union{Nothing, Float64} = nothing
-    upper_bound_active_power::Union{Nothing, Float64} = nothing
-    lower_bound_active_power::Union{Nothing, Float64} = nothing
+    active_power_limits = nothing # spec type: Union{ Nothing, MinMax }
     reactive_power::Union{Nothing, Float64} = nothing
     max_active_power::Union{Nothing, Float64} = nothing
     max_reactive_power::Union{Nothing, Float64} = nothing
@@ -54,8 +51,7 @@ Base.@kwdef mutable struct ShiftablePowerLoad <: OpenAPI.APIModel
         available,
         bus,
         active_power,
-        upper_bound_active_power,
-        lower_bound_active_power,
+        active_power_limits,
         reactive_power,
         max_active_power,
         max_reactive_power,
@@ -69,8 +65,7 @@ Base.@kwdef mutable struct ShiftablePowerLoad <: OpenAPI.APIModel
             available,
             bus,
             active_power,
-            upper_bound_active_power,
-            lower_bound_active_power,
+            active_power_limits,
             reactive_power,
             max_active_power,
             max_reactive_power,
@@ -89,8 +84,7 @@ const _property_types_ShiftablePowerLoad = Dict{Symbol, String}(
     Symbol("available") => "Bool",
     Symbol("bus") => "Int64",
     Symbol("active_power") => "Float64",
-    Symbol("upper_bound_active_power") => "Float64",
-    Symbol("lower_bound_active_power") => "Float64",
+    Symbol("active_power_limits") => "MinMax",
     Symbol("reactive_power") => "Float64",
     Symbol("max_active_power") => "Float64",
     Symbol("max_reactive_power") => "Float64",
@@ -107,8 +101,7 @@ function OpenAPI.check_required(o::ShiftablePowerLoad)
     o.available === nothing && (return false)
     o.bus === nothing && (return false)
     o.active_power === nothing && (return false)
-    o.upper_bound_active_power === nothing && (return false)
-    o.lower_bound_active_power === nothing && (return false)
+    o.active_power_limits === nothing && (return false)
     o.reactive_power === nothing && (return false)
     o.max_active_power === nothing && (return false)
     o.max_reactive_power === nothing && (return false)
@@ -126,13 +119,8 @@ function OpenAPI.validate_properties(o::ShiftablePowerLoad)
     OpenAPI.validate_property(ShiftablePowerLoad, Symbol("active_power"), o.active_power)
     OpenAPI.validate_property(
         ShiftablePowerLoad,
-        Symbol("upper_bound_active_power"),
-        o.upper_bound_active_power,
-    )
-    OpenAPI.validate_property(
-        ShiftablePowerLoad,
-        Symbol("lower_bound_active_power"),
-        o.lower_bound_active_power,
+        Symbol("active_power_limits"),
+        o.active_power_limits,
     )
     OpenAPI.validate_property(
         ShiftablePowerLoad,

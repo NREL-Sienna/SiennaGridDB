@@ -240,6 +240,30 @@ end
         @test test_convert.active_power == 0.0
         @test test_convert.rating == 384.0
     end
+    @testset "ShiftablePowerLoad to JSON" begin
+        shift_load = PSY.ShiftablePowerLoad(
+            name="shift_load",
+            available=true,
+            bus=PSY.get_bus(c_sys5, 2),
+            active_power=0.5,
+            active_power_limits=(min=0.0, max=10.0),
+            reactive_power=0.2,
+            max_active_power=0.75,
+            max_reactive_power=0.75,
+            base_power=10.0,
+            load_balance_time_horizon=5,
+            operation_cost=PSY.LoadCost(nothing),
+        )
+        PSY.add_component!(c_sys5, shift_load)
+        @test isa(shift_load, PSY.ShiftablePowerLoad)
+        test_convert = SiennaOpenAPIModels.psy2openapi(shift_load, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.ShiftablePowerLoad, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.available
+        @test test_convert.bus == 2
+        @test test_convert.active_power == 5.0
+        @test test_convert.max_reactive_power == 7.5
+    end
     @testset "StandardLoad to JSON" begin
         standard_load = PSY.StandardLoad(
             name="standard_load",

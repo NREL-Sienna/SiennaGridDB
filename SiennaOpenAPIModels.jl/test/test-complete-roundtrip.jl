@@ -175,6 +175,28 @@ using JSON
         renew_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
         @test IS.compare_values(renew, renew_copy, exclude=Set([:internal, :ext]))
     end
+    @testset "ShiftablePowerLoad to JSON and Back" begin
+        shift_load = PSY.ShiftablePowerLoad(
+            name="shift_load",
+            available=true,
+            bus=PSY.get_bus(c_sys5, 2),
+            active_power=0.5,
+            active_power_limits=(min=0.0, max=10.0),
+            reactive_power=0.2,
+            max_active_power=0.75,
+            max_reactive_power=0.75,
+            base_power=10.0,
+            load_balance_time_horizon=5,
+            operation_cost=PSY.LoadCost(nothing),
+        )
+        PSY.add_component!(c_sys5, shift_load)
+        @test isa(shift_load, PSY.ShiftablePowerLoad)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(shift_load, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, c_sys5)
+        shift_load_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(shift_load, shift_load_copy, exclude=Set([:internal, :ext]))
+    end
     @testset "SynchronousCondenser to JSON" begin
         synch = PSY.SynchronousCondenser(
             name="synch",

@@ -312,17 +312,15 @@ function psy2openapi(power_load::PSY.ShiftablePowerLoad, ids::IDGenerator)
         available=power_load.available,
         bus=getid!(ids, power_load.bus),
         active_power=power_load.active_power * PSY.get_base_power(power_load),
-        upper_bound_active_power=power_load.upper_bound_active_power *
-                                 PSY.get_base_power(power_load),
-        lower_bound_active_power=power_load.lower_bound_active_power *
-                                 PSY.get_base_power(power_load),
+        active_power_limits=get_min_max(
+            scale(power_load.active_power_limits, PSY.get_base_power(power_load)),
+        ),
         reactive_power=power_load.reactive_power * PSY.get_base_power(power_load),
         max_active_power=power_load.max_active_power * PSY.get_base_power(power_load),
         max_reactive_power=power_load.max_reactive_power * PSY.get_base_power(power_load),
         base_power=power_load.base_power,
         load_balance_time_horizon=power_load.load_balance_time_horizon,
         operation_cost=get_operation_cost(power_load.operation_cost),
-        dynamic_injector=getid!(ids, power_load.dynamic_injector),
     )
 end
 
