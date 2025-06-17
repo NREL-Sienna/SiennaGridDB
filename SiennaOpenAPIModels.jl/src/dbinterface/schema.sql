@@ -157,7 +157,7 @@ CREATE TABLE storage_units (
     name text NOT NULL,
     prime_mover text NOT NULL REFERENCES prime_mover_types(name),
     -- Energy capacity
-    max_capacity real NOT NULL CHECK (max_capacity > 0),
+    max_capacity real NOT NULL,
     balancing_topology integer NOT NULL REFERENCES balancing_topologies (id),
     efficiency_up real CHECK (
         efficiency_up > 0
@@ -169,7 +169,7 @@ CREATE TABLE storage_units (
     ) DEFAULT 1.0,
     rating real NOT NULL DEFAULT 1 CHECK (rating > 0),
     base_power real NOT NULL CHECK (base_power > 0),
-    CHECK (base_power >= rating),
+    --CHECK (base_power >= rating),
     UNIQUE(name)
 ) strict;
 
@@ -180,7 +180,7 @@ CREATE TABLE hydro_reservoir(
 );
 
 CREATE TABLE hydro_reservoir_connections(
-    turbine_id integer NOT NULL REFERENCES generation_units(id),
+    turbine_id integer NOT NULL REFERENCES entities(id),
     reservoir_id integer NOT NULL REFERENCES hydro_reservoir(id)
 );
 
@@ -258,22 +258,34 @@ CREATE TABLE supplemental_attributes_association (
     FOREIGN KEY (attribute_id) REFERENCES supplemental_attributes (id)
 ) strict;
 
-CREATE TABLE time_series (
+CREATE TABLE time_series_associations(
     id INTEGER PRIMARY KEY,
     time_series_uuid TEXT NOT NULL,
     time_series_type TEXT NOT NULL,
     initial_timestamp TEXT NOT NULL,
-    resolution INTEGER NOT NULL,
-    horizon INTEGER,
-    INTERVAL INTEGER,
+    resolution TEXT NOT NULL,
+    horizon TEXT,
+    INTERVAL TEXT,
     window_count INTEGER,
     length INTEGER,
-    scaling_multiplier TEXT,
-    -- enum: ["max_active_power", ]
     name TEXT NOT NULL,
-    owner_id INTEGER NOT NULL,
-    features TEXT
+    owner_uuid TEXT NOT NULL,
+    owner_type TEXT NOT NULL,
+    owner_category TEXT NOT NULL,
+    features TEXT NOT NULL,
+    scaling_factor_multiplier JSON NULL,
+    metadata_uuid TEXT NOT NULL,
+    units TEXT NULL
 );
+CREATE UNIQUE INDEX "by_c_n_tst_features" ON "time_series_associations" (
+    "owner_uuid",
+    "time_series_type",
+    "name",
+    "resolution",
+    "features"
+);
+CREATE INDEX "by_ts_uuid" ON "time_series_associations" ("time_series_uuid");
+
 
 CREATE TABLE loads (
     id integer PRIMARY KEY REFERENCES entities (id),

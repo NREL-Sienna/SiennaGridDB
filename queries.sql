@@ -65,26 +65,14 @@ WHERE
 .print +-------------+
 .print | Time Series |
 .print +-------------+
+
 SELECT
   time_series_type,
   name,
   initial_timestamp,
-  resolution_ms,
+  resolution,
   horizon,
   interval,
   length
 FROM
   time_series;
-
-.print +------------------------------------+
-.print | Deterministic Forecast Time Series |
-.print +------------------------------------+
-SELECT
-  id,
-  time_series_id,
-  datetime (timestamp, 'unixepoch'),
-  value
-FROM
-  static_time_series;
-
-SELECT * from deterministic_time_series_view;
