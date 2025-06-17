@@ -47,7 +47,12 @@ function insert_attributes!(
     end
 end
 
-function get_row(table_name::AbstractString, schema::Tables.Schema, c::OpenAPI.APIModel)
+function get_row(
+    table_name::AbstractString,
+    schema::Tables.Schema,
+    c::OpenAPI.APIModel,
+    ::PSY.Component,
+)
     return tuple(
         (
             get_row_field(c, table_name, col_name) for
@@ -69,7 +74,12 @@ function ignoreattribute(
     return in(Symbol(col_name), schema.names)
 end
 
-function get_row(::AbstractString, ::Tables.Schema, c::EnergyReservoirStorage)
+function get_row(
+    ::AbstractString,
+    ::Tables.Schema,
+    c::EnergyReservoirStorage,
+    ::PSY.EnergyReservoirStorage,
+)
     return (
         c.id,
         c.name,
@@ -83,15 +93,24 @@ function get_row(::AbstractString, ::Tables.Schema, c::EnergyReservoirStorage)
     )
 end
 
-function get_row(::AbstractString, ::Tables.Schema, c::HydroPumpedStorage)
+function get_row(
+    ::AbstractString,
+    ::Tables.Schema,
+    c::HydroPumpTurbine,
+    c_original::PSY.HydroPumpTurbine,
+)
     return (
         c.id,
         c.name,
         c.prime_mover_type,
-        c.storage_capacity.up,
+        c_original.head_reservoir.head_to_volume_factor(
+            c_original.head_reservoir.storage_level_limits.max,
+        ) *
+        c_original.conversion_factor *
+        PSY.get_base_power(c_original),
         c.bus,
-        nothing,
-        nothing,
+        c.efficiency.pump,
+        c.efficiency.turbine,
         c.rating,
         c.base_power,
     )
@@ -114,12 +133,12 @@ function add_components_to_tables!(
     components,
     ids::IDGenerator,
 ) where {T <: OpenAPI.APIModel}
-    for c in components
-        uuid = IS.get_uuid(c)
-        c = psy2openapi(c, ids)
-        row = get_row(table_name, schema, c)
+    for component in components
+        uuid = IS.get_uuid(component)
+        openapi_component = psy2openapi(component, ids)
+        row = get_row(table_name, schema, openapi_component, component)
         try
-            DBInterface.execute(entity_statement, (c.id,))
+            DBInterface.execute(entity_statement, (openapi_component.id,))
             DBInterface.execute(table_statement, row)
         catch e
             if isa(e, SQLite.SQLiteException)
@@ -128,8 +147,8 @@ function add_components_to_tables!(
                 rethrow(e)
             end
         end
-        insert_attributes!(T, table_name, schema, attribute_statement, c)
-        insert_uuid!(attribute_statement, table_name, c.id, uuid)
+        insert_attributes!(T, table_name, schema, attribute_statement, openapi_component)
+        insert_uuid!(attribute_statement, table_name, openapi_component.id, uuid)
     end
 end
 

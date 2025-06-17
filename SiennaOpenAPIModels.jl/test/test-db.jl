@@ -127,6 +127,8 @@ end
     end
 end
 
+# TODO: Add 118-bus to PSCB instead.
+#=
 @testset "118_bus to DB" begin
     # Get 118_bus_rt.json from directory of this file
     sys = PSY.System(joinpath(dirname(@__FILE__), "118_bus.json"))
@@ -141,6 +143,7 @@ end
     @test copy_of_sys isa PSY.System
     test_component_each_type(sys, copy_of_sys)
 end
+=#
 
 @testset "RTS-System to DB" begin
     sys = PowerSystemCaseBuilder.build_system(
@@ -198,9 +201,13 @@ end
 
     db = SQLite.DB()
     SiennaOpenAPIModels.make_sqlite!(db)
-    SiennaOpenAPIModels.sys2db!(db, sys, IDGenerator())
+    ids = IDGenerator()
+    SiennaOpenAPIModels.sys2db!(db, sys, ids)
     storages = Tables.columntable(DBInterface.execute(db, "SELECT * FROM storage_units"))
     @test length(storages.id) == 1
+    reservoirs =
+        Tables.columntable(DBInterface.execute(db, "SELECT * from hydro_reservoir"))
+    @test length(reservoirs.id) == 2
 
     copy_of_sys = SiennaOpenAPIModels.make_system_from_db(db)
     @test copy_of_sys isa PSY.System

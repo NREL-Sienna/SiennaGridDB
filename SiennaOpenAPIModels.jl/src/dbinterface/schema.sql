@@ -180,7 +180,7 @@ CREATE TABLE hydro_reservoir(
 );
 
 CREATE TABLE hydro_reservoir_connections(
-    turbine_id integer NOT NULL REFERENCES generation_units(id),
+    turbine_id integer NOT NULL REFERENCES entities(id),
     reservoir_id integer NOT NULL REFERENCES hydro_reservoir(id)
 );
 
