@@ -16,5 +16,6 @@ Name | Type | Description | Notes
 **base_power** | **Float64** |  | [default to nothing]
 **load_balance_time_horizon** | **Int64** |  | [default to nothing]
 **operation_cost** | [***LoadCost**](LoadCost.md) |  | [default to nothing]
+**dynamic_injector** | **Any** |  | [optional] [default to nothing]
 
 [[Back to Model list]](../README.md#models) [[Back to API list]](../README.md#api-endpoints) [[Back to README]](../README.md)

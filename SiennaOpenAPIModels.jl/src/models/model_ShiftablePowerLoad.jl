@@ -16,6 +16,7 @@
         base_power=nothing,
         load_balance_time_horizon=nothing,
         operation_cost=nothing,
+        dynamic_injector=nothing,
     )
 
     - id::Int64
@@ -30,6 +31,7 @@
     - base_power::Float64
     - load_balance_time_horizon::Int64
     - operation_cost::LoadCost
+    - dynamic_injector::Any
 """
 Base.@kwdef mutable struct ShiftablePowerLoad <: OpenAPI.APIModel
     id::Union{Nothing, Int64} = nothing
@@ -44,6 +46,7 @@ Base.@kwdef mutable struct ShiftablePowerLoad <: OpenAPI.APIModel
     base_power::Union{Nothing, Float64} = nothing
     load_balance_time_horizon::Union{Nothing, Int64} = nothing
     operation_cost = nothing # spec type: Union{ Nothing, LoadCost }
+    dynamic_injector::Union{Nothing, Any} = nothing
 
     function ShiftablePowerLoad(
         id,
@@ -58,6 +61,7 @@ Base.@kwdef mutable struct ShiftablePowerLoad <: OpenAPI.APIModel
         base_power,
         load_balance_time_horizon,
         operation_cost,
+        dynamic_injector,
     )
         o = new(
             id,
@@ -72,6 +76,7 @@ Base.@kwdef mutable struct ShiftablePowerLoad <: OpenAPI.APIModel
             base_power,
             load_balance_time_horizon,
             operation_cost,
+            dynamic_injector,
         )
         OpenAPI.validate_properties(o)
         return o
@@ -91,6 +96,7 @@ const _property_types_ShiftablePowerLoad = Dict{Symbol, String}(
     Symbol("base_power") => "Float64",
     Symbol("load_balance_time_horizon") => "Int64",
     Symbol("operation_cost") => "LoadCost",
+    Symbol("dynamic_injector") => "Any",
 )
 OpenAPI.property_type(::Type{ShiftablePowerLoad}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_ShiftablePowerLoad[name]))}
@@ -147,6 +153,11 @@ function OpenAPI.validate_properties(o::ShiftablePowerLoad)
         ShiftablePowerLoad,
         Symbol("operation_cost"),
         o.operation_cost,
+    )
+    OpenAPI.validate_property(
+        ShiftablePowerLoad,
+        Symbol("dynamic_injector"),
+        o.dynamic_injector,
     )
 end
 

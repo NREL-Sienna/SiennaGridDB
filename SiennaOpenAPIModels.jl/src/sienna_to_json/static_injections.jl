@@ -321,6 +321,7 @@ function psy2openapi(power_load::PSY.ShiftablePowerLoad, ids::IDGenerator)
         base_power=power_load.base_power,
         load_balance_time_horizon=power_load.load_balance_time_horizon,
         operation_cost=get_operation_cost(power_load.operation_cost),
+        dynamic_injector=getid!(ids, power_load.dynamic_injector),
     )
 end
 
