@@ -184,6 +184,7 @@ function psy2openapi(hydro::PSY.HydroReservoir, ids::IDGenerator)
         travel_time=hydro.travel_time,
         intake_elevation=hydro.intake_elevation,
         head_to_volume_factor=ValueCurve(get_value_curve(hydro.head_to_volume_factor)),
+        operation_cost=get_operation_cost(hydro.operation_cost),
         level_data_type=string(hydro.level_data_type),
     )
 end

@@ -9,6 +9,7 @@ function psy2openapi(bus::PSY.ACBus, ids::IDGenerator)
         voltage_limits=get_min_max(bus.voltage_limits),
         base_voltage=bus.base_voltage,
         area=getid!(ids, bus.area),
+        available=bus.available,
         load_zone=getid!(ids, bus.load_zone),
     )
 end

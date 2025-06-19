@@ -16,6 +16,7 @@
         travel_time=nothing,
         intake_elevation=nothing,
         head_to_volume_factor=nothing,
+        operation_cost=nothing,
         level_data_type="USABLE_VOLUME",
     )
 
@@ -31,6 +32,7 @@
     - travel_time::Float64
     - intake_elevation::Float64
     - head_to_volume_factor::ValueCurve
+    - operation_cost::HydroReservoirCost
     - level_data_type::String
 """
 Base.@kwdef mutable struct HydroReservoir <: OpenAPI.APIModel
@@ -46,6 +48,7 @@ Base.@kwdef mutable struct HydroReservoir <: OpenAPI.APIModel
     travel_time::Union{Nothing, Float64} = nothing
     intake_elevation::Union{Nothing, Float64} = nothing
     head_to_volume_factor = nothing # spec type: Union{ Nothing, ValueCurve }
+    operation_cost = nothing # spec type: Union{ Nothing, HydroReservoirCost }
     level_data_type::Union{Nothing, String} = "USABLE_VOLUME"
 
     function HydroReservoir(
@@ -61,6 +64,7 @@ Base.@kwdef mutable struct HydroReservoir <: OpenAPI.APIModel
         travel_time,
         intake_elevation,
         head_to_volume_factor,
+        operation_cost,
         level_data_type,
     )
         o = new(
@@ -76,6 +80,7 @@ Base.@kwdef mutable struct HydroReservoir <: OpenAPI.APIModel
             travel_time,
             intake_elevation,
             head_to_volume_factor,
+            operation_cost,
             level_data_type,
         )
         OpenAPI.validate_properties(o)
@@ -96,6 +101,7 @@ const _property_types_HydroReservoir = Dict{Symbol, String}(
     Symbol("travel_time") => "Float64",
     Symbol("intake_elevation") => "Float64",
     Symbol("head_to_volume_factor") => "ValueCurve",
+    Symbol("operation_cost") => "HydroReservoirCost",
     Symbol("level_data_type") => "String",
 )
 OpenAPI.property_type(::Type{HydroReservoir}, name::Symbol) =
@@ -111,6 +117,7 @@ function OpenAPI.check_required(o::HydroReservoir)
     o.outflow === nothing && (return false)
     o.intake_elevation === nothing && (return false)
     o.head_to_volume_factor === nothing && (return false)
+    o.operation_cost === nothing && (return false)
     true
 end
 
@@ -139,6 +146,7 @@ function OpenAPI.validate_properties(o::HydroReservoir)
         Symbol("head_to_volume_factor"),
         o.head_to_volume_factor,
     )
+    OpenAPI.validate_property(HydroReservoir, Symbol("operation_cost"), o.operation_cost)
     OpenAPI.validate_property(HydroReservoir, Symbol("level_data_type"), o.level_data_type)
 end
 

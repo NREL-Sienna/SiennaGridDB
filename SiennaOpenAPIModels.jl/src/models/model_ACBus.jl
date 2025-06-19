@@ -6,6 +6,7 @@
     ACBus(;
         angle=nothing,
         area=nothing,
+        available=nothing,
         base_voltage=nothing,
         bustype=nothing,
         id=nothing,
@@ -18,6 +19,7 @@
 
     - angle::Float64
     - area::Int64
+    - available::Bool
     - base_voltage::Float64
     - bustype::String
     - id::Int64
@@ -30,6 +32,7 @@
 Base.@kwdef mutable struct ACBus <: OpenAPI.APIModel
     angle::Union{Nothing, Float64} = nothing
     area::Union{Nothing, Int64} = nothing
+    available::Union{Nothing, Bool} = nothing
     base_voltage::Union{Nothing, Float64} = nothing
     bustype::Union{Nothing, String} = nothing
     id::Union{Nothing, Int64} = nothing
@@ -42,6 +45,7 @@ Base.@kwdef mutable struct ACBus <: OpenAPI.APIModel
     function ACBus(
         angle,
         area,
+        available,
         base_voltage,
         bustype,
         id,
@@ -54,6 +58,7 @@ Base.@kwdef mutable struct ACBus <: OpenAPI.APIModel
         o = new(
             angle,
             area,
+            available,
             base_voltage,
             bustype,
             id,
@@ -71,6 +76,7 @@ end # type ACBus
 const _property_types_ACBus = Dict{Symbol, String}(
     Symbol("angle") => "Float64",
     Symbol("area") => "Int64",
+    Symbol("available") => "Bool",
     Symbol("base_voltage") => "Float64",
     Symbol("bustype") => "String",
     Symbol("id") => "Int64",
@@ -84,6 +90,7 @@ OpenAPI.property_type(::Type{ACBus}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_ACBus[name]))}
 
 function OpenAPI.check_required(o::ACBus)
+    o.available === nothing && (return false)
     o.bustype === nothing && (return false)
     o.id === nothing && (return false)
     o.name === nothing && (return false)
@@ -94,6 +101,7 @@ end
 function OpenAPI.validate_properties(o::ACBus)
     OpenAPI.validate_property(ACBus, Symbol("angle"), o.angle)
     OpenAPI.validate_property(ACBus, Symbol("area"), o.area)
+    OpenAPI.validate_property(ACBus, Symbol("available"), o.available)
     OpenAPI.validate_property(ACBus, Symbol("base_voltage"), o.base_voltage)
     OpenAPI.validate_property(ACBus, Symbol("bustype"), o.bustype)
     OpenAPI.validate_property(ACBus, Symbol("id"), o.id)

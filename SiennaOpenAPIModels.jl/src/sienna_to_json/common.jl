@@ -57,7 +57,7 @@ function get_xy_coords(nt::@NamedTuple{x::Float64, y::Float64})
 end
 
 """
-Multiply both values of all NamedTuple by a scalar
+Multiply both values of a NamedTuple by a scalar
 """
 function scale(nt::NamedTuple{T, Tuple{Float64, Float64}}, scalar::Float64) where {T}
     NamedTuple{T, Tuple{Float64, Float64}}((nt[1] * scalar, nt[2] * scalar))
@@ -66,13 +66,42 @@ end
 scale(::Nothing, ::Float64) = nothing
 scale(x::Float64, scalar::Float64) = scalar * x
 
+"""
+Divide both values of a NamedTuple by a scalar
+"""
+function divide(nt::NamedTuple{T, Tuple{Float64, Float64}}, scalar::Float64) where {T}
+    NamedTuple{T, Tuple{Float64, Float64}}((nt[1] / scalar, nt[2] / scalar))
+end
+
+divide(::Nothing, ::Float64) = nothing
+divide(x::Float64, scalar::Float64) = x / scalar
+
+# Function to properly scale r, x, g, b, and primary_shunt
+
+function get_Z_fraction(v::Float64, s::Float64)
+    return v^2 / s
+end
+
+function get_Z_fraction(v::Nothing, s::Float64)
+    error("base voltage is nothing")
+end
+
 # Functions that get operation costs
 
 function get_operation_cost(cost::PSY.HydroGenerationCost)
     HydroGenerationCost(
-        cost_type="HYDRO",
+        cost_type="HYDRO_GEN",
         variable=ProductionVariableCostCurve(get_variable_cost(cost.variable)),
         fixed=cost.fixed,
+    )
+end
+
+function get_operation_cost(cost::PSY.HydroReservoirCost)
+    HydroReservoirCost(
+        cost_type="HYDRO_RES",
+        level_shortage_cost=cost.level_shortage_cost,
+        level_surplus_cost=cost.level_surplus_cost,
+        spillage_cost=cost.spillage_cost,
     )
 end
 
