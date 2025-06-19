@@ -190,6 +190,7 @@ function openapi2psy(hydro::HydroReservoir, resolver::Resolver)
         travel_time=hydro.travel_time,
         intake_elevation=hydro.intake_elevation,
         head_to_volume_factor=get_sienna_value_curve(hydro.head_to_volume_factor),
+        operation_cost=get_sienna_operation_cost(hydro.operation_cost),
         level_data_type=get_res_data_enum(hydro.level_data_type),
     )
 end

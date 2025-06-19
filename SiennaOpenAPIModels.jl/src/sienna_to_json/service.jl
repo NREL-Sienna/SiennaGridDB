@@ -14,6 +14,9 @@ function psy2openapi(agc::PSY.AGC, ids::IDGenerator)
 end
 
 function psy2openapi(reserve::PSY.ConstantReserve{T}, ids::IDGenerator) where {T}
+    if PSY.get_base_power(reserve) == 0.0
+        error("base power is 0.0")
+    end
     ConstantReserve(
         id=getid!(ids, reserve),
         name=reserve.name,
@@ -29,6 +32,9 @@ function psy2openapi(reserve::PSY.ConstantReserve{T}, ids::IDGenerator) where {T
 end
 
 function psy2openapi(reserve::PSY.ConstantReserveGroup{T}, ids::IDGenerator) where {T}
+    if PSY.get_base_power(reserve) == 0.0
+        error("base power is 0.0")
+    end
     ConstantReserveGroup(
         id=getid!(ids, reserve),
         name=reserve.name,
@@ -39,6 +45,9 @@ function psy2openapi(reserve::PSY.ConstantReserveGroup{T}, ids::IDGenerator) whe
 end
 
 function psy2openapi(reserve::PSY.ConstantReserveNonSpinning, ids::IDGenerator)
+    if PSY.get_base_power(reserve) == 0.0
+        error("base power is 0.0")
+    end
     ConstantReserveNonSpinning(
         id=getid!(ids, reserve),
         name=reserve.name,
@@ -53,6 +62,9 @@ function psy2openapi(reserve::PSY.ConstantReserveNonSpinning, ids::IDGenerator)
 end
 
 function psy2openapi(reserve::PSY.VariableReserve{T}, ids::IDGenerator) where {T}
+    if PSY.get_base_power(reserve) == 0.0
+        error("base power is 0.0")
+    end
     VariableReserve(
         id=getid!(ids, reserve),
         name=reserve.name,
@@ -68,6 +80,9 @@ function psy2openapi(reserve::PSY.VariableReserve{T}, ids::IDGenerator) where {T
 end
 
 function psy2openapi(reserve::PSY.VariableReserveNonSpinning, ids::IDGenerator)
+    if PSY.get_base_power(reserve) == 0.0
+        error("base power is 0.0")
+    end
     VariableReserveNonSpinning(
         id=getid!(ids, reserve),
         name=reserve.name,

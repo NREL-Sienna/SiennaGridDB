@@ -19,6 +19,9 @@ function psy2openapi(arc::PSY.Arc, ids::IDGenerator)
 end
 
 function psy2openapi(area::PSY.Area, ids::IDGenerator)
+    if PSY.get_base_power(area) == 0.0
+        error("base power is 0.0")
+    end
     Area(
         id=getid!(ids, area),
         name=area.name,
@@ -42,6 +45,9 @@ function psy2openapi(dcbus::PSY.DCBus, ids::IDGenerator)
 end
 
 function psy2openapi(load_zone::PSY.LoadZone, ids::IDGenerator)
+    if PSY.get_base_power(load_zone) == 0.0
+        error("base power is 0.0")
+    end
     LoadZone(
         id=getid!(ids, load_zone),
         name=load_zone.name,

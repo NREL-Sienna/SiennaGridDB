@@ -109,16 +109,6 @@ function get_tuple_xy_coords(obj::XYCoords)
     return (x=obj.x, y=obj.y)
 end
 
-"""
-Divide both values of all NamedTuple by a scalar
-"""
-function divide(nt::NamedTuple{T, Tuple{Float64, Float64}}, scalar::Float64) where {T}
-    NamedTuple{T, Tuple{Float64, Float64}}((nt[1] / scalar, nt[2] / scalar))
-end
-
-divide(::Nothing, ::Float64) = nothing
-divide(x::Float64, scalar::Float64) = x / scalar
-
 # Functions that get operation costs
 
 function get_sienna_operation_cost(cost::HydroGenerationCost)
@@ -130,6 +120,14 @@ end
 
 function get_sienna_operation_cost(cost::HydroStorageGenerationCost)
     get_sienna_operation_cost(cost.value)
+end
+
+function get_sienna_operation_cost(cost::HydroReservoirCost)
+    PSY.HydroReservoirCost(
+        level_shortage_cost=cost.level_shortage_cost,
+        level_surplus_cost=cost.level_surplus_cost,
+        spillage_cost=cost.spillage_cost,
+    )
 end
 
 function get_sienna_operation_cost(cost::ImportExportCost)
