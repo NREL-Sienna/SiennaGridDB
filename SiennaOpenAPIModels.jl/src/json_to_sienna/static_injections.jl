@@ -361,8 +361,8 @@ function openapi2psy(source::Source, resolver::Resolver)
             get_tuple_min_max(source.reactive_power_limits),
             source.base_power,
         ),
-        R_th=source.R_th,
-        X_th=source.X_th,
+        R_th=source.R_th, # ?? needs to be scaled in psy5
+        X_th=source.X_th, # ?? needs to be scaled in psy5
         internal_voltage=source.internal_voltage,
         internal_angle=source.internal_angle,
         base_power=source.base_power,
