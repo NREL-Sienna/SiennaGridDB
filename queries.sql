@@ -75,4 +75,4 @@ SELECT
   interval,
   length
 FROM
-  time_series;
+  time_series_associations;
