@@ -368,8 +368,8 @@ function psy2openapi(source::PSY.Source, ids::IDGenerator)
         reactive_power_limits=get_min_max(
             scale(source.reactive_power_limits, source.base_power),
         ),
-        R_th=source.R_th, # ?? needs to be scaled in psy5
-        X_th=source.X_th, # ?? needs to be scaled in psy5
+        R_th=source.R_th,
+        X_th=source.X_th,
         internal_voltage=source.internal_voltage,
         internal_angle=source.internal_angle,
         base_power=source.base_power,
