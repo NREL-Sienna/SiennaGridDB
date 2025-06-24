@@ -65,6 +65,7 @@ end
 
 scale(::Nothing, ::Float64) = nothing
 scale(x::Float64, scalar::Float64) = scalar * x
+scale(x::ComplexF64, scalar::Float64) = scalar * x
 
 """
 Divide both values of a NamedTuple by a scalar
@@ -75,6 +76,7 @@ end
 
 divide(::Nothing, ::Float64) = nothing
 divide(x::Float64, scalar::Float64) = x / scalar
+divide(x::ComplexF64, scalar::Float64) = x / scalar
 
 # Function to properly scale r, x, g, b, and primary_shunt
 

@@ -27,8 +27,14 @@ function psy2openapi(branch::PSY.DiscreteControlledACBranch, ids::IDGenerator)
         active_power_flow=branch.active_power_flow * PSY.get_base_power(branch),
         reactive_power_flow=branch.reactive_power_flow * PSY.get_base_power(branch),
         arc=getid!(ids, branch.arc),
-        r=branch.r, # needs to be scaled in psy5
-        x=branch.x, # needs to be scaled in psy5
+        r=branch.r * get_Z_fraction(
+            PSY.get_base_voltage(PSY.get_arc(branch).from),
+            PSY.get_base_power(branch),
+        ),
+        x=branch.x * get_Z_fraction(
+            PSY.get_base_voltage(PSY.get_arc(branch).from),
+            PSY.get_base_power(branch),
+        ),
         rating=branch.rating * PSY.get_base_power(branch),
         discrete_branch_type=string(branch.discrete_branch_type),
         branch_status=string(branch.branch_status),
@@ -67,7 +73,15 @@ function psy2openapi(line::PSY.Line, ids::IDGenerator)
         angle_limits=get_min_max(line.angle_limits),
         rating_b=scale(line.rating_b, PSY.get_base_power(line)),
         rating_c=scale(line.rating_c, PSY.get_base_power(line)),
-        g=get_from_to(line.g), # needs to be scaled in psy5
+        g=get_from_to(
+            divide(
+                line.g,
+                get_Z_fraction(
+                    PSY.get_base_voltage(PSY.get_arc(line).from),
+                    PSY.get_base_power(line),
+                ),
+            ),
+        ),
     )
 end
 
@@ -82,9 +96,23 @@ function psy2openapi(monitored::PSY.MonitoredLine, ids::IDGenerator)
         active_power_flow=monitored.active_power_flow * PSY.get_base_power(monitored),
         reactive_power_flow=monitored.reactive_power_flow * PSY.get_base_power(monitored),
         arc=getid!(ids, monitored.arc),
-        r=monitored.r, # needs to be scaled in psy5
-        x=monitored.x, # needs to be scaled in psy5
-        b=get_from_to(monitored.b), # needs to be scaled in psy5
+        r=monitored.r * get_Z_fraction(
+            PSY.get_base_voltage(PSY.get_arc(monitored).from),
+            PSY.get_base_power(monitored),
+        ),
+        x=monitored.x * get_Z_fraction(
+            PSY.get_base_voltage(PSY.get_arc(monitored).from),
+            PSY.get_base_power(monitored),
+        ),
+        b=get_from_to(
+            divide(
+                monitored.b,
+                get_Z_fraction(
+                    PSY.get_base_voltage(PSY.get_arc(monitored).from),
+                    PSY.get_base_power(monitored),
+                ),
+            ),
+        ),
         flow_limits=get_fromto_tofrom(
             scale(monitored.flow_limits, PSY.get_base_power(monitored)),
         ),
@@ -92,23 +120,33 @@ function psy2openapi(monitored::PSY.MonitoredLine, ids::IDGenerator)
         angle_limits=get_min_max(monitored.angle_limits),
         rating_b=scale(monitored.rating_b, PSY.get_base_power(monitored)),
         rating_c=scale(monitored.rating_c, PSY.get_base_power(monitored)),
-        g=get_from_to(monitored.g), # needs to be scaled in psy5
+        g=get_from_to(
+            divide(
+                monitored.g,
+                get_Z_fraction(
+                    PSY.get_base_voltage(PSY.get_arc(monitored).from),
+                    PSY.get_base_power(monitored),
+                ),
+            ),
+        ),
     )
 end
 
 function psy2openapi(transformer::PSY.PhaseShiftingTransformer, ids::IDGenerator)
-    if trasformer.base_power == 0.0
+    if transformer.base_power == 0.0
         error("base power is 0.0")
     end
     PhaseShiftingTransformer(
         id=getid!(ids, transformer),
         name=transformer.name,
         available=transformer.available,
-        active_power_flow=transformer.active_power_flow * trasformer.base_power,
-        reactive_power_flow=transformer.reactive_power_flow * trasformer.base_power,
+        active_power_flow=transformer.active_power_flow * transformer.base_power,
+        reactive_power_flow=transformer.reactive_power_flow * transformer.base_power,
         arc=getid!(ids, transformer.arc),
-        r=line.r * get_Z_fraction(transformer.base_voltage_primary, transformer.base_power), # assuming primary, not secondary, base voltage
-        x=line.x * get_Z_fraction(transformer.base_voltage_primary, transformer.base_power), # assuming primary, not secondary, base voltage
+        r=transformer.r *
+          get_Z_fraction(transformer.base_voltage_primary, transformer.base_power), # assuming primary, not secondary, base voltage
+        x=transformer.x *
+          get_Z_fraction(transformer.base_voltage_primary, transformer.base_power), # assuming primary, not secondary, base voltage
         primary_shunt=get_complex_number(
             divide(
                 transformer.primary_shunt,
@@ -117,40 +155,44 @@ function psy2openapi(transformer::PSY.PhaseShiftingTransformer, ids::IDGenerator
         ), # assuming primary, not secondary, base voltage
         tap=transformer.tap,
         alpha=transformer.α,
-        rating=scale(transformer.rating, trasformer.base_power),
+        rating=scale(transformer.rating, transformer.base_power),
         base_power=transformer.base_power,
         base_voltage_primary=transformer.base_voltage_primary,
         base_voltage_secondary=transformer.base_voltage_secondary,
-        rating_b=scale(transformer.rating_b, trasformer.base_power),
-        rating_c=scale(transformer.rating_c, trasformer.base_power),
+        rating_b=scale(transformer.rating_b, transformer.base_power),
+        rating_c=scale(transformer.rating_c, transformer.base_power),
         phase_angle_limits=get_min_max(transformer.phase_angle_limits),
     )
 end
 
 function psy2openapi(transformer::PSY.TapTransformer, ids::IDGenerator)
-    if trasformer.base_power == 0.0
+    if transformer.base_power == 0.0
         error("base power is 0.0")
     end
     TapTransformer(
         id=getid!(ids, transformer),
         name=transformer.name,
         available=transformer.available,
-        active_power_flow=transformer.active_power_flow * trasformer.base_power,
-        reactive_power_flow=transformer.reactive_power_flow * trasformer.base_power,
+        active_power_flow=transformer.active_power_flow * transformer.base_power,
+        reactive_power_flow=transformer.reactive_power_flow * transformer.base_power,
         arc=getid!(ids, transformer.arc),
-        r=line.r * get_Z_fraction(transformer.base_voltage_primary, transformer.base_power), # assuming primary, not secondary, base voltage
-        x=line.x * get_Z_fraction(transformer.base_voltage_primary, transformer.base_power), # assuming primary, not secondary, base voltage
-        primary_shunt=divide(
-            get_complex_number(transformer.primary_shunt),
-            get_Z_fraction(transformer.base_voltage_primary, transformer.base_power),
+        r=transformer.r *
+          get_Z_fraction(transformer.base_voltage_primary, transformer.base_power), # assuming primary, not secondary, base voltage
+        x=transformer.x *
+          get_Z_fraction(transformer.base_voltage_primary, transformer.base_power), # assuming primary, not secondary, base voltage
+        primary_shunt=get_complex_number(
+            divide(
+                transformer.primary_shunt,
+                get_Z_fraction(transformer.base_voltage_primary, transformer.base_power),
+            ),
         ), # assuming primary, not secondary, base voltage
         tap=transformer.tap,
         rating=transformer.rating,
         base_power=transformer.base_power,
         base_voltage_primary=transformer.base_voltage_primary,
         base_voltage_secondary=transformer.base_voltage_secondary,
-        rating_b=scale(transformer.rating_b, trasformer.base_power),
-        rating_c=scale(transformer.rating_c, trasformer.base_power),
+        rating_b=scale(transformer.rating_b, transformer.base_power),
+        rating_c=scale(transformer.rating_c, transformer.base_power),
     )
 end
 
@@ -164,7 +206,7 @@ function psy2openapi(tmodel::PSY.TModelHVDCLine, ids::IDGenerator)
         available=tmodel.available,
         active_power_flow=tmodel.active_power_flow * PSY.get_base_power(tmodel),
         arc=getid!(ids, tmodel.arc),
-        r=tmodel.r, # needs to be scaled in psy5
+        r=tmodel.r,
         l=tmodel.l,
         c=tmodel.c,
         active_power_limits_from=get_min_max(
@@ -177,26 +219,26 @@ function psy2openapi(tmodel::PSY.TModelHVDCLine, ids::IDGenerator)
 end
 
 function psy2openapi(transformer2w::PSY.Transformer2W, ids::IDGenerator)
-    if trasformer2w.base_power == 0.0
+    if transformer2w.base_power == 0.0
         error("base power is 0.0")
     end
     Transformer2W(
         id=getid!(ids, transformer2w),
         name=transformer2w.name,
         available=transformer2w.available,
-        active_power_flow=transformer2w.active_power_flow * trasformer2w.base_power,
-        reactive_power_flow=transformer2w.reactive_power_flow * trasformer2w.base_power,
+        active_power_flow=transformer2w.active_power_flow * transformer2w.base_power,
+        reactive_power_flow=transformer2w.reactive_power_flow * transformer2w.base_power,
         arc=getid!(ids, transformer2w.arc),
-        r=line.r *
+        r=transformer2w.r *
           get_Z_fraction(transformer2w.base_voltage_primary, transformer2w.base_power),
-        x=line.x *
+        x=transformer2w.x *
           get_Z_fraction(transformer2w.base_voltage_primary, transformer2w.base_power),
-        rating=scale(transformer2w.rating, trasformer2w.base_power),
+        rating=scale(transformer2w.rating, transformer2w.base_power),
         base_power=transformer2w.base_power,
-        base_voltage_primary=transformer.base_voltage_primary,
-        base_voltage_secondary=transformer.base_voltage_secondary,
-        rating_b=scale(transformer2w.rating_b, trasformer2w.base_power),
-        rating_c=scale(transformer2w.rating_c, trasformer2w.base_power),
+        base_voltage_primary=transformer2w.base_voltage_primary,
+        base_voltage_secondary=transformer2w.base_voltage_secondary,
+        rating_b=scale(transformer2w.rating_b, transformer2w.base_power),
+        rating_c=scale(transformer2w.rating_c, transformer2w.base_power),
         primary_shunt=get_complex_number(
             divide(
                 transformer2w.primary_shunt,
@@ -317,35 +359,35 @@ function psy2openapi(lcc::PSY.TwoTerminalLCCLine, ids::IDGenerator)
         available=lcc.available,
         arc=getid!(ids, lcc.arc),
         active_power_flow=lcc.active_power_flow * PSY.get_base_power(lcc),
-        r=lcc.r, # needs to be scaled in psy5
+        r=lcc.r,
         transfer_setpoint=lcc.transfer_setpoint,
         scheduled_dc_voltage=lcc.scheduled_dc_voltage,
         rectifier_bridges=lcc.rectifier_bridges,
         rectifier_delay_angle_limits=get_min_max(lcc.rectifier_delay_angle_limits),
-        rectifier_rc=lcc.rectifier_rc, # ?? needs to be scaled in psy5
-        rectifier_xc=lcc.rectifier_xc, # ?? needs to be scaled in psy5
+        rectifier_rc=lcc.rectifier_rc,
+        rectifier_xc=lcc.rectifier_xc,
         rectifier_base_voltage=lcc.rectifier_base_voltage,
         inverter_bridges=lcc.inverter_bridges,
         inverter_extinction_angle_limits=get_min_max(lcc.inverter_extinction_angle_limits),
-        inverter_rc=lcc.inverter_rc, # ?? needs to be scaled in psy5
-        inverter_xc=lcc.inverter_xc, # ?? needs to be scaled in psy5
+        inverter_rc=lcc.inverter_rc,
+        inverter_xc=lcc.inverter_xc,
         inverter_base_voltage=lcc.inverter_base_voltage,
         power_mode=lcc.power_mode,
         switch_mode_voltage=lcc.switch_mode_voltage,
-        compounding_resistance=lcc.compounding_resistance, # ?? needs to be scaled in psy5
+        compounding_resistance=lcc.compounding_resistance,
         min_compounding_voltage=lcc.min_compounding_voltage,
         rectifier_transformer_ratio=lcc.rectifier_transformer_ratio,
         rectifier_tap_setting=lcc.rectifier_tap_setting,
         rectifier_tap_limits=get_min_max(lcc.rectifier_tap_limits),
         rectifier_tap_step=lcc.rectifier_tap_step,
         rectifier_delay_angle=lcc.rectifier_delay_angle,
-        rectifier_capacitor_reactance=lcc.rectifier_capacitor_reactance, # ?? needs to be scaled in psy5
+        rectifier_capacitor_reactance=lcc.rectifier_capacitor_reactance,
         inverter_transformer_ratio=lcc.inverter_transformer_ratio,
         inverter_tap_setting=lcc.inverter_tap_setting,
         inverter_tap_limits=get_min_max(lcc.inverter_tap_limits),
         inverter_tap_step=lcc.inverter_tap_step,
         inverter_extinction_angle=lcc.inverter_extinction_angle,
-        inverter_capacitor_reactance=lcc.inverter_capacitor_reactance, # ?? needs to be scaled in psy5
+        inverter_capacitor_reactance=lcc.inverter_capacitor_reactance,
         active_power_limits_from=get_min_max(
             scale(lcc.active_power_limits_from, PSY.get_base_power(lcc)),
         ),
@@ -379,7 +421,7 @@ function psy2openapi(vsc::PSY.TwoTerminalVSCLine, ids::IDGenerator)
         active_power_limits_to=get_min_max(
             scale(vsc.active_power_limits_to, PSY.get_base_power(vsc)),
         ),
-        g=vsc.g, # needs to be scaled in psy5
+        g=vsc.g,
         dc_current=vsc.dc_current,
         reactive_power_from=vsc.reactive_power_from * PSY.get_base_power(vsc),
         dc_voltage_control_from=vsc.dc_voltage_control_from,
