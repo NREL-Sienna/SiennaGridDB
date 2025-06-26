@@ -1,4 +1,7 @@
 function psy2openapi(area_interchange::PSY.AreaInterchange, ids::IDGenerator)
+    if PSY.get_base_power(area_interchange) == 0.0
+        error("base power is 0.0")
+    end
     AreaInterchange(
         id=getid!(ids, area_interchange),
         name=area_interchange.name,
@@ -14,6 +17,9 @@ function psy2openapi(area_interchange::PSY.AreaInterchange, ids::IDGenerator)
 end
 
 function psy2openapi(branch::PSY.DiscreteControlledACBranch, ids::IDGenerator)
+    if PSY.get_base_power(branch) == 0.0
+        error("base power is 0.0")
+    end
     DiscreteControlledACBranch(
         id=getid!(ids, branch),
         name=branch.name,
@@ -21,8 +27,14 @@ function psy2openapi(branch::PSY.DiscreteControlledACBranch, ids::IDGenerator)
         active_power_flow=branch.active_power_flow * PSY.get_base_power(branch),
         reactive_power_flow=branch.reactive_power_flow * PSY.get_base_power(branch),
         arc=getid!(ids, branch.arc),
-        r=branch.r,
-        x=branch.x,
+        r=branch.r * get_Z_fraction(
+            PSY.get_base_voltage(PSY.get_arc(branch).from),
+            PSY.get_base_power(branch),
+        ),
+        x=branch.x * get_Z_fraction(
+            PSY.get_base_voltage(PSY.get_arc(branch).from),
+            PSY.get_base_power(branch),
+        ),
         rating=branch.rating * PSY.get_base_power(branch),
         discrete_branch_type=string(branch.discrete_branch_type),
         branch_status=string(branch.branch_status),
@@ -30,6 +42,9 @@ function psy2openapi(branch::PSY.DiscreteControlledACBranch, ids::IDGenerator)
 end
 
 function psy2openapi(line::PSY.Line, ids::IDGenerator)
+    if PSY.get_base_power(line) == 0.0
+        error("base power is 0.0")
+    end
     Line(
         id=getid!(ids, line),
         name=line.name,
@@ -37,18 +52,43 @@ function psy2openapi(line::PSY.Line, ids::IDGenerator)
         active_power_flow=line.active_power_flow * PSY.get_base_power(line),
         reactive_power_flow=line.reactive_power_flow * PSY.get_base_power(line),
         arc=getid!(ids, line.arc),
-        r=line.r,
-        x=line.x,
-        b=get_from_to(line.b),
+        r=line.r * get_Z_fraction(
+            PSY.get_base_voltage(PSY.get_arc(line).from),
+            PSY.get_base_power(line),
+        ),
+        x=line.x * get_Z_fraction(
+            PSY.get_base_voltage(PSY.get_arc(line).from),
+            PSY.get_base_power(line),
+        ),
+        b=get_from_to(
+            divide(
+                line.b,
+                get_Z_fraction(
+                    PSY.get_base_voltage(PSY.get_arc(line).from),
+                    PSY.get_base_power(line),
+                ),
+            ),
+        ),
         rating=line.rating * PSY.get_base_power(line),
         angle_limits=get_min_max(line.angle_limits),
         rating_b=scale(line.rating_b, PSY.get_base_power(line)),
         rating_c=scale(line.rating_c, PSY.get_base_power(line)),
-        g=get_from_to(line.g),
+        g=get_from_to(
+            divide(
+                line.g,
+                get_Z_fraction(
+                    PSY.get_base_voltage(PSY.get_arc(line).from),
+                    PSY.get_base_power(line),
+                ),
+            ),
+        ),
     )
 end
 
 function psy2openapi(monitored::PSY.MonitoredLine, ids::IDGenerator)
+    if PSY.get_base_power(monitored) == 0.0
+        error("base power is 0.0")
+    end
     MonitoredLine(
         id=getid!(ids, monitored),
         name=monitored.name,
@@ -56,9 +96,23 @@ function psy2openapi(monitored::PSY.MonitoredLine, ids::IDGenerator)
         active_power_flow=monitored.active_power_flow * PSY.get_base_power(monitored),
         reactive_power_flow=monitored.reactive_power_flow * PSY.get_base_power(monitored),
         arc=getid!(ids, monitored.arc),
-        r=monitored.r,
-        x=monitored.x,
-        b=get_from_to(monitored.b),
+        r=monitored.r * get_Z_fraction(
+            PSY.get_base_voltage(PSY.get_arc(monitored).from),
+            PSY.get_base_power(monitored),
+        ),
+        x=monitored.x * get_Z_fraction(
+            PSY.get_base_voltage(PSY.get_arc(monitored).from),
+            PSY.get_base_power(monitored),
+        ),
+        b=get_from_to(
+            divide(
+                monitored.b,
+                get_Z_fraction(
+                    PSY.get_base_voltage(PSY.get_arc(monitored).from),
+                    PSY.get_base_power(monitored),
+                ),
+            ),
+        ),
         flow_limits=get_fromto_tofrom(
             scale(monitored.flow_limits, PSY.get_base_power(monitored)),
         ),
@@ -66,53 +120,86 @@ function psy2openapi(monitored::PSY.MonitoredLine, ids::IDGenerator)
         angle_limits=get_min_max(monitored.angle_limits),
         rating_b=scale(monitored.rating_b, PSY.get_base_power(monitored)),
         rating_c=scale(monitored.rating_c, PSY.get_base_power(monitored)),
-        g=get_from_to(monitored.g),
+        g=get_from_to(
+            divide(
+                monitored.g,
+                get_Z_fraction(
+                    PSY.get_base_voltage(PSY.get_arc(monitored).from),
+                    PSY.get_base_power(monitored),
+                ),
+            ),
+        ),
     )
 end
 
 function psy2openapi(transformer::PSY.PhaseShiftingTransformer, ids::IDGenerator)
+    if transformer.base_power == 0.0
+        error("base power is 0.0")
+    end
     PhaseShiftingTransformer(
         id=getid!(ids, transformer),
         name=transformer.name,
         available=transformer.available,
-        active_power_flow=transformer.active_power_flow * PSY.get_base_power(transformer),
-        reactive_power_flow=transformer.reactive_power_flow *
-                            PSY.get_base_power(transformer),
+        active_power_flow=transformer.active_power_flow * transformer.base_power,
+        reactive_power_flow=transformer.reactive_power_flow * transformer.base_power,
         arc=getid!(ids, transformer.arc),
-        r=transformer.r,
-        x=transformer.x,
-        primary_shunt=transformer.primary_shunt,
+        r=transformer.r *
+          get_Z_fraction(transformer.base_voltage_primary, transformer.base_power), # assuming primary, not secondary, base voltage
+        x=transformer.x *
+          get_Z_fraction(transformer.base_voltage_primary, transformer.base_power), # assuming primary, not secondary, base voltage
+        primary_shunt=get_complex_number(
+            divide(
+                transformer.primary_shunt,
+                get_Z_fraction(transformer.base_voltage_primary, transformer.base_power),
+            ),
+        ), # assuming primary, not secondary, base voltage
         tap=transformer.tap,
         alpha=transformer.α,
-        rating=scale(transformer.rating, PSY.get_base_power(transformer)),
+        rating=scale(transformer.rating, transformer.base_power),
         base_power=transformer.base_power,
-        rating_b=scale(transformer.rating_b, PSY.get_base_power(transformer)),
-        rating_c=scale(transformer.rating_c, PSY.get_base_power(transformer)),
+        base_voltage_primary=transformer.base_voltage_primary,
+        base_voltage_secondary=transformer.base_voltage_secondary,
+        rating_b=scale(transformer.rating_b, transformer.base_power),
+        rating_c=scale(transformer.rating_c, transformer.base_power),
         phase_angle_limits=get_min_max(transformer.phase_angle_limits),
     )
 end
 
 function psy2openapi(transformer::PSY.TapTransformer, ids::IDGenerator)
+    if transformer.base_power == 0.0
+        error("base power is 0.0")
+    end
     TapTransformer(
         id=getid!(ids, transformer),
         name=transformer.name,
         available=transformer.available,
-        active_power_flow=transformer.active_power_flow * PSY.get_base_power(transformer),
-        reactive_power_flow=transformer.reactive_power_flow *
-                            PSY.get_base_power(transformer),
+        active_power_flow=transformer.active_power_flow * transformer.base_power,
+        reactive_power_flow=transformer.reactive_power_flow * transformer.base_power,
         arc=getid!(ids, transformer.arc),
-        r=transformer.r,
-        x=transformer.x,
-        primary_shunt=transformer.primary_shunt,
+        r=transformer.r *
+          get_Z_fraction(transformer.base_voltage_primary, transformer.base_power), # assuming primary, not secondary, base voltage
+        x=transformer.x *
+          get_Z_fraction(transformer.base_voltage_primary, transformer.base_power), # assuming primary, not secondary, base voltage
+        primary_shunt=get_complex_number(
+            divide(
+                transformer.primary_shunt,
+                get_Z_fraction(transformer.base_voltage_primary, transformer.base_power),
+            ),
+        ), # assuming primary, not secondary, base voltage
         tap=transformer.tap,
         rating=transformer.rating,
         base_power=transformer.base_power,
-        rating_b=scale(transformer.rating_b, PSY.get_base_power(transformer)),
-        rating_c=scale(transformer.rating_c, PSY.get_base_power(transformer)),
+        base_voltage_primary=transformer.base_voltage_primary,
+        base_voltage_secondary=transformer.base_voltage_secondary,
+        rating_b=scale(transformer.rating_b, transformer.base_power),
+        rating_c=scale(transformer.rating_c, transformer.base_power),
     )
 end
 
 function psy2openapi(tmodel::PSY.TModelHVDCLine, ids::IDGenerator)
+    if PSY.get_base_power(tmodel) == 0.0
+        error("base power is 0.0")
+    end
     TModelHVDCLine(
         id=getid!(ids, tmodel),
         name=tmodel.name,
@@ -132,26 +219,114 @@ function psy2openapi(tmodel::PSY.TModelHVDCLine, ids::IDGenerator)
 end
 
 function psy2openapi(transformer2w::PSY.Transformer2W, ids::IDGenerator)
+    if transformer2w.base_power == 0.0
+        error("base power is 0.0")
+    end
     Transformer2W(
         id=getid!(ids, transformer2w),
         name=transformer2w.name,
         available=transformer2w.available,
-        active_power_flow=transformer2w.active_power_flow *
-                          PSY.get_base_power(transformer2w),
-        reactive_power_flow=transformer2w.reactive_power_flow *
-                            PSY.get_base_power(transformer2w),
+        active_power_flow=transformer2w.active_power_flow * transformer2w.base_power,
+        reactive_power_flow=transformer2w.reactive_power_flow * transformer2w.base_power,
         arc=getid!(ids, transformer2w.arc),
-        r=transformer2w.r,
-        x=transformer2w.x,
-        rating=scale(transformer2w.rating, PSY.get_base_power(transformer2w)),
+        r=transformer2w.r *
+          get_Z_fraction(transformer2w.base_voltage_primary, transformer2w.base_power),
+        x=transformer2w.x *
+          get_Z_fraction(transformer2w.base_voltage_primary, transformer2w.base_power),
+        rating=scale(transformer2w.rating, transformer2w.base_power),
         base_power=transformer2w.base_power,
-        rating_b=scale(transformer2w.rating_b, PSY.get_base_power(transformer2w)),
-        rating_c=scale(transformer2w.rating_c, PSY.get_base_power(transformer2w)),
-        primary_shunt=transformer2w.primary_shunt,
+        base_voltage_primary=transformer2w.base_voltage_primary,
+        base_voltage_secondary=transformer2w.base_voltage_secondary,
+        rating_b=scale(transformer2w.rating_b, transformer2w.base_power),
+        rating_c=scale(transformer2w.rating_c, transformer2w.base_power),
+        primary_shunt=get_complex_number(
+            divide(
+                transformer2w.primary_shunt,
+                get_Z_fraction(
+                    transformer2w.base_voltage_primary,
+                    transformer2w.base_power,
+                ),
+            ),
+        ),
+    )
+end
+
+function psy2openapi(trans3w::PSY.Transformer3W, ids::IDGenerator)
+    if trans3w.base_power_12 == 0.0
+        error("primary base power is 0.0")
+    elseif trans3w.base_power_23 == 0.0
+        error("secondary base power is 0.0")
+    elseif trans3w.base_power_13 == 0.0
+        error("tertiary base power is 0.0")
+    end
+    Transformer3W(
+        id=getid!(ids, trans3w),
+        name=trans3w.name,
+        available=trans3w.available,
+        primary_star_arc=getid!(ids, trans3w.primary_star_arc),
+        secondary_star_arc=getid!(ids, trans3w.secondary_star_arc),
+        tertiary_star_arc=getid!(ids, trans3w.tertiary_star_arc),
+        star_bus=getid!(ids, trans3w.star_bus),
+        active_power_flow_primary=trans3w.active_power_flow_primary * trans3w.base_power_12,
+        reactive_power_flow_primary=trans3w.reactive_power_flow_primary *
+                                    trans3w.base_power_12,
+        active_power_flow_secondary=trans3w.active_power_flow_secondary *
+                                    trans3w.base_power_23,
+        reactive_power_flow_secondary=trans3w.reactive_power_flow_secondary *
+                                      trans3w.base_power_23,
+        active_power_flow_tertiary=trans3w.active_power_flow_tertiary *
+                                   trans3w.base_power_13,
+        reactive_power_flow_tertiary=trans3w.reactive_power_flow_tertiary *
+                                     trans3w.base_power_13,
+        r_primary=trans3w.r_primary *
+                  get_Z_fraction(trans3w.base_voltage_primary, trans3w.base_power_12),
+        x_primary=trans3w.x_primary *
+                  get_Z_fraction(trans3w.base_voltage_primary, trans3w.base_power_12),
+        r_secondary=trans3w.r_secondary *
+                    get_Z_fraction(trans3w.base_voltage_secondary, trans3w.base_power_23),
+        x_secondary=trans3w.x_secondary *
+                    get_Z_fraction(trans3w.base_voltage_secondary, trans3w.base_power_23),
+        r_tertiary=trans3w.r_tertiary *
+                   get_Z_fraction(trans3w.base_voltage_tertiary, trans3w.base_power_13),
+        x_tertiary=trans3w.x_tertiary *
+                   get_Z_fraction(trans3w.base_voltage_tertiary, trans3w.base_power_13),
+        rating=scale(trans3w.rating, trans3w.base_power_12),
+        r_12=trans3w.r_12 *
+             get_Z_fraction(trans3w.base_voltage_primary, trans3w.base_power_12),
+        x_12=trans3w.x_12 *
+             get_Z_fraction(trans3w.base_voltage_primary, trans3w.base_power_12),
+        r_23=trans3w.r_23 *
+             get_Z_fraction(trans3w.base_voltage_secondary, trans3w.base_power_23),
+        x_23=trans3w.x_23 *
+             get_Z_fraction(trans3w.base_voltage_secondary, trans3w.base_power_23),
+        r_13=trans3w.r_13 *
+             get_Z_fraction(trans3w.base_voltage_tertiary, trans3w.base_power_13),
+        x_13=trans3w.x_13 *
+             get_Z_fraction(trans3w.base_voltage_tertiary, trans3w.base_power_13),
+        base_power_12=trans3w.base_power_12,
+        base_power_23=trans3w.base_power_23,
+        base_power_13=trans3w.base_power_13,
+        base_voltage_primary=trans3w.base_voltage_primary,
+        base_voltage_secondary=trans3w.base_voltage_secondary,
+        base_voltage_tertiary=trans3w.base_voltage_tertiary,
+        g=trans3w.g / get_Z_fraction(trans3w.base_voltage_primary, trans3w.base_power_12),
+        b=trans3w.b / get_Z_fraction(trans3w.base_voltage_primary, trans3w.base_power_12),
+        primary_turns_ratio=trans3w.primary_turns_ratio,
+        secondary_turns_ratio=trans3w.secondary_turns_ratio,
+        tertiary_turns_ratio=trans3w.tertiary_turns_ratio,
+        available_primary=trans3w.available_primary,
+        available_secondary=trans3w.available_secondary,
+        available_tertiary=trans3w.available_tertiary,
+        rating_primary=trans3w.rating_primary * trans3w.base_power_12,
+        rating_secondary=trans3w.rating_secondary * trans3w.base_power_23,
+        rating_tertiary=trans3w.rating_tertiary * trans3w.base_power_13,
     )
 end
 
 function psy2openapi(hvdc::PSY.TwoTerminalGenericHVDCLine, ids::IDGenerator)
+    if PSY.get_base_power(hvdc) == 0.0
+        error("base power is 0.0")
+    end
     TwoTerminalGenericHVDCLine(
         id=getid!(ids, hvdc),
         name=hvdc.name,
@@ -175,6 +350,9 @@ function psy2openapi(hvdc::PSY.TwoTerminalGenericHVDCLine, ids::IDGenerator)
 end
 
 function psy2openapi(lcc::PSY.TwoTerminalLCCLine, ids::IDGenerator)
+    if PSY.get_base_power(lcc) == 0.0
+        error("base power is 0.0")
+    end
     TwoTerminalLCCLine(
         id=getid!(ids, lcc),
         name=lcc.name,
@@ -227,6 +405,9 @@ function psy2openapi(lcc::PSY.TwoTerminalLCCLine, ids::IDGenerator)
 end
 
 function psy2openapi(vsc::PSY.TwoTerminalVSCLine, ids::IDGenerator)
+    if PSY.get_base_power(vsc) == 0.0
+        error("base power is 0.0")
+    end
     TwoTerminalVSCLine(
         id=getid!(ids, vsc),
         name=vsc.name,
@@ -250,7 +431,9 @@ function psy2openapi(vsc::PSY.TwoTerminalVSCLine, ids::IDGenerator)
         converter_loss_from=get_value_curve(vsc.converter_loss_from),
         max_dc_current_from=vsc.max_dc_current_from,
         rating_from=vsc.rating_from * PSY.get_base_power(vsc),
-        reactive_power_limits_from=get_min_max(vsc.reactive_power_limits_from),
+        reactive_power_limits_from=get_min_max(
+            scale(vsc.reactive_power_limits_from, PSY.get_base_power(vsc)),
+        ),
         power_factor_weighting_fraction_from=vsc.power_factor_weighting_fraction_from,
         voltage_limits_from=get_min_max(vsc.voltage_limits_from),
         reactive_power_to=vsc.reactive_power_to * PSY.get_base_power(vsc),
@@ -260,8 +443,10 @@ function psy2openapi(vsc::PSY.TwoTerminalVSCLine, ids::IDGenerator)
         ac_setpoint_to=vsc.ac_setpoint_to,
         converter_loss_to=get_value_curve(vsc.converter_loss_to),
         max_dc_current_to=vsc.max_dc_current_to,
-        rating_to=vsc.rating_to,
-        reactive_power_limits_to=get_min_max(vsc.reactive_power_limits_to),
+        rating_to=vsc.rating_to * PSY.get_base_power(vsc),
+        reactive_power_limits_to=get_min_max(
+            scale(vsc.reactive_power_limits_to, PSY.get_base_power(vsc)),
+        ),
         power_factor_weighting_fraction_to=vsc.power_factor_weighting_fraction_to,
         voltage_limits_to=get_min_max(vsc.voltage_limits_to),
     )

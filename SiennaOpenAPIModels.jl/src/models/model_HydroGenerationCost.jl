@@ -5,7 +5,7 @@
 Cost representation for hydro gen units
 
     HydroGenerationCost(;
-        cost_type="HYDRO",
+        cost_type="HYDRO_GEN",
         fixed=0.0,
         variable=nothing,
     )
@@ -15,7 +15,7 @@ Cost representation for hydro gen units
     - variable::ProductionVariableCostCurve
 """
 Base.@kwdef mutable struct HydroGenerationCost <: OpenAPI.APIModel
-    cost_type::Union{Nothing, String} = "HYDRO"
+    cost_type::Union{Nothing, String} = "HYDRO_GEN"
     fixed::Union{Nothing, Float64} = 0.0
     variable = nothing # spec type: Union{ Nothing, ProductionVariableCostCurve }
 
@@ -47,6 +47,6 @@ end
 
 function OpenAPI.validate_property(::Type{HydroGenerationCost}, name::Symbol, val)
     if name === Symbol("cost_type")
-        OpenAPI.validate_param(name, "HydroGenerationCost", :enum, val, ["HYDRO"])
+        OpenAPI.validate_param(name, "HydroGenerationCost", :enum, val, ["HYDRO_GEN"])
     end
 end

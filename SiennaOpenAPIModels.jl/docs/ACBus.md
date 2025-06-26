@@ -1,11 +1,12 @@
 # ACBus
 
-
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **angle** | **Float64** |  | [optional] [default to nothing]
 **area** | **Int64** |  | [optional] [default to nothing]
+**available** | **Bool** |  | [default to nothing]
 **base_voltage** | **Float64** |  | [optional] [default to nothing]
 **bustype** | **String** |  | [default to nothing]
 **id** | **Int64** |  | [default to nothing]
@@ -15,7 +16,4 @@ Name | Type | Description | Notes
 **number** | **Int64** |  | [default to nothing]
 **voltage_limits** | [***MinMax**](MinMax.md) |  | [optional] [default to nothing]
 
-
 [[Back to Model list]](../README.md#models) [[Back to API list]](../README.md#api-endpoints) [[Back to README]](../README.md)
-
-

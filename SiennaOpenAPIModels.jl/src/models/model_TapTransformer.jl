@@ -16,6 +16,8 @@
         tap=nothing,
         rating=nothing,
         base_power=nothing,
+        base_voltage_primary=nothing,
+        base_voltage_secondary=nothing,
         rating_b=nothing,
         rating_c=nothing,
     )
@@ -28,10 +30,12 @@
     - arc::Int64
     - r::Float64
     - x::Float64
-    - primary_shunt::Float64
+    - primary_shunt::ComplexNumber
     - tap::Float64
     - rating::Float64
     - base_power::Float64
+    - base_voltage_primary::Float64
+    - base_voltage_secondary::Float64
     - rating_b::Float64
     - rating_c::Float64
 """
@@ -44,10 +48,12 @@ Base.@kwdef mutable struct TapTransformer <: OpenAPI.APIModel
     arc::Union{Nothing, Int64} = nothing
     r::Union{Nothing, Float64} = nothing
     x::Union{Nothing, Float64} = nothing
-    primary_shunt::Union{Nothing, Float64} = nothing
+    primary_shunt = nothing # spec type: Union{ Nothing, ComplexNumber }
     tap::Union{Nothing, Float64} = nothing
     rating::Union{Nothing, Float64} = nothing
     base_power::Union{Nothing, Float64} = nothing
+    base_voltage_primary::Union{Nothing, Float64} = nothing
+    base_voltage_secondary::Union{Nothing, Float64} = nothing
     rating_b::Union{Nothing, Float64} = nothing
     rating_c::Union{Nothing, Float64} = nothing
 
@@ -64,6 +70,8 @@ Base.@kwdef mutable struct TapTransformer <: OpenAPI.APIModel
         tap,
         rating,
         base_power,
+        base_voltage_primary,
+        base_voltage_secondary,
         rating_b,
         rating_c,
     )
@@ -80,6 +88,8 @@ Base.@kwdef mutable struct TapTransformer <: OpenAPI.APIModel
             tap,
             rating,
             base_power,
+            base_voltage_primary,
+            base_voltage_secondary,
             rating_b,
             rating_c,
         )
@@ -97,10 +107,12 @@ const _property_types_TapTransformer = Dict{Symbol, String}(
     Symbol("arc") => "Int64",
     Symbol("r") => "Float64",
     Symbol("x") => "Float64",
-    Symbol("primary_shunt") => "Float64",
+    Symbol("primary_shunt") => "ComplexNumber",
     Symbol("tap") => "Float64",
     Symbol("rating") => "Float64",
     Symbol("base_power") => "Float64",
+    Symbol("base_voltage_primary") => "Float64",
+    Symbol("base_voltage_secondary") => "Float64",
     Symbol("rating_b") => "Float64",
     Symbol("rating_c") => "Float64",
 )
@@ -143,6 +155,16 @@ function OpenAPI.validate_properties(o::TapTransformer)
     OpenAPI.validate_property(TapTransformer, Symbol("tap"), o.tap)
     OpenAPI.validate_property(TapTransformer, Symbol("rating"), o.rating)
     OpenAPI.validate_property(TapTransformer, Symbol("base_power"), o.base_power)
+    OpenAPI.validate_property(
+        TapTransformer,
+        Symbol("base_voltage_primary"),
+        o.base_voltage_primary,
+    )
+    OpenAPI.validate_property(
+        TapTransformer,
+        Symbol("base_voltage_secondary"),
+        o.base_voltage_secondary,
+    )
     OpenAPI.validate_property(TapTransformer, Symbol("rating_b"), o.rating_b)
     OpenAPI.validate_property(TapTransformer, Symbol("rating_c"), o.rating_c)
 end

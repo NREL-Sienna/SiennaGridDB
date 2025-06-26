@@ -8,6 +8,7 @@ function openapi2psy(bus::ACBus, resolver::Resolver)
         voltage_limits=get_tuple_min_max(bus.voltage_limits),
         base_voltage=bus.base_voltage,
         area=resolver(bus.area),
+        available=bus.available,
         load_zone=resolver(bus.load_zone),
     )
 end

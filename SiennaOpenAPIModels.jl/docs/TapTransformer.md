@@ -12,10 +12,12 @@ Name | Type | Description | Notes
 **arc** | **Int64** |  | [default to nothing]
 **r** | **Float64** |  | [default to nothing]
 **x** | **Float64** |  | [default to nothing]
-**primary_shunt** | **Float64** |  | [default to nothing]
+**primary_shunt** | [***ComplexNumber**](ComplexNumber.md) |  | [default to nothing]
 **tap** | **Float64** |  | [default to nothing]
 **rating** | **Float64** |  | [optional] [default to nothing]
 **base_power** | **Float64** |  | [default to nothing]
+**base_voltage_primary** | **Float64** |  | [optional] [default to nothing]
+**base_voltage_secondary** | **Float64** |  | [optional] [default to nothing]
 **rating_b** | **Float64** |  | [optional] [default to nothing]
 **rating_c** | **Float64** |  | [optional] [default to nothing]
 

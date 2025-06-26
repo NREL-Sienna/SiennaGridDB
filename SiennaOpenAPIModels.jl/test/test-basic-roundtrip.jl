@@ -99,7 +99,7 @@ end
         @test test_convert.arc == 2
         @test test_convert.active_power_flow == 50.0
         @test test_convert.reactive_power_flow == 0.0
-        @test test_convert.r == 0.00108
+        @test test_convert.r == 0.57132
         @test test_convert.rating == 1500
         @test test_convert.discrete_branch_type == "OTHER"
         @test test_convert.branch_status == "CLOSED"
@@ -596,8 +596,8 @@ end
         test_roundtrip(SiennaOpenAPIModels.TapTransformer, test_convert)
         @test test_convert.id == 1
         @test test_convert.rating ≈ 5.786163762803648
-        @test test_convert.primary_shunt == 0.0
-        @test test_convert.x ≈ 0.20912
+        @test test_convert.primary_shunt.real == 0.0
+        @test test_convert.x ≈ 9.9562032
     end
     @testset "Transformer2W to JSON" begin
         transformer2w =
@@ -607,7 +607,7 @@ end
         test_roundtrip(SiennaOpenAPIModels.Transformer2W, test_convert)
         @test test_convert.id == 1
         @test test_convert.r == 0.0
-        @test test_convert.primary_shunt == 0.0
+        @test test_convert.primary_shunt.imag == 0.0
     end
 end
 
@@ -678,7 +678,7 @@ end
         test_roundtrip(SiennaOpenAPIModels.PhaseShiftingTransformer, test_convert)
         @test test_convert.id == 1
         @test test_convert.arc == 2
-        @test test_convert.x == 0.03274425
+        @test test_convert.x == 17.32170825
         @test test_convert.rating == 426.0
     end
 end
@@ -789,9 +789,9 @@ end
         @test test_convert.ac_setpoint_from == 1.034
         @test test_convert.max_dc_current_from == 1499.79
         @test test_convert.rating_from == 100.0 * 2.26
-        @test test_convert.reactive_power_limits_from.min == -1.0
-        @test test_convert.rating_to == 2.26
-        @test test_convert.reactive_power_limits_to.max == 1.0
+        @test test_convert.reactive_power_limits_from.min == -100.0
+        @test test_convert.rating_to == 100.0 * 2.26
+        @test test_convert.reactive_power_limits_to.max == 100.0
         @test test_convert.power_factor_weighting_fraction_to == 0.5
         @test test_convert.voltage_limits_to.max == 999.9
     end
