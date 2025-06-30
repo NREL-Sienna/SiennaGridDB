@@ -70,11 +70,12 @@ end
                 "SELECT id, entity_id, name, json(value) as value FROM attributes",
             ),
         )
-        @test length(attributes.id) == 7
-        @test length(unique(attributes.id)) == 7
+        @test length(attributes.id) == 8
+        @test length(unique(attributes.id)) == 8
         @test all(attributes.entity_id .== 1)
         @test attributes_to_dict(attributes) == Dict(
             "voltage_limits" => Dict{String, Any}("max" => 1.05, "min" => 0.9),
+            "available" => true,
             "base_voltage" => 230.0,
             "number" => 1,
             "magnitude" => 1.0,
