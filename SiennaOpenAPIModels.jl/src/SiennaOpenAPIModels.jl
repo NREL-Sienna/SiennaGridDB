@@ -12,6 +12,7 @@ module SiennaOpenAPIModels
 using OpenAPI
 using StructHelpers: @batteries
 import PowerSystems
+import Dates
 
 const PSY = PowerSystems
 const API_VERSION = "1.0.0"
@@ -123,6 +124,7 @@ include("json_to_sienna/service.jl")
 include("dbinterface/value_curve.jl")
 
 include("dbinterface/sqlite.jl")
+include("dbinterface/time_series.jl")
 
 """
 Register handlers for all APIs in this module in the supplied `Router` instance.

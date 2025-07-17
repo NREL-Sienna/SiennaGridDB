@@ -273,7 +273,7 @@ CREATE TABLE time_series_associations(
     owner_type TEXT NOT NULL,
     owner_category TEXT NOT NULL,
     features TEXT NOT NULL,
-    scaling_factor_multiplier JSON NULL,
+    scaling_factor_multiplier TEXT NULL,
     metadata_uuid TEXT NOT NULL,
     units TEXT NULL
 );
@@ -302,7 +302,7 @@ CREATE TABLE loads (
 -- of a time-varying quantity.
 CREATE TABLE static_time_series (
     id integer PRIMARY KEY,
-    uuid text NULL UNIQUE,
+    uuid text NULL,
     timestamp datetime NOT NULL,
     value real NOT NULL
 );
