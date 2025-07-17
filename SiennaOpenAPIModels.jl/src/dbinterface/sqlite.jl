@@ -391,6 +391,8 @@ function db2sys!(sys::PSY.System, db, resolver::Resolver)
            table_name == "prime_mover_types" ||
            table_name == "fuels" ||
            table_name == "entity_types" ||
+           table_name == "time_series_associations" ||
+           table_name == "static_time_series" ||
            table_name == "time_series"
             continue
         end
