@@ -19,7 +19,7 @@ Schema for the SQL database for Sienna Applications
 cargo install just
 ```
 
-### Create and example database and run some queries on it
+### Create an example database and run some queries on it
 
 ```console
 just test
