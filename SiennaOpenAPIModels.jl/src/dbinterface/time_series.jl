@@ -56,6 +56,7 @@ function get_uuid_mapping(sys::PowerSystems.System)
 
     for row in Tables.rows(time_series_uuids)
         uuid = row.time_series_uuid
+
         if haskey(uuid_count, uuid)
             # Duplicate found, assign a new UUID
             new_uuid = UUIDs.uuid4()
@@ -68,6 +69,18 @@ function get_uuid_mapping(sys::PowerSystems.System)
     end
 
     return uuid_mapping
+end
+
+function get_example_metadata_uuids(sys::PowerSystems.System)
+    metadata_store = sys.data.time_series_manager.metadata_store
+
+    return IS.sql(
+        metadata_store,
+        """
+        SELECT time_series_uuid, metadata_uuid
+        FROM time_series_associations GROUP BY time_series_uuid;
+        """,
+    )
 end
 
 function get_time_series_from_metadata_uuid(sys::PowerSystems.System, metadata_uuid)
@@ -98,12 +111,13 @@ function serialize_timeseries_data!(
     stmt = DBInterface.prepare(
         db,
         """
-        INSERT INTO static_time_series (uuid, timestamp, value)
+        INSERT INTO static_time_series (uuid, idx, value)
         VALUES (?, ?, ?)
         """,
     )
-    for (timestamp, value) in ts
-        DBInterface.execute(stmt, (string(time_series_uuid), string(timestamp), value))
+    for (i, timestamp_value) in enumerate(ts)
+        _, value = timestamp_value
+        DBInterface.execute(stmt, (string(time_series_uuid), i, value))
     end
 end
 
@@ -115,37 +129,39 @@ function serialize_timeseries_data!(
     ts::PowerSystems.DeterministicSingleTimeSeries,
     time_series_uuid::Base.UUID,
 )
-    serialize_timeseries_data!(db, ts.single_time_series, time_series_uuid)
+    serialize_time_series_data(db, ts.single_time_series, time_series_uuid)
 end
 
 """
 Iterate through all metadata objects and serialize timeseries
 """
 function serialize_all_timeseries_data!(db, sys::PowerSystems.System)
-    metadata_uuid_to_new_time_series_uuids = get_uuid_mapping(sys)
+    time_series_uuid_to_metadata_uuids = get_example_metadata_uuids(sys)
 
-    for (metadata_uuid, time_series_uuid) in metadata_uuid_to_new_time_series_uuids
+    for (time_series_uuid, metadata_uuid) in eachrow(time_series_uuid_to_metadata_uuids)
         ts = get_time_series_from_metadata_uuid(sys, Base.UUID(metadata_uuid))
-        serialize_timeseries_data!(db, ts, time_series_uuid)
+        serialize_timeseries_data!(db, ts, Base.UUID(time_series_uuid))
     end
-    return metadata_uuid_to_new_time_series_uuids
 end
 
-function transform_associations!(sys::PowerSystems.System, associations, uuid_mapping)
+function transform_associations!(sys::PowerSystems.System, associations)
     associations = PowerSystems.DataFrames.coalesce.(associations, nothing)
-    associations[!, "time_series_uuid"] =
-        map(x -> string(uuid_mapping[x]), associations[!, "metadata_uuid"])
+    type_strings =
+        SiennaOpenAPIModels.ALL_DESERIALIZABLE_TYPES .|> (x -> last(split(string(x), ".")))
+    deserializable_string(x) = in(x, type_strings)
+
+    associations = associations[deserializable_string.(associations[!, "owner_type"]), :]
     #associations[!, "owner_id"] = map(onwer_uuid -> getid!(ids, owner_uuid), associations[!, "owner_uuid"])
     return associations
 end
 
-function serialize_timeseries_associations!(db, sys::PowerSystems.System, uuid_mapping)
+function serialize_timeseries_associations!(db, sys::PowerSystems.System)
     associations = IS.sql(
         sys.data.time_series_manager.metadata_store,
         """SELECT $(join(INFRASYS_TS_SCHEMA.names, ", "))
 FROM time_series_associations;""",
     )
-    associations = transform_associations!(sys, associations, uuid_mapping)
+    associations = transform_associations!(sys, associations)
 
     statement = DBInterface.prepare(
         db,
@@ -159,37 +175,59 @@ VALUES ($(join(repeat("?", length(INFRASYS_TS_SCHEMA.names)), ", ")))""",
 end
 
 function serialize_timeseries!(db, sys::PowerSystems.System)
-    uuid_mapping = serialize_all_timeseries_data!(db, sys)
-    serialize_timeseries_associations!(db, sys, uuid_mapping)
+    DBInterface.transaction(db) do
+        serialize_all_timeseries_data!(db, sys)
+        serialize_timeseries_associations!(db, sys)
+    end
 end
 
 function deserialize_timedata(
     db,
-    ::InfrastructureSystems.SingleTimeSeriesMetadata,
+    sts_meta::InfrastructureSystems.SingleTimeSeriesMetadata,
     time_series_uuid,
 )
     stmt = DBInterface.prepare(
         db,
         """
-        SELECT timestamp, value
+        SELECT idx, value
         FROM static_time_series
         WHERE uuid = ?
-        ORDER BY timestamp
+        ORDER BY idx
         """,
     )
     rows = DBInterface.execute(stmt, (string(time_series_uuid),))
     column_table = Tables.columntable(rows)
-    return PowerSystems.TimeSeries.TimeArray(
-        Dates.DateTime.(column_table.timestamp),
-        column_table.value,
-    )
+    timestamps =
+        range(sts_meta.initial_timestamp; length=sts_meta.length, step=sts_meta.resolution)
+    return PowerSystems.TimeSeries.TimeArray(timestamps, column_table.value)
+end
+
+function deserialize_timedata(_, ts::InfrastructureSystems.DeterministicMetadata, _)
+    error("Cannot deserialize deterministic timeseries $ts")
 end
 
 function deserialize_time_series_row!(sys, db, row)
     metadata = deserialize_metadata(row)
-    time_array = deserialize_timedata(db, metadata, row.time_series_uuid)
-    ts = InfrastructureSystems.time_series_metadata_to_data(metadata)(metadata, time_array)
-    PowerSystems.add_time_series!(sys, PowerSystems.get_component(sys, row.owner_uuid), ts)
+    if isa(metadata, InfrastructureSystems.DeterministicMetadata) &&
+       metadata.time_series_type <: InfrastructureSystems.DeterministicSingleTimeSeries
+        component = PowerSystems.get_component(sys, row.owner_uuid)
+        InfrastructureSystems.add_metadata!(
+            sys.data.time_series_manager.metadata_store,
+            component,
+            metadata,
+        )
+    else
+        time_array = deserialize_timedata(db, metadata, row.time_series_uuid)
+        ts = InfrastructureSystems.time_series_metadata_to_data(metadata)(
+            metadata,
+            time_array,
+        )
+        PowerSystems.add_time_series!(
+            sys,
+            PowerSystems.get_component(sys, row.owner_uuid),
+            ts,
+        )
+    end
 end
 
 # TODO: STOLEN FROM InfrastructureSystems. This should be made an IS functions.
@@ -245,17 +283,49 @@ function deserialize_metadata(row)
             data[field] = val
         end
     end
-    return metadata_type(; data...)
+    metadata = metadata_type(; data...)
+    return metadata
+end
+
+function get_example_metadata(db)
+    time_series_uuid_rows = DBInterface.execute(
+        db,
+        "SELECT * FROM time_series_associations WHERE time_series_type != 'DeterministicSingleTimeSeries' GROUP BY time_series_uuid",
+    )
+    return time_series_uuid_rows
+end
+
+function deserialize_time_series_from_metadata!(sys::PowerSystems.System, db, metadata, row)
+    time_array = deserialize_timedata(db, metadata, row.time_series_uuid)
+    ts = InfrastructureSystems.time_series_metadata_to_data(metadata)(metadata, time_array)
+    PowerSystems.add_time_series!(sys, PowerSystems.get_component(sys, row.owner_uuid), ts)
 end
 
 function deserialize_timeseries!(sys::PowerSystems.System, db)
-    associations = DBInterface.execute(
-        db,
-        """SELECT $(join(INFRASYS_TS_SCHEMA.names, ", "))
-FROM time_series_associations;""",
-    )
+    DBInterface.transaction(db) do
+        # For each time_series_uuid, we'll pick a "real" metadata_uuid (so no DeterministicSingleTimeSeries),
+        # then we will deserialize and add them to the system. Finally, we'll go through and add_metadata!
+        # for all others.
+        serialized_metadata = Set{String}()
+        for row in get_example_metadata(db)
+            metadata = deserialize_metadata(row)
+            deserialize_time_series_from_metadata!(sys, db, metadata, row)
+            push!(serialized_metadata, row.metadata_uuid)
+        end
 
-    for row in associations
-        deserialize_time_series_row!(sys, db, row)
+        associations = DBInterface.execute(db, "SELECT * FROM time_series_associations")
+
+        for row in associations
+            metadata = deserialize_metadata(row)
+            if in(row.metadata_uuid, serialized_metadata)
+                continue
+            end
+            component = PowerSystems.get_component(sys, row.owner_uuid)
+            InfrastructureSystems.add_metadata!(
+                sys.data.time_series_manager.metadata_store,
+                component,
+                metadata,
+            )
+        end
     end
 end
