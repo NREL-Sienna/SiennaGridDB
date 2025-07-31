@@ -153,6 +153,81 @@ function openapi2psy(transformer::PhaseShiftingTransformer, resolver::Resolver)
     )
 end
 
+function openapi2psy(phase3w::PhaseShiftingTransformer3W, resolver::Resolver)
+    if phase3w.base_power_12 == 0.0
+        error("primary base power is 0.0")
+    elseif phase3w.base_power_23 == 0.0
+        error("secondary base power is 0.0")
+    elseif phase3w.base_power_13 == 0.0
+        error("tertiary base power is 0.0")
+    end
+    PSY.PhaseShiftingTransformer3W(
+        name=phase3w.name,
+        available=phase3w.available,
+        primary_star_arc=resolver(phase3w.primary_star_arc),
+        secondary_star_arc=resolver(phase3w.secondary_star_arc),
+        tertiary_star_arc=resolver(phase3w.tertiary_star_arc),
+        star_bus=resolver(phase3w.star_bus),
+        active_power_flow_primary=phase3w.active_power_flow_primary / phase3w.base_power_12,
+        reactive_power_flow_primary=phase3w.reactive_power_flow_primary /
+                                    phase3w.base_power_12,
+        active_power_flow_secondary=phase3w.active_power_flow_secondary /
+                                    phase3w.base_power_23,
+        reactive_power_flow_secondary=phase3w.reactive_power_flow_secondary /
+                                      phase3w.base_power_23,
+        active_power_flow_tertiary=phase3w.active_power_flow_tertiary /
+                                   phase3w.base_power_13,
+        reactive_power_flow_tertiary=phase3w.reactive_power_flow_tertiary /
+                                     phase3w.base_power_13,
+        r_primary=phase3w.r_primary /
+                  get_Z_fraction(phase3w.base_voltage_primary, phase3w.base_power_12),
+        x_primary=phase3w.x_primary /
+                  get_Z_fraction(phase3w.base_voltage_primary, phase3w.base_power_12),
+        r_secondary=phase3w.r_secondary /
+                    get_Z_fraction(phase3w.base_voltage_secondary, phase3w.base_power_23),
+        x_secondary=phase3w.x_secondary /
+                    get_Z_fraction(phase3w.base_voltage_secondary, phase3w.base_power_23),
+        r_tertiary=phase3w.r_tertiary /
+                   get_Z_fraction(phase3w.base_voltage_tertiary, phase3w.base_power_13),
+        x_tertiary=phase3w.x_tertiary /
+                   get_Z_fraction(phase3w.base_voltage_tertiary, phase3w.base_power_13),
+        rating=divide(phase3w.rating, phase3w.base_power_12),
+        r_12=phase3w.r_12 /
+             get_Z_fraction(phase3w.base_voltage_primary, phase3w.base_power_12),
+        x_12=phase3w.x_12 /
+             get_Z_fraction(phase3w.base_voltage_primary, phase3w.base_power_12),
+        r_23=phase3w.r_23 /
+             get_Z_fraction(phase3w.base_voltage_secondary, phase3w.base_power_23),
+        x_23=phase3w.x_23 /
+             get_Z_fraction(phase3w.base_voltage_secondary, phase3w.base_power_23),
+        r_13=phase3w.r_13 /
+             get_Z_fraction(phase3w.base_voltage_tertiary, phase3w.base_power_13),
+        x_13=phase3w.x_13 /
+             get_Z_fraction(phase3w.base_voltage_tertiary, phase3w.base_power_13),
+        α_primary=phase3w.alpha_primary,
+        α_secondary=phase3w.alpha_secondary,
+        α_tertiary=phase3w.alpha_tertiary,
+        base_power_12=phase3w.base_power_12,
+        base_power_23=phase3w.base_power_23,
+        base_power_13=phase3w.base_power_13,
+        base_voltage_primary=phase3w.base_voltage_primary,
+        base_voltage_secondary=phase3w.base_voltage_secondary,
+        base_voltage_tertiary=phase3w.base_voltage_tertiary,
+        g=phase3w.g * get_Z_fraction(phase3w.base_voltage_primary, phase3w.base_power_12),
+        b=phase3w.b * get_Z_fraction(phase3w.base_voltage_primary, phase3w.base_power_12),
+        primary_turns_ratio=phase3w.primary_turns_ratio,
+        secondary_turns_ratio=phase3w.secondary_turns_ratio,
+        tertiary_turns_ratio=phase3w.tertiary_turns_ratio,
+        available_primary=phase3w.available_primary,
+        available_secondary=phase3w.available_secondary,
+        available_tertiary=phase3w.available_tertiary,
+        rating_primary=phase3w.rating_primary / phase3w.base_power_12,
+        rating_secondary=phase3w.rating_secondary / phase3w.base_power_23,
+        rating_tertiary=phase3w.rating_tertiary / phase3w.base_power_13,
+        phase_angle_limits=get_tuple_min_max(phase3w.phase_angle_limits),
+    )
+end
+
 function openapi2psy(taptransform::TapTransformer, resolver::Resolver)
     if taptransform.base_power == 0.0
         error("base power is 0.0")

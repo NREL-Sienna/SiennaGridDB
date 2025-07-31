@@ -9,6 +9,7 @@ Name | Type | Description | Notes
 **available** | **Bool** |  | [default to nothing]
 **bus** | **Int64** |  | [default to nothing]
 **Y** | [***ComplexNumber**](ComplexNumber.md) |  | [default to nothing]
+**initial_status** | **Vector{Int64}** |  | [optional] [default to nothing]
 **number_of_steps** | **Vector{Int64}** |  | [optional] [default to nothing]
 **Y_increase** | [**Vector{ComplexNumber}**](ComplexNumber.md) |  | [optional] [default to nothing]
 **admittance_limits** | [***MinMax**](MinMax.md) |  | [optional] [default to nothing]

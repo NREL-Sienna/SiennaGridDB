@@ -14,6 +14,7 @@
         max_reactive_power=nothing,
         base_power=nothing,
         operation_cost=nothing,
+        conformity="UNDEFINED",
         dynamic_injector=nothing,
     )
 
@@ -27,6 +28,7 @@
     - max_reactive_power::Float64
     - base_power::Float64
     - operation_cost::LoadCost
+    - conformity::String
     - dynamic_injector::Any
 """
 Base.@kwdef mutable struct InterruptiblePowerLoad <: OpenAPI.APIModel
@@ -40,6 +42,7 @@ Base.@kwdef mutable struct InterruptiblePowerLoad <: OpenAPI.APIModel
     max_reactive_power::Union{Nothing, Float64} = nothing
     base_power::Union{Nothing, Float64} = nothing
     operation_cost = nothing # spec type: Union{ Nothing, LoadCost }
+    conformity::Union{Nothing, String} = "UNDEFINED"
     dynamic_injector::Union{Nothing, Any} = nothing
 
     function InterruptiblePowerLoad(
@@ -53,6 +56,7 @@ Base.@kwdef mutable struct InterruptiblePowerLoad <: OpenAPI.APIModel
         max_reactive_power,
         base_power,
         operation_cost,
+        conformity,
         dynamic_injector,
     )
         o = new(
@@ -66,6 +70,7 @@ Base.@kwdef mutable struct InterruptiblePowerLoad <: OpenAPI.APIModel
             max_reactive_power,
             base_power,
             operation_cost,
+            conformity,
             dynamic_injector,
         )
         OpenAPI.validate_properties(o)
@@ -84,6 +89,7 @@ const _property_types_InterruptiblePowerLoad = Dict{Symbol, String}(
     Symbol("max_reactive_power") => "Float64",
     Symbol("base_power") => "Float64",
     Symbol("operation_cost") => "LoadCost",
+    Symbol("conformity") => "String",
     Symbol("dynamic_injector") => "Any",
 )
 OpenAPI.property_type(::Type{InterruptiblePowerLoad}, name::Symbol) =
@@ -134,6 +140,7 @@ function OpenAPI.validate_properties(o::InterruptiblePowerLoad)
         Symbol("operation_cost"),
         o.operation_cost,
     )
+    OpenAPI.validate_property(InterruptiblePowerLoad, Symbol("conformity"), o.conformity)
     OpenAPI.validate_property(
         InterruptiblePowerLoad,
         Symbol("dynamic_injector"),
@@ -141,4 +148,14 @@ function OpenAPI.validate_properties(o::InterruptiblePowerLoad)
     )
 end
 
-function OpenAPI.validate_property(::Type{InterruptiblePowerLoad}, name::Symbol, val) end
+function OpenAPI.validate_property(::Type{InterruptiblePowerLoad}, name::Symbol, val)
+    if name === Symbol("conformity")
+        OpenAPI.validate_param(
+            name,
+            "InterruptiblePowerLoad",
+            :enum,
+            val,
+            ["NON_CONFORMING", "CONFORMING", "UNDEFINED"],
+        )
+    end
+end

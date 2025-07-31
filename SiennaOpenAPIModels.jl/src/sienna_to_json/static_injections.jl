@@ -248,21 +248,62 @@ function psy2openapi(inter::PSY.InterconnectingConverter, ids::IDGenerator)
     )
 end
 
-function psy2openapi(interrupt::PSY.InterruptiblePowerLoad, ids::IDGenerator)
-    if interrupt.base_power == 0.0
+function psy2openapi(interrupt_power::PSY.InterruptiblePowerLoad, ids::IDGenerator)
+    if interrupt_power.base_power == 0.0
         error("base power is 0.0")
     end
     InterruptiblePowerLoad(
-        id=getid!(ids, interrupt),
-        name=interrupt.name,
-        available=interrupt.available,
-        bus=getid!(ids, interrupt.bus),
-        active_power=interrupt.active_power * interrupt.base_power,
-        reactive_power=interrupt.reactive_power * interrupt.base_power,
-        max_active_power=interrupt.max_active_power * interrupt.base_power,
-        max_reactive_power=interrupt.max_reactive_power * interrupt.base_power,
-        base_power=interrupt.base_power,
-        operation_cost=get_operation_cost(interrupt.operation_cost),
+        id=getid!(ids, interrupt_power),
+        name=interrupt_power.name,
+        available=interrupt_power.available,
+        bus=getid!(ids, interrupt_power.bus),
+        active_power=interrupt_power.active_power * interrupt_power.base_power,
+        reactive_power=interrupt_power.reactive_power * interrupt_power.base_power,
+        max_active_power=interrupt_power.max_active_power * interrupt_power.base_power,
+        max_reactive_power=interrupt_power.max_reactive_power * interrupt_power.base_power,
+        base_power=interrupt_power.base_power,
+        operation_cost=get_operation_cost(interrupt_power.operation_cost),
+        conformity=string(interrupt_power.conformity),
+        dynamic_injector=getid!(ids, interrupt_power.dynamic_injector),
+    )
+end
+
+function psy2openapi(interrupt_standard::PSY.InterruptibleStandardLoad, ids::IDGenerator)
+    if interrupt_standard.base_power == 0.0
+        error("base power is 0.0")
+    end
+    InterruptiblePowerLoad(
+        id=getid!(ids, interrupt_standard),
+        name=interrupt_standard.name,
+        available=interrupt_standard.available,
+        bus=getid!(ids, interrupt_standard.bus),
+        base_power=interrupt_standard.base_power,
+        operation_cost=get_operation_cost(interrupt_standard.operation_cost),
+        conformity=string(interrupt_standard.conformity),
+        constant_active_power=interrupt_standard.constant_active_power *
+                              interrupt_standard.base_power,
+        constant_reactive_power=interrupt_standard.constant_reactive_power *
+                                interrupt_standard.base_power,
+        impedance_active_power=interrupt_standard.impedance_active_power *
+                               interrupt_standard.base_power,
+        impedance_reactive_power=interrupt_standard.impedance_reactive_power *
+                                 interrupt_standard.base_power,
+        current_active_power=current_standard.current_active_power *
+                             interrupt_standard.base_power,
+        current_reactive_power=current_standard.current_reactive_power *
+                               interrupt_standard.base_power,
+        max_constant_active_power=interrupt_standard.max_constant_active_power *
+                                  interrupt_standard.base_power,
+        max_constant_reactive_power=interrupt_standard.max_constant_reactive_power *
+                                    interrupt_standard.base_power,
+        max_impedance_active_power=interrupt_standard.max_impedance_active_power *
+                                   interrupt_standard.base_power,
+        max_impedance_reactive_power=interrupt_standard.max_impedance_reactive_power *
+                                     interrupt_standard.base_power,
+        max_current_active_power=current_standard.max_current_active_power *
+                                 interrupt_standard.base_power,
+        max_current_reactive_power=current_standard.max_current_reactive_power *
+                                   interrupt_standard.base_power,
         dynamic_injector=getid!(ids, interrupt.dynamic_injector),
     )
 end
@@ -423,6 +464,7 @@ function psy2openapi(switch::PSY.SwitchedAdmittance, ids::IDGenerator)
         available=switch.available,
         bus=getid!(ids, switch.bus),
         Y=get_complex_number(switch.Y),
+        initial_status=switch.initial_status,
         number_of_steps=switch.number_of_steps,
         Y_increase=map(get_complex_number, switch.Y_increase),
         admittance_limits=get_min_max(switch.admittance_limits),
