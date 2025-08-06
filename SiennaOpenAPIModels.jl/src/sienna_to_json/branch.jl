@@ -162,6 +162,7 @@ function psy2openapi(transformer::PSY.PhaseShiftingTransformer, ids::IDGenerator
         rating_b=scale(transformer.rating_b, transformer.base_power),
         rating_c=scale(transformer.rating_c, transformer.base_power),
         phase_angle_limits=get_min_max(transformer.phase_angle_limits),
+        control_objective=string(transformer.control_objective),
     )
 end
 
@@ -238,6 +239,9 @@ function psy2openapi(phase3w::PSY.PhaseShiftingTransformer3W, ids::IDGenerator)
         rating_secondary=phase3w.rating_secondary * phase3w.base_power_23,
         rating_tertiary=phase3w.rating_tertiary * phase3w.base_power_13,
         phase_angle_limits=get_min_max(phase3w.phase_angle_limits),
+        control_objective_primary=string(phase3w.control_objective_primary),
+        control_objective_secondary=string(phase3w.control_objective_secondary),
+        control_objective_tertiary=string(phase3w.control_objective_tertiary),
     )
 end
 
@@ -269,6 +273,8 @@ function psy2openapi(transformer::PSY.TapTransformer, ids::IDGenerator)
         base_voltage_secondary=transformer.base_voltage_secondary,
         rating_b=scale(transformer.rating_b, transformer.base_power),
         rating_c=scale(transformer.rating_c, transformer.base_power),
+        winding_group_number=string(transformer.winding_group_number),
+        control_objective=string(transformer.control_objective),
     )
 end
 
@@ -324,6 +330,7 @@ function psy2openapi(transformer2w::PSY.Transformer2W, ids::IDGenerator)
                 ),
             ),
         ),
+        winding_group_number=string(transformer2w.winding_group_number),
     )
 end
 
@@ -396,6 +403,12 @@ function psy2openapi(trans3w::PSY.Transformer3W, ids::IDGenerator)
         rating_primary=trans3w.rating_primary * trans3w.base_power_12,
         rating_secondary=trans3w.rating_secondary * trans3w.base_power_23,
         rating_tertiary=trans3w.rating_tertiary * trans3w.base_power_13,
+        primary_group_number=string(trans3w.primary_group_number),
+        secondary_group_number=string(trans3w.secondary_group_number),
+        tertiary_group_number=string(trans3w.tertiary_group_number),
+        control_objective_primary=string(trans3w.control_objective_primary),
+        control_objective_secondary=string(trans3w.control_objective_secondary),
+        control_objective_tertiary=string(trans3w.control_objective_tertiary),
     )
 end
 

@@ -157,7 +157,7 @@ function OpenAPI.validate_property(::Type{HydroReservoir}, name::Symbol, val)
             "HydroReservoir",
             :enum,
             val,
-            ["USABLE_VOLUME", "TOTAL_VOLUME", "HEAD"],
+            ["USABLE_VOLUME", "TOTAL_VOLUME", "HEAD", "ENERGY"],
         )
     end
 end

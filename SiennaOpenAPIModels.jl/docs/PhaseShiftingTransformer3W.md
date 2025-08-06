@@ -51,5 +51,8 @@ Name | Type | Description | Notes
 **rating_secondary** | **Float64** |  | [optional] [default to 0.0]
 **rating_tertiary** | **Float64** |  | [optional] [default to 0.0]
 **phase_angle_limits** | [***MinMax**](MinMax.md) |  | [optional] [default to nothing]
+**control_objective_primary** | **String** |  | [optional] [default to "UNDEFINED"]
+**control_objective_secondary** | **String** |  | [optional] [default to "UNDEFINED"]
+**control_objective_tertiary** | **String** |  | [optional] [default to "UNDEFINED"]
 
 [[Back to Model list]](../README.md#models) [[Back to API list]](../README.md#api-endpoints) [[Back to README]](../README.md)

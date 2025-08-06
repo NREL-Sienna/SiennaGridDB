@@ -51,6 +51,9 @@
         rating_secondary=0.0,
         rating_tertiary=0.0,
         phase_angle_limits=nothing,
+        control_objective_primary="UNDEFINED",
+        control_objective_secondary="UNDEFINED",
+        control_objective_tertiary="UNDEFINED",
     )
 
     - id::Int64
@@ -100,6 +103,9 @@
     - rating_secondary::Float64
     - rating_tertiary::Float64
     - phase_angle_limits::MinMax
+    - control_objective_primary::String
+    - control_objective_secondary::String
+    - control_objective_tertiary::String
 """
 Base.@kwdef mutable struct PhaseShiftingTransformer3W <: OpenAPI.APIModel
     id::Union{Nothing, Int64} = nothing
@@ -149,6 +155,9 @@ Base.@kwdef mutable struct PhaseShiftingTransformer3W <: OpenAPI.APIModel
     rating_secondary::Union{Nothing, Float64} = 0.0
     rating_tertiary::Union{Nothing, Float64} = 0.0
     phase_angle_limits = nothing # spec type: Union{ Nothing, MinMax }
+    control_objective_primary::Union{Nothing, String} = "UNDEFINED"
+    control_objective_secondary::Union{Nothing, String} = "UNDEFINED"
+    control_objective_tertiary::Union{Nothing, String} = "UNDEFINED"
 
     function PhaseShiftingTransformer3W(
         id,
@@ -198,6 +207,9 @@ Base.@kwdef mutable struct PhaseShiftingTransformer3W <: OpenAPI.APIModel
         rating_secondary,
         rating_tertiary,
         phase_angle_limits,
+        control_objective_primary,
+        control_objective_secondary,
+        control_objective_tertiary,
     )
         o = new(
             id,
@@ -247,6 +259,9 @@ Base.@kwdef mutable struct PhaseShiftingTransformer3W <: OpenAPI.APIModel
             rating_secondary,
             rating_tertiary,
             phase_angle_limits,
+            control_objective_primary,
+            control_objective_secondary,
+            control_objective_tertiary,
         )
         OpenAPI.validate_properties(o)
         return o
@@ -301,6 +316,9 @@ const _property_types_PhaseShiftingTransformer3W = Dict{Symbol, String}(
     Symbol("rating_secondary") => "Float64",
     Symbol("rating_tertiary") => "Float64",
     Symbol("phase_angle_limits") => "MinMax",
+    Symbol("control_objective_primary") => "String",
+    Symbol("control_objective_secondary") => "String",
+    Symbol("control_objective_tertiary") => "String",
 )
 OpenAPI.property_type(::Type{PhaseShiftingTransformer3W}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_PhaseShiftingTransformer3W[name]))}
@@ -516,6 +534,90 @@ function OpenAPI.validate_properties(o::PhaseShiftingTransformer3W)
         Symbol("phase_angle_limits"),
         o.phase_angle_limits,
     )
+    OpenAPI.validate_property(
+        PhaseShiftingTransformer3W,
+        Symbol("control_objective_primary"),
+        o.control_objective_primary,
+    )
+    OpenAPI.validate_property(
+        PhaseShiftingTransformer3W,
+        Symbol("control_objective_secondary"),
+        o.control_objective_secondary,
+    )
+    OpenAPI.validate_property(
+        PhaseShiftingTransformer3W,
+        Symbol("control_objective_tertiary"),
+        o.control_objective_tertiary,
+    )
 end
 
-function OpenAPI.validate_property(::Type{PhaseShiftingTransformer3W}, name::Symbol, val) end
+function OpenAPI.validate_property(::Type{PhaseShiftingTransformer3W}, name::Symbol, val)
+    if name === Symbol("control_objective_primary")
+        OpenAPI.validate_param(
+            name,
+            "PhaseShiftingTransformer3W",
+            :enum,
+            val,
+            [
+                "UNDEFINED",
+                "VOLTAGE_DISABLED",
+                "REACTIVE_POWER_FLOW_DISABLED",
+                "ACTIVE_POWER_FLOW_DISABLED",
+                "CONTROL_OF_DC_LINE_DISABLED",
+                "ASYMETRIC_ACTIVE_POWER_FLOW_DISABLED",
+                "FIXED",
+                "VOLTAGE",
+                "REACTIVE_POWER_FLOW",
+                "ACTIVE_POWER_FLOW",
+                "CONTROL_OF_DC_LINE",
+                "ASYMETRIC_ACTIVE_POWER_FLOW",
+            ],
+        )
+    end
+
+    if name === Symbol("control_objective_secondary")
+        OpenAPI.validate_param(
+            name,
+            "PhaseShiftingTransformer3W",
+            :enum,
+            val,
+            [
+                "UNDEFINED",
+                "VOLTAGE_DISABLED",
+                "REACTIVE_POWER_FLOW_DISABLED",
+                "ACTIVE_POWER_FLOW_DISABLED",
+                "CONTROL_OF_DC_LINE_DISABLED",
+                "ASYMETRIC_ACTIVE_POWER_FLOW_DISABLED",
+                "FIXED",
+                "VOLTAGE",
+                "REACTIVE_POWER_FLOW",
+                "ACTIVE_POWER_FLOW",
+                "CONTROL_OF_DC_LINE",
+                "ASYMETRIC_ACTIVE_POWER_FLOW",
+            ],
+        )
+    end
+
+    if name === Symbol("control_objective_tertiary")
+        OpenAPI.validate_param(
+            name,
+            "PhaseShiftingTransformer3W",
+            :enum,
+            val,
+            [
+                "UNDEFINED",
+                "VOLTAGE_DISABLED",
+                "REACTIVE_POWER_FLOW_DISABLED",
+                "ACTIVE_POWER_FLOW_DISABLED",
+                "CONTROL_OF_DC_LINE_DISABLED",
+                "ASYMETRIC_ACTIVE_POWER_FLOW_DISABLED",
+                "FIXED",
+                "VOLTAGE",
+                "REACTIVE_POWER_FLOW",
+                "ACTIVE_POWER_FLOW",
+                "CONTROL_OF_DC_LINE",
+                "ASYMETRIC_ACTIVE_POWER_FLOW",
+            ],
+        )
+    end
+end

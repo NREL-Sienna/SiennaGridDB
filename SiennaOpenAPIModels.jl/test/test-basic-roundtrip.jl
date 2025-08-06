@@ -220,6 +220,28 @@ end
         @test test_convert.arc == 2
         @test test_convert.rating == 796.0
     end
+    @testset "MotorLoad to JSON" begin
+        motor_load = PSY.MotorLoad(
+            name="motor_load",
+            available=true,
+            bus=PSY.get_bus(c_sys5, 2),
+            active_power=0.5,
+            reactive_power=0.2,
+            base_power=10.0,
+            rating=1.0,
+            max_active_power=0.75,
+            reactive_power_limits=(min=0.0, max=10.0),
+        )
+        PSY.add_component!(c_sys5, motor_load)
+        @test isa(motor_load, PSY.MotorLoad)
+        test_convert = SiennaOpenAPIModels.psy2openapi(motor_load, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.MotorLoad, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.available
+        @test test_convert.bus == 2
+        @test test_convert.active_power == 50.0
+        @test test_convert.motor_technology == "UNDETERMINED"
+    end
     @testset "PowerLoad to JSON" begin
         power_load = PSY.get_component(PSY.PowerLoad, c_sys5, "Bus2")
         @test isa(power_load, PSY.PowerLoad)
@@ -389,6 +411,49 @@ end
         @test test_convert.id == 1
         @test test_convert.available
         @test isnothing(test_convert.dynamic_injector)
+    end
+    @testset "PhaseShiftingTransformer3W to JSON" begin
+        phase3w = PSY.PhaseShiftingTransformer3W(
+            name="phase3w",
+            available=true,
+            primary_star_arc=PSY.get_component(PSY.Arc, RTS_GMLC_RT_sys, "Agricola -> Ali"),
+            secondary_star_arc=PSY.get_component(PSY.Arc, RTS_GMLC_RT_sys, "Adler -> Ali"),
+            tertiary_star_arc=PSY.get_component(PSY.Arc, RTS_GMLC_RT_sys, "Alger -> Ali"),
+            star_bus=PSY.get_component(PSY.ACBus, RTS_GMLC_RT_sys, "Ali"),
+            active_power_flow_primary=0.0,
+            reactive_power_flow_primary=0.0,
+            active_power_flow_secondary=0.0,
+            reactive_power_flow_secondary=0.0,
+            active_power_flow_tertiary=0.0,
+            reactive_power_flow_tertiary=0.0,
+            r_primary=0.0002295,
+            x_primary=0.036619,
+            r_secondary=0.00083,
+            x_secondary=-0.00052,
+            r_tertiary=0.0041235,
+            x_tertiary=0.201563,
+            r_12=0.001059,
+            x_12=0.036097,
+            r_23=0.004954,
+            x_23=0.20104,
+            r_13=0.004353,
+            x_13=0.238183,
+            α_primary=0.0175,
+            α_secondary=0.0175,
+            α_tertiary=0.0175,
+            base_power_12=144.0,
+            base_power_23=100.0,
+            base_power_13=100.0,
+        )
+        PSY.add_component!(RTS_GMLC_RT_sys, phase3w)
+        @test phase3w isa PSY.PhaseShiftingTransformer3W
+        test_convert = SiennaOpenAPIModels.psy2openapi(phase3w, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.PhaseShiftingTransformer3W, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.star_bus.name == "Ali"
+        @test test_convert.active_power_flow_tertiary == 0.0
+        @test test_convert.r_23 == 0.004954
+        @test test_convert.α_primary == 0.0175
     end
     @testset "RenewableNonDispatch to JSON" begin
         renewnondispatch =
@@ -751,6 +816,17 @@ end
         @test test_convert.control_mode == "NML"
         @test test_convert.max_shunt_current == 204.0
         @test test_convert.reactive_power_required == 100.0
+    end
+    @testset "Transformer3W to JSON" begin
+        tr3w = only(collect(PSY.get_components(PSY.Transformer3W, pti_frankenstein_70_sys)))
+        @test isa(tr3w, PSY.Transformer3W)
+        test_convert = SiennaOpenAPIModels.psy2openapi(tr3w, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.Transformer3W, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.r_primary == 0.00022949999999999986
+        @test test_convert.rating == 0.0
+        @test test_convert.base_voltage_tertiary == 27.6
+        @test test_convert.secondary_group_number == "GROUP_0"
     end
     @testset "TwoTerminalLCCLine to JSON" begin
         lcc = only(

@@ -15,6 +15,10 @@ function get_branchtype_enum(branchtype::String)
     IS.deserialize(PSY.DiscreteControlledBranchType, branchtype)
 end
 
+function get_control_objective_enum(objective::String)
+    IS.deserialize(PSY.TransformerControlObjective, objective)
+end
+
 function get_factsmode_enum(factsmode::String)
     IS.deserialize(PSY.FACTSOperationModes, factsmode)
 end
@@ -25,6 +29,10 @@ end
 
 function get_load_conform_enum(conformity::String)
     IS.deserialize(PSY.LoadConformity, conformity)
+end
+
+function get_motor_tech_enum(motor_tech::String)
+    IS.deserialize(PSY.MotorLoadTechnology, motor_tech)
 end
 
 function get_prime_mover_enum(prime_mover_type::String)
@@ -57,6 +65,10 @@ end
 
 function get_storage_tech_enum(storage::String)
     IS.deserialize(PSY.StorageTech, storage)
+end
+
+function get_winding_group_enum(group_num::String)
+    IS.deserialize(PSY.WindingGroupNumber, group_num)
 end
 
 # Functions that convert and scale tuples

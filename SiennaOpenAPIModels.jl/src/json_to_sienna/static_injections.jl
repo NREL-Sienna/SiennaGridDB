@@ -304,6 +304,27 @@ function openapi2openapi(interrupt_standard::InterruptibleStandardLoad, resolver
     )
 end
 
+function openapi2psy(motor_load::MotorLoad, resolver::Resolver)
+    if motor_load.base_power == 0.0
+        error("base power is 0.0")
+    end
+    PSY.MotorLoad(
+        name=motor_load.name,
+        available=motor_load.available,
+        bus=resolver(motor_load.bus),
+        active_power=motor_load.active_power / motor_load.base_power,
+        reactive_power=motor_load.reactive_power / motor_load.base_power,
+        base_power=motor_load.base_power,
+        rating=motor_load.rating / motor_load.base_power,
+        max_active_power=motor_load.max_active_power / motor_load.base_power,
+        reactive_power_limits=divide(
+            get_tuple_min_max(motor_load.reactive_power_limits),
+            motor_load.base_power,
+        ),
+        motor_technology=get_motor_tech_enum(motor_load.motor_technology),
+    )
+end
+
 function openapi2psy(load::PowerLoad, resolver::Resolver)
     if load.base_power == 0.0
         error("base power is 0.0")

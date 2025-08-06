@@ -47,6 +47,12 @@
         rating_primary=0.0,
         rating_secondary=0.0,
         rating_tertiary=0.0,
+        primary_group_number="UNDEFINED",
+        secondary_group_number="UNDEFINED",
+        tertiary_group_number="UNDEFINED",
+        control_objective_primary="UNDEFINED",
+        control_objective_secondary="UNDEFINED",
+        control_objective_tertiary="UNDEFINED",
     )
 
     - id::Int64
@@ -92,6 +98,12 @@
     - rating_primary::Float64
     - rating_secondary::Float64
     - rating_tertiary::Float64
+    - primary_group_number::String
+    - secondary_group_number::String
+    - tertiary_group_number::String
+    - control_objective_primary::String
+    - control_objective_secondary::String
+    - control_objective_tertiary::String
 """
 Base.@kwdef mutable struct Transformer3W <: OpenAPI.APIModel
     id::Union{Nothing, Int64} = nothing
@@ -137,6 +149,12 @@ Base.@kwdef mutable struct Transformer3W <: OpenAPI.APIModel
     rating_primary::Union{Nothing, Float64} = 0.0
     rating_secondary::Union{Nothing, Float64} = 0.0
     rating_tertiary::Union{Nothing, Float64} = 0.0
+    primary_group_number::Union{Nothing, String} = "UNDEFINED"
+    secondary_group_number::Union{Nothing, String} = "UNDEFINED"
+    tertiary_group_number::Union{Nothing, String} = "UNDEFINED"
+    control_objective_primary::Union{Nothing, String} = "UNDEFINED"
+    control_objective_secondary::Union{Nothing, String} = "UNDEFINED"
+    control_objective_tertiary::Union{Nothing, String} = "UNDEFINED"
 
     function Transformer3W(
         id,
@@ -182,6 +200,12 @@ Base.@kwdef mutable struct Transformer3W <: OpenAPI.APIModel
         rating_primary,
         rating_secondary,
         rating_tertiary,
+        primary_group_number,
+        secondary_group_number,
+        tertiary_group_number,
+        control_objective_primary,
+        control_objective_secondary,
+        control_objective_tertiary,
     )
         o = new(
             id,
@@ -227,6 +251,12 @@ Base.@kwdef mutable struct Transformer3W <: OpenAPI.APIModel
             rating_primary,
             rating_secondary,
             rating_tertiary,
+            primary_group_number,
+            secondary_group_number,
+            tertiary_group_number,
+            control_objective_primary,
+            control_objective_secondary,
+            control_objective_tertiary,
         )
         OpenAPI.validate_properties(o)
         return o
@@ -277,6 +307,12 @@ const _property_types_Transformer3W = Dict{Symbol, String}(
     Symbol("rating_primary") => "Float64",
     Symbol("rating_secondary") => "Float64",
     Symbol("rating_tertiary") => "Float64",
+    Symbol("primary_group_number") => "String",
+    Symbol("secondary_group_number") => "String",
+    Symbol("tertiary_group_number") => "String",
+    Symbol("control_objective_primary") => "String",
+    Symbol("control_objective_secondary") => "String",
+    Symbol("control_objective_tertiary") => "String",
 )
 OpenAPI.property_type(::Type{Transformer3W}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_Transformer3W[name]))}
@@ -425,6 +461,159 @@ function OpenAPI.validate_properties(o::Transformer3W)
     OpenAPI.validate_property(Transformer3W, Symbol("rating_primary"), o.rating_primary)
     OpenAPI.validate_property(Transformer3W, Symbol("rating_secondary"), o.rating_secondary)
     OpenAPI.validate_property(Transformer3W, Symbol("rating_tertiary"), o.rating_tertiary)
+    OpenAPI.validate_property(
+        Transformer3W,
+        Symbol("primary_group_number"),
+        o.primary_group_number,
+    )
+    OpenAPI.validate_property(
+        Transformer3W,
+        Symbol("secondary_group_number"),
+        o.secondary_group_number,
+    )
+    OpenAPI.validate_property(
+        Transformer3W,
+        Symbol("tertiary_group_number"),
+        o.tertiary_group_number,
+    )
+    OpenAPI.validate_property(
+        Transformer3W,
+        Symbol("control_objective_primary"),
+        o.control_objective_primary,
+    )
+    OpenAPI.validate_property(
+        Transformer3W,
+        Symbol("control_objective_secondary"),
+        o.control_objective_secondary,
+    )
+    OpenAPI.validate_property(
+        Transformer3W,
+        Symbol("control_objective_tertiary"),
+        o.control_objective_tertiary,
+    )
 end
 
-function OpenAPI.validate_property(::Type{Transformer3W}, name::Symbol, val) end
+function OpenAPI.validate_property(::Type{Transformer3W}, name::Symbol, val)
+    if name === Symbol("primary_group_number")
+        OpenAPI.validate_param(
+            name,
+            "Transformer3W",
+            :enum,
+            val,
+            [
+                "UNDEFINED",
+                "GROUP_0",
+                "GROUP_1",
+                "GROUP_5",
+                "GROUP_6",
+                "GROUP_7",
+                "GROUP_11",
+            ],
+        )
+    end
+
+    if name === Symbol("secondary_group_number")
+        OpenAPI.validate_param(
+            name,
+            "Transformer3W",
+            :enum,
+            val,
+            [
+                "UNDEFINED",
+                "GROUP_0",
+                "GROUP_1",
+                "GROUP_5",
+                "GROUP_6",
+                "GROUP_7",
+                "GROUP_11",
+            ],
+        )
+    end
+
+    if name === Symbol("tertiary_group_number")
+        OpenAPI.validate_param(
+            name,
+            "Transformer3W",
+            :enum,
+            val,
+            [
+                "UNDEFINED",
+                "GROUP_0",
+                "GROUP_1",
+                "GROUP_5",
+                "GROUP_6",
+                "GROUP_7",
+                "GROUP_11",
+            ],
+        )
+    end
+
+    if name === Symbol("control_objective_primary")
+        OpenAPI.validate_param(
+            name,
+            "Transformer3W",
+            :enum,
+            val,
+            [
+                "UNDEFINED",
+                "VOLTAGE_DISABLED",
+                "REACTIVE_POWER_FLOW_DISABLED",
+                "ACTIVE_POWER_FLOW_DISABLED",
+                "CONTROL_OF_DC_LINE_DISABLED",
+                "ASYMETRIC_ACTIVE_POWER_FLOW_DISABLED",
+                "FIXED",
+                "VOLTAGE",
+                "REACTIVE_POWER_FLOW",
+                "ACTIVE_POWER_FLOW",
+                "CONTROL_OF_DC_LINE",
+                "ASYMETRIC_ACTIVE_POWER_FLOW",
+            ],
+        )
+    end
+
+    if name === Symbol("control_objective_secondary")
+        OpenAPI.validate_param(
+            name,
+            "Transformer3W",
+            :enum,
+            val,
+            [
+                "UNDEFINED",
+                "VOLTAGE_DISABLED",
+                "REACTIVE_POWER_FLOW_DISABLED",
+                "ACTIVE_POWER_FLOW_DISABLED",
+                "CONTROL_OF_DC_LINE_DISABLED",
+                "ASYMETRIC_ACTIVE_POWER_FLOW_DISABLED",
+                "FIXED",
+                "VOLTAGE",
+                "REACTIVE_POWER_FLOW",
+                "ACTIVE_POWER_FLOW",
+                "CONTROL_OF_DC_LINE",
+                "ASYMETRIC_ACTIVE_POWER_FLOW",
+            ],
+        )
+    end
+
+    if name === Symbol("control_objective_tertiary")
+        OpenAPI.validate_param(
+            name,
+            "Transformer3W",
+            :enum,
+            val,
+            [
+                "UNDEFINED",
+                "VOLTAGE_DISABLED",
+                "REACTIVE_POWER_FLOW_DISABLED",
+                "ACTIVE_POWER_FLOW_DISABLED",
+                "CONTROL_OF_DC_LINE_DISABLED",
+                "ASYMETRIC_ACTIVE_POWER_FLOW_DISABLED",
+                "FIXED",
+                "VOLTAGE",
+                "REACTIVE_POWER_FLOW",
+                "ACTIVE_POWER_FLOW",
+                "CONTROL_OF_DC_LINE",
+                "ASYMETRIC_ACTIVE_POWER_FLOW",
+            ],
+        )
+    end
+end

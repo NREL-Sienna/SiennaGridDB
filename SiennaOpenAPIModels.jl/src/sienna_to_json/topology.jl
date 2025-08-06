@@ -3,6 +3,7 @@ function psy2openapi(bus::PSY.ACBus, ids::IDGenerator)
         id=getid!(ids, bus),
         number=bus.number,
         name=bus.name,
+        available=bus.available,
         bustype=string(bus.bustype),
         angle=bus.angle,
         magnitude=bus.magnitude,

@@ -308,6 +308,28 @@ function psy2openapi(interrupt_standard::PSY.InterruptibleStandardLoad, ids::IDG
     )
 end
 
+function psy2openapi(motor_load::PSY.MotorLoad, ids::IDGenerator)
+    if motor_load.base_power == 0.0
+        error("base power is 0.0")
+    end
+    MotorLoad(
+        id=getid!(ids, motor_load),
+        name=motor_load.name,
+        available=motor_load.available,
+        bus=getid!(ids, motor_load.bus),
+        active_power=motor_load.active_power * motor_load.base_power,
+        reactive_power=motor_load.reactive_power * motor_load.base_power,
+        base_power=motor_load.base_power,
+        rating=motor_load.rating * motor_load.base_power,
+        max_active_power=motor_load.max_active_power * motor_load.base_power,
+        reactive_power_limits=get_min_max(
+            scale(motor_load.reactive_power_limits, motor_load.base_power),
+        ),
+        motor_technology=string(motor_load.motor_technology),
+        dynamic_injector=getid!(ids, motor_load.dynamic_injector),
+    )
+end
+
 function psy2openapi(power_load::PSY.PowerLoad, ids::IDGenerator)
     if power_load.base_power == 0.0
         error("base power is 0.0")
