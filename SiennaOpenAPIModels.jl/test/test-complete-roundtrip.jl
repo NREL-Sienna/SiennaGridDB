@@ -148,6 +148,33 @@ using JSON
         turbine_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
         @test IS.compare_values(turbine, turbine_copy, exclude=Set([:internal, :ext]))
     end
+    @testset "InterruptibleStandardLoad to JSON and Back" begin
+        interrupt = PSY.InterruptibleStandardLoad(
+            name="interrupt",
+            available=true,
+            bus=PSY.get_bus(c_sys5, 2),
+            base_power=10.0,
+            operation_cost=PSY.LoadCost(nothing),
+            conformity=PSY.LoadConformity.NON_CONFORMING,
+            constant_active_power=5.0,
+            constant_reactive_power=3.5,
+            impedance_active_power=5.0,
+            impedance_reactive_power=3.5,
+            max_constant_active_power=10.0,
+            max_constant_reactive_power=10.0,
+            max_impedance_active_power=10.0,
+            max_impedance_reactive_power=10.0,
+            max_current_active_power=10.0,
+            max_current_reactive_power=10.0,
+        )
+        PSY.add_component!(c_sys5, interrupt)
+        @test isa(interrupt, PSY.InterruptibleStandardLoad)
+        id_gen = IDGenerator()
+        test_convert = SiennaOpenAPIModels.psy2openapi(interrupt, id_gen)
+        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, c_sys5)
+        interrupt_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
+        @test IS.compare_values(interrupt, interrupt_copy, exclude=Set([:internal, :ext]))
+    end
     @testset "Line to JSON and Back" begin
         line = PSY.get_component(PSY.Line, c_sys5, "4")
         @test isa(line, PSY.Line)

@@ -2,7 +2,6 @@ function openapi2psy(bus::ACBus, resolver::Resolver)
     PSY.ACBus(;
         number=bus.number,
         name=bus.name,
-        available=bus.available,
         bustype=get_bustype_enum(bus.bustype),
         angle=bus.angle,
         magnitude=bus.magnitude,

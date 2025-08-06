@@ -211,6 +211,37 @@ end
         @test test_convert.active_power == 3200.0
         @test test_convert.time_limits.down == 5.0
     end
+    @testset "InterruptibleStandardLoad to JSON" begin
+        interrupt = PSY.InterruptibleStandardLoad(
+            name="interrupt",
+            available=true,
+            bus=PSY.get_bus(c_sys5, 2),
+            base_power=10.0,
+            operation_cost=PSY.LoadCost(nothing),
+            conformity=PSY.LoadConformity.NON_CONFORMING,
+            constant_active_power=5.0,
+            constant_reactive_power=3.5,
+            impedance_active_power=5.0,
+            impedance_reactive_power=3.5,
+            max_constant_active_power=10.0,
+            max_constant_reactive_power=10.0,
+            max_impedance_active_power=10.0,
+            max_impedance_reactive_power=10.0,
+            max_current_active_power=10.0,
+            max_current_reactive_power=10.0,
+        )
+        PSY.add_component!(c_sys5, interrupt)
+        @test isa(interrupt, PSY.InterruptibleStandardLoad)
+        test_convert = SiennaOpenAPIModels.psy2openapi(interrupt, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.InterruptibleStandardLoad, test_convert)
+        @test test_convert.id == 1
+        @test test_convert.bus == 2
+        @test test_convert.conformity == "NON_CONFORMING"
+        @test test_convert.impedance_reactive_power == 35.0
+        @test test_convert.current_active_power == 0.0
+        @test test_convert.max_constant_active_power == 100.0
+        @test test_convert.max_current_reactive_power == 0.0
+    end
     @testset "Line to JSON" begin
         line = PSY.get_component(PSY.Line, c_sys5, "4")
         @test isa(line, PSY.Line)
