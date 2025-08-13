@@ -288,9 +288,9 @@ function psy2openapi(interrupt_standard::PSY.InterruptibleStandardLoad, ids::IDG
                                interrupt_standard.base_power,
         impedance_reactive_power=interrupt_standard.impedance_reactive_power *
                                  interrupt_standard.base_power,
-        current_active_power=current_standard.current_active_power *
+        current_active_power=interrupt_standard.current_active_power *
                              interrupt_standard.base_power,
-        current_reactive_power=current_standard.current_reactive_power *
+        current_reactive_power=interrupt_standard.current_reactive_power *
                                interrupt_standard.base_power,
         max_constant_active_power=interrupt_standard.max_constant_active_power *
                                   interrupt_standard.base_power,
@@ -300,11 +300,11 @@ function psy2openapi(interrupt_standard::PSY.InterruptibleStandardLoad, ids::IDG
                                    interrupt_standard.base_power,
         max_impedance_reactive_power=interrupt_standard.max_impedance_reactive_power *
                                      interrupt_standard.base_power,
-        max_current_active_power=current_standard.max_current_active_power *
+        max_current_active_power=interrupt_standard.max_current_active_power *
                                  interrupt_standard.base_power,
-        max_current_reactive_power=current_standard.max_current_reactive_power *
+        max_current_reactive_power=interrupt_standard.max_current_reactive_power *
                                    interrupt_standard.base_power,
-        dynamic_injector=getid!(ids, interrupt.dynamic_injector),
+        dynamic_injector=getid!(ids, interrupt_standard.dynamic_injector),
     )
 end
 

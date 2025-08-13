@@ -213,7 +213,7 @@ end
     end
     @testset "InterruptibleStandardLoad to JSON" begin
         interrupt = PSY.InterruptibleStandardLoad(
-            name="interrupt",
+            name="interrupt_standard",
             available=true,
             bus=PSY.get_bus(c_sys5, 2),
             base_power=10.0,
@@ -270,7 +270,7 @@ end
         @test test_convert.id == 1
         @test test_convert.available
         @test test_convert.bus == 2
-        @test test_convert.active_power == 50.0
+        @test test_convert.active_power == 5.0
         @test test_convert.motor_technology == "UNDETERMINED"
     end
     @testset "PowerLoad to JSON" begin
@@ -463,6 +463,7 @@ end
             x_secondary=-0.00052,
             r_tertiary=0.0041235,
             x_tertiary=0.201563,
+            rating=10.0,
             r_12=0.001059,
             x_12=0.036097,
             r_23=0.004954,

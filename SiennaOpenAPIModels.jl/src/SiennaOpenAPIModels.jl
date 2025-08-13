@@ -68,6 +68,7 @@ include("modelincludes.jl")
 @batteries LoadZone
 @batteries MinMax
 @batteries MonitoredLine
+@batteries MotorLoad
 @batteries PhaseShiftingTransformer
 @batteries PhaseShiftingTransformer3W
 @batteries PiecewiseLinearData
