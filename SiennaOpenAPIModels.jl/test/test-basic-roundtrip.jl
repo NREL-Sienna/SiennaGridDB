@@ -854,10 +854,10 @@ end
         test_convert = SiennaOpenAPIModels.psy2openapi(tr3w, IDGenerator())
         test_roundtrip(SiennaOpenAPIModels.Transformer3W, test_convert)
         @test test_convert.id == 1
-        @test test_convert.r_primary == 0.38245046874999994
+        @test test_convert.r_primary == 0.27316237499999985
         @test test_convert.rating == 0.0
         @test test_convert.base_voltage_tertiary == 27.6
-        @test test_convert.secondary_group_number == "UNDEFINED"
+        @test test_convert.secondary_group_number == "GROUP_0"
     end
     @testset "TwoTerminalLCCLine to JSON" begin
         lcc = only(
