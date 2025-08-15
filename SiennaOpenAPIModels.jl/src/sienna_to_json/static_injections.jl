@@ -272,7 +272,7 @@ function psy2openapi(interrupt_standard::PSY.InterruptibleStandardLoad, ids::IDG
     if interrupt_standard.base_power == 0.0
         error("base power is 0.0")
     end
-    InterruptiblePowerLoad(
+    InterruptibleStandardLoad(
         id=getid!(ids, interrupt_standard),
         name=interrupt_standard.name,
         available=interrupt_standard.available,

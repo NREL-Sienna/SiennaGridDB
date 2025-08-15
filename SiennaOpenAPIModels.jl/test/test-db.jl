@@ -15,9 +15,6 @@ function attributes_to_dict(column_table)
     return d
 end
 
-custom_isequivalent(x, y) = isequal(x, y) || (x == y)
-custom_isequivalent(x::AbstractFloat, y::AbstractFloat) = isequal(x, y) || (x == y) || x ≈ y
-
 function test_component_each_type(sys, copy_of_sys)
     for T in SiennaOpenAPIModels.ALL_DESERIALIZABLE_TYPES
         SIENNA_T = SiennaOpenAPIModels.OPENAPI_TYPE_TO_PSY[T]

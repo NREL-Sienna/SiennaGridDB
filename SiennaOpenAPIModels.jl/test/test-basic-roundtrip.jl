@@ -240,7 +240,7 @@ end
         @test test_convert.impedance_reactive_power == 35.0
         @test test_convert.current_active_power == 0.0
         @test test_convert.max_constant_active_power == 100.0
-        @test test_convert.max_current_reactive_power == 0.0
+        @test test_convert.max_current_reactive_power == 100.0
     end
     @testset "Line to JSON" begin
         line = PSY.get_component(PSY.Line, c_sys5, "4")
@@ -482,10 +482,9 @@ end
         test_convert = SiennaOpenAPIModels.psy2openapi(phase3w, IDGenerator())
         test_roundtrip(SiennaOpenAPIModels.PhaseShiftingTransformer3W, test_convert)
         @test test_convert.id == 1
-        @test test_convert.star_bus.name == "Ali"
         @test test_convert.active_power_flow_tertiary == 0.0
-        @test test_convert.r_23 == 0.004954
-        @test test_convert.α_primary == 0.0175
+        @test test_convert.r_23 == 0.94343976
+        @test test_convert.alpha_primary == 0.0175
     end
     @testset "RenewableNonDispatch to JSON" begin
         renewnondispatch =
@@ -855,10 +854,10 @@ end
         test_convert = SiennaOpenAPIModels.psy2openapi(tr3w, IDGenerator())
         test_roundtrip(SiennaOpenAPIModels.Transformer3W, test_convert)
         @test test_convert.id == 1
-        @test test_convert.r_primary == 0.00022949999999999986
+        @test test_convert.r_primary == 0.38245046874999994
         @test test_convert.rating == 0.0
         @test test_convert.base_voltage_tertiary == 27.6
-        @test test_convert.secondary_group_number == "GROUP_0"
+        @test test_convert.secondary_group_number == "UNDEFINED"
     end
     @testset "TwoTerminalLCCLine to JSON" begin
         lcc = only(

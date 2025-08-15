@@ -266,11 +266,11 @@ function openapi2psy(interrupt_power::InterruptiblePowerLoad, resolver::Resolver
     )
 end
 
-function openapi2openapi(interrupt_standard::InterruptibleStandardLoad, resolver::Resolver)
+function openapi2psy(interrupt_standard::InterruptibleStandardLoad, resolver::Resolver)
     if interrupt_standard.base_power == 0.0
         error("base power is 0.0")
     end
-    PSY.InterruptiblePowerLoad(
+    PSY.InterruptibleStandardLoad(
         name=interrupt_standard.name,
         available=interrupt_standard.available,
         bus=resolver(interrupt_standard.bus),

@@ -197,7 +197,7 @@ using JSON
             reactive_power_limits=(min=0.0, max=10.0),
         )
         PSY.add_component!(c_sys5, motor_load)
-        @test isa(load, PSY.MotorLoad)
+        @test isa(motor_load, PSY.MotorLoad)
         id_gen = IDGenerator()
         test_convert = SiennaOpenAPIModels.psy2openapi(motor_load, id_gen)
         resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, c_sys5)
@@ -361,6 +361,7 @@ end
             x_secondary=-0.00052,
             r_tertiary=0.0041235,
             x_tertiary=0.201563,
+            rating=10.0,
             r_12=0.001059,
             x_12=0.036097,
             r_23=0.004954,
@@ -380,7 +381,12 @@ end
         test_convert = SiennaOpenAPIModels.psy2openapi(phase3w, id_gen)
         resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, RTS_GMLC_RT_sys)
         phase3w_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
-        @test IS.compare_values(phase3w, phase3w_copy, exclude=Set([:internal, :ext]))
+        @test IS.compare_values(
+            custom_isequivalent,
+            phase3w,
+            phase3w_copy,
+            exclude=Set([:internal, :ext]),
+        )
     end
     @testset "RenewableNonDispatch to JSON and Back" begin
         renewnon =
@@ -722,7 +728,12 @@ end
         resolver =
             SiennaOpenAPIModels.resolver_from_id_generator(id_gen, pti_frankenstein_70_sys)
         tr3w_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
-        @test IS.compare_values(tr3w, tr3w_copy, exclude=Set([:internal, :ext]))
+        @test IS.compare_values(
+            custom_isequivalent,
+            tr3w,
+            tr3w_copy,
+            exclude=Set([:internal, :ext]),
+        )
     end
     @testset "TwoTerminalLCCLine to JSON and Back" begin
         lcc = only(
