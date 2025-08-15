@@ -204,25 +204,6 @@ CREATE TABLE transport_technologies(
     UNIQUE(id, arc_id, scenario)
 );
 
--- NOTE: The purpose of this table is to link operational parameters to multiple
--- entities like existing units (real paramters) or supply technologies
--- (expected parameters).
--- The same operational data could be attached to multiple entities.
-CREATE TABLE operational_data (
-    id integer PRIMARY KEY,
-    entity_id integer NOT NULL,
-    active_power_limit_min real NOT NULL CHECK (active_power_limit_min >= 0),
-    must_run bool,
-    uptime real NOT NULL CHECK (uptime >= 0),
-    downtime real NOT NULL CHECK (downtime >= 0),
-    ramp_up real NOT NULL,
-    ramp_down real NOT NULL,
-    operational_cost json NULL,
-    -- We can add what type of operational cost it is or other parameters (e.g., variable)
-    operational_cost_type text generated always AS (json_type(operational_cost)) virtual,
-    FOREIGN KEY (entity_id) REFERENCES entities(id)
-);
-
 -- NOTE: Attributes are additional parameters that can be linked to entities.
 -- The main purpose of this is when there is an important field that is not
 -- capture on the entity table that should exist on the model. Example of this

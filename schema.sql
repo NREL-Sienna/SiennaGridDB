@@ -18,7 +18,6 @@ DROP TABLE IF EXISTS time_series_associations;
 DROP TABLE IF EXISTS supplemental_attributes_association;
 DROP TABLE IF EXISTS supplemental_attributes;
 DROP TABLE IF EXISTS attributes;
-DROP TABLE IF EXISTS operational_data;
 DROP TABLE IF EXISTS hydro_reservoir_connections;
 DROP TABLE IF EXISTS hydro_reservoir;
 DROP TABLE IF EXISTS storage_units;
@@ -205,32 +204,12 @@ CREATE TABLE transport_technologies(
     UNIQUE(arc_id, scenario)
 );
 
--- NOTE: The purpose of this table is to link operational parameters to multiple
--- entities like existing units (real paramters) or supply technologies
--- (expected parameters).
--- The same operational data could be attached to multiple entities.
-CREATE TABLE operational_data (
-    id integer PRIMARY KEY,
-    entity_id integer NOT NULL,
-    active_power_limit_min real NOT NULL CHECK (active_power_limit_min >= 0),
-    must_run bool,
-    uptime real NOT NULL CHECK (uptime >= 0),
-    downtime real NOT NULL CHECK (downtime >= 0),
-    ramp_up real NOT NULL,
-    ramp_down real NOT NULL,
-    operational_cost json NULL,
-    -- We can add what type of operational cost it is or other parameters (e.g., variable)
-    operational_cost_type text generated always AS (json_type(operational_cost)) virtual,
-    FOREIGN KEY (entity_id) REFERENCES entities(id) ON DELETE CASCADE
-);
-
 -- NOTE: Attributes are additional parameters that can be linked to entities.
 -- The main purpose of this is when there is an important field that is not
 -- capture on the entity table that should exist on the model. Example of this
 -- fields are variable or fixed operation and maintenance cost or any other
 -- field that its representation is hard to fit into a `integer`, `real` or
--- `text`. It must not be used for operational details since most of the should
--- be included in the `operational_data` table.
+-- `text`.
 CREATE TABLE attributes (
     id integer PRIMARY KEY,
     entity_id integer NOT NULL,
