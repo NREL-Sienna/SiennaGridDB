@@ -1,4 +1,4 @@
-# Transformer3W
+# PhaseShiftingTransformer3W
 
 ## Properties
 
@@ -30,6 +30,9 @@ Name | Type | Description | Notes
 **x_23** | **Float64** |  | [default to nothing]
 **r_13** | **Float64** |  | [default to nothing]
 **x_13** | **Float64** |  | [default to nothing]
+**alpha_primary** | **Float64** |  | [default to nothing]
+**alpha_secondary** | **Float64** |  | [default to nothing]
+**alpha_tertiary** | **Float64** |  | [default to nothing]
 **base_power_12** | **Float64** |  | [default to nothing]
 **base_power_23** | **Float64** |  | [default to nothing]
 **base_power_13** | **Float64** |  | [default to nothing]
@@ -47,9 +50,7 @@ Name | Type | Description | Notes
 **rating_primary** | **Float64** |  | [optional] [default to 0.0]
 **rating_secondary** | **Float64** |  | [optional] [default to 0.0]
 **rating_tertiary** | **Float64** |  | [optional] [default to 0.0]
-**primary_group_number** | **String** |  | [optional] [default to "UNDEFINED"]
-**secondary_group_number** | **String** |  | [optional] [default to "UNDEFINED"]
-**tertiary_group_number** | **String** |  | [optional] [default to "UNDEFINED"]
+**phase_angle_limits** | [***MinMax**](MinMax.md) |  | [optional] [default to nothing]
 **control_objective_primary** | **String** |  | [optional] [default to "UNDEFINED"]
 **control_objective_secondary** | **String** |  | [optional] [default to "UNDEFINED"]
 **control_objective_tertiary** | **String** |  | [optional] [default to "UNDEFINED"]

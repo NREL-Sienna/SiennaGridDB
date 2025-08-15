@@ -162,6 +162,86 @@ function psy2openapi(transformer::PSY.PhaseShiftingTransformer, ids::IDGenerator
         rating_b=scale(transformer.rating_b, transformer.base_power),
         rating_c=scale(transformer.rating_c, transformer.base_power),
         phase_angle_limits=get_min_max(transformer.phase_angle_limits),
+        control_objective=string(transformer.control_objective),
+    )
+end
+
+function psy2openapi(phase3w::PSY.PhaseShiftingTransformer3W, ids::IDGenerator)
+    if phase3w.base_power_12 == 0.0
+        error("primary base power is 0.0")
+    elseif phase3w.base_power_23 == 0.0
+        error("secondary base power is 0.0")
+    elseif phase3w.base_power_13 == 0.0
+        error("tertiary base power is 0.0")
+    end
+    PhaseShiftingTransformer3W(
+        id=getid!(ids, phase3w),
+        name=phase3w.name,
+        available=phase3w.available,
+        primary_star_arc=getid!(ids, phase3w.primary_star_arc),
+        secondary_star_arc=getid!(ids, phase3w.secondary_star_arc),
+        tertiary_star_arc=getid!(ids, phase3w.tertiary_star_arc),
+        star_bus=getid!(ids, phase3w.star_bus),
+        active_power_flow_primary=phase3w.active_power_flow_primary * phase3w.base_power_12,
+        reactive_power_flow_primary=phase3w.reactive_power_flow_primary *
+                                    phase3w.base_power_12,
+        active_power_flow_secondary=phase3w.active_power_flow_secondary *
+                                    phase3w.base_power_23,
+        reactive_power_flow_secondary=phase3w.reactive_power_flow_secondary *
+                                      phase3w.base_power_23,
+        active_power_flow_tertiary=phase3w.active_power_flow_tertiary *
+                                   phase3w.base_power_13,
+        reactive_power_flow_tertiary=phase3w.reactive_power_flow_tertiary *
+                                     phase3w.base_power_13,
+        r_primary=phase3w.r_primary *
+                  get_Z_fraction(phase3w.base_voltage_primary, phase3w.base_power_12),
+        x_primary=phase3w.x_primary *
+                  get_Z_fraction(phase3w.base_voltage_primary, phase3w.base_power_12),
+        r_secondary=phase3w.r_secondary *
+                    get_Z_fraction(phase3w.base_voltage_secondary, phase3w.base_power_23),
+        x_secondary=phase3w.x_secondary *
+                    get_Z_fraction(phase3w.base_voltage_secondary, phase3w.base_power_23),
+        r_tertiary=phase3w.r_tertiary *
+                   get_Z_fraction(phase3w.base_voltage_tertiary, phase3w.base_power_13),
+        x_tertiary=phase3w.x_tertiary *
+                   get_Z_fraction(phase3w.base_voltage_tertiary, phase3w.base_power_13),
+        rating=scale(phase3w.rating, phase3w.base_power_12),
+        r_12=phase3w.r_12 *
+             get_Z_fraction(phase3w.base_voltage_primary, phase3w.base_power_12),
+        x_12=phase3w.x_12 *
+             get_Z_fraction(phase3w.base_voltage_primary, phase3w.base_power_12),
+        r_23=phase3w.r_23 *
+             get_Z_fraction(phase3w.base_voltage_secondary, phase3w.base_power_23),
+        x_23=phase3w.x_23 *
+             get_Z_fraction(phase3w.base_voltage_secondary, phase3w.base_power_23),
+        r_13=phase3w.r_13 *
+             get_Z_fraction(phase3w.base_voltage_tertiary, phase3w.base_power_13),
+        x_13=phase3w.x_13 *
+             get_Z_fraction(phase3w.base_voltage_tertiary, phase3w.base_power_13),
+        alpha_primary=phase3w.α_primary,
+        alpha_secondary=phase3w.α_secondary,
+        alpha_tertiary=phase3w.α_tertiary,
+        base_power_12=phase3w.base_power_12,
+        base_power_23=phase3w.base_power_23,
+        base_power_13=phase3w.base_power_13,
+        base_voltage_primary=phase3w.base_voltage_primary,
+        base_voltage_secondary=phase3w.base_voltage_secondary,
+        base_voltage_tertiary=phase3w.base_voltage_tertiary,
+        g=phase3w.g / get_Z_fraction(phase3w.base_voltage_primary, phase3w.base_power_12),
+        b=phase3w.b / get_Z_fraction(phase3w.base_voltage_primary, phase3w.base_power_12),
+        primary_turns_ratio=phase3w.primary_turns_ratio,
+        secondary_turns_ratio=phase3w.secondary_turns_ratio,
+        tertiary_turns_ratio=phase3w.tertiary_turns_ratio,
+        available_primary=phase3w.available_primary,
+        available_secondary=phase3w.available_secondary,
+        available_tertiary=phase3w.available_tertiary,
+        rating_primary=phase3w.rating_primary * phase3w.base_power_12,
+        rating_secondary=phase3w.rating_secondary * phase3w.base_power_23,
+        rating_tertiary=phase3w.rating_tertiary * phase3w.base_power_13,
+        phase_angle_limits=get_min_max(phase3w.phase_angle_limits),
+        control_objective_primary=string(phase3w.control_objective_primary),
+        control_objective_secondary=string(phase3w.control_objective_secondary),
+        control_objective_tertiary=string(phase3w.control_objective_tertiary),
     )
 end
 
@@ -193,6 +273,8 @@ function psy2openapi(transformer::PSY.TapTransformer, ids::IDGenerator)
         base_voltage_secondary=transformer.base_voltage_secondary,
         rating_b=scale(transformer.rating_b, transformer.base_power),
         rating_c=scale(transformer.rating_c, transformer.base_power),
+        winding_group_number=string(transformer.winding_group_number),
+        control_objective=string(transformer.control_objective),
     )
 end
 
@@ -248,6 +330,7 @@ function psy2openapi(transformer2w::PSY.Transformer2W, ids::IDGenerator)
                 ),
             ),
         ),
+        winding_group_number=string(transformer2w.winding_group_number),
     )
 end
 
@@ -320,6 +403,12 @@ function psy2openapi(trans3w::PSY.Transformer3W, ids::IDGenerator)
         rating_primary=trans3w.rating_primary * trans3w.base_power_12,
         rating_secondary=trans3w.rating_secondary * trans3w.base_power_23,
         rating_tertiary=trans3w.rating_tertiary * trans3w.base_power_13,
+        primary_group_number=string(trans3w.primary_group_number),
+        secondary_group_number=string(trans3w.secondary_group_number),
+        tertiary_group_number=string(trans3w.tertiary_group_number),
+        control_objective_primary=string(trans3w.control_objective_primary),
+        control_objective_secondary=string(trans3w.control_objective_secondary),
+        control_objective_tertiary=string(trans3w.control_objective_tertiary),
     )
 end
 

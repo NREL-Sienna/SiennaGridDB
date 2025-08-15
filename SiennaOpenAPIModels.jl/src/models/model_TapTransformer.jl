@@ -20,6 +20,8 @@
         base_voltage_secondary=nothing,
         rating_b=nothing,
         rating_c=nothing,
+        winding_group_number="UNDEFINED",
+        control_objective="UNDEFINED",
     )
 
     - id::Int64
@@ -38,6 +40,8 @@
     - base_voltage_secondary::Float64
     - rating_b::Float64
     - rating_c::Float64
+    - winding_group_number::String
+    - control_objective::String
 """
 Base.@kwdef mutable struct TapTransformer <: OpenAPI.APIModel
     id::Union{Nothing, Int64} = nothing
@@ -56,6 +60,8 @@ Base.@kwdef mutable struct TapTransformer <: OpenAPI.APIModel
     base_voltage_secondary::Union{Nothing, Float64} = nothing
     rating_b::Union{Nothing, Float64} = nothing
     rating_c::Union{Nothing, Float64} = nothing
+    winding_group_number::Union{Nothing, String} = "UNDEFINED"
+    control_objective::Union{Nothing, String} = "UNDEFINED"
 
     function TapTransformer(
         id,
@@ -74,6 +80,8 @@ Base.@kwdef mutable struct TapTransformer <: OpenAPI.APIModel
         base_voltage_secondary,
         rating_b,
         rating_c,
+        winding_group_number,
+        control_objective,
     )
         o = new(
             id,
@@ -92,6 +100,8 @@ Base.@kwdef mutable struct TapTransformer <: OpenAPI.APIModel
             base_voltage_secondary,
             rating_b,
             rating_c,
+            winding_group_number,
+            control_objective,
         )
         OpenAPI.validate_properties(o)
         return o
@@ -115,6 +125,8 @@ const _property_types_TapTransformer = Dict{Symbol, String}(
     Symbol("base_voltage_secondary") => "Float64",
     Symbol("rating_b") => "Float64",
     Symbol("rating_c") => "Float64",
+    Symbol("winding_group_number") => "String",
+    Symbol("control_objective") => "String",
 )
 OpenAPI.property_type(::Type{TapTransformer}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_TapTransformer[name]))}
@@ -167,6 +179,57 @@ function OpenAPI.validate_properties(o::TapTransformer)
     )
     OpenAPI.validate_property(TapTransformer, Symbol("rating_b"), o.rating_b)
     OpenAPI.validate_property(TapTransformer, Symbol("rating_c"), o.rating_c)
+    OpenAPI.validate_property(
+        TapTransformer,
+        Symbol("winding_group_number"),
+        o.winding_group_number,
+    )
+    OpenAPI.validate_property(
+        TapTransformer,
+        Symbol("control_objective"),
+        o.control_objective,
+    )
 end
 
-function OpenAPI.validate_property(::Type{TapTransformer}, name::Symbol, val) end
+function OpenAPI.validate_property(::Type{TapTransformer}, name::Symbol, val)
+    if name === Symbol("winding_group_number")
+        OpenAPI.validate_param(
+            name,
+            "TapTransformer",
+            :enum,
+            val,
+            [
+                "UNDEFINED",
+                "GROUP_0",
+                "GROUP_1",
+                "GROUP_5",
+                "GROUP_6",
+                "GROUP_7",
+                "GROUP_11",
+            ],
+        )
+    end
+
+    if name === Symbol("control_objective")
+        OpenAPI.validate_param(
+            name,
+            "TapTransformer",
+            :enum,
+            val,
+            [
+                "UNDEFINED",
+                "VOLTAGE_DISABLED",
+                "REACTIVE_POWER_FLOW_DISABLED",
+                "ACTIVE_POWER_FLOW_DISABLED",
+                "CONTROL_OF_DC_LINE_DISABLED",
+                "ASYMETRIC_ACTIVE_POWER_FLOW_DISABLED",
+                "FIXED",
+                "VOLTAGE",
+                "REACTIVE_POWER_FLOW",
+                "ACTIVE_POWER_FLOW",
+                "CONTROL_OF_DC_LINE",
+                "ASYMETRIC_ACTIVE_POWER_FLOW",
+            ],
+        )
+    end
+end

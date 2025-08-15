@@ -248,20 +248,80 @@ function openapi2psy(inter::InterconnectingConverter, resolver::Resolver)
     )
 end
 
-function openapi2psy(interrupt::InterruptiblePowerLoad, resolver::Resolver)
-    if interrupt.base_power == 0.0
+function openapi2psy(interrupt_power::InterruptiblePowerLoad, resolver::Resolver)
+    if interrupt_power.base_power == 0.0
         error("base power is 0.0")
     end
     PSY.InterruptiblePowerLoad(
-        name=interrupt.name,
-        available=interrupt.available,
-        bus=resolver(interrupt.bus),
-        active_power=interrupt.active_power / interrupt.base_power,
-        reactive_power=interrupt.reactive_power / interrupt.base_power,
-        max_active_power=interrupt.max_active_power / interrupt.base_power,
-        max_reactive_power=interrupt.max_reactive_power / interrupt.base_power,
-        base_power=interrupt.base_power,
-        operation_cost=get_sienna_operation_cost(interrupt.operation_cost),
+        name=interrupt_power.name,
+        available=interrupt_power.available,
+        bus=resolver(interrupt_power.bus),
+        active_power=interrupt_power.active_power / interrupt_power.base_power,
+        reactive_power=interrupt_power.reactive_power / interrupt_power.base_power,
+        max_active_power=interrupt_power.max_active_power / interrupt_power.base_power,
+        max_reactive_power=interrupt_power.max_reactive_power / interrupt_power.base_power,
+        base_power=interrupt_power.base_power,
+        operation_cost=get_sienna_operation_cost(interrupt_power.operation_cost),
+        conformity=get_load_conform_enum(interrupt_power.conformity),
+    )
+end
+
+function openapi2psy(interrupt_standard::InterruptibleStandardLoad, resolver::Resolver)
+    if interrupt_standard.base_power == 0.0
+        error("base power is 0.0")
+    end
+    PSY.InterruptibleStandardLoad(
+        name=interrupt_standard.name,
+        available=interrupt_standard.available,
+        bus=resolver(interrupt_standard.bus),
+        base_power=interrupt_standard.base_power,
+        operation_cost=get_sienna_operation_cost(interrupt_standard.operation_cost),
+        conformity=get_load_conform_enum(interrupt_standard.conformity),
+        constant_active_power=interrupt_standard.constant_active_power /
+                              interrupt_standard.base_power,
+        constant_reactive_power=interrupt_standard.constant_reactive_power /
+                                interrupt_standard.base_power,
+        impedance_active_power=interrupt_standard.impedance_active_power /
+                               interrupt_standard.base_power,
+        impedance_reactive_power=interrupt_standard.impedance_reactive_power /
+                                 interrupt_standard.base_power,
+        current_active_power=interrupt_standard.current_active_power /
+                             interrupt_standard.base_power,
+        current_reactive_power=interrupt_standard.current_reactive_power /
+                               interrupt_standard.base_power,
+        max_constant_active_power=interrupt_standard.max_constant_active_power /
+                                  interrupt_standard.base_power,
+        max_constant_reactive_power=interrupt_standard.max_constant_reactive_power /
+                                    interrupt_standard.base_power,
+        max_impedance_active_power=interrupt_standard.max_impedance_active_power /
+                                   interrupt_standard.base_power,
+        max_impedance_reactive_power=interrupt_standard.max_impedance_reactive_power /
+                                     interrupt_standard.base_power,
+        max_current_active_power=interrupt_standard.max_current_active_power /
+                                 interrupt_standard.base_power,
+        max_current_reactive_power=interrupt_standard.max_current_reactive_power /
+                                   interrupt_standard.base_power,
+    )
+end
+
+function openapi2psy(motor_load::MotorLoad, resolver::Resolver)
+    if motor_load.base_power == 0.0
+        error("base power is 0.0")
+    end
+    PSY.MotorLoad(
+        name=motor_load.name,
+        available=motor_load.available,
+        bus=resolver(motor_load.bus),
+        active_power=motor_load.active_power / motor_load.base_power,
+        reactive_power=motor_load.reactive_power / motor_load.base_power,
+        base_power=motor_load.base_power,
+        rating=motor_load.rating / motor_load.base_power,
+        max_active_power=motor_load.max_active_power / motor_load.base_power,
+        reactive_power_limits=divide(
+            get_tuple_min_max(motor_load.reactive_power_limits),
+            motor_load.base_power,
+        ),
+        motor_technology=get_motor_tech_enum(motor_load.motor_technology),
     )
 end
 
@@ -412,6 +472,7 @@ function openapi2psy(switch::SwitchedAdmittance, resolver::Resolver)
         available=switch.available,
         bus=resolver(switch.bus),
         Y=get_julia_complex(switch.Y),
+        initial_status=switch.initial_status,
         number_of_steps=switch.number_of_steps,
         Y_increase=map(get_julia_complex, switch.Y_increase),
         admittance_limits=get_tuple_min_max(switch.admittance_limits),

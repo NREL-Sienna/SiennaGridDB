@@ -22,5 +22,6 @@ Name | Type | Description | Notes
 **rating_b** | **Float64** |  | [optional] [default to nothing]
 **rating_c** | **Float64** |  | [optional] [default to nothing]
 **phase_angle_limits** | [***MinMax**](MinMax.md) |  | [optional] [default to nothing]
+**control_objective** | **String** |  | [optional] [default to "UNDEFINED"]
 
 [[Back to Model list]](../README.md#models) [[Back to API list]](../README.md#api-endpoints) [[Back to README]](../README.md)

@@ -61,13 +61,16 @@ include("modelincludes.jl")
 @batteries InputOutputCurveFunctionData
 @batteries InterconnectingConverter
 @batteries InterruptiblePowerLoad
+@batteries InterruptibleStandardLoad
 @batteries Line
 @batteries LinearFunctionData
 @batteries LoadCost
 @batteries LoadZone
 @batteries MinMax
 @batteries MonitoredLine
+@batteries MotorLoad
 @batteries PhaseShiftingTransformer
+@batteries PhaseShiftingTransformer3W
 @batteries PiecewiseLinearData
 @batteries PiecewiseStepData
 @batteries PowerLoad

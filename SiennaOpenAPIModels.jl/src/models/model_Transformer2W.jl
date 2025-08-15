@@ -19,6 +19,7 @@
         base_voltage_secondary=nothing,
         rating_b=nothing,
         rating_c=nothing,
+        winding_group_number="UNDEFINED",
     )
 
     - id::Int64
@@ -36,6 +37,7 @@
     - base_voltage_secondary::Float64
     - rating_b::Float64
     - rating_c::Float64
+    - winding_group_number::String
 """
 Base.@kwdef mutable struct Transformer2W <: OpenAPI.APIModel
     id::Union{Nothing, Int64} = nothing
@@ -53,6 +55,7 @@ Base.@kwdef mutable struct Transformer2W <: OpenAPI.APIModel
     base_voltage_secondary::Union{Nothing, Float64} = nothing
     rating_b::Union{Nothing, Float64} = nothing
     rating_c::Union{Nothing, Float64} = nothing
+    winding_group_number::Union{Nothing, String} = "UNDEFINED"
 
     function Transformer2W(
         id,
@@ -70,6 +73,7 @@ Base.@kwdef mutable struct Transformer2W <: OpenAPI.APIModel
         base_voltage_secondary,
         rating_b,
         rating_c,
+        winding_group_number,
     )
         o = new(
             id,
@@ -87,6 +91,7 @@ Base.@kwdef mutable struct Transformer2W <: OpenAPI.APIModel
             base_voltage_secondary,
             rating_b,
             rating_c,
+            winding_group_number,
         )
         OpenAPI.validate_properties(o)
         return o
@@ -109,6 +114,7 @@ const _property_types_Transformer2W = Dict{Symbol, String}(
     Symbol("base_voltage_secondary") => "Float64",
     Symbol("rating_b") => "Float64",
     Symbol("rating_c") => "Float64",
+    Symbol("winding_group_number") => "String",
 )
 OpenAPI.property_type(::Type{Transformer2W}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_Transformer2W[name]))}
@@ -159,6 +165,29 @@ function OpenAPI.validate_properties(o::Transformer2W)
     )
     OpenAPI.validate_property(Transformer2W, Symbol("rating_b"), o.rating_b)
     OpenAPI.validate_property(Transformer2W, Symbol("rating_c"), o.rating_c)
+    OpenAPI.validate_property(
+        Transformer2W,
+        Symbol("winding_group_number"),
+        o.winding_group_number,
+    )
 end
 
-function OpenAPI.validate_property(::Type{Transformer2W}, name::Symbol, val) end
+function OpenAPI.validate_property(::Type{Transformer2W}, name::Symbol, val)
+    if name === Symbol("winding_group_number")
+        OpenAPI.validate_param(
+            name,
+            "Transformer2W",
+            :enum,
+            val,
+            [
+                "UNDEFINED",
+                "GROUP_0",
+                "GROUP_1",
+                "GROUP_5",
+                "GROUP_6",
+                "GROUP_7",
+                "GROUP_11",
+            ],
+        )
+    end
+end
