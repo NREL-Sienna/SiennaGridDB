@@ -144,29 +144,34 @@ function serialize_all_timeseries_data!(db, sys::PowerSystems.System)
     end
 end
 
-function transform_associations!(sys::PowerSystems.System, associations)
+function transform_associations!(sys::PowerSystems.System, associations, ids::IDGenerator)
     associations = PowerSystems.DataFrames.coalesce.(associations, nothing)
     type_strings =
         SiennaOpenAPIModels.ALL_DESERIALIZABLE_TYPES .|> (x -> last(split(string(x), ".")))
     deserializable_string(x) = in(x, type_strings)
 
     associations = associations[deserializable_string.(associations[!, "owner_type"]), :]
-    #associations[!, "owner_id"] = map(onwer_uuid -> getid!(ids, owner_uuid), associations[!, "owner_uuid"])
+    associations[!, "owner_id"] =
+        map(owner_uuid -> getid!(ids, Base.UUID(owner_uuid)), associations[!, "owner_uuid"])
+    PowerSystems.DataFrames.select!(
+        associations,
+        Symbol.(collect(TABLE_SCHEMAS["time_series_associations"].names)),
+    )
     return associations
 end
 
-function serialize_timeseries_associations!(db, sys::PowerSystems.System)
+function serialize_timeseries_associations!(db, sys::PowerSystems.System, ids::IDGenerator)
     associations = IS.sql(
         sys.data.time_series_manager.metadata_store,
         """SELECT $(join(INFRASYS_TS_SCHEMA.names, ", "))
 FROM time_series_associations;""",
     )
-    associations = transform_associations!(sys, associations)
+    associations = transform_associations!(sys, associations, ids)
 
     statement = DBInterface.prepare(
         db,
-        """INSERT INTO time_series_associations ($(join(INFRASYS_TS_SCHEMA.names, ", ")))
-VALUES ($(join(repeat("?", length(INFRASYS_TS_SCHEMA.names)), ", ")))""",
+        """INSERT INTO time_series_associations ($(join(TABLE_SCHEMAS["time_series_associations"].names, ", ")))
+VALUES ($(join(repeat("?", length(TABLE_SCHEMAS["time_series_associations"].names)), ", ")))""",
     )
 
     for row in Tables.rowtable(associations)
@@ -174,10 +179,10 @@ VALUES ($(join(repeat("?", length(INFRASYS_TS_SCHEMA.names)), ", ")))""",
     end
 end
 
-function serialize_timeseries!(db, sys::PowerSystems.System)
+function serialize_timeseries!(db, sys::PowerSystems.System, ids::IDGenerator)
     DBInterface.transaction(db) do
         serialize_all_timeseries_data!(db, sys)
-        serialize_timeseries_associations!(db, sys)
+        serialize_timeseries_associations!(db, sys, ids)
     end
 end
 
@@ -295,13 +300,19 @@ function get_example_metadata(db)
     return time_series_uuid_rows
 end
 
-function deserialize_time_series_from_metadata!(sys::PowerSystems.System, db, metadata, row)
+function deserialize_time_series_from_metadata!(
+    sys::PowerSystems.System,
+    db,
+    resolver::Resolver,
+    metadata,
+    row,
+)
     time_array = deserialize_timedata(db, metadata, row.time_series_uuid)
     ts = InfrastructureSystems.time_series_metadata_to_data(metadata)(metadata, time_array)
-    PowerSystems.add_time_series!(sys, PowerSystems.get_component(sys, row.owner_uuid), ts)
+    PowerSystems.add_time_series!(sys, resolver(row.owner_id), ts)
 end
 
-function deserialize_timeseries!(sys::PowerSystems.System, db)
+function deserialize_timeseries!(sys::PowerSystems.System, db, resolver::Resolver)
     DBInterface.transaction(db) do
         # For each time_series_uuid, we'll pick a "real" metadata_uuid (so no DeterministicSingleTimeSeries),
         # then we will deserialize and add them to the system. Finally, we'll go through and add_metadata!
@@ -309,7 +320,7 @@ function deserialize_timeseries!(sys::PowerSystems.System, db)
         serialized_metadata = Set{String}()
         for row in get_example_metadata(db)
             metadata = deserialize_metadata(row)
-            deserialize_time_series_from_metadata!(sys, db, metadata, row)
+            deserialize_time_series_from_metadata!(sys, db, resolver, metadata, row)
             push!(serialized_metadata, row.metadata_uuid)
         end
 
@@ -320,7 +331,7 @@ function deserialize_timeseries!(sys::PowerSystems.System, db)
             if in(row.metadata_uuid, serialized_metadata)
                 continue
             end
-            component = PowerSystems.get_component(sys, row.owner_uuid)
+            component = resolver(row.owner_id)
             InfrastructureSystems.add_metadata!(
                 sys.data.time_series_manager.metadata_store,
                 component,

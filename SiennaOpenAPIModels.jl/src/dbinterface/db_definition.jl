@@ -135,7 +135,7 @@ const TABLE_SCHEMAS = Dict(
     ),
     "supplemental_attributes_association" =>
         Tables.Schema(["attribute_id", "entity_id"], [Int64, Int64]),
-    "time_series" => Tables.Schema(
+    "time_series_associations" => Tables.Schema(
         [
             "id",
             "time_series_uuid",
@@ -143,13 +143,17 @@ const TABLE_SCHEMAS = Dict(
             "initial_timestamp",
             "resolution",
             "horizon",
-            "INTERVAL",
+            "interval",
             "window_count",
             "length",
-            "scaling_multiplier",
             "name",
             "owner_id",
+            "owner_type",
+            "owner_category",
             "features",
+            "scaling_factor_multiplier",
+            "metadata_uuid",
+            "units",
         ],
         [
             Int64,
@@ -165,16 +169,18 @@ const TABLE_SCHEMAS = Dict(
             String,
             Int64,
             Union{String, Nothing},
+            Union{String, Nothing},
+            Union{String, Nothing},
+            Union{String, Nothing},
+            Union{String, Nothing},
         ],
     ),
     "loads" => Tables.Schema(
         ["id", "name", "balancing_topology", "base_power"],
         [Int64, String, Int64, Union{Float64, Nothing}],
     ),
-    "static_time_series" => Tables.Schema(
-        ["id", "uuid", "timestamp", "value"],
-        [Int64, String, String, Float64],
-    ),
+    "static_time_series" =>
+        Tables.Schema(["id", "uuid", "idx", "value"], [Int64, String, Int64, Float64]),
 )
 
 function make_sqlite!(db)

@@ -22,8 +22,6 @@ DROP TABLE IF EXISTS transmission_lines;
 
 DROP TABLE IF EXISTS planning_regions;
 
-DROP TABLE IF EXISTS time_series;
-
 DROP TABLE IF EXISTS transmission_interchanges;
 
 DROP TABLE IF EXISTS entities;
@@ -270,7 +268,7 @@ CREATE TABLE time_series_associations(
     window_count INTEGER,
     length INTEGER,
     name TEXT NOT NULL,
-    owner_uuid TEXT NOT NULL,
+    owner_id INTEGER NOT NULL REFERENCES entities(id),
     owner_type TEXT NOT NULL,
     owner_category TEXT NOT NULL,
     features TEXT NOT NULL,
@@ -279,7 +277,7 @@ CREATE TABLE time_series_associations(
     units TEXT NULL
 );
 CREATE UNIQUE INDEX "by_c_n_tst_features" ON "time_series_associations" (
-    "owner_uuid",
+    "owner_id",
     "time_series_type",
     "name",
     "resolution",

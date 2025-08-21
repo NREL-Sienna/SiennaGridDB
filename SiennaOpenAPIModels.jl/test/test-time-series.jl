@@ -35,10 +35,12 @@ end
     SiennaOpenAPIModels.make_sqlite!(db)
     ids = IDGenerator()
     SiennaOpenAPIModels.sys2db!(db, sys, ids)
-    SiennaOpenAPIModels.serialize_timeseries!(db, sys)
+    SiennaOpenAPIModels.serialize_timeseries!(db, sys, ids)
 
-    copy_of_sys = SiennaOpenAPIModels.make_system_from_db(db)
-    SiennaOpenAPIModels.deserialize_timeseries!(copy_of_sys, db)
+    copy_of_sys = PSY.System(100)
+    resolver = SiennaOpenAPIModels.Resolver(copy_of_sys, Dict{Int64, Base.UUID}())
+    SiennaOpenAPIModels.db2sys!(copy_of_sys, db, resolver)
+    SiennaOpenAPIModels.deserialize_timeseries!(copy_of_sys, db, resolver)
     @test copy_of_sys isa PSY.System
     test_component_each_type(sys, copy_of_sys)
     test_all_time_series(sys, copy_of_sys)
@@ -53,10 +55,12 @@ end
     SiennaOpenAPIModels.make_sqlite!(db)
     ids = IDGenerator()
     SiennaOpenAPIModels.sys2db!(db, sys, ids)
-    SiennaOpenAPIModels.serialize_timeseries!(db, sys)
+    SiennaOpenAPIModels.serialize_timeseries!(db, sys, ids)
 
-    copy_of_sys = SiennaOpenAPIModels.make_system_from_db(db)
-    SiennaOpenAPIModels.deserialize_timeseries!(copy_of_sys, db)
+    copy_of_sys = PSY.System(100)
+    resolver = SiennaOpenAPIModels.Resolver(copy_of_sys, Dict{Int64, Base.UUID}())
+    SiennaOpenAPIModels.db2sys!(copy_of_sys, db, resolver)
+    SiennaOpenAPIModels.deserialize_timeseries!(copy_of_sys, db, resolver)
     @test copy_of_sys isa PSY.System
     #test_component_each_type(sys, copy_of_sys)  # it has dynamic injectors
     test_all_time_series(sys, copy_of_sys)
@@ -81,10 +85,12 @@ end
     SiennaOpenAPIModels.make_sqlite!(db)
     ids = IDGenerator()
     SiennaOpenAPIModels.sys2db!(db, sys, ids)
-    SiennaOpenAPIModels.serialize_timeseries!(db, sys)
+    SiennaOpenAPIModels.serialize_timeseries!(db, sys, ids)
 
-    copy_of_sys = SiennaOpenAPIModels.make_system_from_db(db)
-    SiennaOpenAPIModels.deserialize_timeseries!(copy_of_sys, db)
+    copy_of_sys = PSY.System(100)
+    resolver = SiennaOpenAPIModels.Resolver(copy_of_sys, Dict{Int64, Base.UUID}())
+    SiennaOpenAPIModels.db2sys!(copy_of_sys, db, resolver)
+    SiennaOpenAPIModels.deserialize_timeseries!(copy_of_sys, db, resolver)
     @test copy_of_sys isa PSY.System
     test_component_each_type(sys, copy_of_sys)
     test_all_time_series(sys, copy_of_sys)
