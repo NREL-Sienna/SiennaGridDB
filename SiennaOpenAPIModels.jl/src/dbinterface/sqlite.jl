@@ -214,11 +214,14 @@ function send_table_to_db!(::Type{T}, db, components, ids) where {T}
     )
 end
 
-function sys2db!(db, sys::PSY.System, ids::IDGenerator)
+function sys2db!(db, sys::PSY.System, ids::IDGenerator; time_series=false)
     DBInterface.transaction(db) do
         for (T, OPENAPI_T) in zip(ALL_PSY_TYPES, ALL_TYPES)
             send_table_to_db!(OPENAPI_T, db, PSY.get_components(T, sys), ids)
         end
+    end
+    if time_series
+        serialize_timeseries!(db, sys, ids)
     end
 end
 
@@ -391,7 +394,8 @@ function db2sys!(sys::PSY.System, db, resolver::Resolver)
            table_name == "prime_mover_types" ||
            table_name == "fuels" ||
            table_name == "entity_types" ||
-           table_name == "time_series"
+           table_name == "time_series_associations" ||
+           table_name == "static_time_series"
             continue
         end
         result = DBInterface.execute(db, "SELECT count(*) from $table_name")
@@ -403,9 +407,12 @@ function db2sys!(sys::PSY.System, db, resolver::Resolver)
     end
 end
 
-function make_system_from_db(db)
+function make_system_from_db(db; time_series=false)
     sys = PSY.System(100)
     resolver = Resolver(sys, Dict{Int64, UUID}())
     db2sys!(sys, db, resolver)
+    if time_series
+        deserialize_timeseries!(sys, db, resolver)
+    end
     return sys
 end

@@ -5,6 +5,7 @@ version = "0.1.0"
 
 [deps]
 DBInterface = "a10d1c49-ce27-4219-8d33-6db1a4562965"
+Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
 InfrastructureSystems = "2cd47ed4-ca9b-11e9-27f2-ab636a7671f1"
 JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
 OpenAPI = "d5e62ea6-ddf3-4d43-8e4c-ad5e6c8bfd7d"
@@ -20,6 +21,7 @@ PowerSystems = {rev = "psy5", url = "https://github.com/NREL-Sienna/PowerSystems
 
 [compat]
 DBInterface = "2.6.1"
+Dates = "1.11.0"
 InfrastructureSystems = "2.6.0"
 JSON = "0.21.4"
 SQLite = "1.6.1"
