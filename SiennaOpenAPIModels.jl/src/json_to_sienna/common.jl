@@ -67,6 +67,10 @@ function get_storage_tech_enum(storage::String)
     IS.deserialize(PSY.StorageTech, storage)
 end
 
+function get_turbine_type_enum(turbine::String)
+    IS.deserialize(PSY.HydroTurbineType, turbine)
+end
+
 function get_winding_group_enum(group_num::String)
     IS.deserialize(PSY.WindingGroupNumber, group_num)
 end

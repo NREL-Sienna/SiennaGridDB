@@ -15,7 +15,7 @@
         initial_storage=nothing,
         name=nothing,
         operation_cost=nothing,
-        prime_mover_type="OT",
+        prime_mover_type=nothing,
         ramp_limits=nothing,
         rating=nothing,
         reactive_power=nothing,
@@ -63,7 +63,7 @@ Base.@kwdef mutable struct HydroEnergyReservoir <: OpenAPI.APIModel
     initial_storage::Union{Nothing, Float64} = nothing
     name::Union{Nothing, String} = nothing
     operation_cost = nothing # spec type: Union{ Nothing, HydroStorageGenerationCost }
-    prime_mover_type::Union{Nothing, String} = "OT"
+    prime_mover_type::Union{Nothing, String} = nothing
     ramp_limits = nothing # spec type: Union{ Nothing, UpDown }
     rating::Union{Nothing, Float64} = nothing
     reactive_power::Union{Nothing, Float64} = nothing

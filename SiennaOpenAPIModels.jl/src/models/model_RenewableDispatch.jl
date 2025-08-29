@@ -11,7 +11,7 @@
         active_power=nothing,
         reactive_power=nothing,
         rating=nothing,
-        prime_mover_type="OT",
+        prime_mover_type=nothing,
         reactive_power_limits=nothing,
         power_factor=nothing,
         operation_cost=nothing,
@@ -41,7 +41,7 @@ Base.@kwdef mutable struct RenewableDispatch <: OpenAPI.APIModel
     active_power::Union{Nothing, Float64} = nothing
     reactive_power::Union{Nothing, Float64} = nothing
     rating::Union{Nothing, Float64} = nothing
-    prime_mover_type::Union{Nothing, String} = "OT"
+    prime_mover_type::Union{Nothing, String} = nothing
     reactive_power_limits = nothing # spec type: Union{ Nothing, MinMax }
     power_factor::Union{Nothing, Float64} = nothing
     operation_cost = nothing # spec type: Union{ Nothing, RenewableGenerationCost }

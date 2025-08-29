@@ -159,6 +159,8 @@ end
         @test test_convert.available
         @test test_convert.bus == 2
         @test test_convert.active_power == 3200.0
+        @test test_convert.status == "OFF"
+        @test test_convert.time_at_status == 10000.0
         @test test_convert.time_limits.down == 5.0
     end
     @testset "HydroReservoir to JSON" begin
@@ -200,6 +202,7 @@ end
             ramp_limits=(up=0.0, down=50.0),
             time_limits=(up=0.0, down=5.0),
             base_power=100.0,
+            turbine_type=PSY.HydroTurbineType.BULB,
         )
         PSY.add_component!(c_sys5, turbine)
         @test isa(turbine, PSY.HydroTurbine)
@@ -210,6 +213,7 @@ end
         @test test_convert.bus == 2
         @test test_convert.active_power == 3200.0
         @test test_convert.time_limits.down == 5.0
+        @test test_convert.turbine_type == "BULB"
     end
     @testset "InterruptibleStandardLoad to JSON" begin
         interrupt = PSY.InterruptibleStandardLoad(

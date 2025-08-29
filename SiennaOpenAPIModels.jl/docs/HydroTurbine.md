@@ -20,6 +20,7 @@ Name | Type | Description | Notes
 **base_power** | **Float64** |  | [default to nothing]
 **operation_cost** | [***HydroGenerationCost**](HydroGenerationCost.md) |  | [optional] [default to nothing]
 **efficiency** | **Float64** |  | [optional] [default to 1.0]
+**turbine_type** | **String** |  | [optional] [default to "UNKNOWN"]
 **conversion_factor** | **Float64** |  | [optional] [default to 1.0]
 **reservoirs** | **Vector{Int64}** |  | [optional] [default to nothing]
 **dynamic_injector** | **Any** |  | [optional] [default to nothing]

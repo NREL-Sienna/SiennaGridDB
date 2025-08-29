@@ -139,6 +139,7 @@ using JSON
             ramp_limits=(up=0.0, down=50.0),
             time_limits=(up=0.0, down=5.0),
             base_power=100.0,
+            turbine_type=PSY.HydroTurbineType.BULB,
         )
         PSY.add_component!(c_sys5, turbine)
         @test isa(turbine, PSY.HydroTurbine)

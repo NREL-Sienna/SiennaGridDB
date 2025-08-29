@@ -100,6 +100,8 @@ function psy2openapi(hydro::PSY.HydroDispatch, ids::IDGenerator)
         operation_cost=get_operation_cost(hydro.operation_cost),
         rating=hydro.rating * hydro.base_power,
         base_power=hydro.base_power,
+        status=hydro.status,
+        time_at_status=hydro.time_at_status,
         time_limits=get_up_down(hydro.time_limits),
         dynamic_injector=getid!(ids, hydro.dynamic_injector),
     )
@@ -167,14 +169,14 @@ function psy2openapi(hydro::PSY.HydroPumpTurbine, ids::IDGenerator)
         ramp_limits=get_up_down(scale(hydro.ramp_limits, hydro.base_power)),
         time_limits=get_up_down(hydro.time_limits),
         base_power=hydro.base_power,
+        status=string(hydro.status),
+        time_at_status=hydro.time_at_status,
         operation_cost=HydroStorageGenerationCost(get_operation_cost(hydro.operation_cost)),
         active_power_pump=hydro.active_power_pump * hydro.base_power,
         efficiency=get_turbine_pump(hydro.efficiency),
         transition_time=get_turbine_pump(hydro.transition_time),
         minimum_time=get_turbine_pump(hydro.minimum_time),
         conversion_factor=hydro.conversion_factor,
-        must_run=hydro.must_run,
-        prime_mover_type=string(hydro.prime_mover_type),
         dynamic_injector=getid!(ids, hydro.dynamic_injector),
     )
 end
@@ -221,6 +223,7 @@ function psy2openapi(hydro::PSY.HydroTurbine, ids::IDGenerator)
         base_power=hydro.base_power,
         operation_cost=get_operation_cost(hydro.operation_cost),
         efficiency=hydro.efficiency,
+        turbine_type=string(hydro.turbine_type),
         conversion_factor=hydro.conversion_factor,
         reservoirs=map(c -> getid!(ids, c), hydro.reservoirs), # this is a vector of reservoirs
         dynamic_injector=getid!(ids, hydro.dynamic_injector),
@@ -509,7 +512,6 @@ function psy2openapi(synch::PSY.SynchronousCondenser, ids::IDGenerator)
             scale(synch.reactive_power_limits, synch.base_power),
         ),
         base_power=synch.base_power,
-        must_run=synch.must_run,
         active_power_losses=synch.active_power_losses * synch.base_power,
         dynamic_injector=getid!(ids, synch.dynamic_injector),
     )

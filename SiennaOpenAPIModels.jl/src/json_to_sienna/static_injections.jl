@@ -98,6 +98,8 @@ function openapi2psy(hydro::HydroDispatch, resolver::Resolver)
         ramp_limits=divide(get_tuple_up_down(hydro.ramp_limits), hydro.base_power),
         time_limits=get_tuple_up_down(hydro.time_limits),
         base_power=hydro.base_power,
+        status=hydro.status,
+        time_at_status=hydro.time_at_status,
         operation_cost=get_sienna_operation_cost(hydro.operation_cost),
     )
 end
@@ -166,14 +168,14 @@ function openapi2psy(hydro::HydroPumpTurbine, resolver::Resolver)
         ramp_limits=divide(get_tuple_up_down(hydro.ramp_limits), hydro.base_power),
         time_limits=get_tuple_up_down(hydro.time_limits),
         base_power=hydro.base_power,
+        status=get_pump_status_enum(hydro.status),
+        time_at_status=hydro.time_at_status,
         operation_cost=get_sienna_operation_cost(hydro.operation_cost),
         active_power_pump=hydro.active_power_pump / hydro.base_power,
         efficiency=get_tuple_turbine_pump(hydro.efficiency),
         transition_time=get_tuple_turbine_pump(hydro.transition_time),
         minimum_time=get_tuple_turbine_pump(hydro.minimum_time),
         conversion_factor=hydro.conversion_factor,
-        must_run=hydro.must_run,
-        prime_mover_type=get_prime_mover_enum(hydro.prime_mover_type),
     )
 end
 
@@ -221,6 +223,7 @@ function openapi2psy(hydro::HydroTurbine, resolver::Resolver)
         base_power=hydro.base_power,
         operation_cost=get_sienna_operation_cost(hydro.operation_cost),
         efficiency=hydro.efficiency,
+        turbine_type=get_turbine_type_enum(hydro.turbine_type),
         conversion_factor=hydro.conversion_factor,
         reservoirs=map(resolver, hydro.reservoirs), # this is a vector of reservoirs
     )
@@ -494,7 +497,6 @@ function openapi2psy(synch::SynchronousCondenser, resolver::Resolver)
             synch.base_power,
         ),
         base_power=synch.base_power,
-        must_run=synch.must_run,
         active_power_losses=synch.active_power_losses / synch.base_power,
     )
 end
