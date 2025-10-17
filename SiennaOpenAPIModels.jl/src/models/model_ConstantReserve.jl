@@ -69,16 +69,16 @@ Base.@kwdef mutable struct ConstantReserve <: OpenAPI.APIModel
 end # type ConstantReserve
 
 const _property_types_ConstantReserve = Dict{Symbol, String}(
-    Symbol("available") => "Bool",
-    Symbol("deployed_fraction") => "Float64",
-    Symbol("id") => "Int64",
-    Symbol("max_output_fraction") => "Float64",
-    Symbol("max_participation_factor") => "Float64",
-    Symbol("name") => "String",
-    Symbol("requirement") => "Float64",
-    Symbol("reserve_direction") => "String",
-    Symbol("sustained_time") => "Float64",
-    Symbol("time_frame") => "Float64",
+    Symbol("available")=>"Bool",
+    Symbol("deployed_fraction")=>"Float64",
+    Symbol("id")=>"Int64",
+    Symbol("max_output_fraction")=>"Float64",
+    Symbol("max_participation_factor")=>"Float64",
+    Symbol("name")=>"String",
+    Symbol("requirement")=>"Float64",
+    Symbol("reserve_direction")=>"String",
+    Symbol("sustained_time")=>"Float64",
+    Symbol("time_frame")=>"Float64",
 )
 OpenAPI.property_type(::Type{ConstantReserve}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_ConstantReserve[name]))}

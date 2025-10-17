@@ -84,19 +84,19 @@ Base.@kwdef mutable struct RenewableDispatch <: OpenAPI.APIModel
 end # type RenewableDispatch
 
 const _property_types_RenewableDispatch = Dict{Symbol, String}(
-    Symbol("id") => "Int64",
-    Symbol("name") => "String",
-    Symbol("available") => "Bool",
-    Symbol("bus") => "Int64",
-    Symbol("active_power") => "Float64",
-    Symbol("reactive_power") => "Float64",
-    Symbol("rating") => "Float64",
-    Symbol("prime_mover_type") => "String",
-    Symbol("reactive_power_limits") => "MinMax",
-    Symbol("power_factor") => "Float64",
-    Symbol("operation_cost") => "RenewableGenerationCost",
-    Symbol("base_power") => "Float64",
-    Symbol("dynamic_injector") => "Any",
+    Symbol("id")=>"Int64",
+    Symbol("name")=>"String",
+    Symbol("available")=>"Bool",
+    Symbol("bus")=>"Int64",
+    Symbol("active_power")=>"Float64",
+    Symbol("reactive_power")=>"Float64",
+    Symbol("rating")=>"Float64",
+    Symbol("prime_mover_type")=>"String",
+    Symbol("reactive_power_limits")=>"MinMax",
+    Symbol("power_factor")=>"Float64",
+    Symbol("operation_cost")=>"RenewableGenerationCost",
+    Symbol("base_power")=>"Float64",
+    Symbol("dynamic_injector")=>"Any",
 )
 OpenAPI.property_type(::Type{RenewableDispatch}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_RenewableDispatch[name]))}

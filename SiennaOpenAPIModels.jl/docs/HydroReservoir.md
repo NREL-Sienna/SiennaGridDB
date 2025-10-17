@@ -16,6 +16,7 @@ Name | Type | Description | Notes
 **travel_time** | **Float64** |  | [optional] [default to nothing]
 **intake_elevation** | **Float64** |  | [default to nothing]
 **head_to_volume_factor** | [***ValueCurve**](ValueCurve.md) |  | [default to nothing]
+**reservoir_location** | **String** |  | [optional] [default to "HEAD"]
 **operation_cost** | [***HydroReservoirCost**](HydroReservoirCost.md) |  | [default to nothing]
 **level_data_type** | **String** |  | [optional] [default to "USABLE_VOLUME"]
 

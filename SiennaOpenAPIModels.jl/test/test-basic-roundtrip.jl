@@ -656,19 +656,6 @@ end
         PowerSystemCaseBuilder.PSITestSystems,
         "c_sys5_hy_ed",
     )
-    @testset "HydroEnergyReservoir to JSON" begin
-        hydro_res =
-            only(collect(PSY.get_components(PSY.HydroEnergyReservoir, c_sys5_hy_ed)))
-        @test isa(hydro_res, PSY.HydroEnergyReservoir)
-        test_convert = SiennaOpenAPIModels.psy2openapi(hydro_res, IDGenerator())
-        test_roundtrip(SiennaOpenAPIModels.HydroEnergyReservoir, test_convert)
-        @test test_convert.id == 1
-        @test test_convert.bus == 2
-        @test test_convert.prime_mover_type == "HY"
-        @test test_convert.active_power_limits.max == 700.0
-        @test test_convert.ramp_limits.down == 700.0
-        @test test_convert.conversion_factor == 1.0
-    end
     @testset "InterruptiblePowerLoad to JSON" begin
         interrupt =
             only(collect(PSY.get_components(PSY.InterruptiblePowerLoad, c_sys5_hy_ed)))

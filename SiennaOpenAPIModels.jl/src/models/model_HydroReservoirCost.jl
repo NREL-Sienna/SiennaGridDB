@@ -35,10 +35,10 @@ Base.@kwdef mutable struct HydroReservoirCost <: OpenAPI.APIModel
 end # type HydroReservoirCost
 
 const _property_types_HydroReservoirCost = Dict{Symbol, String}(
-    Symbol("cost_type") => "String",
-    Symbol("level_shortage_cost") => "Float64",
-    Symbol("level_surplus_cost") => "Float64",
-    Symbol("spillage_cost") => "Float64",
+    Symbol("cost_type")=>"String",
+    Symbol("level_shortage_cost")=>"Float64",
+    Symbol("level_surplus_cost")=>"Float64",
+    Symbol("spillage_cost")=>"Float64",
 )
 OpenAPI.property_type(::Type{HydroReservoirCost}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_HydroReservoirCost[name]))}

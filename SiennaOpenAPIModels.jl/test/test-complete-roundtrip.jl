@@ -534,16 +534,6 @@ end
         PowerSystemCaseBuilder.PSITestSystems,
         "c_sys5_hy_ed",
     )
-    @testset "HydroEnergyReservoir to JSON and Back" begin
-        hydro_res =
-            only(collect(PSY.get_components(PSY.HydroEnergyReservoir, c_sys5_hy_ed)))
-        @test isa(hydro_res, PSY.HydroEnergyReservoir)
-        id_gen = IDGenerator()
-        test_convert = SiennaOpenAPIModels.psy2openapi(hydro_res, id_gen)
-        resolver = SiennaOpenAPIModels.resolver_from_id_generator(id_gen, c_sys5_hy_ed)
-        hydro_res_copy = SiennaOpenAPIModels.openapi2psy(test_convert, resolver)
-        @test IS.compare_values(hydro_res, hydro_res_copy, exclude=Set([:internal, :ext]))
-    end
     @testset "InterruptiblePowerLoad to JSON and Back" begin
         interrupt =
             only(collect(PSY.get_components(PSY.InterruptiblePowerLoad, c_sys5_hy_ed)))

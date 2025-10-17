@@ -35,12 +35,12 @@ Base.@kwdef mutable struct FixedAdmittance <: OpenAPI.APIModel
 end # type FixedAdmittance
 
 const _property_types_FixedAdmittance = Dict{Symbol, String}(
-    Symbol("name") => "String",
-    Symbol("id") => "Int64",
-    Symbol("available") => "Bool",
-    Symbol("bus") => "Int64",
-    Symbol("Y") => "ComplexNumber",
-    Symbol("dynamic_injector") => "Any",
+    Symbol("name")=>"String",
+    Symbol("id")=>"Int64",
+    Symbol("available")=>"Bool",
+    Symbol("bus")=>"Int64",
+    Symbol("Y")=>"ComplexNumber",
+    Symbol("dynamic_injector")=>"Any",
 )
 OpenAPI.property_type(::Type{FixedAdmittance}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_FixedAdmittance[name]))}

@@ -102,7 +102,6 @@ function get_row(
     return (
         c.id,
         c.name,
-        c.prime_mover_type,
         c_original.head_reservoir.head_to_volume_factor(
             c_original.head_reservoir.storage_level_limits.max,
         ) *

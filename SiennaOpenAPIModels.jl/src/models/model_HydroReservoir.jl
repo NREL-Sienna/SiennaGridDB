@@ -16,6 +16,7 @@
         travel_time=nothing,
         intake_elevation=nothing,
         head_to_volume_factor=nothing,
+        reservoir_location="HEAD",
         operation_cost=nothing,
         level_data_type="USABLE_VOLUME",
     )
@@ -32,6 +33,7 @@
     - travel_time::Float64
     - intake_elevation::Float64
     - head_to_volume_factor::ValueCurve
+    - reservoir_location::String
     - operation_cost::HydroReservoirCost
     - level_data_type::String
 """
@@ -48,6 +50,7 @@ Base.@kwdef mutable struct HydroReservoir <: OpenAPI.APIModel
     travel_time::Union{Nothing, Float64} = nothing
     intake_elevation::Union{Nothing, Float64} = nothing
     head_to_volume_factor = nothing # spec type: Union{ Nothing, ValueCurve }
+    reservoir_location::Union{Nothing, String} = "HEAD"
     operation_cost = nothing # spec type: Union{ Nothing, HydroReservoirCost }
     level_data_type::Union{Nothing, String} = "USABLE_VOLUME"
 
@@ -64,6 +67,7 @@ Base.@kwdef mutable struct HydroReservoir <: OpenAPI.APIModel
         travel_time,
         intake_elevation,
         head_to_volume_factor,
+        reservoir_location,
         operation_cost,
         level_data_type,
     )
@@ -80,6 +84,7 @@ Base.@kwdef mutable struct HydroReservoir <: OpenAPI.APIModel
             travel_time,
             intake_elevation,
             head_to_volume_factor,
+            reservoir_location,
             operation_cost,
             level_data_type,
         )
@@ -89,20 +94,21 @@ Base.@kwdef mutable struct HydroReservoir <: OpenAPI.APIModel
 end # type HydroReservoir
 
 const _property_types_HydroReservoir = Dict{Symbol, String}(
-    Symbol("id") => "Int64",
-    Symbol("name") => "String",
-    Symbol("available") => "Bool",
-    Symbol("storage_level_limits") => "MinMax",
-    Symbol("initial_level") => "Float64",
-    Symbol("spillage_limits") => "MinMax",
-    Symbol("inflow") => "Float64",
-    Symbol("outflow") => "Float64",
-    Symbol("level_targets") => "Float64",
-    Symbol("travel_time") => "Float64",
-    Symbol("intake_elevation") => "Float64",
-    Symbol("head_to_volume_factor") => "ValueCurve",
-    Symbol("operation_cost") => "HydroReservoirCost",
-    Symbol("level_data_type") => "String",
+    Symbol("id")=>"Int64",
+    Symbol("name")=>"String",
+    Symbol("available")=>"Bool",
+    Symbol("storage_level_limits")=>"MinMax",
+    Symbol("initial_level")=>"Float64",
+    Symbol("spillage_limits")=>"MinMax",
+    Symbol("inflow")=>"Float64",
+    Symbol("outflow")=>"Float64",
+    Symbol("level_targets")=>"Float64",
+    Symbol("travel_time")=>"Float64",
+    Symbol("intake_elevation")=>"Float64",
+    Symbol("head_to_volume_factor")=>"ValueCurve",
+    Symbol("reservoir_location")=>"String",
+    Symbol("operation_cost")=>"HydroReservoirCost",
+    Symbol("level_data_type")=>"String",
 )
 OpenAPI.property_type(::Type{HydroReservoir}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_HydroReservoir[name]))}
@@ -146,11 +152,20 @@ function OpenAPI.validate_properties(o::HydroReservoir)
         Symbol("head_to_volume_factor"),
         o.head_to_volume_factor,
     )
+    OpenAPI.validate_property(
+        HydroReservoir,
+        Symbol("reservoir_location"),
+        o.reservoir_location,
+    )
     OpenAPI.validate_property(HydroReservoir, Symbol("operation_cost"), o.operation_cost)
     OpenAPI.validate_property(HydroReservoir, Symbol("level_data_type"), o.level_data_type)
 end
 
 function OpenAPI.validate_property(::Type{HydroReservoir}, name::Symbol, val)
+    if name === Symbol("reservoir_location")
+        OpenAPI.validate_param(name, "HydroReservoir", :enum, val, ["HEAD", "TAIL"])
+    end
+
     if name === Symbol("level_data_type")
         OpenAPI.validate_param(
             name,

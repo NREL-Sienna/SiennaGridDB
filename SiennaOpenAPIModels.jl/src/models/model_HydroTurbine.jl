@@ -13,12 +13,12 @@
         rating=nothing,
         active_power_limits=nothing,
         reactive_power_limits=nothing,
-        outflow_limits=nothing,
+        base_power=nothing,
+        operation_cost=nothing,
         powerhouse_elevation=nothing,
         ramp_limits=nothing,
         time_limits=nothing,
-        base_power=nothing,
-        operation_cost=nothing,
+        outflow_limits=nothing,
         efficiency=1.0,
         turbine_type="UNKNOWN",
         conversion_factor=1.0,
@@ -35,12 +35,12 @@
     - rating::Float64
     - active_power_limits::MinMax
     - reactive_power_limits::MinMax
-    - outflow_limits::MinMax
+    - base_power::Float64
+    - operation_cost::HydroGenerationCost
     - powerhouse_elevation::Float64
     - ramp_limits::UpDown
     - time_limits::UpDown
-    - base_power::Float64
-    - operation_cost::HydroGenerationCost
+    - outflow_limits::MinMax
     - efficiency::Float64
     - turbine_type::String
     - conversion_factor::Float64
@@ -57,12 +57,12 @@ Base.@kwdef mutable struct HydroTurbine <: OpenAPI.APIModel
     rating::Union{Nothing, Float64} = nothing
     active_power_limits = nothing # spec type: Union{ Nothing, MinMax }
     reactive_power_limits = nothing # spec type: Union{ Nothing, MinMax }
-    outflow_limits = nothing # spec type: Union{ Nothing, MinMax }
+    base_power::Union{Nothing, Float64} = nothing
+    operation_cost = nothing # spec type: Union{ Nothing, HydroGenerationCost }
     powerhouse_elevation::Union{Nothing, Float64} = nothing
     ramp_limits = nothing # spec type: Union{ Nothing, UpDown }
     time_limits = nothing # spec type: Union{ Nothing, UpDown }
-    base_power::Union{Nothing, Float64} = nothing
-    operation_cost = nothing # spec type: Union{ Nothing, HydroGenerationCost }
+    outflow_limits = nothing # spec type: Union{ Nothing, MinMax }
     efficiency::Union{Nothing, Float64} = 1.0
     turbine_type::Union{Nothing, String} = "UNKNOWN"
     conversion_factor::Union{Nothing, Float64} = 1.0
@@ -79,12 +79,12 @@ Base.@kwdef mutable struct HydroTurbine <: OpenAPI.APIModel
         rating,
         active_power_limits,
         reactive_power_limits,
-        outflow_limits,
+        base_power,
+        operation_cost,
         powerhouse_elevation,
         ramp_limits,
         time_limits,
-        base_power,
-        operation_cost,
+        outflow_limits,
         efficiency,
         turbine_type,
         conversion_factor,
@@ -101,12 +101,12 @@ Base.@kwdef mutable struct HydroTurbine <: OpenAPI.APIModel
             rating,
             active_power_limits,
             reactive_power_limits,
-            outflow_limits,
+            base_power,
+            operation_cost,
             powerhouse_elevation,
             ramp_limits,
             time_limits,
-            base_power,
-            operation_cost,
+            outflow_limits,
             efficiency,
             turbine_type,
             conversion_factor,
@@ -119,26 +119,26 @@ Base.@kwdef mutable struct HydroTurbine <: OpenAPI.APIModel
 end # type HydroTurbine
 
 const _property_types_HydroTurbine = Dict{Symbol, String}(
-    Symbol("id") => "Int64",
-    Symbol("name") => "String",
-    Symbol("available") => "Bool",
-    Symbol("bus") => "Int64",
-    Symbol("active_power") => "Float64",
-    Symbol("reactive_power") => "Float64",
-    Symbol("rating") => "Float64",
-    Symbol("active_power_limits") => "MinMax",
-    Symbol("reactive_power_limits") => "MinMax",
-    Symbol("outflow_limits") => "MinMax",
-    Symbol("powerhouse_elevation") => "Float64",
-    Symbol("ramp_limits") => "UpDown",
-    Symbol("time_limits") => "UpDown",
-    Symbol("base_power") => "Float64",
-    Symbol("operation_cost") => "HydroGenerationCost",
-    Symbol("efficiency") => "Float64",
-    Symbol("turbine_type") => "String",
-    Symbol("conversion_factor") => "Float64",
-    Symbol("reservoirs") => "Vector{Int64}",
-    Symbol("dynamic_injector") => "Any",
+    Symbol("id")=>"Int64",
+    Symbol("name")=>"String",
+    Symbol("available")=>"Bool",
+    Symbol("bus")=>"Int64",
+    Symbol("active_power")=>"Float64",
+    Symbol("reactive_power")=>"Float64",
+    Symbol("rating")=>"Float64",
+    Symbol("active_power_limits")=>"MinMax",
+    Symbol("reactive_power_limits")=>"MinMax",
+    Symbol("base_power")=>"Float64",
+    Symbol("operation_cost")=>"HydroGenerationCost",
+    Symbol("powerhouse_elevation")=>"Float64",
+    Symbol("ramp_limits")=>"UpDown",
+    Symbol("time_limits")=>"UpDown",
+    Symbol("outflow_limits")=>"MinMax",
+    Symbol("efficiency")=>"Float64",
+    Symbol("turbine_type")=>"String",
+    Symbol("conversion_factor")=>"Float64",
+    Symbol("reservoirs")=>"Vector{Int64}",
+    Symbol("dynamic_injector")=>"Any",
 )
 OpenAPI.property_type(::Type{HydroTurbine}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_HydroTurbine[name]))}
@@ -152,8 +152,8 @@ function OpenAPI.check_required(o::HydroTurbine)
     o.reactive_power === nothing && (return false)
     o.rating === nothing && (return false)
     o.active_power_limits === nothing && (return false)
-    o.powerhouse_elevation === nothing && (return false)
     o.base_power === nothing && (return false)
+    o.powerhouse_elevation === nothing && (return false)
     true
 end
 
@@ -175,7 +175,8 @@ function OpenAPI.validate_properties(o::HydroTurbine)
         Symbol("reactive_power_limits"),
         o.reactive_power_limits,
     )
-    OpenAPI.validate_property(HydroTurbine, Symbol("outflow_limits"), o.outflow_limits)
+    OpenAPI.validate_property(HydroTurbine, Symbol("base_power"), o.base_power)
+    OpenAPI.validate_property(HydroTurbine, Symbol("operation_cost"), o.operation_cost)
     OpenAPI.validate_property(
         HydroTurbine,
         Symbol("powerhouse_elevation"),
@@ -183,8 +184,7 @@ function OpenAPI.validate_properties(o::HydroTurbine)
     )
     OpenAPI.validate_property(HydroTurbine, Symbol("ramp_limits"), o.ramp_limits)
     OpenAPI.validate_property(HydroTurbine, Symbol("time_limits"), o.time_limits)
-    OpenAPI.validate_property(HydroTurbine, Symbol("base_power"), o.base_power)
-    OpenAPI.validate_property(HydroTurbine, Symbol("operation_cost"), o.operation_cost)
+    OpenAPI.validate_property(HydroTurbine, Symbol("outflow_limits"), o.outflow_limits)
     OpenAPI.validate_property(HydroTurbine, Symbol("efficiency"), o.efficiency)
     OpenAPI.validate_property(HydroTurbine, Symbol("turbine_type"), o.turbine_type)
     OpenAPI.validate_property(

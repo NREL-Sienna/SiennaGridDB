@@ -74,17 +74,17 @@ Base.@kwdef mutable struct RenewableNonDispatch <: OpenAPI.APIModel
 end # type RenewableNonDispatch
 
 const _property_types_RenewableNonDispatch = Dict{Symbol, String}(
-    Symbol("id") => "Int64",
-    Symbol("name") => "String",
-    Symbol("available") => "Bool",
-    Symbol("bus") => "Int64",
-    Symbol("active_power") => "Float64",
-    Symbol("reactive_power") => "Float64",
-    Symbol("rating") => "Float64",
-    Symbol("prime_mover_type") => "String",
-    Symbol("power_factor") => "Float64",
-    Symbol("base_power") => "Float64",
-    Symbol("dynamic_injector") => "Any",
+    Symbol("id")=>"Int64",
+    Symbol("name")=>"String",
+    Symbol("available")=>"Bool",
+    Symbol("bus")=>"Int64",
+    Symbol("active_power")=>"Float64",
+    Symbol("reactive_power")=>"Float64",
+    Symbol("rating")=>"Float64",
+    Symbol("prime_mover_type")=>"String",
+    Symbol("power_factor")=>"Float64",
+    Symbol("base_power")=>"Float64",
+    Symbol("dynamic_injector")=>"Any",
 )
 OpenAPI.property_type(::Type{RenewableNonDispatch}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_RenewableNonDispatch[name]))}

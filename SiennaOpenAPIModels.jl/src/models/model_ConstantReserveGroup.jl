@@ -32,11 +32,11 @@ Base.@kwdef mutable struct ConstantReserveGroup <: OpenAPI.APIModel
 end # type ConstantReserveGroup
 
 const _property_types_ConstantReserveGroup = Dict{Symbol, String}(
-    Symbol("available") => "Bool",
-    Symbol("id") => "Int64",
-    Symbol("name") => "String",
-    Symbol("requirement") => "Float64",
-    Symbol("reserve_direction") => "String",
+    Symbol("available")=>"Bool",
+    Symbol("id")=>"Int64",
+    Symbol("name")=>"String",
+    Symbol("requirement")=>"Float64",
+    Symbol("reserve_direction")=>"String",
 )
 OpenAPI.property_type(::Type{ConstantReserveGroup}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_ConstantReserveGroup[name]))}

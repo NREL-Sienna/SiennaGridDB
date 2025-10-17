@@ -94,21 +94,21 @@ Base.@kwdef mutable struct Source <: OpenAPI.APIModel
 end # type Source
 
 const _property_types_Source = Dict{Symbol, String}(
-    Symbol("name") => "String",
-    Symbol("id") => "Int64",
-    Symbol("available") => "Bool",
-    Symbol("bus") => "Int64",
-    Symbol("active_power") => "Float64",
-    Symbol("reactive_power") => "Float64",
-    Symbol("active_power_limits") => "MinMax",
-    Symbol("reactive_power_limits") => "MinMax",
-    Symbol("R_th") => "Float64",
-    Symbol("X_th") => "Float64",
-    Symbol("internal_voltage") => "Float64",
-    Symbol("internal_angle") => "Float64",
-    Symbol("base_power") => "Float64",
-    Symbol("operation_cost") => "ImportExportCost",
-    Symbol("dynamic_injector") => "Any",
+    Symbol("name")=>"String",
+    Symbol("id")=>"Int64",
+    Symbol("available")=>"Bool",
+    Symbol("bus")=>"Int64",
+    Symbol("active_power")=>"Float64",
+    Symbol("reactive_power")=>"Float64",
+    Symbol("active_power_limits")=>"MinMax",
+    Symbol("reactive_power_limits")=>"MinMax",
+    Symbol("R_th")=>"Float64",
+    Symbol("X_th")=>"Float64",
+    Symbol("internal_voltage")=>"Float64",
+    Symbol("internal_angle")=>"Float64",
+    Symbol("base_power")=>"Float64",
+    Symbol("operation_cost")=>"ImportExportCost",
+    Symbol("dynamic_injector")=>"Any",
 )
 OpenAPI.property_type(::Type{Source}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_Source[name]))}

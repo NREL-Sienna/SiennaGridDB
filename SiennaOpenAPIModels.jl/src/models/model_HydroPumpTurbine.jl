@@ -29,6 +29,7 @@
         transition_time=nothing,
         minimum_time=nothing,
         conversion_factor=1.0,
+        must_run=false,
         dynamic_injector=nothing,
     )
 
@@ -57,6 +58,7 @@
     - transition_time::TurbinePump
     - minimum_time::TurbinePump
     - conversion_factor::Float64
+    - must_run::Bool
     - dynamic_injector::Any
 """
 Base.@kwdef mutable struct HydroPumpTurbine <: OpenAPI.APIModel
@@ -85,6 +87,7 @@ Base.@kwdef mutable struct HydroPumpTurbine <: OpenAPI.APIModel
     transition_time = nothing # spec type: Union{ Nothing, TurbinePump }
     minimum_time = nothing # spec type: Union{ Nothing, TurbinePump }
     conversion_factor::Union{Nothing, Float64} = 1.0
+    must_run::Union{Nothing, Bool} = false
     dynamic_injector::Union{Nothing, Any} = nothing
 
     function HydroPumpTurbine(
@@ -113,6 +116,7 @@ Base.@kwdef mutable struct HydroPumpTurbine <: OpenAPI.APIModel
         transition_time,
         minimum_time,
         conversion_factor,
+        must_run,
         dynamic_injector,
     )
         o = new(
@@ -141,6 +145,7 @@ Base.@kwdef mutable struct HydroPumpTurbine <: OpenAPI.APIModel
             transition_time,
             minimum_time,
             conversion_factor,
+            must_run,
             dynamic_injector,
         )
         OpenAPI.validate_properties(o)
@@ -149,32 +154,33 @@ Base.@kwdef mutable struct HydroPumpTurbine <: OpenAPI.APIModel
 end # type HydroPumpTurbine
 
 const _property_types_HydroPumpTurbine = Dict{Symbol, String}(
-    Symbol("id") => "Int64",
-    Symbol("name") => "String",
-    Symbol("available") => "Bool",
-    Symbol("bus") => "Int64",
-    Symbol("active_power") => "Float64",
-    Symbol("reactive_power") => "Float64",
-    Symbol("rating") => "Float64",
-    Symbol("active_power_limits") => "MinMax",
-    Symbol("reactive_power_limits") => "MinMax",
-    Symbol("active_power_limits_pump") => "MinMax",
-    Symbol("outflow_limits") => "MinMax",
-    Symbol("head_reservoir") => "Int64",
-    Symbol("tail_reservoir") => "Int64",
-    Symbol("powerhouse_elevation") => "Float64",
-    Symbol("ramp_limits") => "UpDown",
-    Symbol("time_limits") => "UpDown",
-    Symbol("base_power") => "Float64",
-    Symbol("status") => "String",
-    Symbol("time_at_status") => "Float64",
-    Symbol("operation_cost") => "HydroStorageGenerationCost",
-    Symbol("active_power_pump") => "Float64",
-    Symbol("efficiency") => "TurbinePump",
-    Symbol("transition_time") => "TurbinePump",
-    Symbol("minimum_time") => "TurbinePump",
-    Symbol("conversion_factor") => "Float64",
-    Symbol("dynamic_injector") => "Any",
+    Symbol("id")=>"Int64",
+    Symbol("name")=>"String",
+    Symbol("available")=>"Bool",
+    Symbol("bus")=>"Int64",
+    Symbol("active_power")=>"Float64",
+    Symbol("reactive_power")=>"Float64",
+    Symbol("rating")=>"Float64",
+    Symbol("active_power_limits")=>"MinMax",
+    Symbol("reactive_power_limits")=>"MinMax",
+    Symbol("active_power_limits_pump")=>"MinMax",
+    Symbol("outflow_limits")=>"MinMax",
+    Symbol("head_reservoir")=>"Int64",
+    Symbol("tail_reservoir")=>"Int64",
+    Symbol("powerhouse_elevation")=>"Float64",
+    Symbol("ramp_limits")=>"UpDown",
+    Symbol("time_limits")=>"UpDown",
+    Symbol("base_power")=>"Float64",
+    Symbol("status")=>"String",
+    Symbol("time_at_status")=>"Float64",
+    Symbol("operation_cost")=>"HydroStorageGenerationCost",
+    Symbol("active_power_pump")=>"Float64",
+    Symbol("efficiency")=>"TurbinePump",
+    Symbol("transition_time")=>"TurbinePump",
+    Symbol("minimum_time")=>"TurbinePump",
+    Symbol("conversion_factor")=>"Float64",
+    Symbol("must_run")=>"Bool",
+    Symbol("dynamic_injector")=>"Any",
 )
 OpenAPI.property_type(::Type{HydroPumpTurbine}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_HydroPumpTurbine[name]))}
@@ -250,6 +256,7 @@ function OpenAPI.validate_properties(o::HydroPumpTurbine)
         Symbol("conversion_factor"),
         o.conversion_factor,
     )
+    OpenAPI.validate_property(HydroPumpTurbine, Symbol("must_run"), o.must_run)
     OpenAPI.validate_property(
         HydroPumpTurbine,
         Symbol("dynamic_injector"),

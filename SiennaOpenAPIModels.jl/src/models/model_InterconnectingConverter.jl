@@ -84,19 +84,19 @@ Base.@kwdef mutable struct InterconnectingConverter <: OpenAPI.APIModel
 end # type InterconnectingConverter
 
 const _property_types_InterconnectingConverter = Dict{Symbol, String}(
-    Symbol("name") => "String",
-    Symbol("id") => "Int64",
-    Symbol("available") => "Bool",
-    Symbol("bus") => "Int64",
-    Symbol("dc_bus") => "Int64",
-    Symbol("active_power") => "Float64",
-    Symbol("active_power_limits") => "MinMax",
-    Symbol("base_power") => "Float64",
-    Symbol("dc_current") => "Float64",
-    Symbol("max_dc_current") => "Float64",
-    Symbol("loss_function") => "InputOutputCurve",
-    Symbol("rating") => "Float64",
-    Symbol("dynamic_injector") => "Any",
+    Symbol("name")=>"String",
+    Symbol("id")=>"Int64",
+    Symbol("available")=>"Bool",
+    Symbol("bus")=>"Int64",
+    Symbol("dc_bus")=>"Int64",
+    Symbol("active_power")=>"Float64",
+    Symbol("active_power_limits")=>"MinMax",
+    Symbol("base_power")=>"Float64",
+    Symbol("dc_current")=>"Float64",
+    Symbol("max_dc_current")=>"Float64",
+    Symbol("loss_function")=>"InputOutputCurve",
+    Symbol("rating")=>"Float64",
+    Symbol("dynamic_injector")=>"Any",
 )
 OpenAPI.property_type(::Type{InterconnectingConverter}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_InterconnectingConverter[name]))}

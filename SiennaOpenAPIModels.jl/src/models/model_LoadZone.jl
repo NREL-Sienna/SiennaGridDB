@@ -29,10 +29,10 @@ Base.@kwdef mutable struct LoadZone <: OpenAPI.APIModel
 end # type LoadZone
 
 const _property_types_LoadZone = Dict{Symbol, String}(
-    Symbol("id") => "Int64",
-    Symbol("name") => "String",
-    Symbol("peak_active_power") => "Float64",
-    Symbol("peak_reactive_power") => "Float64",
+    Symbol("id")=>"Int64",
+    Symbol("name")=>"String",
+    Symbol("peak_active_power")=>"Float64",
+    Symbol("peak_reactive_power")=>"Float64",
 )
 OpenAPI.property_type(::Type{LoadZone}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_LoadZone[name]))}

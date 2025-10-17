@@ -47,6 +47,10 @@ function get_res_data_enum(reservoir_data_type::String)
     IS.deserialize(PSY.ReservoirDataType, reservoir_data_type)
 end
 
+function get_res_location_enum(reservoir_location::String)
+    IS.deserialize(PSY.ReservoirLocation, reservoir_location)
+end
+
 function get_reserve_enum(direction::String)
     if direction == "UP"
         return PSY.ReserveUp

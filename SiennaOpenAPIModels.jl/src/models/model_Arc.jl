@@ -26,9 +26,9 @@ Base.@kwdef mutable struct Arc <: OpenAPI.APIModel
 end # type Arc
 
 const _property_types_Arc = Dict{Symbol, String}(
-    Symbol("id") => "Int64",
-    Symbol("from") => "Int64",
-    Symbol("to") => "Int64",
+    Symbol("id")=>"Int64",
+    Symbol("from")=>"Int64",
+    Symbol("to")=>"Int64",
 )
 OpenAPI.property_type(::Type{Arc}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_Arc[name]))}
