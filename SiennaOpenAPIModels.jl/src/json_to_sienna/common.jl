@@ -138,9 +138,9 @@ function get_sienna_operation_cost(cost::HydroGenerationCost)
     )
 end
 
-function get_sienna_operation_cost(cost::HydroStorageGenerationCost)
-    get_sienna_operation_cost(cost.value)
-end
+#function get_sienna_operation_cost(cost::HydroStorageGenerationCost)
+#    get_sienna_operation_cost(cost.value)
+#end
 
 function get_sienna_operation_cost(cost::HydroReservoirCost)
     PSY.HydroReservoirCost(

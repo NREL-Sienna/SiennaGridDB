@@ -16,15 +16,14 @@ Tables = "bd369af6-aec1-5ad0-b16a-f7cc5008161c"
 UUIDs = "cf7118a7-6976-5b1a-9a39-7adc72f591a4"
 
 [sources]
-InfrastructureSystems = {rev = "main", url = "/Users/hchubin/SiennaRepos/InfrastructureSystems.jl"}
-PowerSystems = {rev = "psy5", url = "/Users/hchubin/SiennaRepos/PowerSystems.jl"}
+InfrastructureSystems = {rev = "main", url = "https://github.com/NREL-Sienna/InfrastructureSystems.jl"}
+PowerSystems = {rev = "main", url = "https://github.com/NREL-Sienna/PowerSystems.jl"}
 
 [compat]
 DBInterface = "2.6.1"
 Dates = "1.11.0"
-InfrastructureSystems = "2.6.0"
+InfrastructureSystems = "3.0.0"
 JSON = "0.21.4"
-PowerSystems = "4.6.2"
 SQLite = "1.6.1"
 Tables = "1.12.0"
 UUIDs = "1.11.0"

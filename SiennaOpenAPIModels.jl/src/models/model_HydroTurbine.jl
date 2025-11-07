@@ -22,7 +22,8 @@
         efficiency=1.0,
         turbine_type="UNKNOWN",
         conversion_factor=1.0,
-        reservoirs=nothing,
+        prime_mover_type="HY",
+        travel_time=nothing,
         dynamic_injector=nothing,
     )
 
@@ -44,7 +45,8 @@
     - efficiency::Float64
     - turbine_type::String
     - conversion_factor::Float64
-    - reservoirs::Vector{Int64}
+    - prime_mover_type::String
+    - travel_time::Float64
     - dynamic_injector::Any
 """
 Base.@kwdef mutable struct HydroTurbine <: OpenAPI.APIModel
@@ -66,7 +68,8 @@ Base.@kwdef mutable struct HydroTurbine <: OpenAPI.APIModel
     efficiency::Union{Nothing, Float64} = 1.0
     turbine_type::Union{Nothing, String} = "UNKNOWN"
     conversion_factor::Union{Nothing, Float64} = 1.0
-    reservoirs::Union{Nothing, Vector{Int64}} = nothing
+    prime_mover_type::Union{Nothing, String} = "HY"
+    travel_time::Union{Nothing, Float64} = nothing
     dynamic_injector::Union{Nothing, Any} = nothing
 
     function HydroTurbine(
@@ -88,7 +91,8 @@ Base.@kwdef mutable struct HydroTurbine <: OpenAPI.APIModel
         efficiency,
         turbine_type,
         conversion_factor,
-        reservoirs,
+        prime_mover_type,
+        travel_time,
         dynamic_injector,
     )
         o = new(
@@ -110,7 +114,8 @@ Base.@kwdef mutable struct HydroTurbine <: OpenAPI.APIModel
             efficiency,
             turbine_type,
             conversion_factor,
-            reservoirs,
+            prime_mover_type,
+            travel_time,
             dynamic_injector,
         )
         OpenAPI.validate_properties(o)
@@ -137,7 +142,8 @@ const _property_types_HydroTurbine = Dict{Symbol, String}(
     Symbol("efficiency")=>"Float64",
     Symbol("turbine_type")=>"String",
     Symbol("conversion_factor")=>"Float64",
-    Symbol("reservoirs")=>"Vector{Int64}",
+    Symbol("prime_mover_type")=>"String",
+    Symbol("travel_time")=>"Float64",
     Symbol("dynamic_injector")=>"Any",
 )
 OpenAPI.property_type(::Type{HydroTurbine}, name::Symbol) =
@@ -192,7 +198,8 @@ function OpenAPI.validate_properties(o::HydroTurbine)
         Symbol("conversion_factor"),
         o.conversion_factor,
     )
-    OpenAPI.validate_property(HydroTurbine, Symbol("reservoirs"), o.reservoirs)
+    OpenAPI.validate_property(HydroTurbine, Symbol("prime_mover_type"), o.prime_mover_type)
+    OpenAPI.validate_property(HydroTurbine, Symbol("travel_time"), o.travel_time)
     OpenAPI.validate_property(HydroTurbine, Symbol("dynamic_injector"), o.dynamic_injector)
 end
 
@@ -214,6 +221,40 @@ function OpenAPI.validate_property(::Type{HydroTurbine}, name::Symbol, val)
                 "DERIAZ",
                 "PROPELLER",
                 "OTHER",
+            ],
+        )
+    end
+
+    if name === Symbol("prime_mover_type")
+        OpenAPI.validate_param(
+            name,
+            "HydroTurbine",
+            :enum,
+            val,
+            [
+                "BA",
+                "BT",
+                "CA",
+                "CC",
+                "CE",
+                "CP",
+                "CS",
+                "CT",
+                "ES",
+                "FC",
+                "FW",
+                "GT",
+                "HA",
+                "HB",
+                "HK",
+                "HY",
+                "IC",
+                "PS",
+                "OT",
+                "ST",
+                "PVe",
+                "WT",
+                "WS",
             ],
         )
     end

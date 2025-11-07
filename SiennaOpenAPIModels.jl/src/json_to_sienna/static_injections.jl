@@ -128,8 +128,6 @@ function openapi2psy(hydro::HydroPumpTurbine, resolver::Resolver)
             hydro.base_power,
         ),
         outflow_limits=get_tuple_min_max(hydro.outflow_limits),
-        head_reservoir=resolver(hydro.head_reservoir),
-        tail_reservoir=resolver(hydro.tail_reservoir),
         powerhouse_elevation=hydro.powerhouse_elevation,
         ramp_limits=divide(get_tuple_up_down(hydro.ramp_limits), hydro.base_power),
         time_limits=get_tuple_up_down(hydro.time_limits),
@@ -141,7 +139,10 @@ function openapi2psy(hydro::HydroPumpTurbine, resolver::Resolver)
         efficiency=get_tuple_turbine_pump(hydro.efficiency),
         transition_time=get_tuple_turbine_pump(hydro.transition_time),
         minimum_time=get_tuple_turbine_pump(hydro.minimum_time),
+        travel_time=hydro.travel_time,
         conversion_factor=hydro.conversion_factor,
+        must_run=hydro.must_run,
+        prime_mover_type=get_prime_mover_enum(hydro.prime_mover_type),
     )
 end
 
@@ -155,10 +156,11 @@ function openapi2psy(hydro::HydroReservoir, resolver::Resolver)
         inflow=hydro.inflow,
         outflow=hydro.outflow,
         level_targets=hydro.level_targets,
-        travel_time=hydro.travel_time,
         intake_elevation=hydro.intake_elevation,
         head_to_volume_factor=get_sienna_value_curve(hydro.head_to_volume_factor),
-        reservoir_location=get_res_location_enum(hydro.reservoir_location),
+        upstream_turbines=map(resolver, hydro.upstream_turbines), # this is a vector of "HydroUnit"s
+        downstream_turbines=map(resolver, hydro.downstream_turbines), # this is a vector of "HydroUnit"s
+        upstream_reservoirs=map(resolver, hydro.upstream_reservoirs), # this is a vector of "Device"s
         operation_cost=get_sienna_operation_cost(hydro.operation_cost),
         level_data_type=get_res_data_enum(hydro.level_data_type),
     )
@@ -192,7 +194,8 @@ function openapi2psy(hydro::HydroTurbine, resolver::Resolver)
         efficiency=hydro.efficiency,
         turbine_type=get_turbine_type_enum(hydro.turbine_type),
         conversion_factor=hydro.conversion_factor,
-        reservoirs=map(resolver, hydro.reservoirs), # this is a vector of reservoirs
+        prime_mover_type=get_prime_mover_enum(hydro.prime_mover_type),
+        travel_time=hydro.travel_time,
     )
 end
 

@@ -127,20 +127,21 @@ function psy2openapi(hydro::PSY.HydroPumpTurbine, ids::IDGenerator)
             scale(hydro.active_power_limits_pump, hydro.base_power),
         ),
         outflow_limits=get_min_max(hydro.outflow_limits),
-        head_reservoir=getid!(ids, hydro.head_reservoir),
-        tail_reservoir=getid!(ids, hydro.tail_reservoir),
         powerhouse_elevation=hydro.powerhouse_elevation,
         ramp_limits=get_up_down(scale(hydro.ramp_limits, hydro.base_power)),
         time_limits=get_up_down(hydro.time_limits),
         base_power=hydro.base_power,
         status=string(hydro.status),
         time_at_status=hydro.time_at_status,
-        operation_cost=HydroStorageGenerationCost(get_operation_cost(hydro.operation_cost)),
+        operation_cost=get_operation_cost(hydro.operation_cost),
         active_power_pump=(hydro.active_power_pump * hydro.base_power),
         efficiency=get_turbine_pump(hydro.efficiency),
         transition_time=get_turbine_pump(hydro.transition_time),
         minimum_time=get_turbine_pump(hydro.minimum_time),
+        travel_time=hydro.travel_time,
         conversion_factor=hydro.conversion_factor,
+        must_run=hydro.must_run,
+        prime_mover_type=string(hydro.prime_mover_type),
         dynamic_injector=getid!(ids, hydro.dynamic_injector),
     )
 end
@@ -156,10 +157,11 @@ function psy2openapi(hydro::PSY.HydroReservoir, ids::IDGenerator)
         inflow=hydro.inflow,
         outflow=hydro.outflow,
         level_targets=hydro.level_targets,
-        travel_time=hydro.travel_time,
         intake_elevation=hydro.intake_elevation,
         head_to_volume_factor=ValueCurve(get_value_curve(hydro.head_to_volume_factor)),
-        reservoir_location=string(hydro.reservoir_location),
+        upstream_turbines=map(c -> getid!(ids, c), hydro.upstream_turbines), # this is a vector of "HydroUnit"s
+        downstream_turbines=map(c -> getid!(ids, c), hydro.downstream_turbines), # this is a vector of "HydroUnit"s
+        upstream_reservoirs=map(c -> getid!(ids, c), hydro.upstream_reservoirs), # this is a vector of "Device"s
         operation_cost=get_operation_cost(hydro.operation_cost),
         level_data_type=string(hydro.level_data_type),
     )
@@ -190,7 +192,8 @@ function psy2openapi(hydro::PSY.HydroTurbine, ids::IDGenerator)
         efficiency=hydro.efficiency,
         turbine_type=string(hydro.turbine_type),
         conversion_factor=hydro.conversion_factor,
-        reservoirs=map(c -> getid!(ids, c), hydro.reservoirs), # this is a vector of reservoirs
+        prime_mover_type=string(hydro.prime_mover_type),
+        travel_time=hydro.travel_time,
         dynamic_injector=getid!(ids, hydro.dynamic_injector),
     )
 end

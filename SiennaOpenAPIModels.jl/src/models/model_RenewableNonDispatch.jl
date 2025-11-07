@@ -11,7 +11,7 @@
         active_power=nothing,
         reactive_power=nothing,
         rating=nothing,
-        prime_mover_type=nothing,
+        prime_mover_type="HY",
         power_factor=nothing,
         base_power=nothing,
         dynamic_injector=nothing,
@@ -37,7 +37,7 @@ Base.@kwdef mutable struct RenewableNonDispatch <: OpenAPI.APIModel
     active_power::Union{Nothing, Float64} = nothing
     reactive_power::Union{Nothing, Float64} = nothing
     rating::Union{Nothing, Float64} = nothing
-    prime_mover_type::Union{Nothing, String} = nothing
+    prime_mover_type::Union{Nothing, String} = "HY"
     power_factor::Union{Nothing, Float64} = nothing
     base_power::Union{Nothing, Float64} = nothing
     dynamic_injector::Union{Nothing, Any} = nothing

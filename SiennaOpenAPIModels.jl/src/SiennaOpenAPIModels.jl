@@ -51,7 +51,6 @@ include("modelincludes.jl")
 @batteries HydroPumpTurbine
 @batteries HydroReservoir
 @batteries HydroReservoirCost
-@batteries HydroStorageGenerationCost
 @batteries HydroTurbine
 @batteries ImportExportCost
 @batteries IncrementalCurve

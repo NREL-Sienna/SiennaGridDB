@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 **active_power** | **Float64** |  | [default to nothing]
 **reactive_power** | **Float64** |  | [default to nothing]
 **rating** | **Float64** |  | [default to nothing]
-**prime_mover_type** | **String** |  | [default to nothing]
+**prime_mover_type** | **String** |  | [default to "HY"]
 **power_factor** | **Float64** |  | [default to nothing]
 **base_power** | **Float64** |  | [default to nothing]
 **dynamic_injector** | **Any** |  | [optional] [default to nothing]

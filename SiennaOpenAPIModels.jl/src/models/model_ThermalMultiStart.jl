@@ -12,7 +12,7 @@
         active_power=nothing,
         reactive_power=nothing,
         rating=nothing,
-        prime_mover_type=nothing,
+        prime_mover_type="HY",
         fuel="OTHER",
         active_power_limits=nothing,
         reactive_power_limits=nothing,
@@ -60,7 +60,7 @@ Base.@kwdef mutable struct ThermalMultiStart <: OpenAPI.APIModel
     active_power::Union{Nothing, Float64} = nothing
     reactive_power::Union{Nothing, Float64} = nothing
     rating::Union{Nothing, Float64} = nothing
-    prime_mover_type::Union{Nothing, String} = nothing
+    prime_mover_type::Union{Nothing, String} = "HY"
     fuel::Union{Nothing, String} = "OTHER"
     active_power_limits = nothing # spec type: Union{ Nothing, MinMax }
     reactive_power_limits = nothing # spec type: Union{ Nothing, MinMax }
