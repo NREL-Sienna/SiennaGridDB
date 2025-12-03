@@ -27,9 +27,9 @@ Base.@kwdef mutable struct LoadCost <: OpenAPI.APIModel
 end # type LoadCost
 
 const _property_types_LoadCost = Dict{Symbol, String}(
-    Symbol("cost_type") => "String",
-    Symbol("fixed") => "Float64",
-    Symbol("variable") => "CostCurve",
+    Symbol("cost_type")=>"String",
+    Symbol("fixed")=>"Float64",
+    Symbol("variable")=>"CostCurve",
 )
 OpenAPI.property_type(::Type{LoadCost}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_LoadCost[name]))}

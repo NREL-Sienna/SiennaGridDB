@@ -23,5 +23,8 @@ docs/site/
 # environment.
 Manifest.toml
 
+# auto-generated file from tests
+*.swp
+
 # Script used to regenerate docs/ and src/models/ files from PowerSystemSchemas/
 regenerate_docs_and_models.sh

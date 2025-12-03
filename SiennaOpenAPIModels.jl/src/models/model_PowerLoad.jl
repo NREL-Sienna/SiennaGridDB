@@ -74,17 +74,17 @@ Base.@kwdef mutable struct PowerLoad <: OpenAPI.APIModel
 end # type PowerLoad
 
 const _property_types_PowerLoad = Dict{Symbol, String}(
-    Symbol("name") => "String",
-    Symbol("id") => "Int64",
-    Symbol("available") => "Bool",
-    Symbol("bus") => "Int64",
-    Symbol("active_power") => "Float64",
-    Symbol("reactive_power") => "Float64",
-    Symbol("base_power") => "Float64",
-    Symbol("max_active_power") => "Float64",
-    Symbol("max_reactive_power") => "Float64",
-    Symbol("conformity") => "String",
-    Symbol("dynamic_injector") => "Any",
+    Symbol("name")=>"String",
+    Symbol("id")=>"Int64",
+    Symbol("available")=>"Bool",
+    Symbol("bus")=>"Int64",
+    Symbol("active_power")=>"Float64",
+    Symbol("reactive_power")=>"Float64",
+    Symbol("base_power")=>"Float64",
+    Symbol("max_active_power")=>"Float64",
+    Symbol("max_reactive_power")=>"Float64",
+    Symbol("conformity")=>"String",
+    Symbol("dynamic_injector")=>"Any",
 )
 OpenAPI.property_type(::Type{PowerLoad}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_PowerLoad[name]))}

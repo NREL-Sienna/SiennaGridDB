@@ -46,13 +46,13 @@ Base.@kwdef mutable struct AreaInterchange <: OpenAPI.APIModel
 end # type AreaInterchange
 
 const _property_types_AreaInterchange = Dict{Symbol, String}(
-    Symbol("active_power_flow") => "Float64",
-    Symbol("available") => "Bool",
-    Symbol("id") => "Int64",
-    Symbol("flow_limits") => "FromToToFrom",
-    Symbol("from_area") => "Int64",
-    Symbol("name") => "String",
-    Symbol("to_area") => "Int64",
+    Symbol("active_power_flow")=>"Float64",
+    Symbol("available")=>"Bool",
+    Symbol("id")=>"Int64",
+    Symbol("flow_limits")=>"FromToToFrom",
+    Symbol("from_area")=>"Int64",
+    Symbol("name")=>"String",
+    Symbol("to_area")=>"Int64",
 )
 OpenAPI.property_type(::Type{AreaInterchange}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_AreaInterchange[name]))}

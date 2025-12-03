@@ -13,9 +13,11 @@ Name | Type | Description | Notes
 **inflow** | **Float64** |  | [default to nothing]
 **outflow** | **Float64** |  | [default to nothing]
 **level_targets** | **Float64** |  | [optional] [default to nothing]
-**travel_time** | **Float64** |  | [optional] [default to nothing]
 **intake_elevation** | **Float64** |  | [default to nothing]
 **head_to_volume_factor** | [***ValueCurve**](ValueCurve.md) |  | [default to nothing]
+**upstream_turbines** | **Vector{Int64}** |  | [optional] [default to nothing]
+**downstream_turbines** | **Vector{Int64}** |  | [optional] [default to nothing]
+**upstream_reservoirs** | **Vector{Int64}** |  | [optional] [default to nothing]
 **operation_cost** | [***HydroReservoirCost**](HydroReservoirCost.md) |  | [default to nothing]
 **level_data_type** | **String** |  | [optional] [default to "USABLE_VOLUME"]
 

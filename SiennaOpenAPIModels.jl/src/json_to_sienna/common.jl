@@ -47,6 +47,10 @@ function get_res_data_enum(reservoir_data_type::String)
     IS.deserialize(PSY.ReservoirDataType, reservoir_data_type)
 end
 
+function get_res_location_enum(reservoir_location::String)
+    IS.deserialize(PSY.ReservoirLocation, reservoir_location)
+end
+
 function get_reserve_enum(direction::String)
     if direction == "UP"
         return PSY.ReserveUp
@@ -65,6 +69,10 @@ end
 
 function get_storage_tech_enum(storage::String)
     IS.deserialize(PSY.StorageTech, storage)
+end
+
+function get_turbine_type_enum(turbine::String)
+    IS.deserialize(PSY.HydroTurbineType, turbine)
 end
 
 function get_winding_group_enum(group_num::String)
@@ -130,9 +138,9 @@ function get_sienna_operation_cost(cost::HydroGenerationCost)
     )
 end
 
-function get_sienna_operation_cost(cost::HydroStorageGenerationCost)
-    get_sienna_operation_cost(cost.value)
-end
+#function get_sienna_operation_cost(cost::HydroStorageGenerationCost)
+#    get_sienna_operation_cost(cost.value)
+#end
 
 function get_sienna_operation_cost(cost::HydroReservoirCost)
     PSY.HydroReservoirCost(

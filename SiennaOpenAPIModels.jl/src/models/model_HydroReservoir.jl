@@ -13,9 +13,11 @@
         inflow=nothing,
         outflow=nothing,
         level_targets=nothing,
-        travel_time=nothing,
         intake_elevation=nothing,
         head_to_volume_factor=nothing,
+        upstream_turbines=nothing,
+        downstream_turbines=nothing,
+        upstream_reservoirs=nothing,
         operation_cost=nothing,
         level_data_type="USABLE_VOLUME",
     )
@@ -29,9 +31,11 @@
     - inflow::Float64
     - outflow::Float64
     - level_targets::Float64
-    - travel_time::Float64
     - intake_elevation::Float64
     - head_to_volume_factor::ValueCurve
+    - upstream_turbines::Vector{Int64}
+    - downstream_turbines::Vector{Int64}
+    - upstream_reservoirs::Vector{Int64}
     - operation_cost::HydroReservoirCost
     - level_data_type::String
 """
@@ -45,9 +49,11 @@ Base.@kwdef mutable struct HydroReservoir <: OpenAPI.APIModel
     inflow::Union{Nothing, Float64} = nothing
     outflow::Union{Nothing, Float64} = nothing
     level_targets::Union{Nothing, Float64} = nothing
-    travel_time::Union{Nothing, Float64} = nothing
     intake_elevation::Union{Nothing, Float64} = nothing
     head_to_volume_factor = nothing # spec type: Union{ Nothing, ValueCurve }
+    upstream_turbines::Union{Nothing, Vector{Int64}} = nothing
+    downstream_turbines::Union{Nothing, Vector{Int64}} = nothing
+    upstream_reservoirs::Union{Nothing, Vector{Int64}} = nothing
     operation_cost = nothing # spec type: Union{ Nothing, HydroReservoirCost }
     level_data_type::Union{Nothing, String} = "USABLE_VOLUME"
 
@@ -61,9 +67,11 @@ Base.@kwdef mutable struct HydroReservoir <: OpenAPI.APIModel
         inflow,
         outflow,
         level_targets,
-        travel_time,
         intake_elevation,
         head_to_volume_factor,
+        upstream_turbines,
+        downstream_turbines,
+        upstream_reservoirs,
         operation_cost,
         level_data_type,
     )
@@ -77,9 +85,11 @@ Base.@kwdef mutable struct HydroReservoir <: OpenAPI.APIModel
             inflow,
             outflow,
             level_targets,
-            travel_time,
             intake_elevation,
             head_to_volume_factor,
+            upstream_turbines,
+            downstream_turbines,
+            upstream_reservoirs,
             operation_cost,
             level_data_type,
         )
@@ -89,20 +99,22 @@ Base.@kwdef mutable struct HydroReservoir <: OpenAPI.APIModel
 end # type HydroReservoir
 
 const _property_types_HydroReservoir = Dict{Symbol, String}(
-    Symbol("id") => "Int64",
-    Symbol("name") => "String",
-    Symbol("available") => "Bool",
-    Symbol("storage_level_limits") => "MinMax",
-    Symbol("initial_level") => "Float64",
-    Symbol("spillage_limits") => "MinMax",
-    Symbol("inflow") => "Float64",
-    Symbol("outflow") => "Float64",
-    Symbol("level_targets") => "Float64",
-    Symbol("travel_time") => "Float64",
-    Symbol("intake_elevation") => "Float64",
-    Symbol("head_to_volume_factor") => "ValueCurve",
-    Symbol("operation_cost") => "HydroReservoirCost",
-    Symbol("level_data_type") => "String",
+    Symbol("id")=>"Int64",
+    Symbol("name")=>"String",
+    Symbol("available")=>"Bool",
+    Symbol("storage_level_limits")=>"MinMax",
+    Symbol("initial_level")=>"Float64",
+    Symbol("spillage_limits")=>"MinMax",
+    Symbol("inflow")=>"Float64",
+    Symbol("outflow")=>"Float64",
+    Symbol("level_targets")=>"Float64",
+    Symbol("intake_elevation")=>"Float64",
+    Symbol("head_to_volume_factor")=>"ValueCurve",
+    Symbol("upstream_turbines")=>"Vector{Int64}",
+    Symbol("downstream_turbines")=>"Vector{Int64}",
+    Symbol("upstream_reservoirs")=>"Vector{Int64}",
+    Symbol("operation_cost")=>"HydroReservoirCost",
+    Symbol("level_data_type")=>"String",
 )
 OpenAPI.property_type(::Type{HydroReservoir}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_HydroReservoir[name]))}
@@ -135,7 +147,6 @@ function OpenAPI.validate_properties(o::HydroReservoir)
     OpenAPI.validate_property(HydroReservoir, Symbol("inflow"), o.inflow)
     OpenAPI.validate_property(HydroReservoir, Symbol("outflow"), o.outflow)
     OpenAPI.validate_property(HydroReservoir, Symbol("level_targets"), o.level_targets)
-    OpenAPI.validate_property(HydroReservoir, Symbol("travel_time"), o.travel_time)
     OpenAPI.validate_property(
         HydroReservoir,
         Symbol("intake_elevation"),
@@ -145,6 +156,21 @@ function OpenAPI.validate_properties(o::HydroReservoir)
         HydroReservoir,
         Symbol("head_to_volume_factor"),
         o.head_to_volume_factor,
+    )
+    OpenAPI.validate_property(
+        HydroReservoir,
+        Symbol("upstream_turbines"),
+        o.upstream_turbines,
+    )
+    OpenAPI.validate_property(
+        HydroReservoir,
+        Symbol("downstream_turbines"),
+        o.downstream_turbines,
+    )
+    OpenAPI.validate_property(
+        HydroReservoir,
+        Symbol("upstream_reservoirs"),
+        o.upstream_reservoirs,
     )
     OpenAPI.validate_property(HydroReservoir, Symbol("operation_cost"), o.operation_cost)
     OpenAPI.validate_property(HydroReservoir, Symbol("level_data_type"), o.level_data_type)

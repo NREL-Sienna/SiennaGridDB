@@ -23,7 +23,7 @@ Base.@kwdef mutable struct StorageCostStartUpOneOf <: OpenAPI.APIModel
 end # type StorageCostStartUpOneOf
 
 const _property_types_StorageCostStartUpOneOf =
-    Dict{Symbol, String}(Symbol("charge") => "Float64", Symbol("discharge") => "Float64")
+    Dict{Symbol, String}(Symbol("charge")=>"Float64", Symbol("discharge")=>"Float64")
 OpenAPI.property_type(::Type{StorageCostStartUpOneOf}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_StorageCostStartUpOneOf[name]))}
 

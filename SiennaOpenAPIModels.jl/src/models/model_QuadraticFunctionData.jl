@@ -34,10 +34,10 @@ Base.@kwdef mutable struct QuadraticFunctionData <: OpenAPI.APIModel
 end # type QuadraticFunctionData
 
 const _property_types_QuadraticFunctionData = Dict{Symbol, String}(
-    Symbol("constant_term") => "Float64",
-    Symbol("function_type") => "String",
-    Symbol("proportional_term") => "Float64",
-    Symbol("quadratic_term") => "Float64",
+    Symbol("constant_term")=>"Float64",
+    Symbol("function_type")=>"String",
+    Symbol("proportional_term")=>"Float64",
+    Symbol("quadratic_term")=>"Float64",
 )
 OpenAPI.property_type(::Type{QuadraticFunctionData}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_QuadraticFunctionData[name]))}

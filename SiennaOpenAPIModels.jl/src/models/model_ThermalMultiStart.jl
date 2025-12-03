@@ -12,7 +12,7 @@
         active_power=nothing,
         reactive_power=nothing,
         rating=nothing,
-        prime_mover_type="OT",
+        prime_mover_type="HY",
         fuel="OTHER",
         active_power_limits=nothing,
         reactive_power_limits=nothing,
@@ -60,7 +60,7 @@ Base.@kwdef mutable struct ThermalMultiStart <: OpenAPI.APIModel
     active_power::Union{Nothing, Float64} = nothing
     reactive_power::Union{Nothing, Float64} = nothing
     rating::Union{Nothing, Float64} = nothing
-    prime_mover_type::Union{Nothing, String} = "OT"
+    prime_mover_type::Union{Nothing, String} = "HY"
     fuel::Union{Nothing, String} = "OTHER"
     active_power_limits = nothing # spec type: Union{ Nothing, MinMax }
     reactive_power_limits = nothing # spec type: Union{ Nothing, MinMax }
@@ -129,28 +129,28 @@ Base.@kwdef mutable struct ThermalMultiStart <: OpenAPI.APIModel
 end # type ThermalMultiStart
 
 const _property_types_ThermalMultiStart = Dict{Symbol, String}(
-    Symbol("id") => "Int64",
-    Symbol("name") => "String",
-    Symbol("available") => "Bool",
-    Symbol("status") => "Bool",
-    Symbol("bus") => "Int64",
-    Symbol("active_power") => "Float64",
-    Symbol("reactive_power") => "Float64",
-    Symbol("rating") => "Float64",
-    Symbol("prime_mover_type") => "String",
-    Symbol("fuel") => "String",
-    Symbol("active_power_limits") => "MinMax",
-    Symbol("reactive_power_limits") => "MinMax",
-    Symbol("ramp_limits") => "UpDown",
-    Symbol("power_trajectory") => "StartUpShutDown",
-    Symbol("time_limits") => "UpDown",
-    Symbol("start_time_limits") => "StartUpStages",
-    Symbol("start_types") => "Int64",
-    Symbol("operation_cost") => "ThermalGenerationCost",
-    Symbol("base_power") => "Float64",
-    Symbol("time_at_status") => "Float64",
-    Symbol("must_run") => "Bool",
-    Symbol("dynamic_injector") => "Any",
+    Symbol("id")=>"Int64",
+    Symbol("name")=>"String",
+    Symbol("available")=>"Bool",
+    Symbol("status")=>"Bool",
+    Symbol("bus")=>"Int64",
+    Symbol("active_power")=>"Float64",
+    Symbol("reactive_power")=>"Float64",
+    Symbol("rating")=>"Float64",
+    Symbol("prime_mover_type")=>"String",
+    Symbol("fuel")=>"String",
+    Symbol("active_power_limits")=>"MinMax",
+    Symbol("reactive_power_limits")=>"MinMax",
+    Symbol("ramp_limits")=>"UpDown",
+    Symbol("power_trajectory")=>"StartUpShutDown",
+    Symbol("time_limits")=>"UpDown",
+    Symbol("start_time_limits")=>"StartUpStages",
+    Symbol("start_types")=>"Int64",
+    Symbol("operation_cost")=>"ThermalGenerationCost",
+    Symbol("base_power")=>"Float64",
+    Symbol("time_at_status")=>"Float64",
+    Symbol("must_run")=>"Bool",
+    Symbol("dynamic_injector")=>"Any",
 )
 OpenAPI.property_type(::Type{ThermalMultiStart}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_ThermalMultiStart[name]))}

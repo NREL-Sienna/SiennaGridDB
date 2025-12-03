@@ -69,16 +69,16 @@ Base.@kwdef mutable struct TModelHVDCLine <: OpenAPI.APIModel
 end # type TModelHVDCLine
 
 const _property_types_TModelHVDCLine = Dict{Symbol, String}(
-    Symbol("active_power_limits_from") => "MinMax",
-    Symbol("active_power_limits_to") => "MinMax",
-    Symbol("active_power_flow") => "Float64",
-    Symbol("arc") => "Int64",
-    Symbol("available") => "Bool",
-    Symbol("c") => "Float64",
-    Symbol("id") => "Int64",
-    Symbol("l") => "Float64",
-    Symbol("name") => "String",
-    Symbol("r") => "Float64",
+    Symbol("active_power_limits_from")=>"MinMax",
+    Symbol("active_power_limits_to")=>"MinMax",
+    Symbol("active_power_flow")=>"Float64",
+    Symbol("arc")=>"Int64",
+    Symbol("available")=>"Bool",
+    Symbol("c")=>"Float64",
+    Symbol("id")=>"Int64",
+    Symbol("l")=>"Float64",
+    Symbol("name")=>"String",
+    Symbol("r")=>"Float64",
 )
 OpenAPI.property_type(::Type{TModelHVDCLine}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_TModelHVDCLine[name]))}

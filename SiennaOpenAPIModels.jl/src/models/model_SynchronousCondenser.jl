@@ -12,7 +12,6 @@
         rating=nothing,
         reactive_power_limits=nothing,
         base_power=nothing,
-        must_run=false,
         active_power_losses=0.0,
         dynamic_injector=nothing,
     )
@@ -25,7 +24,6 @@
     - rating::Float64
     - reactive_power_limits::MinMax
     - base_power::Float64
-    - must_run::Bool
     - active_power_losses::Float64
     - dynamic_injector::Any
 """
@@ -38,7 +36,6 @@ Base.@kwdef mutable struct SynchronousCondenser <: OpenAPI.APIModel
     rating::Union{Nothing, Float64} = nothing
     reactive_power_limits = nothing # spec type: Union{ Nothing, MinMax }
     base_power::Union{Nothing, Float64} = nothing
-    must_run::Union{Nothing, Bool} = false
     active_power_losses::Union{Nothing, Float64} = 0.0
     dynamic_injector::Union{Nothing, Any} = nothing
 
@@ -51,7 +48,6 @@ Base.@kwdef mutable struct SynchronousCondenser <: OpenAPI.APIModel
         rating,
         reactive_power_limits,
         base_power,
-        must_run,
         active_power_losses,
         dynamic_injector,
     )
@@ -64,7 +60,6 @@ Base.@kwdef mutable struct SynchronousCondenser <: OpenAPI.APIModel
             rating,
             reactive_power_limits,
             base_power,
-            must_run,
             active_power_losses,
             dynamic_injector,
         )
@@ -74,17 +69,16 @@ Base.@kwdef mutable struct SynchronousCondenser <: OpenAPI.APIModel
 end # type SynchronousCondenser
 
 const _property_types_SynchronousCondenser = Dict{Symbol, String}(
-    Symbol("id") => "Int64",
-    Symbol("name") => "String",
-    Symbol("available") => "Bool",
-    Symbol("bus") => "Int64",
-    Symbol("reactive_power") => "Float64",
-    Symbol("rating") => "Float64",
-    Symbol("reactive_power_limits") => "MinMax",
-    Symbol("base_power") => "Float64",
-    Symbol("must_run") => "Bool",
-    Symbol("active_power_losses") => "Float64",
-    Symbol("dynamic_injector") => "Any",
+    Symbol("id")=>"Int64",
+    Symbol("name")=>"String",
+    Symbol("available")=>"Bool",
+    Symbol("bus")=>"Int64",
+    Symbol("reactive_power")=>"Float64",
+    Symbol("rating")=>"Float64",
+    Symbol("reactive_power_limits")=>"MinMax",
+    Symbol("base_power")=>"Float64",
+    Symbol("active_power_losses")=>"Float64",
+    Symbol("dynamic_injector")=>"Any",
 )
 OpenAPI.property_type(::Type{SynchronousCondenser}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_SynchronousCondenser[name]))}
@@ -117,7 +111,6 @@ function OpenAPI.validate_properties(o::SynchronousCondenser)
         o.reactive_power_limits,
     )
     OpenAPI.validate_property(SynchronousCondenser, Symbol("base_power"), o.base_power)
-    OpenAPI.validate_property(SynchronousCondenser, Symbol("must_run"), o.must_run)
     OpenAPI.validate_property(
         SynchronousCondenser,
         Symbol("active_power_losses"),

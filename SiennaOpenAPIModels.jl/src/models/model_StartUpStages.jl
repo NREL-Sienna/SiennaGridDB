@@ -29,10 +29,10 @@ Base.@kwdef mutable struct StartUpStages <: OpenAPI.APIModel
 end # type StartUpStages
 
 const _property_types_StartUpStages = Dict{Symbol, String}(
-    Symbol("startup_stages_type") => "String",
-    Symbol("cold") => "Float64",
-    Symbol("hot") => "Float64",
-    Symbol("warm") => "Float64",
+    Symbol("startup_stages_type")=>"String",
+    Symbol("cold")=>"Float64",
+    Symbol("hot")=>"Float64",
+    Symbol("warm")=>"Float64",
 )
 OpenAPI.property_type(::Type{StartUpStages}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_StartUpStages[name]))}

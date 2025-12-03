@@ -37,7 +37,6 @@ const TYPE_TO_TABLE_LIST = [
     HydroPumpTurbine => "storage_units", # Updated from generation_unit
     ThermalMultiStart => "generation_units",
     RenewableNonDispatch => "generation_units",
-    HydroEnergyReservoir => "generation_units", # Assuming this represents the generator part
 ]
 
 const TYPE_TO_TABLE = Dict(TYPE_TO_TABLE_LIST)
@@ -66,7 +65,6 @@ const ALL_PSY_TYPES = [
     PSY.HydroPumpTurbine,
     PSY.ThermalMultiStart,
     PSY.RenewableNonDispatch,
-    PSY.HydroEnergyReservoir,
 ]
 
 const ALL_TYPES = first.(TYPE_TO_TABLE_LIST)
@@ -98,5 +96,4 @@ const ALL_DESERIALIZABLE_TYPES = [
     HydroPumpTurbine,
     ThermalMultiStart,
     RenewableNonDispatch,
-    HydroEnergyReservoir,
 ]

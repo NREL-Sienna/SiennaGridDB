@@ -69,16 +69,16 @@ Base.@kwdef mutable struct TwoTerminalGenericHVDCLine <: OpenAPI.APIModel
 end # type TwoTerminalGenericHVDCLine
 
 const _property_types_TwoTerminalGenericHVDCLine = Dict{Symbol, String}(
-    Symbol("id") => "Int64",
-    Symbol("name") => "String",
-    Symbol("available") => "Bool",
-    Symbol("active_power_flow") => "Float64",
-    Symbol("arc") => "Int64",
-    Symbol("active_power_limits_from") => "MinMax",
-    Symbol("active_power_limits_to") => "MinMax",
-    Symbol("reactive_power_limits_from") => "MinMax",
-    Symbol("reactive_power_limits_to") => "MinMax",
-    Symbol("loss") => "TwoTerminalLoss",
+    Symbol("id")=>"Int64",
+    Symbol("name")=>"String",
+    Symbol("available")=>"Bool",
+    Symbol("active_power_flow")=>"Float64",
+    Symbol("arc")=>"Int64",
+    Symbol("active_power_limits_from")=>"MinMax",
+    Symbol("active_power_limits_to")=>"MinMax",
+    Symbol("reactive_power_limits_from")=>"MinMax",
+    Symbol("reactive_power_limits_to")=>"MinMax",
+    Symbol("loss")=>"TwoTerminalLoss",
 )
 OpenAPI.property_type(::Type{TwoTerminalGenericHVDCLine}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_TwoTerminalGenericHVDCLine[name]))}
