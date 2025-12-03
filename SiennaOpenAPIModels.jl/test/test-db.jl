@@ -126,9 +126,8 @@ end
 end
 
 # TODO: Add 118-bus to PSCB instead.
-#=
 @testset "118_bus to DB" begin
-    # Get 118_bus_rt.json from directory of this file
+    # Get 118_bus.json from directory of this file
     sys = PSY.System(joinpath(dirname(@__FILE__), "118_bus.json"))
     db = SQLite.DB()
     SiennaOpenAPIModels.make_sqlite!(db)
@@ -136,12 +135,10 @@ end
     acbuses =
         Tables.columntable(DBInterface.execute(db, "SELECT * FROM balancing_topologies"))
     @test length(acbuses.id) == 118
-
     copy_of_sys = SiennaOpenAPIModels.make_system_from_db(db)
     @test copy_of_sys isa PSY.System
     test_component_each_type(sys, copy_of_sys)
 end
-=#
 
 @testset "RTS-System to DB" begin
     sys = PowerSystemCaseBuilder.build_system(
