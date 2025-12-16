@@ -119,8 +119,6 @@ include("json_to_sienna/static_injections.jl")
 include("json_to_sienna/branch.jl")
 include("json_to_sienna/service.jl")
 
-include("dbinterface/value_curve.jl")
-
 include("dbinterface/sqlite.jl")
 include("dbinterface/time_series.jl")
 

@@ -74,6 +74,20 @@ function ignoreattribute(
     return in(Symbol(col_name), schema.names)
 end
 
+function ignoreattribute(
+    ::Type{HydroReservoir},
+    table_name::AbstractString,
+    schema::Tables.Schema,
+    k::AbstractString,
+)
+    # These fields are stored in hydro_reservoir_connections table, not as attributes
+    if k in ("upstream_turbines", "downstream_turbines", "upstream_reservoirs")
+        return true
+    end
+    col_name = get(OPENAPI_FIELDS_TO_DB, (table_name, k), k)
+    return in(Symbol(col_name), schema.names)
+end
+
 function get_row(
     ::AbstractString,
     ::Tables.Schema,
@@ -194,6 +208,65 @@ function send_table_to_db!(::Type{AreaInterchange}, db, components, ids)
     end
 end
 
+function send_table_to_db!(::Type{HydroReservoir}, db, components, ids)
+    table_name = "hydro_reservoir"
+    obj_type = "HydroReservoir"
+    schema = TABLE_SCHEMAS[table_name]
+    table_statement = prepare_schema_insert(db, table_name, schema)
+    entity_statement = prepare_entity_insert(db, table_name, obj_type)
+    attribute_statement = prepare_attributes_insert(db)
+    connection_statement = DBInterface.prepare(
+        db,
+        "INSERT INTO hydro_reservoir_connections (source_id, sink_id) VALUES (?, ?)",
+    )
+
+    for component in components
+        uuid = IS.get_uuid(component)
+        openapi_component = psy2openapi(component, ids)
+        row = (openapi_component.id, openapi_component.name)
+        DBInterface.execute(entity_statement, (openapi_component.id,))
+        DBInterface.execute(table_statement, row)
+        insert_attributes!(
+            HydroReservoir,
+            table_name,
+            schema,
+            attribute_statement,
+            openapi_component,
+        )
+        insert_uuid!(attribute_statement, table_name, openapi_component.id, uuid)
+
+        # Insert connections: downstream_turbines (water flows from reservoir to turbine)
+        if !isnothing(openapi_component.downstream_turbines)
+            for turbine_id in openapi_component.downstream_turbines
+                DBInterface.execute(
+                    connection_statement,
+                    (openapi_component.id, turbine_id),
+                )
+            end
+        end
+
+        # Insert connections: upstream_turbines (water flows from turbine to reservoir, pumping)
+        if !isnothing(openapi_component.upstream_turbines)
+            for turbine_id in openapi_component.upstream_turbines
+                DBInterface.execute(
+                    connection_statement,
+                    (turbine_id, openapi_component.id),
+                )
+            end
+        end
+
+        # Insert connections: upstream_reservoirs (water flows from upstream reservoir to this one)
+        if !isnothing(openapi_component.upstream_reservoirs)
+            for upstream_reservoir_id in openapi_component.upstream_reservoirs
+                DBInterface.execute(
+                    connection_statement,
+                    (upstream_reservoir_id, openapi_component.id),
+                )
+            end
+        end
+    end
+end
+
 function send_table_to_db!(::Type{T}, db, components, ids) where {T}
     table_name = TYPE_TO_TABLE[T]
     obj_type = last(split(string(T), "."))
@@ -287,6 +360,7 @@ end
 function add_components_to_sys!(
     ::Type{OpenAPI_T},
     sys::PSY.System,
+    db,
     table_name,
     rows,
     attributes::Dict{Int64, Dict{String, Any}},
@@ -308,6 +382,7 @@ end
 function add_components_to_sys!(
     ::Type{AreaInterchange},
     sys::PSY.System,
+    db,
     table_name,
     rows,
     attributes::Dict{Int64, Dict{String, Any}},
@@ -329,6 +404,77 @@ function add_components_to_sys!(
             extra_attributes,
         )
         openapi_obj = OpenAPI.from_json(AreaInterchange, dict)
+        sienna_obj = openapi2psy(openapi_obj, resolver)
+        if haskey(dict, "uuid")
+            IS.set_uuid!(IS.get_internal(sienna_obj), Base.UUID(dict["uuid"]))
+        end
+        PowerSystems.add_component!(sys, sienna_obj)
+        resolver.id2uuid[row.id] = IS.get_uuid(sienna_obj)
+    end
+end
+
+function add_components_to_sys!(
+    ::Type{HydroReservoir},
+    sys::PSY.System,
+    db,
+    table_name,
+    rows,
+    attributes::Dict{Int64, Dict{String, Any}},
+    resolver::Resolver,
+)
+    # Prepared statements for connection queries
+    downstream_turbines_stmt = DBInterface.prepare(
+        db,
+        """
+        SELECT hrc.sink_id FROM hydro_reservoir_connections hrc
+        JOIN entities e ON hrc.sink_id = e.id
+        WHERE hrc.source_id = ? AND e.entity_table IN ('generation_units', 'storage_units')
+        """,
+    )
+    upstream_turbines_stmt = DBInterface.prepare(
+        db,
+        """
+        SELECT hrc.source_id FROM hydro_reservoir_connections hrc
+        JOIN entities e ON hrc.source_id = e.id
+        WHERE hrc.sink_id = ? AND e.entity_table IN ('generation_units', 'storage_units')
+        """,
+    )
+    upstream_reservoirs_stmt = DBInterface.prepare(
+        db,
+        """
+        SELECT hrc.source_id FROM hydro_reservoir_connections hrc
+        JOIN entities e ON hrc.source_id = e.id
+        WHERE hrc.sink_id = ? AND e.entity_table = 'hydro_reservoir'
+        """,
+    )
+
+    for row in rows
+        extra_attributes = get(attributes, row.id, Dict{String, Any}())
+
+        # Get connections from the connections table using prepared statements
+        downstream_turbines = Int64[
+            r.sink_id for r in DBInterface.execute(downstream_turbines_stmt, (row.id,))
+        ]
+        upstream_turbines = Int64[
+            r.source_id for r in DBInterface.execute(upstream_turbines_stmt, (row.id,))
+        ]
+        upstream_reservoirs = Int64[
+            r.source_id for r in DBInterface.execute(upstream_reservoirs_stmt, (row.id,))
+        ]
+
+        dict = merge(
+            Dict(
+                get(DB_TO_OPENAPI_FIELDS, (table_name, string(k)), string(k)) =>
+                    coalesce(v, nothing) for (k, v) in zip(propertynames(row), row)
+            ),
+            Dict{String, Any}(
+                "downstream_turbines" => downstream_turbines,
+                "upstream_turbines" => upstream_turbines,
+                "upstream_reservoirs" => upstream_reservoirs,
+            ),
+            extra_attributes,
+        )
+        openapi_obj = OpenAPI.from_json(HydroReservoir, dict)
         sienna_obj = openapi2psy(openapi_obj, resolver)
         if haskey(dict, "uuid")
             IS.set_uuid!(IS.get_internal(sienna_obj), Base.UUID(dict["uuid"]))
@@ -379,7 +525,8 @@ function db2sys!(sys::PSY.System, db, resolver::Resolver)
         # Query the specific table joining with entities to filter by type
         query = get_query_for_table_name(table_name)
         rows = DBInterface.execute(db, query, (obj_type,))
-        add_components_to_sys!(OPENAPI_T, sys, table_name, rows, attributes, resolver)
+        # HydroReservoir needs db to query connections table
+        add_components_to_sys!(OPENAPI_T, sys, db, table_name, rows, attributes, resolver)
         row_counts[table_name] =
             get(row_counts, table_name, 0) + (length(resolver.id2uuid) - all_entities)
         all_entities = length(resolver.id2uuid)
@@ -391,7 +538,8 @@ function db2sys!(sys::PSY.System, db, resolver::Resolver)
            table_name == "fuels" ||
            table_name == "entity_types" ||
            table_name == "time_series_associations" ||
-           table_name == "static_time_series"
+           table_name == "static_time_series" ||
+           table_name == "hydro_reservoir_connections"
             continue
         end
         result = DBInterface.execute(db, "SELECT count(*) from $table_name")

@@ -178,8 +178,9 @@ CREATE TABLE hydro_reservoir(
 );
 
 CREATE TABLE hydro_reservoir_connections(
-    turbine_id integer NOT NULL REFERENCES entities(id),
-    reservoir_id integer NOT NULL REFERENCES hydro_reservoir(id)
+    source_id integer NOT NULL REFERENCES entities(id),
+    sink_id integer NOT NULL REFERENCES entities(id),
+    PRIMARY KEY (source_id, sink_id)
 );
 
 -- NOTE: The purpose of this table is to capture technologies available for

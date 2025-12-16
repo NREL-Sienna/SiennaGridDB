@@ -83,7 +83,7 @@ const TABLE_SCHEMAS = Dict(
     ),
     "hydro_reservoir" => Tables.Schema(["id", "name"], [Int64, String]),
     "hydro_reservoir_connections" =>
-        Tables.Schema(["turbine_id", "reservoir_id"], [Int64, Int64]),
+        Tables.Schema(["source_id", "sink_id"], [Int64, Int64]),
     "supply_technologies" => Tables.Schema(
         ["id", "prime_mover", "fuel", "area", "balancing_topology", "scenario"],
         [

@@ -202,3 +202,55 @@ SELECT CASE
     END;
 
 END;
+
+-- Enforce that a turbine can have at most 1 upstream reservoir
+-- (i.e., at most 1 row where sink is a turbine and source is a reservoir)
+CREATE TRIGGER IF NOT EXISTS enforce_turbine_single_upstream_reservoir
+BEFORE INSERT ON hydro_reservoir_connections
+WHEN (
+    -- Check if sink is a turbine (generation_units or storage_units)
+    SELECT entity_table FROM entities WHERE id = NEW.sink_id
+) IN ('generation_units', 'storage_units')
+AND (
+    -- Check if source is a reservoir
+    SELECT entity_table FROM entities WHERE id = NEW.source_id
+) = 'hydro_reservoir'
+BEGIN
+    SELECT CASE
+        WHEN EXISTS (
+            SELECT 1 FROM hydro_reservoir_connections hrc
+            JOIN entities e_source ON hrc.source_id = e_source.id
+            WHERE hrc.sink_id = NEW.sink_id
+            AND e_source.entity_table = 'hydro_reservoir'
+        ) THEN RAISE(
+            ABORT,
+            'Turbine already has an upstream reservoir. Each turbine can have at most 1 upstream reservoir.'
+        )
+    END;
+END;
+
+-- Enforce that a turbine can have at most 1 downstream reservoir
+-- (i.e., at most 1 row where source is a turbine and sink is a reservoir)
+CREATE TRIGGER IF NOT EXISTS enforce_turbine_single_downstream_reservoir
+BEFORE INSERT ON hydro_reservoir_connections
+WHEN (
+    -- Check if source is a turbine (generation_units or storage_units)
+    SELECT entity_table FROM entities WHERE id = NEW.source_id
+) IN ('generation_units', 'storage_units')
+AND (
+    -- Check if sink is a reservoir
+    SELECT entity_table FROM entities WHERE id = NEW.sink_id
+) = 'hydro_reservoir'
+BEGIN
+    SELECT CASE
+        WHEN EXISTS (
+            SELECT 1 FROM hydro_reservoir_connections hrc
+            JOIN entities e_sink ON hrc.sink_id = e_sink.id
+            WHERE hrc.source_id = NEW.source_id
+            AND e_sink.entity_table = 'hydro_reservoir'
+        ) THEN RAISE(
+            ABORT,
+            'Turbine already has a downstream reservoir. Each turbine can have at most 1 downstream reservoir.'
+        )
+    END;
+END;
