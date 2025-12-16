@@ -73,7 +73,7 @@ const TABLE_SCHEMAS = Dict(
             Int64,
             String,
             String,
-            Float64,
+            Union{Float64, Nothing},
             Int64,
             Union{Float64, Nothing},
             Union{Float64, Nothing},

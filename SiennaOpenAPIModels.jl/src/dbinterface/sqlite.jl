@@ -97,19 +97,16 @@ function get_row(
     ::AbstractString,
     ::Tables.Schema,
     c::HydroPumpTurbine,
-    c_original::PSY.HydroPumpTurbine,
+    ::PSY.HydroPumpTurbine,
 )
     return (
         c.id,
         c.name,
-        c_original.head_reservoir.head_to_volume_factor(
-            c_original.head_reservoir.storage_level_limits.max,
-        ) *
-        c_original.conversion_factor *
-        PSY.get_base_power(c_original),
+        c.prime_mover_type,
+        nothing,  # max_capacity - storage capacity is now in HydroReservoir
         c.bus,
-        c.efficiency.pump,
-        c.efficiency.turbine,
+        c.efficiency.pump,     # efficiency_up (pumping water up)
+        c.efficiency.turbine,  # efficiency_down (water going down through turbine)
         c.rating,
         c.base_power,
     )
