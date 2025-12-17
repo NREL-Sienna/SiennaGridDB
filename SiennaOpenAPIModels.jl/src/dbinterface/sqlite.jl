@@ -23,7 +23,7 @@ function get_row_field(c::OpenAPI.APIModel, table_name::AbstractString, col_name
     end
 end
 
-function ignoreattribute(
+function _ignoreattribute(
     ::Type{T},
     table_name::AbstractString,
     schema::Tables.Schema,
@@ -41,7 +41,7 @@ function insert_attributes!(
     c::OpenAPI.APIModel,
 ) where {T <: OpenAPI.APIModel}
     for (k, v) in JSON.parse(OpenAPI.to_json(c))
-        if !ignoreattribute(T, table_name, schema, k)
+        if !_ignoreattribute(T, table_name, schema, k)
             DBInterface.execute(attribute_statement, (c.id, "FromSienna", k, JSON.json(v)))
         end
     end
@@ -61,7 +61,7 @@ function get_row(
     )
 end
 
-function ignoreattribute(
+function _ignoreattribute(
     ::Type{EnergyReservoirStorage},
     table_name::AbstractString,
     schema::Tables.Schema,
@@ -74,7 +74,7 @@ function ignoreattribute(
     return in(Symbol(col_name), schema.names)
 end
 
-function ignoreattribute(
+function _ignoreattribute(
     ::Type{HydroReservoir},
     table_name::AbstractString,
     schema::Tables.Schema,
