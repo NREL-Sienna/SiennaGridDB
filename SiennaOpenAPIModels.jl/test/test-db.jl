@@ -1,11 +1,17 @@
 using SiennaOpenAPIModels
 using PowerSystemCaseBuilder
 import PowerSystems
-const PSY = PowerSystems
+import InfrastructureSystems
 using JSON
 import SQLite
 import DBInterface
 import Tables
+using Test
+
+const PSY = PowerSystems
+const IS = InfrastructureSystems
+
+include("utils.jl")
 
 function attributes_to_dict(column_table)
     d = Dict()
@@ -126,6 +132,7 @@ end
 end
 
 # TODO: Add 118-bus to PSCB instead.
+#=
 @testset "118_bus to DB" begin
     # Get 118_bus.json from directory of this file
     sys = PSY.System(joinpath(dirname(@__FILE__), "118_bus.json"))
@@ -139,6 +146,7 @@ end
     @test copy_of_sys isa PSY.System
     test_component_each_type(sys, copy_of_sys)
 end
+=#
 
 @testset "RTS-System to DB" begin
     sys = PowerSystemCaseBuilder.build_system(

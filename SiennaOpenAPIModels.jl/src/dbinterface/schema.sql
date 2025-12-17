@@ -155,7 +155,7 @@ CREATE TABLE storage_units (
     name text NOT NULL,
     prime_mover text NOT NULL REFERENCES prime_mover_types(name),
     -- Energy capacity
-    max_capacity real NOT NULL,
+    max_capacity real,
     balancing_topology integer NOT NULL REFERENCES balancing_topologies (id),
     efficiency_up real CHECK (
         efficiency_up > 0
@@ -178,8 +178,9 @@ CREATE TABLE hydro_reservoir(
 );
 
 CREATE TABLE hydro_reservoir_connections(
-    turbine_id integer NOT NULL REFERENCES entities(id),
-    reservoir_id integer NOT NULL REFERENCES hydro_reservoir(id)
+    source_id integer NOT NULL REFERENCES entities(id),
+    sink_id integer NOT NULL REFERENCES entities(id),
+    PRIMARY KEY (source_id, sink_id)
 );
 
 -- NOTE: The purpose of this table is to capture technologies available for
