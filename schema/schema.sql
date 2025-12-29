@@ -22,8 +22,6 @@ DROP TABLE IF EXISTS transmission_lines;
 
 DROP TABLE IF EXISTS planning_regions;
 
-DROP TABLE IF EXISTS time_series;
-
 DROP TABLE IF EXISTS transmission_interchanges;
 
 DROP TABLE IF EXISTS entities;
@@ -157,7 +155,7 @@ CREATE TABLE storage_units (
     name text NOT NULL,
     prime_mover text NOT NULL REFERENCES prime_mover_types(name),
     -- Energy capacity
-    max_capacity real NOT NULL CHECK (max_capacity > 0),
+    max_capacity real,
     balancing_topology integer NOT NULL REFERENCES balancing_topologies (id),
     efficiency_up real CHECK (
         efficiency_up > 0
@@ -169,7 +167,7 @@ CREATE TABLE storage_units (
     ) DEFAULT 1.0,
     rating real NOT NULL DEFAULT 1 CHECK (rating > 0),
     base_power real NOT NULL CHECK (base_power > 0),
-    CHECK (base_power >= rating),
+    --CHECK (base_power >= rating),
     UNIQUE(name)
 ) strict;
 
@@ -180,8 +178,9 @@ CREATE TABLE hydro_reservoir(
 );
 
 CREATE TABLE hydro_reservoir_connections(
-    turbine_id integer NOT NULL REFERENCES generation_units(id),
-    reservoir_id integer NOT NULL REFERENCES hydro_reservoir(id)
+    source_id integer NOT NULL REFERENCES entities(id),
+    sink_id integer NOT NULL REFERENCES entities(id),
+    PRIMARY KEY (source_id, sink_id)
 );
 
 -- NOTE: The purpose of this table is to capture technologies available for
@@ -223,6 +222,7 @@ CREATE TABLE operational_data (
     FOREIGN KEY (entity_id) REFERENCES entities(id)
 );
 
+
 -- NOTE: Attributes are additional parameters that can be linked to entities.
 -- The main purpose of this is when there is an important field that is not
 -- capture on the entity table that should exist on the model. Example of this
@@ -258,22 +258,34 @@ CREATE TABLE supplemental_attributes_association (
     FOREIGN KEY (attribute_id) REFERENCES supplemental_attributes (id)
 ) strict;
 
-CREATE TABLE time_series (
+CREATE TABLE time_series_associations(
     id INTEGER PRIMARY KEY,
     time_series_uuid TEXT NOT NULL,
     time_series_type TEXT NOT NULL,
     initial_timestamp TEXT NOT NULL,
-    resolution INTEGER NOT NULL,
-    horizon INTEGER,
-    INTERVAL INTEGER,
+    resolution TEXT NOT NULL,
+    horizon TEXT,
+    "interval" TEXT,
     window_count INTEGER,
     length INTEGER,
-    scaling_multiplier TEXT,
-    -- enum: ["max_active_power", ]
     name TEXT NOT NULL,
-    owner_id INTEGER NOT NULL,
-    features TEXT
+    owner_id INTEGER NOT NULL REFERENCES entities(id),
+    owner_type TEXT NOT NULL,
+    owner_category TEXT NOT NULL,
+    features TEXT NOT NULL,
+    scaling_factor_multiplier TEXT NULL,
+    metadata_uuid TEXT NOT NULL,
+    units TEXT NULL
 );
+CREATE UNIQUE INDEX "by_c_n_tst_features" ON "time_series_associations" (
+    "owner_id",
+    "time_series_type",
+    "name",
+    "resolution",
+    "features"
+);
+CREATE INDEX "by_ts_uuid" ON "time_series_associations" ("time_series_uuid");
+
 
 CREATE TABLE loads (
     id integer PRIMARY KEY REFERENCES entities (id),
@@ -283,14 +295,9 @@ CREATE TABLE loads (
     FOREIGN KEY(balancing_topology) REFERENCES balancing_topologies (id)
 );
 
--- From Sienna docs:
--- A static time series data is a single column of data where each time period has
--- a single value assigned to a component field, such as its maximum active power.
--- This data commonly is obtained from historical information or the realization
--- of a time-varying quantity.
 CREATE TABLE static_time_series (
     id integer PRIMARY KEY,
-    uuid text NULL UNIQUE,
-    timestamp datetime NOT NULL,
+    uuid text NULL,
+    idx integer NOT NULL,
     value real NOT NULL
 );

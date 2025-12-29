@@ -110,7 +110,7 @@ const TABLE_SCHEMAS = Dict(
             "ramp_up",
             "ramp_down",
             "operational_cost",
-            "operational_cost_type",
+            # Note: operational_cost_type is a generated column, not included here
         ],
         [
             Int64,
@@ -122,16 +122,17 @@ const TABLE_SCHEMAS = Dict(
             Float64,
             Float64,
             Union{String, Nothing},
-            Union{String, Nothing},
         ],
     ),
     "attributes" => Tables.Schema(
-        ["id", "entity_id", "TYPE", "name", "value", "json_type"],
-        [Int64, Int64, String, String, String, String],
+        ["id", "entity_id", "TYPE", "name", "value"],
+        # Note: json_type is a generated column, not included here
+        [Int64, Int64, String, String, String],
     ),
     "supplemental_attributes" => Tables.Schema(
-        ["id", "TYPE", "value", "json_type"],
-        [Int64, String, String, String],
+        ["id", "TYPE", "value"],
+        # Note: json_type is a generated column, not included here
+        [Int64, String, String],
     ),
     "supplemental_attributes_association" =>
         Tables.Schema(["attribute_id", "entity_id"], [Int64, Int64]),
