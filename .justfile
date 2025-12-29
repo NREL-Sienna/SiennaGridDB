@@ -1,9 +1,5 @@
 db-name := "griddb-example.sqlite"
-query-file := "queries.sql"
-data := "dummy_data.sql"
 sqlite-options := "--table"
-tmpdir := `mktemp -d`
-SQLITE_REQUIRED_VERSION := "3.35.0"
 sqlite-command := "sqlite3"
 
 assert-sqlite-version:
@@ -12,21 +8,17 @@ assert-sqlite-version:
 create-schema db=db-name: assert-sqlite-version
     @echo "Creating schema"
     @touch {{db}} && rm {{db}}
-    @{{sqlite-command}} {{db}} < schema.sql
+    @{{sqlite-command}} {{db}} < schema/schema.sql
 
 create-triggers db=db-name: create-schema
     @echo "Adding triggers to schema"
-    @{{sqlite-command}} {{db}} < triggers.sql
+    @{{sqlite-command}} {{db}} < schema/triggers.sql
 
 create-views db=db-name: create-schema
     @echo "Adding views to schema"
-    @{{sqlite-command}} {{db}} < views.sql
+    @{{sqlite-command}} {{db}} < schema/views.sql
 
-load-dummy-data db=db-name: create-schema create-triggers create-views
-    @echo "Loading dummy data"
-    @{{sqlite-command}} {{db}} < {{data}}
-
-new-db db=db-name: load-dummy-data
+new-db db=db-name: create-schema create-triggers create-views
     @{{sqlite-command}} {{sqlite-options}} {{db}}
 
 query db=db-name:

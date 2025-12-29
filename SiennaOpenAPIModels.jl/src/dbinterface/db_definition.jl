@@ -101,12 +101,14 @@ const TABLE_SCHEMAS = Dict(
     ),
     # NOTE: operational_data is now a view (not a table), defined in views.sql
     "attributes" => Tables.Schema(
-        ["id", "entity_id", "TYPE", "name", "value", "json_type"],
-        [Int64, Int64, String, String, String, String],
+        ["id", "entity_id", "TYPE", "name", "value"],
+        # Note: json_type is a generated column, not included here
+        [Int64, Int64, String, String, String],
     ),
     "supplemental_attributes" => Tables.Schema(
-        ["id", "TYPE", "value", "json_type"],
-        [Int64, String, String, String],
+        ["id", "TYPE", "value"],
+        # Note: json_type is a generated column, not included here
+        [Int64, String, String],
     ),
     "supplemental_attributes_association" =>
         Tables.Schema(["attribute_id", "entity_id"], [Int64, Int64]),
