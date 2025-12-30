@@ -268,13 +268,29 @@ function get_row(
         c.id,
         c.name,
         c.prime_mover_type,
-        c.storage_capacity,
+        c.storage_technology_type,
         c.bus,
-        c.efficiency.in,
-        c.efficiency.out,
         c.rating,
         c.base_power,
+        c.storage_capacity,
+        c.storage_level_limits !== nothing ? c.storage_level_limits.min : 0.0,
+        c.storage_level_limits !== nothing ? c.storage_level_limits.max : 1.0,
+        c.initial_storage_capacity_level,
+        c.input_active_power_limits !== nothing ? c.input_active_power_limits.min : 0.0,
+        c.input_active_power_limits !== nothing ? c.input_active_power_limits.max : 0.0,
+        c.output_active_power_limits !== nothing ? c.output_active_power_limits.min : 0.0,
+        c.output_active_power_limits !== nothing ? c.output_active_power_limits.max : 0.0,
+        c.efficiency.in,
+        c.efficiency.out,
+        c.reactive_power_limits !== nothing ? c.reactive_power_limits.min : nothing,
+        c.reactive_power_limits !== nothing ? c.reactive_power_limits.max : nothing,
+        c.active_power,
+        c.reactive_power,
         c.available,
+        c.conversion_factor,
+        c.storage_target,
+        c.cycle_limits,
+        c.operation_cost !== nothing ? JSON.json(c.operation_cost) : nothing,
     )
 end
 
@@ -511,6 +527,17 @@ const NESTED_FIELDS = Dict(
     "ramp_limits" => [("up", "ramp_up"), ("down", "ramp_down")],
     "time_limits" => [("up", "min_up_time"), ("down", "min_down_time")],
     "outflow_limits" => [("min", "outflow_limits_min"), ("max", "outflow_limits_max")],
+    "storage_level_limits" =>
+        [("min", "storage_level_limits_min"), ("max", "storage_level_limits_max")],
+    "input_active_power_limits" => [
+        ("min", "input_active_power_limits_min"),
+        ("max", "input_active_power_limits_max"),
+    ],
+    "output_active_power_limits" => [
+        ("min", "output_active_power_limits_min"),
+        ("max", "output_active_power_limits_max"),
+    ],
+    "efficiency" => [("in", "efficiency_in"), ("out", "efficiency_out")],
 )
 
 const JSON_COLUMNS = Set(["operation_cost"])
@@ -574,24 +601,8 @@ function make_openapi_dict(
     row,
     extra_attributes::Dict{String, Any},
 )
-    efficiency_dict = if !isnothing(row.efficiency_up) && !isnothing(row.efficiency_down)
-        Dict{String, Any}(
-            "efficiency" => Dict{String, Any}(
-                "in" => row.efficiency_up,
-                "out" => row.efficiency_down,
-            ),
-        )
-    else
-        Dict{String, Any}()
-    end
-    return merge(
-        Dict(
-            get(DB_TO_OPENAPI_FIELDS, (table_name, string(k)), string(k)) =>
-                coalesce(v, nothing) for (k, v) in zip(propertynames(row), row)
-        ),
-        efficiency_dict,
-        extra_attributes,
-    )
+    dict = _build_openapi_dict(table_name, row)
+    return merge(dict, extra_attributes)
 end
 
 function add_components_to_sys!(

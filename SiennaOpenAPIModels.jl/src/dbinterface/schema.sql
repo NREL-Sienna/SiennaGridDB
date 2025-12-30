@@ -236,25 +236,40 @@ CREATE TABLE hydro_generators (
 -- NOTE: The purpose of this table is to capture data of **existing storage units only**.
 -- Table of energy storage units (including PHES or other kinds),
 CREATE TABLE storage_units (
-    id integer PRIMARY KEY REFERENCES entities (id),
-    name text NOT NULL,
-    prime_mover text NOT NULL REFERENCES prime_mover_types(name),
-    -- Energy capacity
-    max_capacity real,
-    balancing_topology integer NOT NULL REFERENCES balancing_topologies (id),
-    efficiency_up real CHECK (
-        efficiency_up > 0
-        AND efficiency_up <= 1.0
-    ) DEFAULT 1.0,
-    efficiency_down real CHECK (
-        efficiency_down > 0
-        AND efficiency_down <= 1.0
-    ) DEFAULT 1.0,
-    rating real NOT NULL DEFAULT 1 CHECK (rating > 0),
-    base_power real NOT NULL CHECK (base_power > 0),
+    id INTEGER PRIMARY KEY REFERENCES entities (id),
+    name TEXT NOT NULL UNIQUE,
+    prime_mover TEXT NOT NULL REFERENCES prime_mover_types(name),
+    storage_technology_type TEXT NOT NULL,
+    balancing_topology INTEGER NOT NULL REFERENCES balancing_topologies (id),
+    rating REAL NOT NULL CHECK (rating >= 0),
+    base_power REAL NOT NULL CHECK (base_power > 0),
+    -- Storage capacity and limits:
+    storage_capacity REAL NOT NULL CHECK (storage_capacity >= 0),
+    storage_level_limits_min REAL NOT NULL DEFAULT 0.0 CHECK (storage_level_limits_min >= 0),
+    storage_level_limits_max REAL NOT NULL DEFAULT 1.0 CHECK (storage_level_limits_max >= 0),
+    initial_storage_capacity_level REAL NOT NULL CHECK (initial_storage_capacity_level >= 0),
+    -- Power limits (input = charging, output = discharging):
+    input_active_power_limits_min REAL NOT NULL DEFAULT 0.0 CHECK (input_active_power_limits_min >= 0),
+    input_active_power_limits_max REAL NOT NULL CHECK (input_active_power_limits_max >= 0),
+    output_active_power_limits_min REAL NOT NULL DEFAULT 0.0 CHECK (output_active_power_limits_min >= 0),
+    output_active_power_limits_max REAL NOT NULL CHECK (output_active_power_limits_max >= 0),
+    -- Efficiency (in = charging, out = discharging):
+    efficiency_in REAL NOT NULL DEFAULT 1.0 CHECK (efficiency_in > 0 AND efficiency_in <= 1.0),
+    efficiency_out REAL NOT NULL DEFAULT 1.0 CHECK (efficiency_out > 0 AND efficiency_out <= 1.0),
+    -- Reactive power:
+    reactive_power_limits_min REAL NULL,
+    reactive_power_limits_max REAL NULL,
+    -- Initial setpoints:
+    active_power REAL NOT NULL DEFAULT 0.0,
+    reactive_power REAL NOT NULL DEFAULT 0.0,
+    -- Status:
     available BOOLEAN NOT NULL DEFAULT TRUE,
-    --CHECK (base_power >= rating),
-    UNIQUE(name)
+    -- Storage-specific with defaults:
+    conversion_factor REAL NOT NULL DEFAULT 1.0 CHECK (conversion_factor > 0),
+    storage_target REAL NOT NULL DEFAULT 0.0,
+    cycle_limits INTEGER NOT NULL DEFAULT 10000 CHECK (cycle_limits > 0),
+    -- Cost:
+    operation_cost JSON NULL
 );
 
 CREATE TABLE hydro_reservoir(
