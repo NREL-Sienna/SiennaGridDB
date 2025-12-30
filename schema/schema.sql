@@ -6,7 +6,11 @@
 --      3. User friendly over peformance, but consider performance always,
 -- WARNING: This script should only be used while testing the schema and should not
 -- be applied to existing dataset since it drops all the information it has.
-DROP TABLE IF EXISTS generation_units;
+DROP TABLE IF EXISTS thermal_generators;
+
+DROP TABLE IF EXISTS renewable_generators;
+
+DROP TABLE IF EXISTS hydro_generators;
 
 DROP TABLE IF EXISTS storage_units;
 
@@ -27,8 +31,6 @@ DROP TABLE IF EXISTS transmission_interchanges;
 DROP TABLE IF EXISTS entities;
 
 DROP TABLE IF EXISTS time_series_associations;
-
-DROP TABLE IF EXISTS operational_data;
 
 DROP TABLE IF EXISTS attributes;
 
@@ -134,19 +136,95 @@ CREATE TABLE transmission_interchanges (
     max_flow_to real NOT NULL
 ) strict;
 
--- NOTE: The purpose of this table is to capture data of **existing units only**.
--- Table of generation units
-CREATE TABLE generation_units (
-    id integer PRIMARY KEY REFERENCES entities (id),
-    name text NOT NULL,
-    prime_mover text NOT NULL REFERENCES prime_mover_types(name),
-    fuel text NULL REFERENCES fuels(name),
-    balancing_topology integer NOT NULL REFERENCES balancing_topologies (id),
-    rating real NOT NULL CHECK (rating >= 0),
-    base_power real NOT NULL CHECK (base_power > 0),
-    --CHECK (base_power >= rating),
-    UNIQUE (name)
-) strict;
+-- NOTE: The purpose of these tables is to capture data of **existing units only**.
+
+-- Table of thermal generation units (ThermalStandard, ThermalMultiStart)
+CREATE TABLE thermal_generators (
+    id INTEGER PRIMARY KEY REFERENCES entities (id),
+    name TEXT NOT NULL UNIQUE,
+    prime_mover TEXT NOT NULL REFERENCES prime_mover_types(name),
+    fuel TEXT NOT NULL DEFAULT 'OTHER' REFERENCES fuels(name),
+    balancing_topology INTEGER NOT NULL REFERENCES balancing_topologies (id),
+    rating REAL NOT NULL CHECK (rating >= 0),
+    base_power REAL NOT NULL CHECK (base_power > 0),
+    -- Power limits (required for ThermalStandard):
+    active_power_limits_min REAL NOT NULL DEFAULT 0.0 CHECK (active_power_limits_min >= 0),
+    active_power_limits_max REAL NOT NULL CHECK (active_power_limits_max >= 0),
+    reactive_power_limits_min REAL NULL,
+    reactive_power_limits_max REAL NULL,
+    -- Ramp limits (MW/min):
+    ramp_up REAL NULL CHECK (ramp_up >= 0),
+    ramp_down REAL NULL CHECK (ramp_down >= 0),
+    -- Time limits (hours):
+    min_up_time REAL NULL CHECK (min_up_time >= 0),
+    min_down_time REAL NULL CHECK (min_down_time >= 0),
+    -- Operational flags:
+    must_run BOOLEAN NOT NULL DEFAULT FALSE,
+    available BOOLEAN NOT NULL DEFAULT TRUE,
+    status BOOLEAN NOT NULL DEFAULT FALSE,
+    -- Initial setpoints:
+    active_power REAL NOT NULL DEFAULT 0.0,
+    reactive_power REAL NOT NULL DEFAULT 0.0,
+    -- Cost (complex structure, stored as JSON):
+    operation_cost JSON NOT NULL
+);
+
+-- Table of renewable generation units (RenewableDispatch, RenewableNonDispatch)
+CREATE TABLE renewable_generators (
+    id INTEGER PRIMARY KEY REFERENCES entities (id),
+    name TEXT NOT NULL UNIQUE,
+    prime_mover TEXT NOT NULL REFERENCES prime_mover_types(name),
+    balancing_topology INTEGER NOT NULL REFERENCES balancing_topologies (id),
+    rating REAL NOT NULL CHECK (rating >= 0),
+    base_power REAL NOT NULL CHECK (base_power > 0),
+    -- Renewable-specific:
+    power_factor REAL NOT NULL DEFAULT 1.0 CHECK (power_factor > 0 AND power_factor <= 1.0),
+    reactive_power_limits_min REAL NULL,
+    reactive_power_limits_max REAL NULL,
+    -- Operational flags:
+    available BOOLEAN NOT NULL DEFAULT TRUE,
+    -- Initial setpoints:
+    active_power REAL NOT NULL DEFAULT 0.0,
+    reactive_power REAL NOT NULL DEFAULT 0.0,
+    -- Cost (only for RenewableDispatch):
+    operation_cost JSON NULL
+);
+
+-- Table of hydro generation units (HydroDispatch, HydroTurbine, HydroPumpTurbine)
+CREATE TABLE hydro_generators (
+    id INTEGER PRIMARY KEY REFERENCES entities (id),
+    name TEXT NOT NULL UNIQUE,
+    prime_mover TEXT NOT NULL DEFAULT 'HY' REFERENCES prime_mover_types(name),
+    balancing_topology INTEGER NOT NULL REFERENCES balancing_topologies (id),
+    rating REAL NOT NULL CHECK (rating >= 0),
+    base_power REAL NOT NULL CHECK (base_power > 0),
+    -- Power limits (shared by all):
+    active_power_limits_min REAL NOT NULL DEFAULT 0.0 CHECK (active_power_limits_min >= 0),
+    active_power_limits_max REAL NOT NULL CHECK (active_power_limits_max >= 0),
+    reactive_power_limits_min REAL NULL,
+    reactive_power_limits_max REAL NULL,
+    -- Ramp limits (MW/min):
+    ramp_up REAL NULL CHECK (ramp_up >= 0),
+    ramp_down REAL NULL CHECK (ramp_down >= 0),
+    -- Time limits (hours):
+    min_up_time REAL NULL CHECK (min_up_time >= 0),
+    min_down_time REAL NULL CHECK (min_down_time >= 0),
+    -- Operational flags:
+    available BOOLEAN NOT NULL DEFAULT TRUE,
+    -- Initial setpoints:
+    active_power REAL NOT NULL DEFAULT 0.0,
+    reactive_power REAL NOT NULL DEFAULT 0.0,
+    -- HydroTurbine/HydroPumpTurbine fields (nullable for HydroDispatch):
+    powerhouse_elevation REAL NULL DEFAULT 0.0 CHECK (powerhouse_elevation >= 0),
+    outflow_limits_min REAL NULL,
+    outflow_limits_max REAL NULL,
+    conversion_factor REAL NULL DEFAULT 1.0 CHECK (conversion_factor > 0),
+    travel_time REAL NULL CHECK (travel_time >= 0),
+    -- Cost (optional for hydro - has default in PSY):
+    operation_cost JSON NULL
+    -- Note: efficiency (varies by type), turbine_type, and HydroPumpTurbine-specific
+    -- fields (active_power_limits_pump, etc.) are stored in the attributes table
+);
 
 -- NOTE: The purpose of this table is to capture data of **existing storage units only**.
 -- Table of energy storage units (including PHES or other kinds),
@@ -203,26 +281,6 @@ CREATE TABLE transport_technologies(
     scenario text NULL,
     UNIQUE(id, arc_id, scenario)
 );
-
--- NOTE: The purpose of this table is to link operational parameters to multiple
--- entities like existing units (real paramters) or supply technologies
--- (expected parameters).
--- The same operational data could be attached to multiple entities.
-CREATE TABLE operational_data (
-    id integer PRIMARY KEY,
-    entity_id integer NOT NULL,
-    active_power_limit_min real NOT NULL CHECK (active_power_limit_min >= 0),
-    must_run bool,
-    uptime real NOT NULL CHECK (uptime >= 0),
-    downtime real NOT NULL CHECK (downtime >= 0),
-    ramp_up real NOT NULL,
-    ramp_down real NOT NULL,
-    operational_cost json NULL,
-    -- We can add what type of operational cost it is or other parameters (e.g., variable)
-    operational_cost_type text generated always AS (json_type(operational_cost)) virtual,
-    FOREIGN KEY (entity_id) REFERENCES entities(id)
-);
-
 
 -- NOTE: Attributes are additional parameters that can be linked to entities.
 -- The main purpose of this is when there is an important field that is not
