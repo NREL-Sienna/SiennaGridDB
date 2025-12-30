@@ -68,17 +68,45 @@ SELECT RAISE(
     );
 END;
 
-CREATE TRIGGER IF NOT EXISTS check_generation_units_entity_exists BEFORE
-INSERT ON generation_units
+CREATE TRIGGER IF NOT EXISTS check_thermal_generators_entity_exists BEFORE
+INSERT ON thermal_generators
     WHEN NOT EXISTS (
         SELECT 1
         FROM entities
         WHERE id = NEW.id
-            AND entity_table = 'generation_units'
+            AND entity_table = 'thermal_generators'
     ) BEGIN
 SELECT RAISE(
         ABORT,
-        'Entity ID must exist in entities table with type generation_units before insertion'
+        'Entity ID must exist in entities table with type thermal_generators before insertion'
+    );
+END;
+
+CREATE TRIGGER IF NOT EXISTS check_renewable_generators_entity_exists BEFORE
+INSERT ON renewable_generators
+    WHEN NOT EXISTS (
+        SELECT 1
+        FROM entities
+        WHERE id = NEW.id
+            AND entity_table = 'renewable_generators'
+    ) BEGIN
+SELECT RAISE(
+        ABORT,
+        'Entity ID must exist in entities table with type renewable_generators before insertion'
+    );
+END;
+
+CREATE TRIGGER IF NOT EXISTS check_hydro_generators_entity_exists BEFORE
+INSERT ON hydro_generators
+    WHEN NOT EXISTS (
+        SELECT 1
+        FROM entities
+        WHERE id = NEW.id
+            AND entity_table = 'hydro_generators'
+    ) BEGIN
+SELECT RAISE(
+        ABORT,
+        'Entity ID must exist in entities table with type hydro_generators before insertion'
     );
 END;
 
@@ -208,9 +236,9 @@ END;
 CREATE TRIGGER IF NOT EXISTS enforce_turbine_single_upstream_reservoir
 BEFORE INSERT ON hydro_reservoir_connections
 WHEN (
-    -- Check if sink is a turbine (generation_units or storage_units)
+    -- Check if sink is a turbine (hydro_generators or storage_units)
     SELECT entity_table FROM entities WHERE id = NEW.sink_id
-) IN ('generation_units', 'storage_units')
+) IN ('hydro_generators', 'storage_units')
 AND (
     -- Check if source is a reservoir
     SELECT entity_table FROM entities WHERE id = NEW.source_id
@@ -234,9 +262,9 @@ END;
 CREATE TRIGGER IF NOT EXISTS enforce_turbine_single_downstream_reservoir
 BEFORE INSERT ON hydro_reservoir_connections
 WHEN (
-    -- Check if source is a turbine (generation_units or storage_units)
+    -- Check if source is a turbine (hydro_generators or storage_units)
     SELECT entity_table FROM entities WHERE id = NEW.source_id
-) IN ('generation_units', 'storage_units')
+) IN ('hydro_generators', 'storage_units')
 AND (
     -- Check if sink is a reservoir
     SELECT entity_table FROM entities WHERE id = NEW.sink_id
