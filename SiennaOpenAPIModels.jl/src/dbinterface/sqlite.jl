@@ -104,6 +104,7 @@ function get_row(
         c.efficiency.out,
         c.rating,
         c.base_power,
+        c.available,
     )
 end
 
@@ -123,6 +124,7 @@ function get_row(
         c.efficiency.turbine,  # efficiency_down (water going down through turbine)
         c.rating,
         c.base_power,
+        c.available,
     )
 end
 

@@ -68,6 +68,7 @@ const TABLE_SCHEMAS = Dict(
             "efficiency_down",
             "rating",
             "base_power",
+            "available",
         ],
         [
             Int64,
@@ -79,6 +80,7 @@ const TABLE_SCHEMAS = Dict(
             Union{Float64, Nothing},
             Float64,
             Float64,
+            Bool,
         ],
     ),
     "hydro_reservoir" => Tables.Schema(["id", "name"], [Int64, String]),
