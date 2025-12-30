@@ -172,9 +172,10 @@ CREATE TABLE storage_units (
     ) DEFAULT 1.0,
     rating real NOT NULL DEFAULT 1 CHECK (rating > 0),
     base_power real NOT NULL CHECK (base_power > 0),
+    available BOOLEAN NOT NULL DEFAULT TRUE,
     --CHECK (base_power >= rating),
     UNIQUE(name)
-) strict;
+);
 
 CREATE TABLE hydro_reservoir(
     id integer PRIMARY KEY REFERENCES entities (id),
