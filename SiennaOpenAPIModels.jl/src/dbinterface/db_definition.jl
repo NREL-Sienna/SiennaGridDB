@@ -99,32 +99,7 @@ const TABLE_SCHEMAS = Dict(
         ["id", "arc_id", "scenario"],
         [Int64, Union{Int64, Nothing}, Union{String, Nothing}],
     ),
-    "operational_data" => Tables.Schema(
-        [
-            "id",
-            "entity_id",
-            "active_power_limit_min",
-            "must_run",
-            "uptime",
-            "downtime",
-            "ramp_up",
-            "ramp_down",
-            "operational_cost",
-            "operational_cost_type",
-        ],
-        [
-            Int64,
-            Int64,
-            Float64,
-            Union{Bool, Nothing},
-            Float64,
-            Float64,
-            Float64,
-            Float64,
-            Union{String, Nothing},
-            Union{String, Nothing},
-        ],
-    ),
+    # NOTE: operational_data is now a view (not a table), defined in views.sql
     "attributes" => Tables.Schema(
         ["id", "entity_id", "TYPE", "name", "value", "json_type"],
         [Int64, Int64, String, String, String, String],

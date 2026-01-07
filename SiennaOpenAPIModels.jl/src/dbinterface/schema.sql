@@ -28,7 +28,7 @@ DROP TABLE IF EXISTS entities;
 
 DROP TABLE IF EXISTS time_series_associations;
 
-DROP TABLE IF EXISTS operational_data;
+-- NOTE: operational_data is now a view, not a table (see views.sql)
 
 DROP TABLE IF EXISTS attributes;
 
