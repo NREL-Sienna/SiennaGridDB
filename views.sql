@@ -19,7 +19,7 @@ FROM json_data;
 
 CREATE VIEW IF NOT EXISTS operational_data AS
 SELECT e.id AS entity_id,
-    e.entity_table,
+    e.source_table,
     e.entity_type,
     json_extract(apl.value, '$.min') AS active_power_limit_min,
     json_extract(mr.value, '$') AS must_run,

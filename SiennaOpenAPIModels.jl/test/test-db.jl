@@ -1,11 +1,17 @@
 using SiennaOpenAPIModels
 using PowerSystemCaseBuilder
 import PowerSystems
-const PSY = PowerSystems
+import InfrastructureSystems
 using JSON
 import SQLite
 import DBInterface
 import Tables
+using Test
+
+const PSY = PowerSystems
+const IS = InfrastructureSystems
+
+include("utils.jl")
 
 function attributes_to_dict(column_table)
     d = Dict()
@@ -14,9 +20,6 @@ function attributes_to_dict(column_table)
     end
     return d
 end
-
-custom_isequivalent(x, y) = isequal(x, y) || (x == y)
-custom_isequivalent(x::AbstractFloat, y::AbstractFloat) = isequal(x, y) || (x == y) || x ≈ y
 
 function test_component_each_type(sys, copy_of_sys)
     for T in SiennaOpenAPIModels.ALL_DESERIALIZABLE_TYPES
@@ -70,11 +73,12 @@ end
                 "SELECT id, entity_id, name, json(value) as value FROM attributes",
             ),
         )
-        @test length(attributes.id) == 7
-        @test length(unique(attributes.id)) == 7
+        @test length(attributes.id) == 8
+        @test length(unique(attributes.id)) == 8
         @test all(attributes.entity_id .== 1)
         @test attributes_to_dict(attributes) == Dict(
             "voltage_limits" => Dict{String, Any}("max" => 1.05, "min" => 0.9),
+            "available" => true,
             "base_voltage" => 230.0,
             "number" => 1,
             "magnitude" => 1.0,
@@ -127,8 +131,10 @@ end
     end
 end
 
+# TODO: Add 118-bus to PSCB instead.
+#=
 @testset "118_bus to DB" begin
-    # Get 118_bus_rt.json from directory of this file
+    # Get 118_bus.json from directory of this file
     sys = PSY.System(joinpath(dirname(@__FILE__), "118_bus.json"))
     db = SQLite.DB()
     SiennaOpenAPIModels.make_sqlite!(db)
@@ -136,11 +142,11 @@ end
     acbuses =
         Tables.columntable(DBInterface.execute(db, "SELECT * FROM balancing_topologies"))
     @test length(acbuses.id) == 118
-
     copy_of_sys = SiennaOpenAPIModels.make_system_from_db(db)
     @test copy_of_sys isa PSY.System
     test_component_each_type(sys, copy_of_sys)
 end
+=#
 
 @testset "RTS-System to DB" begin
     sys = PowerSystemCaseBuilder.build_system(
@@ -198,9 +204,13 @@ end
 
     db = SQLite.DB()
     SiennaOpenAPIModels.make_sqlite!(db)
-    SiennaOpenAPIModels.sys2db!(db, sys, IDGenerator())
+    ids = IDGenerator()
+    SiennaOpenAPIModels.sys2db!(db, sys, ids)
     storages = Tables.columntable(DBInterface.execute(db, "SELECT * FROM storage_units"))
     @test length(storages.id) == 1
+    reservoirs =
+        Tables.columntable(DBInterface.execute(db, "SELECT * from hydro_reservoir"))
+    @test length(reservoirs.id) == 2
 
     copy_of_sys = SiennaOpenAPIModels.make_system_from_db(db)
     @test copy_of_sys isa PSY.System

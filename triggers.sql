@@ -141,18 +141,18 @@ END;
 
 -- Business Logic Validation Triggers
 CREATE TRIGGER enforce_arc_entity_types_insert
-AFTER INSERT ON arcs 
-BEGIN 
+AFTER INSERT ON arcs
+BEGIN
     SELECT CASE
-        WHEN NOT EXISTS (SELECT 1 FROM entities WHERE id = NEW.from_id) THEN 
+        WHEN NOT EXISTS (SELECT 1 FROM entities WHERE id = NEW.from_id) THEN
             RAISE(ABORT, 'from_id entity does not exist')
-        WHEN NOT EXISTS (SELECT 1 FROM entities WHERE id = NEW.to_id) THEN 
+        WHEN NOT EXISTS (SELECT 1 FROM entities WHERE id = NEW.to_id) THEN
             RAISE(ABORT, 'to_id entity does not exist')
-        WHEN (SELECT entity_type FROM entities WHERE id = NEW.from_id) 
-             NOT IN ('balancing_topologies', 'planning_regions', 'LoadZone', 'ACBus', 'Area') THEN 
+        WHEN (SELECT entity_type FROM entities WHERE id = NEW.from_id)
+             NOT IN ('balancing_topologies', 'planning_regions', 'LoadZone', 'ACBus', 'Area') THEN
             RAISE(ABORT, 'Invalid from_id entity type: must be balancing topology or planning region')
-        WHEN (SELECT entity_type FROM entities WHERE id = NEW.to_id) 
-             NOT IN ('balancing_topologies', 'planning_regions', 'LoadZone', 'ACBus', 'Area') THEN 
+        WHEN (SELECT entity_type FROM entities WHERE id = NEW.to_id)
+             NOT IN ('balancing_topologies', 'planning_regions', 'LoadZone', 'ACBus', 'Area') THEN
             RAISE(ABORT, 'Invalid to_id entity type: must be balancing topology or planning region')
     END;
 END;
@@ -163,7 +163,7 @@ BEFORE INSERT ON entities
 BEGIN
     SELECT CASE
         WHEN NOT EXISTS (SELECT 1 FROM entity_types WHERE name = NEW.entity_type) THEN
-            RAISE(ABORT, 'Invalid entity_type: ' || NEW.entity_type || ' not found in entity_types')
+            RAISE(ABORT, 'Invalid entity_type not found in entity_types')
     END;
 END;
 

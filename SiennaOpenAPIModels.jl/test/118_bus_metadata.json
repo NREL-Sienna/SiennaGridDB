@@ -9,6 +9,10 @@
       "type": "Arc"
     },
     {
+      "count": 3,
+      "type": "Area"
+    },
+    {
       "count": 43,
       "type": "HydroDispatch"
     },
@@ -36,6 +40,13 @@
   "description": "",
   "frequency": 60,
   "name": "",
-  "time_series_counts": [],
-  "time_series_resolutions_milliseconds": []
+  "time_series_counts": [
+    {
+      "count": 253,
+      "type": "SingleTimeSeries"
+    }
+  ],
+  "time_series_resolutions_milliseconds": [
+    3600000
+  ]
 }

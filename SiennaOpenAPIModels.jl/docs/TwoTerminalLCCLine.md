@@ -1,0 +1,47 @@
+# TwoTerminalLCCLine
+
+## Properties
+
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**id** | **Int64** |  | [default to nothing]
+**name** | **String** |  | [default to nothing]
+**available** | **Bool** |  | [default to nothing]
+**arc** | **Int64** |  | [default to nothing]
+**active_power_flow** | **Float64** |  | [default to nothing]
+**r** | **Float64** |  | [default to nothing]
+**transfer_setpoint** | **Float64** |  | [default to nothing]
+**scheduled_dc_voltage** | **Float64** |  | [default to nothing]
+**rectifier_bridges** | **Int64** |  | [default to nothing]
+**rectifier_delay_angle_limits** | [***MinMax**](MinMax.md) |  | [default to nothing]
+**rectifier_rc** | **Float64** |  | [default to nothing]
+**rectifier_xc** | **Float64** |  | [default to nothing]
+**rectifier_base_voltage** | **Float64** |  | [default to nothing]
+**inverter_bridges** | **Int64** |  | [default to nothing]
+**inverter_extinction_angle_limits** | [***MinMax**](MinMax.md) |  | [default to nothing]
+**inverter_rc** | **Float64** |  | [default to nothing]
+**inverter_xc** | **Float64** |  | [default to nothing]
+**inverter_base_voltage** | **Float64** |  | [default to nothing]
+**power_mode** | **Bool** |  | [optional] [default to true]
+**switch_mode_voltage** | **Float64** |  | [optional] [default to 0.0]
+**compounding_resistance** | **Float64** |  | [optional] [default to 0.0]
+**min_compounding_voltage** | **Float64** |  | [optional] [default to 0.0]
+**rectifier_transformer_ratio** | **Float64** |  | [optional] [default to 1.0]
+**rectifier_tap_setting** | **Float64** |  | [optional] [default to 1.0]
+**rectifier_tap_limits** | [***MinMax**](MinMax.md) |  | [optional] [default to nothing]
+**rectifier_tap_step** | **Float64** |  | [optional] [default to 0.00625]
+**rectifier_delay_angle** | **Float64** |  | [optional] [default to 0.0]
+**rectifier_capacitor_reactance** | **Float64** |  | [optional] [default to 0.0]
+**inverter_transformer_ratio** | **Float64** |  | [optional] [default to 1.0]
+**inverter_tap_setting** | **Float64** |  | [optional] [default to 1.0]
+**inverter_tap_limits** | [***MinMax**](MinMax.md) |  | [optional] [default to nothing]
+**inverter_tap_step** | **Float64** |  | [optional] [default to 0.0625]
+**inverter_extinction_angle** | **Float64** |  | [optional] [default to 0.0]
+**inverter_capacitor_reactance** | **Float64** |  | [optional] [default to 0.0]
+**active_power_limits_from** | [***MinMax**](MinMax.md) |  | [optional] [default to nothing]
+**active_power_limits_to** | [***MinMax**](MinMax.md) |  | [optional] [default to nothing]
+**reactive_power_limits_from** | [***MinMax**](MinMax.md) |  | [optional] [default to nothing]
+**reactive_power_limits_to** | [***MinMax**](MinMax.md) |  | [optional] [default to nothing]
+**loss** | [***TwoTerminalLoss**](TwoTerminalLoss.md) |  | [optional] [default to nothing]
+
+[[Back to Model list]](../README.md#models) [[Back to API list]](../README.md#api-endpoints) [[Back to README]](../README.md)

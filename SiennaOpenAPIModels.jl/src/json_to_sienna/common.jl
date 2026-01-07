@@ -7,8 +7,32 @@ function get_bustype_enum(bustype::String)
     IS.deserialize(PSY.ACBusTypes, bustype)
 end
 
+function get_branchstatus_enum(branchstatus::String)
+    IS.deserialize(PSY.DiscreteControlledBranchStatus, branchstatus)
+end
+
+function get_branchtype_enum(branchtype::String)
+    IS.deserialize(PSY.DiscreteControlledBranchType, branchtype)
+end
+
+function get_control_objective_enum(objective::String)
+    IS.deserialize(PSY.TransformerControlObjective, objective)
+end
+
+function get_factsmode_enum(factsmode::String)
+    IS.deserialize(PSY.FACTSOperationModes, factsmode)
+end
+
 function get_fuel_type_enum(fuel_type::String)
     IS.deserialize(PSY.ThermalFuels, fuel_type)
+end
+
+function get_load_conform_enum(conformity::String)
+    IS.deserialize(PSY.LoadConformity, conformity)
+end
+
+function get_motor_tech_enum(motor_tech::String)
+    IS.deserialize(PSY.MotorLoadTechnology, motor_tech)
 end
 
 function get_prime_mover_enum(prime_mover_type::String)
@@ -17,6 +41,14 @@ end
 
 function get_pump_status_enum(status::String)
     IS.deserialize(PSY.PumpHydroStatus, status)
+end
+
+function get_res_data_enum(reservoir_data_type::String)
+    IS.deserialize(PSY.ReservoirDataType, reservoir_data_type)
+end
+
+function get_res_location_enum(reservoir_location::String)
+    IS.deserialize(PSY.ReservoirLocation, reservoir_location)
 end
 
 function get_reserve_enum(direction::String)
@@ -37,6 +69,14 @@ end
 
 function get_storage_tech_enum(storage::String)
     IS.deserialize(PSY.StorageTech, storage)
+end
+
+function get_turbine_type_enum(turbine::String)
+    IS.deserialize(PSY.HydroTurbineType, turbine)
+end
+
+function get_winding_group_enum(group_num::String)
+    IS.deserialize(PSY.WindingGroupNumber, group_num)
 end
 
 # Functions that convert and scale tuples
@@ -71,6 +111,12 @@ function get_tuple_startup_shutdown(obj::StartUpShutDown)
     return (startup=obj.startup, shutdown=obj.shutdown)
 end
 
+get_tuple_turbine_pump(::Nothing) = nothing
+
+function get_tuple_turbine_pump(obj::TurbinePump)
+    return (turbine=obj.turbine, pump=obj.pump)
+end
+
 get_tuple_up_down(::Nothing) = nothing
 
 function get_tuple_up_down(obj::UpDown)
@@ -83,16 +129,6 @@ function get_tuple_xy_coords(obj::XYCoords)
     return (x=obj.x, y=obj.y)
 end
 
-"""
-Divide both values of all NamedTuple by a scalar
-"""
-function divide(nt::NamedTuple{T, Tuple{Float64, Float64}}, scalar::Float64) where {T}
-    NamedTuple{T, Tuple{Float64, Float64}}((nt[1] / scalar, nt[2] / scalar))
-end
-
-divide(::Nothing, ::Float64) = nothing
-divide(x::Float64, scalar::Float64) = x / scalar
-
 # Functions that get operation costs
 
 function get_sienna_operation_cost(cost::HydroGenerationCost)
@@ -102,8 +138,25 @@ function get_sienna_operation_cost(cost::HydroGenerationCost)
     )
 end
 
-function get_sienna_operation_cost(cost::HydroStorageGenerationCost)
-    get_sienna_operation_cost(cost.value)
+#function get_sienna_operation_cost(cost::HydroStorageGenerationCost)
+#    get_sienna_operation_cost(cost.value)
+#end
+
+function get_sienna_operation_cost(cost::HydroReservoirCost)
+    PSY.HydroReservoirCost(
+        level_shortage_cost=cost.level_shortage_cost,
+        level_surplus_cost=cost.level_surplus_cost,
+        spillage_cost=cost.spillage_cost,
+    )
+end
+
+function get_sienna_operation_cost(cost::ImportExportCost)
+    PSY.ImportExportCost(
+        import_offer_curves=get_sienna_variable_cost(cost.import_offer_curves),
+        export_offer_curves=get_sienna_variable_cost(cost.export_offer_curves),
+        energy_import_weekly_limit=cost.energy_import_weekly_limit,
+        energy_export_weekly_limit=cost.energy_export_weekly_limit,
+    )
 end
 
 function get_sienna_operation_cost(cost::LoadCost)
@@ -114,6 +167,7 @@ function get_sienna_operation_cost(cost::RenewableGenerationCost)
     PSY.RenewableGenerationCost(
         curtailment_cost=get_sienna_variable_cost(cost.curtailment_cost),
         variable=get_sienna_variable_cost(cost.variable),
+        fixed=cost.fixed,
     )
 end
 
@@ -192,6 +246,10 @@ end
 
 get_sienna_value_curve(::Nothing) = nothing
 
+function get_sienna_value_curve(curve::Float64)
+    return curve
+end
+
 function get_sienna_value_curve(curve::AverageRateCurve)
     PSY.AverageRateCurve(
         function_data=PSY.AverageRateCurveFunctionData(
@@ -217,7 +275,7 @@ function get_sienna_value_curve(curve::InputOutputCurve)
     )
 end
 
-function get_sienna_value_curve(curve::TwoTerminalHVDCLineLoss)
+function get_sienna_value_curve(curve::TwoTerminalLoss)
     get_sienna_value_curve(curve.value)
 end
 
