@@ -292,28 +292,6 @@ function get_reserve_direction(::Type{PSY.ReserveSymmetric})
     "SYMMETRIC"
 end
 
-function get_technology_financial_data(financial_data::PSIP.TechnologyFinancialData) #This is actually not in openAPI, let's fix this
-    TechnologyFinancialData(;
-        interest_rate = financial_data.interest_rate,
-        capital_recovery_period = financial_data.capital_recovery_period,
-        technology_base_year = financial_data.technology_base_year,
-    )
-end
-
-function get_fuel_dictionary(fuels::Dict)
-    fuel_dictionary = Dict{String, Any}()
-    for (fuel, value) in fuels
-        fuel_string = string(fuel)
-        if isa(value, Dict)
-            fuel_dictionary[fuel_string] = get_min_max(value)
-        else
-            fuel_dictionary[fuel_string] = value
-        end
-    end
-    return fuel_dictionary
-end
-
-
 # UUID stuff
 
 mutable struct IDGenerator
