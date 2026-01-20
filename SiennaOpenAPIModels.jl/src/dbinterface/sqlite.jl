@@ -514,7 +514,7 @@ function get_query_for_table_name(table_name)
     end
 end
 
-function db2sys!(sys::PSY.System, db, resolver::Resolver)
+function db2sys!(sys::PSY.System, db, resolver::Resolver; time_series=false)
     attributes = get_entity_attributes(db)
     row_counts = Dict{String, Int64}()
     all_entities = 0
@@ -549,14 +549,14 @@ function db2sys!(sys::PSY.System, db, resolver::Resolver)
             @warn "Table $table_name contains $db_count ids but $local_count were processed"
         end
     end
-end
-
-function make_system_from_db(db; time_series=false)
-    sys = PSY.System(100)
-    resolver = Resolver(sys, Dict{Int64, UUID}())
-    db2sys!(sys, db, resolver)
     if time_series
         deserialize_timeseries!(sys, db, resolver)
     end
+end
+
+function db2sys(db; time_series=false)
+    sys = PSY.System(100)
+    resolver = Resolver(sys, Dict{Int64, UUID}())
+    db2sys!(sys, db, resolver, time_series=time_series)
     return sys
 end

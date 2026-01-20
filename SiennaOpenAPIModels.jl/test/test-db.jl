@@ -104,7 +104,7 @@ end
         SiennaOpenAPIModels.make_sqlite!(db)
         id_generator = IDGenerator()
         SiennaOpenAPIModels.sys2db!(db, c_sys5, id_generator)
-        copy_of_sys = SiennaOpenAPIModels.make_system_from_db(db)
+        copy_of_sys = SiennaOpenAPIModels.db2sys(db)
         @test copy_of_sys isa PSY.System
         for T in SiennaOpenAPIModels.ALL_DESERIALIZABLE_TYPES
             SIENNA_T = SiennaOpenAPIModels.OPENAPI_TYPE_TO_PSY[T]
@@ -137,7 +137,7 @@ end
     acbuses =
         Tables.columntable(DBInterface.execute(db, "SELECT * FROM balancing_topologies"))
     @test length(acbuses.id) == 118
-    copy_of_sys = SiennaOpenAPIModels.make_system_from_db(db)
+    copy_of_sys = SiennaOpenAPIModels.db2sys(db)
     @test copy_of_sys isa PSY.System
     test_component_each_type(sys, copy_of_sys)
 end
@@ -167,7 +167,7 @@ WHERE e.entity_type = 'ACBus'",
     )
     @test length(acbuses.id) == 73
 
-    copy_of_sys = SiennaOpenAPIModels.make_system_from_db(db)
+    copy_of_sys = SiennaOpenAPIModels.db2sys(db)
     @test copy_of_sys isa PSY.System
     test_component_each_type(sys, copy_of_sys)
 end
@@ -186,7 +186,7 @@ end
     )
     @test length(interchanges.id) == 1
 
-    copy_of_sys = SiennaOpenAPIModels.make_system_from_db(db)
+    copy_of_sys = SiennaOpenAPIModels.db2sys(db)
     @test copy_of_sys isa PSY.System
     test_component_each_type(sys, copy_of_sys)
 end
@@ -207,7 +207,7 @@ end
         Tables.columntable(DBInterface.execute(db, "SELECT * from hydro_reservoir"))
     @test length(reservoirs.id) == 2
 
-    copy_of_sys = SiennaOpenAPIModels.make_system_from_db(db)
+    copy_of_sys = SiennaOpenAPIModels.db2sys(db)
     @test copy_of_sys isa PSY.System
     test_component_each_type(sys, copy_of_sys)
 end
