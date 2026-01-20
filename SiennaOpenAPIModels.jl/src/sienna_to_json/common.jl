@@ -318,7 +318,7 @@ function getid!(idgen::IDGenerator, uuid::UUID)
 end
 
 function getid!(idgen::IDGenerator, component::PSY.Component)
-    getid!(idgen, PSY.InfrastructureSystems.get_uuid(component))
+    getid!(idgen, IS.get_uuid(component))
 end
 
 function getid!(::IDGenerator, ::Nothing)

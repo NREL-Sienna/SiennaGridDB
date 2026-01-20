@@ -1,7 +1,6 @@
 import TimeSeries
 
-InfrastructureSystems._is_compare_directly(::TimeSeries.TimeArray, ::TimeSeries.TimeArray) =
-    true
+IS._is_compare_directly(::TimeSeries.TimeArray, ::TimeSeries.TimeArray) = true
 
 function test_all_time_series(sys1::PSY.System, sys2::PSY.System)
     for T in SiennaOpenAPIModels.ALL_DESERIALIZABLE_TYPES
