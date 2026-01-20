@@ -4,10 +4,11 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**name** | **String** |  | [default to nothing]
 **id** | **Int64** |  | [default to nothing]
+**name** | **String** |  | [default to nothing]
 **available** | **Bool** |  | [default to nothing]
 **bus** | **Int64** |  | [default to nothing]
+**base_power** | **Float64** |  | [default to nothing]
 **constant_active_power** | **Float64** |  | [optional] [default to 0.0]
 **constant_reactive_power** | **Float64** |  | [optional] [default to 0.0]
 **impedance_active_power** | **Float64** |  | [optional] [default to 0.0]
@@ -21,7 +22,6 @@ Name | Type | Description | Notes
 **max_current_active_power** | **Float64** |  | [optional] [default to 0.0]
 **max_current_reactive_power** | **Float64** |  | [optional] [default to 0.0]
 **conformity** | **String** |  | [optional] [default to "UNDEFINED"]
-**base_power** | **Float64** |  | [default to nothing]
 **dynamic_injector** | **Any** |  | [optional] [default to nothing]
 
 [[Back to Model list]](../README.md#models) [[Back to API list]](../README.md#api-endpoints) [[Back to README]](../README.md)

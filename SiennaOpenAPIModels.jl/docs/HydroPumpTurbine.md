@@ -29,7 +29,7 @@ Name | Type | Description | Notes
 **travel_time** | **Float64** |  | [optional] [default to nothing]
 **conversion_factor** | **Float64** |  | [optional] [default to 1.0]
 **must_run** | **Bool** |  | [optional] [default to false]
-**prime_mover_type** | **String** |  | [optional] [default to "PS"]
+**prime_mover_type** | **String** |  | [optional] [default to "OT"]
 **dynamic_injector** | **Any** |  | [optional] [default to nothing]
 
 [[Back to Model list]](../README.md#models) [[Back to API list]](../README.md#api-endpoints) [[Back to README]](../README.md)

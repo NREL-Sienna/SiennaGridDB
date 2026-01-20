@@ -4,78 +4,78 @@
 @doc raw"""InterconnectingConverter
 
     InterconnectingConverter(;
-        name=nothing,
         id=nothing,
+        name=nothing,
         available=nothing,
         bus=nothing,
         dc_bus=nothing,
         active_power=nothing,
+        rating=nothing,
         active_power_limits=nothing,
         base_power=nothing,
         dc_current=0.0,
         max_dc_current=100000000,
         loss_function=nothing,
-        rating=nothing,
         dynamic_injector=nothing,
     )
 
-    - name::String
     - id::Int64
+    - name::String
     - available::Bool
     - bus::Int64
     - dc_bus::Int64
     - active_power::Float64
+    - rating::Float64
     - active_power_limits::MinMax
     - base_power::Float64
     - dc_current::Float64
     - max_dc_current::Float64
     - loss_function::InputOutputCurve
-    - rating::Float64
     - dynamic_injector::Any
 """
 Base.@kwdef mutable struct InterconnectingConverter <: OpenAPI.APIModel
-    name::Union{Nothing, String} = nothing
     id::Union{Nothing, Int64} = nothing
+    name::Union{Nothing, String} = nothing
     available::Union{Nothing, Bool} = nothing
     bus::Union{Nothing, Int64} = nothing
     dc_bus::Union{Nothing, Int64} = nothing
     active_power::Union{Nothing, Float64} = nothing
+    rating::Union{Nothing, Float64} = nothing
     active_power_limits = nothing # spec type: Union{ Nothing, MinMax }
     base_power::Union{Nothing, Float64} = nothing
     dc_current::Union{Nothing, Float64} = 0.0
     max_dc_current::Union{Nothing, Float64} = 100000000
     loss_function = nothing # spec type: Union{ Nothing, InputOutputCurve }
-    rating::Union{Nothing, Float64} = nothing
     dynamic_injector::Union{Nothing, Any} = nothing
 
     function InterconnectingConverter(
-        name,
         id,
+        name,
         available,
         bus,
         dc_bus,
         active_power,
+        rating,
         active_power_limits,
         base_power,
         dc_current,
         max_dc_current,
         loss_function,
-        rating,
         dynamic_injector,
     )
         o = new(
-            name,
             id,
+            name,
             available,
             bus,
             dc_bus,
             active_power,
+            rating,
             active_power_limits,
             base_power,
             dc_current,
             max_dc_current,
             loss_function,
-            rating,
             dynamic_injector,
         )
         OpenAPI.validate_properties(o)
@@ -84,39 +84,39 @@ Base.@kwdef mutable struct InterconnectingConverter <: OpenAPI.APIModel
 end # type InterconnectingConverter
 
 const _property_types_InterconnectingConverter = Dict{Symbol, String}(
-    Symbol("name")=>"String",
-    Symbol("id")=>"Int64",
-    Symbol("available")=>"Bool",
-    Symbol("bus")=>"Int64",
-    Symbol("dc_bus")=>"Int64",
-    Symbol("active_power")=>"Float64",
-    Symbol("active_power_limits")=>"MinMax",
-    Symbol("base_power")=>"Float64",
-    Symbol("dc_current")=>"Float64",
-    Symbol("max_dc_current")=>"Float64",
-    Symbol("loss_function")=>"InputOutputCurve",
-    Symbol("rating")=>"Float64",
-    Symbol("dynamic_injector")=>"Any",
+    Symbol("id") => "Int64",
+    Symbol("name") => "String",
+    Symbol("available") => "Bool",
+    Symbol("bus") => "Int64",
+    Symbol("dc_bus") => "Int64",
+    Symbol("active_power") => "Float64",
+    Symbol("rating") => "Float64",
+    Symbol("active_power_limits") => "MinMax",
+    Symbol("base_power") => "Float64",
+    Symbol("dc_current") => "Float64",
+    Symbol("max_dc_current") => "Float64",
+    Symbol("loss_function") => "InputOutputCurve",
+    Symbol("dynamic_injector") => "Any",
 )
 OpenAPI.property_type(::Type{InterconnectingConverter}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_InterconnectingConverter[name]))}
 
 function OpenAPI.check_required(o::InterconnectingConverter)
-    o.name === nothing && (return false)
     o.id === nothing && (return false)
+    o.name === nothing && (return false)
     o.available === nothing && (return false)
     o.bus === nothing && (return false)
     o.dc_bus === nothing && (return false)
     o.active_power === nothing && (return false)
+    o.rating === nothing && (return false)
     o.active_power_limits === nothing && (return false)
     o.base_power === nothing && (return false)
-    o.rating === nothing && (return false)
     true
 end
 
 function OpenAPI.validate_properties(o::InterconnectingConverter)
-    OpenAPI.validate_property(InterconnectingConverter, Symbol("name"), o.name)
     OpenAPI.validate_property(InterconnectingConverter, Symbol("id"), o.id)
+    OpenAPI.validate_property(InterconnectingConverter, Symbol("name"), o.name)
     OpenAPI.validate_property(InterconnectingConverter, Symbol("available"), o.available)
     OpenAPI.validate_property(InterconnectingConverter, Symbol("bus"), o.bus)
     OpenAPI.validate_property(InterconnectingConverter, Symbol("dc_bus"), o.dc_bus)
@@ -125,6 +125,7 @@ function OpenAPI.validate_properties(o::InterconnectingConverter)
         Symbol("active_power"),
         o.active_power,
     )
+    OpenAPI.validate_property(InterconnectingConverter, Symbol("rating"), o.rating)
     OpenAPI.validate_property(
         InterconnectingConverter,
         Symbol("active_power_limits"),
@@ -142,7 +143,6 @@ function OpenAPI.validate_properties(o::InterconnectingConverter)
         Symbol("loss_function"),
         o.loss_function,
     )
-    OpenAPI.validate_property(InterconnectingConverter, Symbol("rating"), o.rating)
     OpenAPI.validate_property(
         InterconnectingConverter,
         Symbol("dynamic_injector"),

@@ -23,7 +23,7 @@ Base.@kwdef mutable struct InOut <: OpenAPI.APIModel
 end # type InOut
 
 const _property_types_InOut =
-    Dict{Symbol, String}(Symbol("in")=>"Float64", Symbol("out")=>"Float64")
+    Dict{Symbol, String}(Symbol("in") => "Float64", Symbol("out") => "Float64")
 OpenAPI.property_type(::Type{InOut}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_InOut[name]))}
 

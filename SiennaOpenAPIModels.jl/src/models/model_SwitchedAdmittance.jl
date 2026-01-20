@@ -69,16 +69,16 @@ Base.@kwdef mutable struct SwitchedAdmittance <: OpenAPI.APIModel
 end # type SwitchedAdmittance
 
 const _property_types_SwitchedAdmittance = Dict{Symbol, String}(
-    Symbol("id")=>"Int64",
-    Symbol("name")=>"String",
-    Symbol("available")=>"Bool",
-    Symbol("bus")=>"Int64",
-    Symbol("Y")=>"ComplexNumber",
-    Symbol("initial_status")=>"Vector{Int64}",
-    Symbol("number_of_steps")=>"Vector{Int64}",
-    Symbol("Y_increase")=>"Vector{ComplexNumber}",
-    Symbol("admittance_limits")=>"MinMax",
-    Symbol("dynamic_injector")=>"Any",
+    Symbol("id") => "Int64",
+    Symbol("name") => "String",
+    Symbol("available") => "Bool",
+    Symbol("bus") => "Int64",
+    Symbol("Y") => "ComplexNumber",
+    Symbol("initial_status") => "Vector{Int64}",
+    Symbol("number_of_steps") => "Vector{Int64}",
+    Symbol("Y_increase") => "Vector{ComplexNumber}",
+    Symbol("admittance_limits") => "MinMax",
+    Symbol("dynamic_injector") => "Any",
 )
 OpenAPI.property_type(::Type{SwitchedAdmittance}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_SwitchedAdmittance[name]))}

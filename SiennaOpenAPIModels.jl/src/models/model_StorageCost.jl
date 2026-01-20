@@ -60,14 +60,14 @@ Base.@kwdef mutable struct StorageCost <: OpenAPI.APIModel
 end # type StorageCost
 
 const _property_types_StorageCost = Dict{Symbol, String}(
-    Symbol("cost_type")=>"String",
-    Symbol("charge_variable_cost")=>"CostCurve",
-    Symbol("discharge_variable_cost")=>"CostCurve",
-    Symbol("fixed")=>"Float64",
-    Symbol("shut_down")=>"Float64",
-    Symbol("start_up")=>"StorageCostStartUp",
-    Symbol("energy_shortage_cost")=>"Float64",
-    Symbol("energy_surplus_cost")=>"Float64",
+    Symbol("cost_type") => "String",
+    Symbol("charge_variable_cost") => "CostCurve",
+    Symbol("discharge_variable_cost") => "CostCurve",
+    Symbol("fixed") => "Float64",
+    Symbol("shut_down") => "Float64",
+    Symbol("start_up") => "StorageCostStartUp",
+    Symbol("energy_shortage_cost") => "Float64",
+    Symbol("energy_surplus_cost") => "Float64",
 )
 OpenAPI.property_type(::Type{StorageCost}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_StorageCost[name]))}

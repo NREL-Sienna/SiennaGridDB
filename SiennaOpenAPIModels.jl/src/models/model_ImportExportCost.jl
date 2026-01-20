@@ -44,11 +44,11 @@ Base.@kwdef mutable struct ImportExportCost <: OpenAPI.APIModel
 end # type ImportExportCost
 
 const _property_types_ImportExportCost = Dict{Symbol, String}(
-    Symbol("cost_type")=>"String",
-    Symbol("import_offer_curves")=>"CostCurve",
-    Symbol("export_offer_curves")=>"CostCurve",
-    Symbol("energy_import_weekly_limit")=>"Float64",
-    Symbol("energy_export_weekly_limit")=>"Float64",
+    Symbol("cost_type") => "String",
+    Symbol("import_offer_curves") => "CostCurve",
+    Symbol("export_offer_curves") => "CostCurve",
+    Symbol("energy_import_weekly_limit") => "Float64",
+    Symbol("energy_export_weekly_limit") => "Float64",
 )
 OpenAPI.property_type(::Type{ImportExportCost}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_ImportExportCost[name]))}

@@ -4,82 +4,82 @@
 @doc raw"""AreaInterchange
 
     AreaInterchange(;
-        active_power_flow=nothing,
-        available=nothing,
         id=nothing,
-        flow_limits=nothing,
-        from_area=nothing,
         name=nothing,
+        available=nothing,
+        active_power_flow=nothing,
+        from_area=nothing,
         to_area=nothing,
+        flow_limits=nothing,
     )
 
-    - active_power_flow::Float64
-    - available::Bool
     - id::Int64
-    - flow_limits::FromToToFrom
-    - from_area::Int64
     - name::String
+    - available::Bool
+    - active_power_flow::Float64
+    - from_area::Int64
     - to_area::Int64
+    - flow_limits::FromToToFrom
 """
 Base.@kwdef mutable struct AreaInterchange <: OpenAPI.APIModel
-    active_power_flow::Union{Nothing, Float64} = nothing
-    available::Union{Nothing, Bool} = nothing
     id::Union{Nothing, Int64} = nothing
-    flow_limits = nothing # spec type: Union{ Nothing, FromToToFrom }
-    from_area::Union{Nothing, Int64} = nothing
     name::Union{Nothing, String} = nothing
+    available::Union{Nothing, Bool} = nothing
+    active_power_flow::Union{Nothing, Float64} = nothing
+    from_area::Union{Nothing, Int64} = nothing
     to_area::Union{Nothing, Int64} = nothing
+    flow_limits = nothing # spec type: Union{ Nothing, FromToToFrom }
 
     function AreaInterchange(
-        active_power_flow,
-        available,
         id,
-        flow_limits,
-        from_area,
         name,
+        available,
+        active_power_flow,
+        from_area,
         to_area,
+        flow_limits,
     )
-        o = new(active_power_flow, available, id, flow_limits, from_area, name, to_area)
+        o = new(id, name, available, active_power_flow, from_area, to_area, flow_limits)
         OpenAPI.validate_properties(o)
         return o
     end
 end # type AreaInterchange
 
 const _property_types_AreaInterchange = Dict{Symbol, String}(
-    Symbol("active_power_flow")=>"Float64",
-    Symbol("available")=>"Bool",
-    Symbol("id")=>"Int64",
-    Symbol("flow_limits")=>"FromToToFrom",
-    Symbol("from_area")=>"Int64",
-    Symbol("name")=>"String",
-    Symbol("to_area")=>"Int64",
+    Symbol("id") => "Int64",
+    Symbol("name") => "String",
+    Symbol("available") => "Bool",
+    Symbol("active_power_flow") => "Float64",
+    Symbol("from_area") => "Int64",
+    Symbol("to_area") => "Int64",
+    Symbol("flow_limits") => "FromToToFrom",
 )
 OpenAPI.property_type(::Type{AreaInterchange}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_AreaInterchange[name]))}
 
 function OpenAPI.check_required(o::AreaInterchange)
-    o.active_power_flow === nothing && (return false)
-    o.available === nothing && (return false)
     o.id === nothing && (return false)
-    o.flow_limits === nothing && (return false)
-    o.from_area === nothing && (return false)
     o.name === nothing && (return false)
+    o.available === nothing && (return false)
+    o.active_power_flow === nothing && (return false)
+    o.from_area === nothing && (return false)
     o.to_area === nothing && (return false)
+    o.flow_limits === nothing && (return false)
     true
 end
 
 function OpenAPI.validate_properties(o::AreaInterchange)
+    OpenAPI.validate_property(AreaInterchange, Symbol("id"), o.id)
+    OpenAPI.validate_property(AreaInterchange, Symbol("name"), o.name)
+    OpenAPI.validate_property(AreaInterchange, Symbol("available"), o.available)
     OpenAPI.validate_property(
         AreaInterchange,
         Symbol("active_power_flow"),
         o.active_power_flow,
     )
-    OpenAPI.validate_property(AreaInterchange, Symbol("available"), o.available)
-    OpenAPI.validate_property(AreaInterchange, Symbol("id"), o.id)
-    OpenAPI.validate_property(AreaInterchange, Symbol("flow_limits"), o.flow_limits)
     OpenAPI.validate_property(AreaInterchange, Symbol("from_area"), o.from_area)
-    OpenAPI.validate_property(AreaInterchange, Symbol("name"), o.name)
     OpenAPI.validate_property(AreaInterchange, Symbol("to_area"), o.to_area)
+    OpenAPI.validate_property(AreaInterchange, Symbol("flow_limits"), o.flow_limits)
 end
 
 function OpenAPI.validate_property(::Type{AreaInterchange}, name::Symbol, val) end

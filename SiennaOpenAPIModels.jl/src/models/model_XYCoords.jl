@@ -23,7 +23,7 @@ Base.@kwdef mutable struct XYCoords <: OpenAPI.APIModel
 end # type XYCoords
 
 const _property_types_XYCoords =
-    Dict{Symbol, String}(Symbol("x")=>"Float64", Symbol("y")=>"Float64")
+    Dict{Symbol, String}(Symbol("x") => "Float64", Symbol("y") => "Float64")
 OpenAPI.property_type(::Type{XYCoords}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_XYCoords[name]))}
 

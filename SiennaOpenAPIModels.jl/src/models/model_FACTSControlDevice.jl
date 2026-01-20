@@ -64,15 +64,15 @@ Base.@kwdef mutable struct FACTSControlDevice <: OpenAPI.APIModel
 end # type FACTSControlDevice
 
 const _property_types_FACTSControlDevice = Dict{Symbol, String}(
-    Symbol("name")=>"String",
-    Symbol("id")=>"Int64",
-    Symbol("available")=>"Bool",
-    Symbol("bus")=>"Int64",
-    Symbol("control_mode")=>"String",
-    Symbol("voltage_setpoint")=>"Float64",
-    Symbol("max_shunt_current")=>"Float64",
-    Symbol("reactive_power_required")=>"Float64",
-    Symbol("dynamic_injector")=>"Any",
+    Symbol("name") => "String",
+    Symbol("id") => "Int64",
+    Symbol("available") => "Bool",
+    Symbol("bus") => "Int64",
+    Symbol("control_mode") => "String",
+    Symbol("voltage_setpoint") => "Float64",
+    Symbol("max_shunt_current") => "Float64",
+    Symbol("reactive_power_required") => "Float64",
+    Symbol("dynamic_injector") => "Any",
 )
 OpenAPI.property_type(::Type{FACTSControlDevice}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_FACTSControlDevice[name]))}

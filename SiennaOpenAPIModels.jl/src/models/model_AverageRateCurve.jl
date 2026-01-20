@@ -29,10 +29,10 @@ Base.@kwdef mutable struct AverageRateCurve <: OpenAPI.APIModel
 end # type AverageRateCurve
 
 const _property_types_AverageRateCurve = Dict{Symbol, String}(
-    Symbol("curve_type")=>"String",
-    Symbol("function_data")=>"AverageRateCurveFunctionData",
-    Symbol("initial_input")=>"Float64",
-    Symbol("input_at_zero")=>"Float64",
+    Symbol("curve_type") => "String",
+    Symbol("function_data") => "AverageRateCurveFunctionData",
+    Symbol("initial_input") => "Float64",
+    Symbol("input_at_zero") => "Float64",
 )
 OpenAPI.property_type(::Type{AverageRateCurve}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_AverageRateCurve[name]))}

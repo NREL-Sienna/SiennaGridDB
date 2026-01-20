@@ -4,8 +4,8 @@
 @doc raw"""InterruptiblePowerLoad
 
     InterruptiblePowerLoad(;
-        name=nothing,
         id=nothing,
+        name=nothing,
         available=nothing,
         bus=nothing,
         active_power=nothing,
@@ -18,8 +18,8 @@
         dynamic_injector=nothing,
     )
 
-    - name::String
     - id::Int64
+    - name::String
     - available::Bool
     - bus::Int64
     - active_power::Float64
@@ -32,8 +32,8 @@
     - dynamic_injector::Any
 """
 Base.@kwdef mutable struct InterruptiblePowerLoad <: OpenAPI.APIModel
-    name::Union{Nothing, String} = nothing
     id::Union{Nothing, Int64} = nothing
+    name::Union{Nothing, String} = nothing
     available::Union{Nothing, Bool} = nothing
     bus::Union{Nothing, Int64} = nothing
     active_power::Union{Nothing, Float64} = nothing
@@ -46,8 +46,8 @@ Base.@kwdef mutable struct InterruptiblePowerLoad <: OpenAPI.APIModel
     dynamic_injector::Union{Nothing, Any} = nothing
 
     function InterruptiblePowerLoad(
-        name,
         id,
+        name,
         available,
         bus,
         active_power,
@@ -60,8 +60,8 @@ Base.@kwdef mutable struct InterruptiblePowerLoad <: OpenAPI.APIModel
         dynamic_injector,
     )
         o = new(
-            name,
             id,
+            name,
             available,
             bus,
             active_power,
@@ -79,25 +79,25 @@ Base.@kwdef mutable struct InterruptiblePowerLoad <: OpenAPI.APIModel
 end # type InterruptiblePowerLoad
 
 const _property_types_InterruptiblePowerLoad = Dict{Symbol, String}(
-    Symbol("name")=>"String",
-    Symbol("id")=>"Int64",
-    Symbol("available")=>"Bool",
-    Symbol("bus")=>"Int64",
-    Symbol("active_power")=>"Float64",
-    Symbol("reactive_power")=>"Float64",
-    Symbol("max_active_power")=>"Float64",
-    Symbol("max_reactive_power")=>"Float64",
-    Symbol("base_power")=>"Float64",
-    Symbol("operation_cost")=>"LoadCost",
-    Symbol("conformity")=>"String",
-    Symbol("dynamic_injector")=>"Any",
+    Symbol("id") => "Int64",
+    Symbol("name") => "String",
+    Symbol("available") => "Bool",
+    Symbol("bus") => "Int64",
+    Symbol("active_power") => "Float64",
+    Symbol("reactive_power") => "Float64",
+    Symbol("max_active_power") => "Float64",
+    Symbol("max_reactive_power") => "Float64",
+    Symbol("base_power") => "Float64",
+    Symbol("operation_cost") => "LoadCost",
+    Symbol("conformity") => "String",
+    Symbol("dynamic_injector") => "Any",
 )
 OpenAPI.property_type(::Type{InterruptiblePowerLoad}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_InterruptiblePowerLoad[name]))}
 
 function OpenAPI.check_required(o::InterruptiblePowerLoad)
-    o.name === nothing && (return false)
     o.id === nothing && (return false)
+    o.name === nothing && (return false)
     o.available === nothing && (return false)
     o.bus === nothing && (return false)
     o.active_power === nothing && (return false)
@@ -110,8 +110,8 @@ function OpenAPI.check_required(o::InterruptiblePowerLoad)
 end
 
 function OpenAPI.validate_properties(o::InterruptiblePowerLoad)
-    OpenAPI.validate_property(InterruptiblePowerLoad, Symbol("name"), o.name)
     OpenAPI.validate_property(InterruptiblePowerLoad, Symbol("id"), o.id)
+    OpenAPI.validate_property(InterruptiblePowerLoad, Symbol("name"), o.name)
     OpenAPI.validate_property(InterruptiblePowerLoad, Symbol("available"), o.available)
     OpenAPI.validate_property(InterruptiblePowerLoad, Symbol("bus"), o.bus)
     OpenAPI.validate_property(

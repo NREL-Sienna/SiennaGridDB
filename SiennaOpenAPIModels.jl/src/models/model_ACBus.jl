@@ -74,17 +74,17 @@ Base.@kwdef mutable struct ACBus <: OpenAPI.APIModel
 end # type ACBus
 
 const _property_types_ACBus = Dict{Symbol, String}(
-    Symbol("angle")=>"Float64",
-    Symbol("area")=>"Int64",
-    Symbol("available")=>"Bool",
-    Symbol("base_voltage")=>"Float64",
-    Symbol("bustype")=>"String",
-    Symbol("id")=>"Int64",
-    Symbol("load_zone")=>"Int64",
-    Symbol("magnitude")=>"Float64",
-    Symbol("name")=>"String",
-    Symbol("number")=>"Int64",
-    Symbol("voltage_limits")=>"MinMax",
+    Symbol("angle") => "Float64",
+    Symbol("area") => "Int64",
+    Symbol("available") => "Bool",
+    Symbol("base_voltage") => "Float64",
+    Symbol("bustype") => "String",
+    Symbol("id") => "Int64",
+    Symbol("load_zone") => "Int64",
+    Symbol("magnitude") => "Float64",
+    Symbol("name") => "String",
+    Symbol("number") => "Int64",
+    Symbol("voltage_limits") => "MinMax",
 )
 OpenAPI.property_type(::Type{ACBus}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_ACBus[name]))}

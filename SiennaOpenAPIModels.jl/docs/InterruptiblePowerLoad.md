@@ -4,8 +4,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**name** | **String** |  | [default to nothing]
 **id** | **Int64** |  | [default to nothing]
+**name** | **String** |  | [default to nothing]
 **available** | **Bool** |  | [default to nothing]
 **bus** | **Int64** |  | [default to nothing]
 **active_power** | **Float64** |  | [default to nothing]

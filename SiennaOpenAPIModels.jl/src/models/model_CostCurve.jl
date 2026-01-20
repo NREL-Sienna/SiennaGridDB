@@ -29,10 +29,10 @@ Base.@kwdef mutable struct CostCurve <: OpenAPI.APIModel
 end # type CostCurve
 
 const _property_types_CostCurve = Dict{Symbol, String}(
-    Symbol("power_units")=>"String",
-    Symbol("value_curve")=>"ValueCurve",
-    Symbol("variable_cost_type")=>"String",
-    Symbol("vom_cost")=>"InputOutputCurve",
+    Symbol("power_units") => "String",
+    Symbol("value_curve") => "ValueCurve",
+    Symbol("variable_cost_type") => "String",
+    Symbol("vom_cost") => "InputOutputCurve",
 )
 OpenAPI.property_type(::Type{CostCurve}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_CostCurve[name]))}

@@ -99,22 +99,22 @@ Base.@kwdef mutable struct HydroReservoir <: OpenAPI.APIModel
 end # type HydroReservoir
 
 const _property_types_HydroReservoir = Dict{Symbol, String}(
-    Symbol("id")=>"Int64",
-    Symbol("name")=>"String",
-    Symbol("available")=>"Bool",
-    Symbol("storage_level_limits")=>"MinMax",
-    Symbol("initial_level")=>"Float64",
-    Symbol("spillage_limits")=>"MinMax",
-    Symbol("inflow")=>"Float64",
-    Symbol("outflow")=>"Float64",
-    Symbol("level_targets")=>"Float64",
-    Symbol("intake_elevation")=>"Float64",
-    Symbol("head_to_volume_factor")=>"ValueCurve",
-    Symbol("upstream_turbines")=>"Vector{Int64}",
-    Symbol("downstream_turbines")=>"Vector{Int64}",
-    Symbol("upstream_reservoirs")=>"Vector{Int64}",
-    Symbol("operation_cost")=>"HydroReservoirCost",
-    Symbol("level_data_type")=>"String",
+    Symbol("id") => "Int64",
+    Symbol("name") => "String",
+    Symbol("available") => "Bool",
+    Symbol("storage_level_limits") => "MinMax",
+    Symbol("initial_level") => "Float64",
+    Symbol("spillage_limits") => "MinMax",
+    Symbol("inflow") => "Float64",
+    Symbol("outflow") => "Float64",
+    Symbol("level_targets") => "Float64",
+    Symbol("intake_elevation") => "Float64",
+    Symbol("head_to_volume_factor") => "ValueCurve",
+    Symbol("upstream_turbines") => "Vector{Int64}",
+    Symbol("downstream_turbines") => "Vector{Int64}",
+    Symbol("upstream_reservoirs") => "Vector{Int64}",
+    Symbol("operation_cost") => "HydroReservoirCost",
+    Symbol("level_data_type") => "String",
 )
 OpenAPI.property_type(::Type{HydroReservoir}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_HydroReservoir[name]))}

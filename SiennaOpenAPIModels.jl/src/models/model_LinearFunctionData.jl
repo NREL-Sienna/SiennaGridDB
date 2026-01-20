@@ -26,9 +26,9 @@ Base.@kwdef mutable struct LinearFunctionData <: OpenAPI.APIModel
 end # type LinearFunctionData
 
 const _property_types_LinearFunctionData = Dict{Symbol, String}(
-    Symbol("constant_term")=>"Float64",
-    Symbol("function_type")=>"String",
-    Symbol("proportional_term")=>"Float64",
+    Symbol("constant_term") => "Float64",
+    Symbol("function_type") => "String",
+    Symbol("proportional_term") => "Float64",
 )
 OpenAPI.property_type(::Type{LinearFunctionData}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_LinearFunctionData[name]))}

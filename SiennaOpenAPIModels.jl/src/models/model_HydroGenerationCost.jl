@@ -27,9 +27,9 @@ Base.@kwdef mutable struct HydroGenerationCost <: OpenAPI.APIModel
 end # type HydroGenerationCost
 
 const _property_types_HydroGenerationCost = Dict{Symbol, String}(
-    Symbol("cost_type")=>"String",
-    Symbol("fixed")=>"Float64",
-    Symbol("variable")=>"ProductionVariableCostCurve",
+    Symbol("cost_type") => "String",
+    Symbol("fixed") => "Float64",
+    Symbol("variable") => "ProductionVariableCostCurve",
 )
 OpenAPI.property_type(::Type{HydroGenerationCost}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_HydroGenerationCost[name]))}

@@ -94,21 +94,21 @@ Base.@kwdef mutable struct MonitoredLine <: OpenAPI.APIModel
 end # type MonitoredLine
 
 const _property_types_MonitoredLine = Dict{Symbol, String}(
-    Symbol("id")=>"Int64",
-    Symbol("name")=>"String",
-    Symbol("available")=>"Bool",
-    Symbol("active_power_flow")=>"Float64",
-    Symbol("reactive_power_flow")=>"Float64",
-    Symbol("arc")=>"Int64",
-    Symbol("r")=>"Float64",
-    Symbol("x")=>"Float64",
-    Symbol("b")=>"FromTo",
-    Symbol("flow_limits")=>"FromToToFrom",
-    Symbol("rating")=>"Float64",
-    Symbol("rating_b")=>"Float64",
-    Symbol("rating_c")=>"Float64",
-    Symbol("angle_limits")=>"MinMax",
-    Symbol("g")=>"FromTo",
+    Symbol("id") => "Int64",
+    Symbol("name") => "String",
+    Symbol("available") => "Bool",
+    Symbol("active_power_flow") => "Float64",
+    Symbol("reactive_power_flow") => "Float64",
+    Symbol("arc") => "Int64",
+    Symbol("r") => "Float64",
+    Symbol("x") => "Float64",
+    Symbol("b") => "FromTo",
+    Symbol("flow_limits") => "FromToToFrom",
+    Symbol("rating") => "Float64",
+    Symbol("rating_b") => "Float64",
+    Symbol("rating_c") => "Float64",
+    Symbol("angle_limits") => "MinMax",
+    Symbol("g") => "FromTo",
 )
 OpenAPI.property_type(::Type{MonitoredLine}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_MonitoredLine[name]))}

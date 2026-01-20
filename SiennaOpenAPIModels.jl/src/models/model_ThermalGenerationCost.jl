@@ -33,11 +33,11 @@ Base.@kwdef mutable struct ThermalGenerationCost <: OpenAPI.APIModel
 end # type ThermalGenerationCost
 
 const _property_types_ThermalGenerationCost = Dict{Symbol, String}(
-    Symbol("cost_type")=>"String",
-    Symbol("fixed")=>"Float64",
-    Symbol("shut_down")=>"Float64",
-    Symbol("start_up")=>"ThermalGenerationCostStartUp",
-    Symbol("variable")=>"ProductionVariableCostCurve",
+    Symbol("cost_type") => "String",
+    Symbol("fixed") => "Float64",
+    Symbol("shut_down") => "Float64",
+    Symbol("start_up") => "ThermalGenerationCostStartUp",
+    Symbol("variable") => "ProductionVariableCostCurve",
 )
 OpenAPI.property_type(::Type{ThermalGenerationCost}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_ThermalGenerationCost[name]))}

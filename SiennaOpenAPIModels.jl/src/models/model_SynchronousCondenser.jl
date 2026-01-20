@@ -69,16 +69,16 @@ Base.@kwdef mutable struct SynchronousCondenser <: OpenAPI.APIModel
 end # type SynchronousCondenser
 
 const _property_types_SynchronousCondenser = Dict{Symbol, String}(
-    Symbol("id")=>"Int64",
-    Symbol("name")=>"String",
-    Symbol("available")=>"Bool",
-    Symbol("bus")=>"Int64",
-    Symbol("reactive_power")=>"Float64",
-    Symbol("rating")=>"Float64",
-    Symbol("reactive_power_limits")=>"MinMax",
-    Symbol("base_power")=>"Float64",
-    Symbol("active_power_losses")=>"Float64",
-    Symbol("dynamic_injector")=>"Any",
+    Symbol("id") => "Int64",
+    Symbol("name") => "String",
+    Symbol("available") => "Bool",
+    Symbol("bus") => "Int64",
+    Symbol("reactive_power") => "Float64",
+    Symbol("rating") => "Float64",
+    Symbol("reactive_power_limits") => "MinMax",
+    Symbol("base_power") => "Float64",
+    Symbol("active_power_losses") => "Float64",
+    Symbol("dynamic_injector") => "Any",
 )
 OpenAPI.property_type(::Type{SynchronousCondenser}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_SynchronousCondenser[name]))}

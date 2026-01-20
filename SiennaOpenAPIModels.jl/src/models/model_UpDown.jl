@@ -23,7 +23,7 @@ Base.@kwdef mutable struct UpDown <: OpenAPI.APIModel
 end # type UpDown
 
 const _property_types_UpDown =
-    Dict{Symbol, String}(Symbol("down")=>"Float64", Symbol("up")=>"Float64")
+    Dict{Symbol, String}(Symbol("down") => "Float64", Symbol("up") => "Float64")
 OpenAPI.property_type(::Type{UpDown}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_UpDown[name]))}
 

@@ -74,17 +74,17 @@ Base.@kwdef mutable struct DiscreteControlledACBranch <: OpenAPI.APIModel
 end # type DiscreteControlledACBranch
 
 const _property_types_DiscreteControlledACBranch = Dict{Symbol, String}(
-    Symbol("id")=>"Int64",
-    Symbol("name")=>"String",
-    Symbol("available")=>"Bool",
-    Symbol("active_power_flow")=>"Float64",
-    Symbol("reactive_power_flow")=>"Float64",
-    Symbol("arc")=>"Int64",
-    Symbol("r")=>"Float64",
-    Symbol("x")=>"Float64",
-    Symbol("rating")=>"Float64",
-    Symbol("discrete_branch_type")=>"String",
-    Symbol("branch_status")=>"String",
+    Symbol("id") => "Int64",
+    Symbol("name") => "String",
+    Symbol("available") => "Bool",
+    Symbol("active_power_flow") => "Float64",
+    Symbol("reactive_power_flow") => "Float64",
+    Symbol("arc") => "Int64",
+    Symbol("r") => "Float64",
+    Symbol("x") => "Float64",
+    Symbol("rating") => "Float64",
+    Symbol("discrete_branch_type") => "String",
+    Symbol("branch_status") => "String",
 )
 OpenAPI.property_type(::Type{DiscreteControlledACBranch}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_DiscreteControlledACBranch[name]))}

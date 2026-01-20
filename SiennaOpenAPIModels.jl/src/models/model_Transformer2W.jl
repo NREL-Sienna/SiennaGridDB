@@ -99,22 +99,22 @@ Base.@kwdef mutable struct Transformer2W <: OpenAPI.APIModel
 end # type Transformer2W
 
 const _property_types_Transformer2W = Dict{Symbol, String}(
-    Symbol("id")=>"Int64",
-    Symbol("name")=>"String",
-    Symbol("available")=>"Bool",
-    Symbol("active_power_flow")=>"Float64",
-    Symbol("reactive_power_flow")=>"Float64",
-    Symbol("arc")=>"Int64",
-    Symbol("r")=>"Float64",
-    Symbol("x")=>"Float64",
-    Symbol("primary_shunt")=>"ComplexNumber",
-    Symbol("rating")=>"Float64",
-    Symbol("base_power")=>"Float64",
-    Symbol("base_voltage_primary")=>"Float64",
-    Symbol("base_voltage_secondary")=>"Float64",
-    Symbol("rating_b")=>"Float64",
-    Symbol("rating_c")=>"Float64",
-    Symbol("winding_group_number")=>"String",
+    Symbol("id") => "Int64",
+    Symbol("name") => "String",
+    Symbol("available") => "Bool",
+    Symbol("active_power_flow") => "Float64",
+    Symbol("reactive_power_flow") => "Float64",
+    Symbol("arc") => "Int64",
+    Symbol("r") => "Float64",
+    Symbol("x") => "Float64",
+    Symbol("primary_shunt") => "ComplexNumber",
+    Symbol("rating") => "Float64",
+    Symbol("base_power") => "Float64",
+    Symbol("base_voltage_primary") => "Float64",
+    Symbol("base_voltage_secondary") => "Float64",
+    Symbol("rating_b") => "Float64",
+    Symbol("rating_c") => "Float64",
+    Symbol("winding_group_number") => "String",
 )
 OpenAPI.property_type(::Type{Transformer2W}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_Transformer2W[name]))}

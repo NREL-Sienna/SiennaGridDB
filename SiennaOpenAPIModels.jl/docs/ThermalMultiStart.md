@@ -12,7 +12,7 @@ Name | Type | Description | Notes
 **active_power** | **Float64** |  | [default to nothing]
 **reactive_power** | **Float64** |  | [default to nothing]
 **rating** | **Float64** |  | [default to nothing]
-**prime_mover_type** | **String** |  | [default to "HY"]
+**prime_mover_type** | **String** |  | [default to "OT"]
 **fuel** | **String** | Thermal fuels that reflect options in the EIA annual energy review. | [default to "OTHER"]
 **active_power_limits** | [***MinMax**](MinMax.md) |  | [default to nothing]
 **reactive_power_limits** | [***MinMax**](MinMax.md) |  | [optional] [default to nothing]

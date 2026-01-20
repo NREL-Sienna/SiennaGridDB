@@ -84,19 +84,19 @@ Base.@kwdef mutable struct ShiftablePowerLoad <: OpenAPI.APIModel
 end # type ShiftablePowerLoad
 
 const _property_types_ShiftablePowerLoad = Dict{Symbol, String}(
-    Symbol("id")=>"Int64",
-    Symbol("name")=>"String",
-    Symbol("available")=>"Bool",
-    Symbol("bus")=>"Int64",
-    Symbol("active_power")=>"Float64",
-    Symbol("active_power_limits")=>"MinMax",
-    Symbol("reactive_power")=>"Float64",
-    Symbol("max_active_power")=>"Float64",
-    Symbol("max_reactive_power")=>"Float64",
-    Symbol("base_power")=>"Float64",
-    Symbol("load_balance_time_horizon")=>"Int64",
-    Symbol("operation_cost")=>"LoadCost",
-    Symbol("dynamic_injector")=>"Any",
+    Symbol("id") => "Int64",
+    Symbol("name") => "String",
+    Symbol("available") => "Bool",
+    Symbol("bus") => "Int64",
+    Symbol("active_power") => "Float64",
+    Symbol("active_power_limits") => "MinMax",
+    Symbol("reactive_power") => "Float64",
+    Symbol("max_active_power") => "Float64",
+    Symbol("max_reactive_power") => "Float64",
+    Symbol("base_power") => "Float64",
+    Symbol("load_balance_time_horizon") => "Int64",
+    Symbol("operation_cost") => "LoadCost",
+    Symbol("dynamic_injector") => "Any",
 )
 OpenAPI.property_type(::Type{ShiftablePowerLoad}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_ShiftablePowerLoad[name]))}

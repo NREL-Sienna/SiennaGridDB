@@ -4,8 +4,8 @@
 @doc raw"""Source
 
     Source(;
-        name=nothing,
         id=nothing,
+        name=nothing,
         available=nothing,
         bus=nothing,
         active_power=0.0,
@@ -21,8 +21,8 @@
         dynamic_injector=nothing,
     )
 
-    - name::String
     - id::Int64
+    - name::String
     - available::Bool
     - bus::Int64
     - active_power::Float64
@@ -38,8 +38,8 @@
     - dynamic_injector::Any
 """
 Base.@kwdef mutable struct Source <: OpenAPI.APIModel
-    name::Union{Nothing, String} = nothing
     id::Union{Nothing, Int64} = nothing
+    name::Union{Nothing, String} = nothing
     available::Union{Nothing, Bool} = nothing
     bus::Union{Nothing, Int64} = nothing
     active_power::Union{Nothing, Float64} = 0.0
@@ -55,8 +55,8 @@ Base.@kwdef mutable struct Source <: OpenAPI.APIModel
     dynamic_injector::Union{Nothing, Any} = nothing
 
     function Source(
-        name,
         id,
+        name,
         available,
         bus,
         active_power,
@@ -72,8 +72,8 @@ Base.@kwdef mutable struct Source <: OpenAPI.APIModel
         dynamic_injector,
     )
         o = new(
-            name,
             id,
+            name,
             available,
             bus,
             active_power,
@@ -94,36 +94,36 @@ Base.@kwdef mutable struct Source <: OpenAPI.APIModel
 end # type Source
 
 const _property_types_Source = Dict{Symbol, String}(
-    Symbol("name")=>"String",
-    Symbol("id")=>"Int64",
-    Symbol("available")=>"Bool",
-    Symbol("bus")=>"Int64",
-    Symbol("active_power")=>"Float64",
-    Symbol("reactive_power")=>"Float64",
-    Symbol("active_power_limits")=>"MinMax",
-    Symbol("reactive_power_limits")=>"MinMax",
-    Symbol("R_th")=>"Float64",
-    Symbol("X_th")=>"Float64",
-    Symbol("internal_voltage")=>"Float64",
-    Symbol("internal_angle")=>"Float64",
-    Symbol("base_power")=>"Float64",
-    Symbol("operation_cost")=>"ImportExportCost",
-    Symbol("dynamic_injector")=>"Any",
+    Symbol("id") => "Int64",
+    Symbol("name") => "String",
+    Symbol("available") => "Bool",
+    Symbol("bus") => "Int64",
+    Symbol("active_power") => "Float64",
+    Symbol("reactive_power") => "Float64",
+    Symbol("active_power_limits") => "MinMax",
+    Symbol("reactive_power_limits") => "MinMax",
+    Symbol("R_th") => "Float64",
+    Symbol("X_th") => "Float64",
+    Symbol("internal_voltage") => "Float64",
+    Symbol("internal_angle") => "Float64",
+    Symbol("base_power") => "Float64",
+    Symbol("operation_cost") => "ImportExportCost",
+    Symbol("dynamic_injector") => "Any",
 )
 OpenAPI.property_type(::Type{Source}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_Source[name]))}
 
 function OpenAPI.check_required(o::Source)
-    o.name === nothing && (return false)
     o.id === nothing && (return false)
+    o.name === nothing && (return false)
     o.available === nothing && (return false)
     o.bus === nothing && (return false)
     true
 end
 
 function OpenAPI.validate_properties(o::Source)
-    OpenAPI.validate_property(Source, Symbol("name"), o.name)
     OpenAPI.validate_property(Source, Symbol("id"), o.id)
+    OpenAPI.validate_property(Source, Symbol("name"), o.name)
     OpenAPI.validate_property(Source, Symbol("available"), o.available)
     OpenAPI.validate_property(Source, Symbol("bus"), o.bus)
     OpenAPI.validate_property(Source, Symbol("active_power"), o.active_power)
