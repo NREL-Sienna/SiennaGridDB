@@ -39,7 +39,7 @@ const INFRASYS_TS_SCHEMA = Tables.Schema(
     ],
 )
 
-function get_uuid_mapping(sys::PowerSystems.System)
+function get_uuid_mapping(sys::PSY.System)
     metadata_store = sys.data.time_series_manager.metadata_store
 
     time_series_uuids = IS.sql(
@@ -71,7 +71,7 @@ function get_uuid_mapping(sys::PowerSystems.System)
     return uuid_mapping
 end
 
-function get_example_metadata_uuids(sys::PowerSystems.System)
+function get_example_metadata_uuids(sys::PSY.System)
     metadata_store = sys.data.time_series_manager.metadata_store
 
     return IS.sql(
@@ -83,7 +83,7 @@ function get_example_metadata_uuids(sys::PowerSystems.System)
     )
 end
 
-function get_time_series_from_metadata_uuid(sys::PowerSystems.System, metadata_uuid)
+function get_time_series_from_metadata_uuid(sys::PSY.System, metadata_uuid)
     ts_metadata = sys.data.time_series_manager.metadata_store.metadata_uuids[metadata_uuid]
 
     start_time = IS._check_start_time(nothing, ts_metadata)
@@ -105,7 +105,7 @@ Writes time series as rows (time_series_uuid, timestamp, value)
 """
 function serialize_timeseries_data!(
     db,
-    ts::PowerSystems.SingleTimeSeries,
+    ts::PSY.SingleTimeSeries,
     time_series_uuid::Base.UUID,
 )
     stmt = DBInterface.prepare(
@@ -126,7 +126,7 @@ Writes time series as rows (time_series_uuid, timestamp, value)
 """
 function serialize_timeseries_data!(
     db,
-    ts::PowerSystems.DeterministicSingleTimeSeries,
+    ts::PSY.DeterministicSingleTimeSeries,
     time_series_uuid::Base.UUID,
 )
     serialize_time_series_data(db, ts.single_time_series, time_series_uuid)
@@ -135,7 +135,7 @@ end
 """
 Iterate through all metadata objects and serialize timeseries
 """
-function serialize_all_timeseries_data!(db, sys::PowerSystems.System)
+function serialize_all_timeseries_data!(db, sys::PSY.System)
     time_series_uuid_to_metadata_uuids = get_example_metadata_uuids(sys)
 
     for (time_series_uuid, metadata_uuid) in eachrow(time_series_uuid_to_metadata_uuids)
@@ -144,8 +144,8 @@ function serialize_all_timeseries_data!(db, sys::PowerSystems.System)
     end
 end
 
-function transform_associations!(sys::PowerSystems.System, associations, ids::IDGenerator)
-    associations = PowerSystems.DataFrames.coalesce.(associations, nothing)
+function transform_associations!(sys::PSY.System, associations, ids::IDGenerator)
+    associations = PSY.DataFrames.coalesce.(associations, nothing)
     type_strings =
         SiennaOpenAPIModels.ALL_DESERIALIZABLE_TYPES .|> (x -> last(split(string(x), ".")))
     deserializable_string(x) = in(x, type_strings)
@@ -153,14 +153,14 @@ function transform_associations!(sys::PowerSystems.System, associations, ids::ID
     associations = associations[deserializable_string.(associations[!, "owner_type"]), :]
     associations[!, "owner_id"] =
         map(owner_uuid -> getid!(ids, Base.UUID(owner_uuid)), associations[!, "owner_uuid"])
-    PowerSystems.DataFrames.select!(
+    PSY.DataFrames.select!(
         associations,
         Symbol.(collect(TABLE_SCHEMAS["time_series_associations"].names)),
     )
     return associations
 end
 
-function serialize_timeseries_associations!(db, sys::PowerSystems.System, ids::IDGenerator)
+function serialize_timeseries_associations!(db, sys::PSY.System, ids::IDGenerator)
     associations = IS.sql(
         sys.data.time_series_manager.metadata_store,
         """SELECT $(join(INFRASYS_TS_SCHEMA.names, ", "))
@@ -179,7 +179,7 @@ VALUES ($(join(repeat("?", length(TABLE_SCHEMAS["time_series_associations"].name
     end
 end
 
-function serialize_timeseries!(db, sys::PowerSystems.System, ids::IDGenerator)
+function serialize_timeseries!(db, sys::PSY.System, ids::IDGenerator)
     DBInterface.transaction(db) do
         serialize_all_timeseries_data!(db, sys)
         serialize_timeseries_associations!(db, sys, ids)
@@ -204,7 +204,7 @@ function deserialize_timedata(
     column_table = Tables.columntable(rows)
     timestamps =
         range(sts_meta.initial_timestamp; length=sts_meta.length, step=sts_meta.resolution)
-    return PowerSystems.TimeSeries.TimeArray(timestamps, column_table.value)
+    return PSY.TimeSeries.TimeArray(timestamps, column_table.value)
 end
 
 function deserialize_timedata(_, ts::InfrastructureSystems.DeterministicMetadata, _)
@@ -215,7 +215,7 @@ function deserialize_time_series_row!(sys, db, row)
     metadata = deserialize_metadata(row)
     if isa(metadata, InfrastructureSystems.DeterministicMetadata) &&
        metadata.time_series_type <: InfrastructureSystems.DeterministicSingleTimeSeries
-        component = PowerSystems.get_component(sys, row.owner_uuid)
+        component = PSY.get_component(sys, row.owner_uuid)
         InfrastructureSystems.add_metadata!(
             sys.data.time_series_manager.metadata_store,
             component,
@@ -227,11 +227,7 @@ function deserialize_time_series_row!(sys, db, row)
             metadata,
             time_array,
         )
-        PowerSystems.add_time_series!(
-            sys,
-            PowerSystems.get_component(sys, row.owner_uuid),
-            ts,
-        )
+        PSY.add_time_series!(sys, PSY.get_component(sys, row.owner_uuid), ts)
     end
 end
 
@@ -301,7 +297,7 @@ function get_example_metadata(db)
 end
 
 function deserialize_time_series_from_metadata!(
-    sys::PowerSystems.System,
+    sys::PSY.System,
     db,
     resolver::Resolver,
     metadata,
@@ -309,10 +305,10 @@ function deserialize_time_series_from_metadata!(
 )
     time_array = deserialize_timedata(db, metadata, row.time_series_uuid)
     ts = InfrastructureSystems.time_series_metadata_to_data(metadata)(metadata, time_array)
-    PowerSystems.add_time_series!(sys, resolver(row.owner_id), ts)
+    PSY.add_time_series!(sys, resolver(row.owner_id), ts)
 end
 
-function deserialize_timeseries!(sys::PowerSystems.System, db, resolver::Resolver)
+function deserialize_timeseries!(sys::PSY.System, db, resolver::Resolver)
     DBInterface.transaction(db) do
         # For each time_series_uuid, we'll pick a "real" metadata_uuid (so no DeterministicSingleTimeSeries),
         # then we will deserialize and add them to the system. Finally, we'll go through and add_metadata!

@@ -1,5 +1,4 @@
-import InfrastructureSystems
-const IS = InfrastructureSystems
+import InfrastructureSystems as IS
 
 # Functions that deserilize strings
 

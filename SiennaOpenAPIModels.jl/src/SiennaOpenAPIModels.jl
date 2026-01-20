@@ -11,10 +11,10 @@ module SiennaOpenAPIModels
 
 using OpenAPI
 using StructHelpers: @batteries
-import PowerSystems
+import PowerSystems as PSY
 import Dates
+import InfrastructureSystems as IS
 
-const PSY = PowerSystems
 const API_VERSION = "1.0.0"
 
 export psy2openapi

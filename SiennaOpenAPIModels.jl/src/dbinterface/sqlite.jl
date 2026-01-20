@@ -374,7 +374,7 @@ function add_components_to_sys!(
         if haskey(dict, "uuid")
             IS.set_uuid!(IS.get_internal(sienna_obj), Base.UUID(dict["uuid"]))
         end
-        PowerSystems.add_component!(sys, sienna_obj)
+        PSY.add_component!(sys, sienna_obj)
         resolver.id2uuid[row.id] = IS.get_uuid(sienna_obj)
     end
 end
@@ -408,7 +408,7 @@ function add_components_to_sys!(
         if haskey(dict, "uuid")
             IS.set_uuid!(IS.get_internal(sienna_obj), Base.UUID(dict["uuid"]))
         end
-        PowerSystems.add_component!(sys, sienna_obj)
+        PSY.add_component!(sys, sienna_obj)
         resolver.id2uuid[row.id] = IS.get_uuid(sienna_obj)
     end
 end
@@ -479,7 +479,7 @@ function add_components_to_sys!(
         if haskey(dict, "uuid")
             IS.set_uuid!(IS.get_internal(sienna_obj), Base.UUID(dict["uuid"]))
         end
-        PowerSystems.add_component!(sys, sienna_obj)
+        PSY.add_component!(sys, sienna_obj)
         resolver.id2uuid[row.id] = IS.get_uuid(sienna_obj)
     end
 end

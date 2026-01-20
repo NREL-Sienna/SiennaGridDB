@@ -6,13 +6,13 @@ InfrastructureSystems._is_compare_directly(::TimeSeries.TimeArray, ::TimeSeries.
 function test_all_time_series(sys1::PSY.System, sys2::PSY.System)
     for T in SiennaOpenAPIModels.ALL_DESERIALIZABLE_TYPES
         SIENNA_T = SiennaOpenAPIModels.OPENAPI_TYPE_TO_PSY[T]
-        for c in PowerSystems.get_components(SIENNA_T, sys1)
+        for c in PSY.get_components(SIENNA_T, sys1)
             new_component = PSY.get_component(SIENNA_T, sys2, PSY.get_name(c))
-            if PowerSystems.has_time_series(c)
-                for key in PowerSystems.get_time_series_keys(c)
-                    ts = PowerSystems.get_time_series(c, key)
-                    @test PowerSystems.has_time_series(new_component)
-                    new_ts = PowerSystems.get_time_series(new_component, key)
+            if PSY.has_time_series(c)
+                for key in PSY.get_time_series_keys(c)
+                    ts = PSY.get_time_series(c, key)
+                    @test PSY.has_time_series(new_component)
+                    new_ts = PSY.get_time_series(new_component, key)
                     @test !isnothing(new_ts)
                     @test IS.compare_values(
                         custom_isequivalent,

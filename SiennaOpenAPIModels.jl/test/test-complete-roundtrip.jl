@@ -1,10 +1,8 @@
 using SiennaOpenAPIModels
 using OpenAPI
 using PowerSystemCaseBuilder
-import InfrastructureSystems
-const IS = InfrastructureSystems
-import PowerSystems
-const PSY = PowerSystems
+import InfrastructureSystems as IS
+import PowerSystems as PSY
 using JSON
 
 @testset "AC_TWO_RTO_RTS_5min_sys Complete RoundTrip to JSON" begin
@@ -406,7 +404,7 @@ end
     end
     @testset "TapTransformer to JSON and Back" begin
         taptransform = PSY.get_component(
-            PowerSystems.TapTransformer,
+            PSY.TapTransformer,
             pti_case16_complete_sys,
             "BUS 103-BUS 201-i_1",
         )

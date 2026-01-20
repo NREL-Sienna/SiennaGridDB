@@ -1,17 +1,12 @@
 using SiennaOpenAPIModels
 using PowerSystemCaseBuilder
-import PowerSystems
-import InfrastructureSystems
+import PowerSystems as PSY
+import InfrastructureSystems as IS
 using JSON
 import SQLite
 import DBInterface
 import Tables
 using Test
-
-const PSY = PowerSystems
-const IS = InfrastructureSystems
-
-include("utils.jl")
 
 function attributes_to_dict(column_table)
     d = Dict()

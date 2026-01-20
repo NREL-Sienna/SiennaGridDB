@@ -1,8 +1,7 @@
 using SiennaOpenAPIModels
 using OpenAPI
 using PowerSystemCaseBuilder
-import PowerSystems
-const PSY = PowerSystems
+import PowerSystems as PSY
 using JSON
 
 function jsondiff(j1::S, j2::S) where {S <: Union{String, Int64, Float64, Bool}}
@@ -503,7 +502,7 @@ end
     end
     @testset "TapTransformer to JSON" begin
         taptransformer = PSY.get_component(
-            PowerSystems.TapTransformer,
+            PSY.TapTransformer,
             pti_case16_complete_sys,
             "BUS 103-BUS 201-i_1",
         )
