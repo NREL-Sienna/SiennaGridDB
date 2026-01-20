@@ -53,8 +53,7 @@ end
     db = SQLite.DB()
     SiennaOpenAPIModels.make_sqlite!(db)
     ids = IDGenerator()
-    SiennaOpenAPIModels.sys2db!(db, sys, ids)
-    SiennaOpenAPIModels.serialize_timeseries!(db, sys, ids)
+    SiennaOpenAPIModels.sys2db!(db, sys, ids, time_series=true)
 
     copy_of_sys = PSY.System(100)
     resolver = SiennaOpenAPIModels.Resolver(copy_of_sys, Dict{Int64, Base.UUID}())
