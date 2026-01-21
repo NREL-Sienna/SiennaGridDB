@@ -43,8 +43,8 @@ function openapi2psy(branch::DiscreteControlledACBranch, resolver::Resolver)
             ),
         ),
         rating=divide(branch.rating, PSY.get_base_power(resolver.sys)),
-        discrete_branch_type=get_branchtype_enum(branch.discrete_branch_type),
-        branch_status=get_branchstatus_enum(branch.branch_status),
+        discrete_branch_type=PSY.DiscreteControlledBranchType(branch.discrete_branch_type),
+        branch_status=PSY.DiscreteControlledBranchStatus(branch.branch_status),
     )
 end
 
@@ -173,7 +173,7 @@ function openapi2psy(transformer::PhaseShiftingTransformer, resolver::Resolver)
         rating_b=divide(transformer.rating_b, transformer.base_power),
         rating_c=divide(transformer.rating_c, transformer.base_power),
         phase_angle_limits=get_tuple_min_max(transformer.phase_angle_limits),
-        control_objective=get_control_objective_enum(transformer.control_objective),
+        control_objective=PSY.TransformerControlObjective(transformer.control_objective),
     )
 end
 
@@ -285,13 +285,13 @@ function openapi2psy(phase3w::PhaseShiftingTransformer3W, resolver::Resolver)
         rating_secondary=divide(phase3w.rating_secondary, phase3w.base_power_23),
         rating_tertiary=divide(phase3w.rating_tertiary, phase3w.base_power_13),
         phase_angle_limits=get_tuple_min_max(phase3w.phase_angle_limits),
-        control_objective_primary=get_control_objective_enum(
+        control_objective_primary=PSY.TransformerControlObjective(
             phase3w.control_objective_primary,
         ),
-        control_objective_secondary=get_control_objective_enum(
+        control_objective_secondary=PSY.TransformerControlObjective(
             phase3w.control_objective_secondary,
         ),
-        control_objective_tertiary=get_control_objective_enum(
+        control_objective_tertiary=PSY.TransformerControlObjective(
             phase3w.control_objective_tertiary,
         ),
     )
@@ -326,8 +326,8 @@ function openapi2psy(taptransform::TapTransformer, resolver::Resolver)
         base_voltage_secondary=taptransform.base_voltage_secondary,
         rating_b=divide(taptransform.rating_b, taptransform.base_power),
         rating_c=divide(taptransform.rating_c, taptransform.base_power),
-        winding_group_number=get_winding_group_enum(taptransform.winding_group_number),
-        control_objective=get_control_objective_enum(taptransform.control_objective),
+        winding_group_number=PSY.WindingGroupNumber(taptransform.winding_group_number),
+        control_objective=PSY.TransformerControlObjective(taptransform.control_objective),
     )
 end
 
@@ -379,7 +379,7 @@ function openapi2psy(transform::Transformer2W, resolver::Resolver)
         base_voltage_secondary=transform.base_voltage_secondary,
         rating_b=divide(transform.rating_b, transform.base_power),
         rating_c=divide(transform.rating_c, transform.base_power),
-        winding_group_number=get_winding_group_enum(transform.winding_group_number),
+        winding_group_number=PSY.WindingGroupNumber(transform.winding_group_number),
     )
 end
 
@@ -487,16 +487,16 @@ function openapi2psy(trans3w::Transformer3W, resolver::Resolver)
         rating_primary=divide(trans3w.rating_primary, trans3w.base_power_12),
         rating_secondary=divide(trans3w.rating_secondary, trans3w.base_power_23),
         rating_tertiary=divide(trans3w.rating_tertiary, trans3w.base_power_13),
-        primary_group_number=get_winding_group_enum(trans3w.primary_group_number),
-        secondary_group_number=get_winding_group_enum(trans3w.secondary_group_number),
-        tertiary_group_number=get_winding_group_enum(trans3w.tertiary_group_number),
-        control_objective_primary=get_control_objective_enum(
+        primary_group_number=PSY.WindingGroupNumber(trans3w.primary_group_number),
+        secondary_group_number=PSY.WindingGroupNumber(trans3w.secondary_group_number),
+        tertiary_group_number=PSY.WindingGroupNumber(trans3w.tertiary_group_number),
+        control_objective_primary=PSY.TransformerControlObjective(
             trans3w.control_objective_primary,
         ),
-        control_objective_secondary=get_control_objective_enum(
+        control_objective_secondary=PSY.TransformerControlObjective(
             trans3w.control_objective_secondary,
         ),
-        control_objective_tertiary=get_control_objective_enum(
+        control_objective_tertiary=PSY.TransformerControlObjective(
             trans3w.control_objective_tertiary,
         ),
     )

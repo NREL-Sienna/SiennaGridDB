@@ -3,8 +3,8 @@ function openapi2psy(energy_res::EnergyReservoirStorage, resolver::Resolver)
         name=energy_res.name,
         available=energy_res.available,
         bus=resolver(energy_res.bus),
-        prime_mover_type=get_prime_mover_enum(energy_res.prime_mover_type),
-        storage_technology_type=get_storage_tech_enum(energy_res.storage_technology_type),
+        prime_mover_type=PSY.PrimeMovers(energy_res.prime_mover_type),
+        storage_technology_type=PSY.StorageTech(energy_res.storage_technology_type),
         storage_capacity=divide(energy_res.storage_capacity, energy_res.base_power),
         storage_level_limits=get_tuple_min_max(energy_res.storage_level_limits),
         initial_storage_capacity_level=energy_res.initial_storage_capacity_level,
@@ -41,7 +41,7 @@ function openapi2psy(load::ExponentialLoad, resolver::Resolver)
         reactive_power=divide(load.reactive_power, load.base_power),
         α=load.alpha,
         β=load.beta,
-        conformity=get_load_conform_enum(load.conformity),
+        conformity=PSY.LoadConformity(load.conformity),
         base_power=load.base_power,
         max_active_power=divide(load.max_active_power, load.base_power),
         max_reactive_power=divide(load.max_reactive_power, load.base_power),
@@ -53,7 +53,7 @@ function openapi2psy(facts::FACTSControlDevice, resolver::Resolver)
         name=facts.name,
         available=facts.available,
         bus=resolver(facts.bus),
-        control_mode=get_factsmode_enum(facts.control_mode),
+        control_mode=PSY.FACTSOperationModes(facts.control_mode),
         voltage_setpoint=facts.voltage_setpoint,
         max_shunt_current=facts.max_shunt_current,
         reactive_power_required=facts.reactive_power_required,
@@ -77,7 +77,7 @@ function openapi2psy(hydro::HydroDispatch, resolver::Resolver)
         active_power=divide(hydro.active_power, hydro.base_power),
         reactive_power=divide(hydro.reactive_power, hydro.base_power),
         rating=divide(hydro.rating, hydro.base_power),
-        prime_mover_type=get_prime_mover_enum(hydro.prime_mover_type),
+        prime_mover_type=PSY.PrimeMovers(hydro.prime_mover_type),
         active_power_limits=divide(
             get_tuple_min_max(hydro.active_power_limits),
             hydro.base_power,
@@ -120,7 +120,7 @@ function openapi2psy(hydro::HydroPumpTurbine, resolver::Resolver)
         ramp_limits=divide(get_tuple_up_down(hydro.ramp_limits), hydro.base_power),
         time_limits=get_tuple_up_down(hydro.time_limits),
         base_power=hydro.base_power,
-        status=get_pump_status_enum(hydro.status),
+        status=PSY.PumpHydroStatus(hydro.status),
         time_at_status=hydro.time_at_status,
         operation_cost=get_sienna_operation_cost(hydro.operation_cost),
         active_power_pump=divide(hydro.active_power_pump, hydro.base_power),
@@ -130,7 +130,7 @@ function openapi2psy(hydro::HydroPumpTurbine, resolver::Resolver)
         travel_time=hydro.travel_time,
         conversion_factor=hydro.conversion_factor,
         must_run=hydro.must_run,
-        prime_mover_type=get_prime_mover_enum(hydro.prime_mover_type),
+        prime_mover_type=PSY.PrimeMovers(hydro.prime_mover_type),
     )
 end
 
@@ -150,7 +150,7 @@ function openapi2psy(hydro::HydroReservoir, resolver::Resolver)
         downstream_turbines=map(resolver, hydro.downstream_turbines), # this is a vector of "HydroUnit"s
         upstream_reservoirs=map(resolver, hydro.upstream_reservoirs), # this is a vector of "Device"s
         operation_cost=get_sienna_operation_cost(hydro.operation_cost),
-        level_data_type=get_res_data_enum(hydro.level_data_type),
+        level_data_type=PSY.ReservoirDataType(hydro.level_data_type),
     )
 end
 
@@ -177,9 +177,9 @@ function openapi2psy(hydro::HydroTurbine, resolver::Resolver)
         base_power=hydro.base_power,
         operation_cost=get_sienna_operation_cost(hydro.operation_cost),
         efficiency=hydro.efficiency,
-        turbine_type=get_turbine_type_enum(hydro.turbine_type),
+        turbine_type=PSY.HydroTurbineType(hydro.turbine_type),
         conversion_factor=hydro.conversion_factor,
-        prime_mover_type=get_prime_mover_enum(hydro.prime_mover_type),
+        prime_mover_type=PSY.PrimeMovers(hydro.prime_mover_type),
         travel_time=hydro.travel_time,
     )
 end
@@ -220,7 +220,7 @@ function openapi2psy(interrupt_power::InterruptiblePowerLoad, resolver::Resolver
         ),
         base_power=interrupt_power.base_power,
         operation_cost=get_sienna_operation_cost(interrupt_power.operation_cost),
-        conformity=get_load_conform_enum(interrupt_power.conformity),
+        conformity=PSY.LoadConformity(interrupt_power.conformity),
     )
 end
 
@@ -231,7 +231,7 @@ function openapi2psy(interrupt_standard::InterruptibleStandardLoad, resolver::Re
         bus=resolver(interrupt_standard.bus),
         base_power=interrupt_standard.base_power,
         operation_cost=get_sienna_operation_cost(interrupt_standard.operation_cost),
-        conformity=get_load_conform_enum(interrupt_standard.conformity),
+        conformity=PSY.LoadConformity(interrupt_standard.conformity),
         constant_active_power=divide(
             interrupt_standard.constant_active_power,
             interrupt_standard.base_power,
@@ -297,7 +297,7 @@ function openapi2psy(motor_load::MotorLoad, resolver::Resolver)
             get_tuple_min_max(motor_load.reactive_power_limits),
             motor_load.base_power,
         ),
-        motor_technology=get_motor_tech_enum(motor_load.motor_technology),
+        motor_technology=PSY.MotorLoadTechnology(motor_load.motor_technology),
     )
 end
 
@@ -311,7 +311,7 @@ function openapi2psy(load::PowerLoad, resolver::Resolver)
         base_power=load.base_power,
         max_active_power=divide(load.max_active_power, load.base_power),
         max_reactive_power=divide(load.max_reactive_power, load.base_power),
-        conformity=get_load_conform_enum(load.conformity),
+        conformity=PSY.LoadConformity(load.conformity),
     )
 end
 
@@ -323,7 +323,7 @@ function openapi2psy(renew::RenewableDispatch, resolver::Resolver)
         active_power=divide(renew.active_power, renew.base_power),
         reactive_power=divide(renew.reactive_power, renew.base_power),
         rating=divide(renew.rating, renew.base_power),
-        prime_mover_type=get_prime_mover_enum(renew.prime_mover_type),
+        prime_mover_type=PSY.PrimeMovers(renew.prime_mover_type),
         reactive_power_limits=divide(
             get_tuple_min_max(renew.reactive_power_limits),
             renew.base_power,
@@ -342,7 +342,7 @@ function openapi2psy(renewnon::RenewableNonDispatch, resolver::Resolver)
         active_power=divide(renewnon.active_power, renewnon.base_power),
         reactive_power=divide(renewnon.reactive_power, renewnon.base_power),
         rating=divide(renewnon.rating, renewnon.base_power),
-        prime_mover_type=get_prime_mover_enum(renewnon.prime_mover_type),
+        prime_mover_type=PSY.PrimeMovers(renewnon.prime_mover_type),
         power_factor=renewnon.power_factor,
         base_power=renewnon.base_power,
     )
@@ -444,7 +444,7 @@ function openapi2psy(standard_load::StandardLoad, resolver::Resolver)
             standard_load.max_current_reactive_power,
             standard_load.base_power,
         ),
-        conformity=get_load_conform_enum(standard_load.conformity),
+        conformity=PSY.LoadConformity(standard_load.conformity),
         base_power=standard_load.base_power,
     )
 end
@@ -487,8 +487,8 @@ function openapi2psy(multi::ThermalMultiStart, resolver::Resolver)
         active_power=divide(multi.active_power, multi.base_power),
         reactive_power=divide(multi.reactive_power, multi.base_power),
         rating=divide(multi.rating, multi.base_power),
-        prime_mover_type=get_prime_mover_enum(multi.prime_mover_type),
-        fuel=get_fuel_type_enum(multi.fuel),
+        prime_mover_type=PSY.PrimeMovers(multi.prime_mover_type),
+        fuel=PSY.ThermalFuels(multi.fuel),
         active_power_limits=divide(
             get_tuple_min_max(multi.active_power_limits),
             multi.base_power,
@@ -515,8 +515,8 @@ end
 function openapi2psy(thermal::ThermalStandard, resolver::Resolver)
     PSY.ThermalStandard(;
         name=thermal.name,
-        prime_mover_type=get_prime_mover_enum(thermal.prime_mover_type),
-        fuel=get_fuel_type_enum(thermal.fuel_type),
+        prime_mover_type=PSY.PrimeMovers(thermal.prime_mover_type),
+        fuel=PSY.ThermalFuels(thermal.fuel_type),
         rating=divide(thermal.rating, thermal.base_power),
         base_power=thermal.base_power,
         available=thermal.available,

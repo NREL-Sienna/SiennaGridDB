@@ -2,54 +2,6 @@ import InfrastructureSystems as IS
 
 # Functions that deserilize strings
 
-function get_bustype_enum(bustype::String)
-    IS.deserialize(PSY.ACBusTypes, bustype)
-end
-
-function get_branchstatus_enum(branchstatus::String)
-    IS.deserialize(PSY.DiscreteControlledBranchStatus, branchstatus)
-end
-
-function get_branchtype_enum(branchtype::String)
-    IS.deserialize(PSY.DiscreteControlledBranchType, branchtype)
-end
-
-function get_control_objective_enum(objective::String)
-    IS.deserialize(PSY.TransformerControlObjective, objective)
-end
-
-function get_factsmode_enum(factsmode::String)
-    IS.deserialize(PSY.FACTSOperationModes, factsmode)
-end
-
-function get_fuel_type_enum(fuel_type::String)
-    IS.deserialize(PSY.ThermalFuels, fuel_type)
-end
-
-function get_load_conform_enum(conformity::String)
-    IS.deserialize(PSY.LoadConformity, conformity)
-end
-
-function get_motor_tech_enum(motor_tech::String)
-    IS.deserialize(PSY.MotorLoadTechnology, motor_tech)
-end
-
-function get_prime_mover_enum(prime_mover_type::String)
-    IS.deserialize(PSY.PrimeMovers, prime_mover_type)
-end
-
-function get_pump_status_enum(status::String)
-    IS.deserialize(PSY.PumpHydroStatus, status)
-end
-
-function get_res_data_enum(reservoir_data_type::String)
-    IS.deserialize(PSY.ReservoirDataType, reservoir_data_type)
-end
-
-function get_res_location_enum(reservoir_location::String)
-    IS.deserialize(PSY.ReservoirLocation, reservoir_location)
-end
-
 function get_reserve_enum(direction::String)
     if direction == "UP"
         return PSY.ReserveUp
@@ -60,22 +12,6 @@ function get_reserve_enum(direction::String)
     else
         error("Unsupported Reserve Direction: $(direction)")
     end
-end
-
-function get_sienna_unit_system(units::String)
-    IS.deserialize(PSY.UnitSystem, units)
-end
-
-function get_storage_tech_enum(storage::String)
-    IS.deserialize(PSY.StorageTech, storage)
-end
-
-function get_turbine_type_enum(turbine::String)
-    IS.deserialize(PSY.HydroTurbineType, turbine)
-end
-
-function get_winding_group_enum(group_num::String)
-    IS.deserialize(PSY.WindingGroupNumber, group_num)
 end
 
 # Functions that convert and scale tuples
@@ -222,14 +158,14 @@ function get_sienna_variable_cost(variable::CostCurve)
     PSY.CostCurve(
         value_curve=get_sienna_value_curve(variable.value_curve),
         vom_cost=get_sienna_value_curve(variable.vom_cost),
-        power_units=get_sienna_unit_system(variable.power_units),
+        power_units=PSY.UnitSystem(variable.power_units),
     )
 end
 
 function get_sienna_variable_cost(variable::FuelCurve)
     PSY.FuelCurve(
         value_curve=get_sienna_value_curve(variable.value_curve),
-        power_units=get_sienna_unit_system(variable.power_units),
+        power_units=PSY.UnitSystem(variable.power_units),
         fuel_cost=get_sienna_variable_cost(variable.fuel_cost),
         vom_cost=get_sienna_value_curve(variable.vom_cost),
     )
