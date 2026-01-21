@@ -11,9 +11,10 @@ module SiennaOpenAPIModels
 
 using OpenAPI
 using StructHelpers: @batteries
-import PowerSystems
+import PowerSystems as PSY
+import Dates
+import InfrastructureSystems as IS
 
-const PSY = PowerSystems
 const API_VERSION = "1.0.0"
 
 export psy2openapi
@@ -36,18 +37,22 @@ include("modelincludes.jl")
 @batteries ConstantReserveNonSpinning
 @batteries CostCurve
 @batteries DCBus
+@batteries DiscreteControlledACBranch
 @batteries EnergyReservoirStorage
 @batteries ExponentialLoad
+@batteries FACTSControlDevice
 @batteries FixedAdmittance
 @batteries FromTo
 @batteries FromToToFrom
 @batteries FuelCurve
 @batteries FuelCurveFuelCost
 @batteries HydroDispatch
-@batteries HydroEnergyReservoir
 @batteries HydroGenerationCost
-@batteries HydroPumpedStorage
-@batteries HydroStorageGenerationCost
+@batteries HydroPumpTurbine
+@batteries HydroReservoir
+@batteries HydroReservoirCost
+@batteries HydroTurbine
+@batteries ImportExportCost
 @batteries IncrementalCurve
 @batteries IncrementalCurveFunctionData
 @batteries InOut
@@ -55,13 +60,16 @@ include("modelincludes.jl")
 @batteries InputOutputCurveFunctionData
 @batteries InterconnectingConverter
 @batteries InterruptiblePowerLoad
+@batteries InterruptibleStandardLoad
 @batteries Line
 @batteries LinearFunctionData
 @batteries LoadCost
 @batteries LoadZone
 @batteries MinMax
 @batteries MonitoredLine
+@batteries MotorLoad
 @batteries PhaseShiftingTransformer
+@batteries PhaseShiftingTransformer3W
 @batteries PiecewiseLinearData
 @batteries PiecewiseStepData
 @batteries PowerLoad
@@ -70,6 +78,7 @@ include("modelincludes.jl")
 @batteries RenewableDispatch
 @batteries RenewableGenerationCost
 @batteries RenewableNonDispatch
+@batteries ShiftablePowerLoad
 @batteries Source
 @batteries StandardLoad
 @batteries StartUpShutDown
@@ -78,6 +87,7 @@ include("modelincludes.jl")
 @batteries StorageCostStartUp
 @batteries StorageCostStartUpOneOf
 @batteries SwitchedAdmittance
+@batteries SynchronousCondenser
 @batteries TapTransformer
 @batteries ThermalGenerationCost
 @batteries ThermalGenerationCostStartUp
@@ -85,9 +95,12 @@ include("modelincludes.jl")
 @batteries ThermalStandard
 @batteries TModelHVDCLine
 @batteries Transformer2W
-@batteries TwoTerminalHVDCLine
-@batteries TwoTerminalHVDCLineLoss
-@batteries TwoTerminalVSCDCLine
+@batteries Transformer3W
+@batteries TurbinePump
+@batteries TwoTerminalLCCLine
+@batteries TwoTerminalGenericHVDCLine
+@batteries TwoTerminalLoss
+@batteries TwoTerminalVSCLine
 @batteries UpDown
 @batteries ValueCurve
 @batteries VariableReserve
@@ -107,6 +120,7 @@ include("json_to_sienna/branch.jl")
 include("json_to_sienna/service.jl")
 
 include("dbinterface/sqlite.jl")
+include("dbinterface/time_series.jl")
 
 """
 Register handlers for all APIs in this module in the supplied `Router` instance.

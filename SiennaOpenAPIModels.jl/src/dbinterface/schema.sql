@@ -22,17 +22,20 @@ DROP TABLE IF EXISTS transmission_lines;
 
 DROP TABLE IF EXISTS planning_regions;
 
-DROP TABLE IF EXISTS time_series;
-
 DROP TABLE IF EXISTS transmission_interchanges;
 
 DROP TABLE IF EXISTS entities;
 
 DROP TABLE IF EXISTS time_series_associations;
 
-DROP TABLE IF EXISTS operational_data;
-
+-- NOTE: operational_data is now a view, not a table (see views.sql)
 DROP TABLE IF EXISTS attributes;
+
+DROP TABLE IF EXISTS loads;
+
+DROP TABLE IF EXISTS static_time_series;
+
+DROP TABLE IF EXISTS entity_types;
 
 DROP TABLE IF EXISTS supplemental_attributes;
 
@@ -157,7 +160,7 @@ CREATE TABLE storage_units (
     name text NOT NULL,
     prime_mover text NOT NULL REFERENCES prime_mover_types(name),
     -- Energy capacity
-    max_capacity real NOT NULL,
+    max_capacity real,
     balancing_topology integer NOT NULL REFERENCES balancing_topologies (id),
     efficiency_up real CHECK (
         efficiency_up > 0
@@ -180,8 +183,9 @@ CREATE TABLE hydro_reservoir(
 );
 
 CREATE TABLE hydro_reservoir_connections(
-    turbine_id integer NOT NULL REFERENCES generation_units(id),
-    reservoir_id integer NOT NULL REFERENCES hydro_reservoir(id)
+    source_id integer NOT NULL REFERENCES entities(id),
+    sink_id integer NOT NULL REFERENCES entities(id),
+    PRIMARY KEY (source_id, sink_id)
 );
 
 -- NOTE: The purpose of this table is to capture technologies available for
@@ -246,20 +250,20 @@ CREATE TABLE time_series_associations(
     initial_timestamp TEXT NOT NULL,
     resolution TEXT NOT NULL,
     horizon TEXT,
-    INTERVAL TEXT,
+    "interval" TEXT,
     window_count INTEGER,
     length INTEGER,
     name TEXT NOT NULL,
-    owner_uuid TEXT NOT NULL,
+    owner_id INTEGER NOT NULL REFERENCES entities(id),
     owner_type TEXT NOT NULL,
     owner_category TEXT NOT NULL,
     features TEXT NOT NULL,
-    scaling_factor_multiplier JSON NULL,
+    scaling_factor_multiplier TEXT NULL,
     metadata_uuid TEXT NOT NULL,
     units TEXT NULL
 );
 CREATE UNIQUE INDEX "by_c_n_tst_features" ON "time_series_associations" (
-    "owner_uuid",
+    "owner_id",
     "time_series_type",
     "name",
     "resolution",
@@ -276,14 +280,9 @@ CREATE TABLE loads (
     FOREIGN KEY(balancing_topology) REFERENCES balancing_topologies (id)
 );
 
--- From Sienna docs:
--- A static time series data is a single column of data where each time period has
--- a single value assigned to a component field, such as its maximum active power.
--- This data commonly is obtained from historical information or the realization
--- of a time-varying quantity.
 CREATE TABLE static_time_series (
     id integer PRIMARY KEY,
-    uuid text NULL UNIQUE,
-    timestamp datetime NOT NULL,
+    uuid text NULL,
+    idx integer NOT NULL,
     value real NOT NULL
 );

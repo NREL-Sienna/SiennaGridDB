@@ -36,6 +36,14 @@ function get_startup_shutdown(
     StartUpShutDown(startup=startup_shutdown.startup, shutdown=startup_shutdown.shutdown)
 end
 
+get_turbine_pump(::Nothing) = nothing
+
+function get_turbine_pump(
+    turbine_pump::NamedTuple{(:turbine, :pump), Tuple{Float64, Float64}},
+)
+    TurbinePump(turbine=turbine_pump.turbine, pump=turbine_pump.pump)
+end
+
 get_up_down(::Nothing) = nothing
 
 function get_up_down(up_down::NamedTuple{(:up, :down), Tuple{Float64, Float64}})
@@ -49,22 +57,77 @@ function get_xy_coords(nt::@NamedTuple{x::Float64, y::Float64})
 end
 
 """
-Multiply both values of all NamedTuple by a scalar
+Multiply both values of a NamedTuple by a scalar
 """
 function scale(nt::NamedTuple{T, Tuple{Float64, Float64}}, scalar::Float64) where {T}
+    scalar == 0.0 && error("Scaling by zero (check that base_power is set)")
     NamedTuple{T, Tuple{Float64, Float64}}((nt[1] * scalar, nt[2] * scalar))
 end
 
 scale(::Nothing, ::Float64) = nothing
-scale(x::Float64, scalar::Float64) = scalar * x
+function scale(x::Float64, scalar::Float64)
+    scalar == 0.0 && error("Scaling by zero (check that base_power is set)")
+    scalar * x
+end
+function scale(x::ComplexF64, scalar::Float64)
+    scalar == 0.0 && error("Scaling by zero (check that base_power is set)")
+    scalar * x
+end
+
+"""
+Divide both values of a NamedTuple by a scalar
+"""
+function divide(nt::NamedTuple{T, Tuple{Float64, Float64}}, scalar::Float64) where {T}
+    scalar == 0.0 && error("Division by zero (check that base_power is set)")
+    NamedTuple{T, Tuple{Float64, Float64}}((nt[1] / scalar, nt[2] / scalar))
+end
+
+divide(::Nothing, ::Float64) = nothing
+function divide(x::Float64, scalar::Float64)
+    scalar == 0.0 && error("Division by zero (check that base_power is set)")
+    x / scalar
+end
+function divide(x::ComplexF64, scalar::Float64)
+    scalar == 0.0 && error("Division by zero (check that base_power is set)")
+    x / scalar
+end
+
+# Function to properly scale r, x, g, b, and primary_shunt
+
+function get_Z_fraction(v::Float64, s::Float64)
+    return v^2 / s
+end
+
+function get_Z_fraction(v::Nothing, s::Float64)
+    error("base voltage is nothing")
+end
 
 # Functions that get operation costs
 
 function get_operation_cost(cost::PSY.HydroGenerationCost)
     HydroGenerationCost(
-        cost_type="HYDRO",
+        cost_type="HYDRO_GEN",
         variable=ProductionVariableCostCurve(get_variable_cost(cost.variable)),
         fixed=cost.fixed,
+    )
+end
+
+function get_operation_cost(cost::PSY.HydroReservoirCost)
+    HydroReservoirCost(
+        cost_type="HYDRO_RES",
+        level_shortage_cost=cost.level_shortage_cost,
+        level_surplus_cost=cost.level_surplus_cost,
+        spillage_cost=cost.spillage_cost,
+    )
+end
+
+function get_operation_cost(cost::PSY.ImportExportCost)
+    ImportExportCost(
+        cost_type="IMPORTEXPORT",
+        import_offer_curves=get_variable_cost(cost.import_offer_curves),
+        export_offer_curves=get_variable_cost(cost.export_offer_curves),
+        energy_import_weekly_limit=cost.energy_import_weekly_limit,
+        energy_export_weekly_limit=cost.energy_export_weekly_limit,
     )
 end
 
@@ -81,6 +144,7 @@ function get_operation_cost(cost::PSY.RenewableGenerationCost)
         cost_type="RENEWABLE",
         curtailment_cost=get_variable_cost(cost.curtailment_cost),
         variable=get_variable_cost(cost.variable),
+        fixed=cost.fixed,
     )
 end
 
@@ -158,6 +222,10 @@ get_value_curve(::Nothing) = nothing
 
 function get_value_curve(curve::T) where {T <: PSY.ValueCurve}
     error("Unsupported type $T")
+end
+
+function get_value_curve(curve::Float64)
+    curve
 end
 
 function get_value_curve(curve::PSY.AverageRateCurve)
@@ -264,7 +332,7 @@ function getid!(idgen::IDGenerator, uuid::UUID)
 end
 
 function getid!(idgen::IDGenerator, component::PSY.Component)
-    getid!(idgen, PSY.InfrastructureSystems.get_uuid(component))
+    getid!(idgen, IS.get_uuid(component))
 end
 
 function getid!(::IDGenerator, ::Nothing)

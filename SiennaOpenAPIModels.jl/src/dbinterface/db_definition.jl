@@ -73,7 +73,7 @@ const TABLE_SCHEMAS = Dict(
             Int64,
             String,
             String,
-            Float64,
+            Union{Float64, Nothing},
             Int64,
             Union{Float64, Nothing},
             Union{Float64, Nothing},
@@ -83,7 +83,7 @@ const TABLE_SCHEMAS = Dict(
     ),
     "hydro_reservoir" => Tables.Schema(["id", "name"], [Int64, String]),
     "hydro_reservoir_connections" =>
-        Tables.Schema(["turbine_id", "reservoir_id"], [Int64, Int64]),
+        Tables.Schema(["source_id", "sink_id"], [Int64, Int64]),
     "supply_technologies" => Tables.Schema(
         ["id", "prime_mover", "fuel", "area", "balancing_topology", "scenario"],
         [
@@ -99,32 +99,7 @@ const TABLE_SCHEMAS = Dict(
         ["id", "arc_id", "scenario"],
         [Int64, Union{Int64, Nothing}, Union{String, Nothing}],
     ),
-    "operational_data" => Tables.Schema(
-        [
-            "id",
-            "entity_id",
-            "active_power_limit_min",
-            "must_run",
-            "uptime",
-            "downtime",
-            "ramp_up",
-            "ramp_down",
-            "operational_cost",
-            "operational_cost_type",
-        ],
-        [
-            Int64,
-            Int64,
-            Float64,
-            Union{Bool, Nothing},
-            Float64,
-            Float64,
-            Float64,
-            Float64,
-            Union{String, Nothing},
-            Union{String, Nothing},
-        ],
-    ),
+    # NOTE: operational_data is now a view (not a table), defined in views.sql
     "attributes" => Tables.Schema(
         ["id", "entity_id", "TYPE", "name", "value", "json_type"],
         [Int64, Int64, String, String, String, String],
@@ -135,7 +110,7 @@ const TABLE_SCHEMAS = Dict(
     ),
     "supplemental_attributes_association" =>
         Tables.Schema(["attribute_id", "entity_id"], [Int64, Int64]),
-    "time_series" => Tables.Schema(
+    "time_series_associations" => Tables.Schema(
         [
             "id",
             "time_series_uuid",
@@ -143,13 +118,17 @@ const TABLE_SCHEMAS = Dict(
             "initial_timestamp",
             "resolution",
             "horizon",
-            "INTERVAL",
+            "interval",
             "window_count",
             "length",
-            "scaling_multiplier",
             "name",
             "owner_id",
+            "owner_type",
+            "owner_category",
             "features",
+            "scaling_factor_multiplier",
+            "metadata_uuid",
+            "units",
         ],
         [
             Int64,
@@ -165,16 +144,18 @@ const TABLE_SCHEMAS = Dict(
             String,
             Int64,
             Union{String, Nothing},
+            Union{String, Nothing},
+            Union{String, Nothing},
+            Union{String, Nothing},
+            Union{String, Nothing},
         ],
     ),
     "loads" => Tables.Schema(
         ["id", "name", "balancing_topology", "base_power"],
         [Int64, String, Int64, Union{Float64, Nothing}],
     ),
-    "static_time_series" => Tables.Schema(
-        ["id", "uuid", "timestamp", "value"],
-        [Int64, String, String, Float64],
-    ),
+    "static_time_series" =>
+        Tables.Schema(["id", "uuid", "idx", "value"], [Int64, String, Int64, Float64]),
 )
 
 function make_sqlite!(db)

@@ -1,6 +1,8 @@
 using SiennaOpenAPIModels
 using Test
 
+include("utils.jl")
+
 #=
 Don't add your tests to runtests.jl. Instead, create files named
 
