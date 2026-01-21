@@ -41,10 +41,10 @@ function openapi2psy(load::ExponentialLoad, resolver::Resolver)
         reactive_power=divide(load.reactive_power, load.base_power),
         α=load.alpha,
         β=load.beta,
-        conformity=PSY.LoadConformity(load.conformity),
         base_power=load.base_power,
         max_active_power=divide(load.max_active_power, load.base_power),
         max_reactive_power=divide(load.max_reactive_power, load.base_power),
+        conformity=PSY.LoadConformity(load.conformity),
     )
 end
 
@@ -170,12 +170,12 @@ function openapi2psy(hydro::HydroTurbine, resolver::Resolver)
             get_tuple_min_max(hydro.reactive_power_limits),
             hydro.base_power,
         ),
-        outflow_limits=get_tuple_min_max(hydro.outflow_limits),
+        base_power=hydro.base_power,
+        operation_cost=get_sienna_operation_cost(hydro.operation_cost),
         powerhouse_elevation=hydro.powerhouse_elevation,
         ramp_limits=divide(get_tuple_up_down(hydro.ramp_limits), hydro.base_power),
         time_limits=get_tuple_up_down(hydro.time_limits),
-        base_power=hydro.base_power,
-        operation_cost=get_sienna_operation_cost(hydro.operation_cost),
+        outflow_limits=get_tuple_min_max(hydro.outflow_limits),
         efficiency=hydro.efficiency,
         turbine_type=PSY.HydroTurbineType(hydro.turbine_type),
         conversion_factor=hydro.conversion_factor,
@@ -396,6 +396,7 @@ function openapi2psy(standard_load::StandardLoad, resolver::Resolver)
         name=standard_load.name,
         available=standard_load.available,
         bus=resolver(standard_load.bus),
+        base_power=standard_load.base_power,
         constant_active_power=divide(
             standard_load.constant_active_power,
             standard_load.base_power,
@@ -445,7 +446,6 @@ function openapi2psy(standard_load::StandardLoad, resolver::Resolver)
             standard_load.base_power,
         ),
         conformity=PSY.LoadConformity(standard_load.conformity),
-        base_power=standard_load.base_power,
     )
 end
 

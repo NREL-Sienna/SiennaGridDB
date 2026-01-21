@@ -156,19 +156,20 @@ function openapi2psy(transformer::PhaseShiftingTransformer, resolver::Resolver)
         r=divide(
             transformer.r,
             get_Z_fraction(transformer.base_voltage_primary, transformer.base_power),
-        ), # assuming primary, not secondary, base voltage
+        ),
         x=divide(
             transformer.x,
             get_Z_fraction(transformer.base_voltage_primary, transformer.base_power),
-        ), # assuming primary, not secondary, base voltage
+        ),
         primary_shunt=scale(
             get_julia_complex(transformer.primary_shunt),
             get_Z_fraction(transformer.base_voltage_primary, transformer.base_power),
-        ), # assuming primary, not secondary, base voltage
+        ),
         tap=transformer.tap,
         α=transformer.alpha,
         rating=divide(transformer.rating, transformer.base_power),
         base_power=transformer.base_power,
+        # TO-DO: incorporate default values for base voltages
         base_voltage_primary=transformer.base_voltage_primary,
         base_voltage_secondary=transformer.base_voltage_secondary,
         rating_b=divide(transformer.rating_b, transformer.base_power),
@@ -265,6 +266,7 @@ function openapi2psy(phase3w::PhaseShiftingTransformer3W, resolver::Resolver)
         base_power_12=phase3w.base_power_12,
         base_power_23=phase3w.base_power_23,
         base_power_13=phase3w.base_power_13,
+        # TO-DO: incorporate default values for base voltages
         base_voltage_primary=phase3w.base_voltage_primary,
         base_voltage_secondary=phase3w.base_voltage_secondary,
         base_voltage_tertiary=phase3w.base_voltage_tertiary,
@@ -308,21 +310,23 @@ function openapi2psy(taptransform::TapTransformer, resolver::Resolver)
             taptransform.base_power,
         ),
         arc=resolver(taptransform.arc),
+        # Based off scaling TwoWindingTransformers in PSY/src/models/components.jl
         r=divide(
             taptransform.r,
             get_Z_fraction(taptransform.base_voltage_primary, taptransform.base_power),
-        ), # assuming primary, not secondary, base voltage
+        ),
         x=divide(
             taptransform.x,
             get_Z_fraction(taptransform.base_voltage_primary, taptransform.base_power),
-        ), # assuming primary, not secondary, base voltage
+        ),
         primary_shunt=scale(
             get_julia_complex(taptransform.primary_shunt),
             get_Z_fraction(taptransform.base_voltage_primary, taptransform.base_power),
-        ), # assuming primary, not secondary, base voltage
+        ),
         tap=taptransform.tap,
         rating=divide(taptransform.rating, taptransform.base_power),
         base_power=taptransform.base_power,
+        # TO-DO: incorporate default values for base voltages
         base_voltage_primary=taptransform.base_voltage_primary,
         base_voltage_secondary=taptransform.base_voltage_secondary,
         rating_b=divide(taptransform.rating_b, taptransform.base_power),
@@ -341,7 +345,7 @@ function openapi2psy(tmodel::TModelHVDCLine, resolver::Resolver)
             PSY.get_base_power(resolver.sys),
         ),
         arc=resolver(tmodel.arc),
-        r=tmodel.r,
+        r=tmodel.r, # not scaled on purpose as of psy v5.3
         l=tmodel.l,
         c=tmodel.c,
         active_power_limits_from=divide(
@@ -362,20 +366,22 @@ function openapi2psy(transform::Transformer2W, resolver::Resolver)
         active_power_flow=divide(transform.active_power_flow, transform.base_power),
         reactive_power_flow=divide(transform.reactive_power_flow, transform.base_power),
         arc=resolver(transform.arc),
+        # Based off scaling TwoWindingTransformers in PSY/src/models/components.jl
         r=divide(
             transform.r,
             get_Z_fraction(transform.base_voltage_primary, transform.base_power),
-        ), # assuming primary, not secondary, base voltage
+        ),
         x=divide(
             transform.x,
             get_Z_fraction(transform.base_voltage_primary, transform.base_power),
-        ), # assuming primary, not secondary, base voltage
+        ),
         primary_shunt=scale(
             get_julia_complex(transform.primary_shunt),
             get_Z_fraction(transform.base_voltage_primary, transform.base_power),
-        ), # assuming primary, not secondary, base voltage
+        ),
         rating=divide(transform.rating, transform.base_power),
         base_power=transform.base_power,
+        # TO-DO: incorporate default values for base voltages
         base_voltage_primary=transform.base_voltage_primary,
         base_voltage_secondary=transform.base_voltage_secondary,
         rating_b=divide(transform.rating_b, transform.base_power),
@@ -468,6 +474,7 @@ function openapi2psy(trans3w::Transformer3W, resolver::Resolver)
         base_power_12=trans3w.base_power_12,
         base_power_23=trans3w.base_power_23,
         base_power_13=trans3w.base_power_13,
+        # TO-DO: incorporate default values for base voltages
         base_voltage_primary=trans3w.base_voltage_primary,
         base_voltage_secondary=trans3w.base_voltage_secondary,
         base_voltage_tertiary=trans3w.base_voltage_tertiary,
@@ -535,20 +542,20 @@ function openapi2psy(lcc::TwoTerminalLCCLine, resolver::Resolver)
         available=lcc.available,
         arc=resolver(lcc.arc),
         active_power_flow=divide(lcc.active_power_flow, PSY.get_base_power(resolver.sys)),
-        r=lcc.r,
+        r=lcc.r, # not scaled on purpose as of psy v5.3
         transfer_setpoint=lcc.transfer_setpoint,
         scheduled_dc_voltage=lcc.scheduled_dc_voltage,
         rectifier_bridges=lcc.rectifier_bridges,
         rectifier_delay_angle_limits=get_tuple_min_max(lcc.rectifier_delay_angle_limits),
-        rectifier_rc=lcc.rectifier_rc,
-        rectifier_xc=lcc.rectifier_xc,
+        rectifier_rc=lcc.rectifier_rc, # not scaled on purpose as of psy v5.3
+        rectifier_xc=lcc.rectifier_xc, # not scaled on purpose as of psy v5.3
         rectifier_base_voltage=lcc.rectifier_base_voltage,
         inverter_bridges=lcc.inverter_bridges,
         inverter_extinction_angle_limits=get_tuple_min_max(
             lcc.inverter_extinction_angle_limits,
         ),
-        inverter_rc=lcc.inverter_rc,
-        inverter_xc=lcc.inverter_xc,
+        inverter_rc=lcc.inverter_rc, # not scaled on purpose as of psy v5.3
+        inverter_xc=lcc.inverter_xc, # not scaled on purpose as of psy v5.3
         inverter_base_voltage=lcc.inverter_base_voltage,
         power_mode=lcc.power_mode,
         switch_mode_voltage=lcc.switch_mode_voltage,
@@ -601,7 +608,7 @@ function openapi2psy(vsc::TwoTerminalVSCLine, resolver::Resolver)
             get_tuple_min_max(vsc.active_power_limits_to),
             PSY.get_base_power(resolver.sys),
         ),
-        g=vsc.g,
+        g=vsc.g, # not scaled on purpose as of psy v5.3
         dc_current=vsc.dc_current,
         reactive_power_from=divide(
             vsc.reactive_power_from,

@@ -151,24 +151,26 @@ function psy2openapi(transformer::PSY.PhaseShiftingTransformer, ids::IDGenerator
         active_power_flow=scale(transformer.active_power_flow, transformer.base_power),
         reactive_power_flow=scale(transformer.reactive_power_flow, transformer.base_power),
         arc=getid!(ids, transformer.arc),
+        # Based off scaling TwoWindingTransformers in PSY/src/models/components.jl
         r=scale(
             transformer.r,
             get_Z_fraction(transformer.base_voltage_primary, transformer.base_power),
-        ), # assuming primary, not secondary, base voltage
+        ),
         x=scale(
             transformer.x,
             get_Z_fraction(transformer.base_voltage_primary, transformer.base_power),
-        ), # assuming primary, not secondary, base voltage
+        ),
         primary_shunt=get_complex_number(
             divide(
                 transformer.primary_shunt,
                 get_Z_fraction(transformer.base_voltage_primary, transformer.base_power),
             ),
-        ), # assuming primary, not secondary, base voltage
+        ),
         tap=transformer.tap,
         alpha=transformer.α,
         rating=scale(transformer.rating, transformer.base_power),
         base_power=transformer.base_power,
+        # TO-DO: incorporate default values for base voltages
         base_voltage_primary=transformer.base_voltage_primary,
         base_voltage_secondary=transformer.base_voltage_secondary,
         rating_b=scale(transformer.rating_b, transformer.base_power),
@@ -266,6 +268,7 @@ function psy2openapi(phase3w::PSY.PhaseShiftingTransformer3W, ids::IDGenerator)
         base_power_12=phase3w.base_power_12,
         base_power_23=phase3w.base_power_23,
         base_power_13=phase3w.base_power_13,
+        # TO-DO: incorporate default values for base voltages
         base_voltage_primary=phase3w.base_voltage_primary,
         base_voltage_secondary=phase3w.base_voltage_secondary,
         base_voltage_tertiary=phase3w.base_voltage_tertiary,
@@ -301,23 +304,25 @@ function psy2openapi(transformer::PSY.TapTransformer, ids::IDGenerator)
         active_power_flow=scale(transformer.active_power_flow, transformer.base_power),
         reactive_power_flow=scale(transformer.reactive_power_flow, transformer.base_power),
         arc=getid!(ids, transformer.arc),
+        # Based off scaling TwoWindingTransformers in PSY/src/models/components.jl
         r=scale(
             transformer.r,
             get_Z_fraction(transformer.base_voltage_primary, transformer.base_power),
-        ), # assuming primary, not secondary, base voltage
+        ),
         x=scale(
             transformer.x,
             get_Z_fraction(transformer.base_voltage_primary, transformer.base_power),
-        ), # assuming primary, not secondary, base voltage
+        ),
         primary_shunt=get_complex_number(
             divide(
                 transformer.primary_shunt,
                 get_Z_fraction(transformer.base_voltage_primary, transformer.base_power),
             ),
-        ), # assuming primary, not secondary, base voltage
+        ),
         tap=transformer.tap,
         rating=scale(transformer.rating, transformer.base_power),
         base_power=transformer.base_power,
+        # TO-DO: incorporate default values for base voltages
         base_voltage_primary=transformer.base_voltage_primary,
         base_voltage_secondary=transformer.base_voltage_secondary,
         rating_b=scale(transformer.rating_b, transformer.base_power),
@@ -334,7 +339,7 @@ function psy2openapi(tmodel::PSY.TModelHVDCLine, ids::IDGenerator)
         available=tmodel.available,
         active_power_flow=scale(tmodel.active_power_flow, PSY.get_base_power(tmodel)),
         arc=getid!(ids, tmodel.arc),
-        r=tmodel.r,
+        r=tmodel.r, # not scaled on purpose as of psy v5.3
         l=tmodel.l,
         c=tmodel.c,
         active_power_limits_from=get_min_max(
@@ -357,6 +362,7 @@ function psy2openapi(transformer2w::PSY.Transformer2W, ids::IDGenerator)
             transformer2w.base_power,
         ),
         arc=getid!(ids, transformer2w.arc),
+        # Based off scaling TwoWindingTransformers in PSY/src/models/components.jl
         r=scale(
             transformer2w.r,
             get_Z_fraction(transformer2w.base_voltage_primary, transformer2w.base_power),
@@ -365,12 +371,6 @@ function psy2openapi(transformer2w::PSY.Transformer2W, ids::IDGenerator)
             transformer2w.x,
             get_Z_fraction(transformer2w.base_voltage_primary, transformer2w.base_power),
         ),
-        rating=scale(transformer2w.rating, transformer2w.base_power),
-        base_power=transformer2w.base_power,
-        base_voltage_primary=transformer2w.base_voltage_primary,
-        base_voltage_secondary=transformer2w.base_voltage_secondary,
-        rating_b=scale(transformer2w.rating_b, transformer2w.base_power),
-        rating_c=scale(transformer2w.rating_c, transformer2w.base_power),
         primary_shunt=get_complex_number(
             divide(
                 transformer2w.primary_shunt,
@@ -380,6 +380,13 @@ function psy2openapi(transformer2w::PSY.Transformer2W, ids::IDGenerator)
                 ),
             ),
         ),
+        rating=scale(transformer2w.rating, transformer2w.base_power),
+        base_power=transformer2w.base_power,
+        # TO-DO: incorporate default values for base voltages
+        base_voltage_primary=transformer2w.base_voltage_primary,
+        base_voltage_secondary=transformer2w.base_voltage_secondary,
+        rating_b=scale(transformer2w.rating_b, transformer2w.base_power),
+        rating_c=scale(transformer2w.rating_c, transformer2w.base_power),
         winding_group_number=string(transformer2w.winding_group_number),
     )
 end
@@ -469,6 +476,7 @@ function psy2openapi(trans3w::PSY.Transformer3W, ids::IDGenerator)
         base_power_12=trans3w.base_power_12,
         base_power_23=trans3w.base_power_23,
         base_power_13=trans3w.base_power_13,
+        # TO-DO: incorporate default values for base voltages
         base_voltage_primary=trans3w.base_voltage_primary,
         base_voltage_secondary=trans3w.base_voltage_secondary,
         base_voltage_tertiary=trans3w.base_voltage_tertiary,
@@ -528,18 +536,18 @@ function psy2openapi(lcc::PSY.TwoTerminalLCCLine, ids::IDGenerator)
         available=lcc.available,
         arc=getid!(ids, lcc.arc),
         active_power_flow=scale(lcc.active_power_flow, PSY.get_base_power(lcc)),
-        r=lcc.r,
+        r=lcc.r, # not scaled on purpose as of psy v5.3
         transfer_setpoint=lcc.transfer_setpoint,
         scheduled_dc_voltage=lcc.scheduled_dc_voltage,
         rectifier_bridges=lcc.rectifier_bridges,
         rectifier_delay_angle_limits=get_min_max(lcc.rectifier_delay_angle_limits),
-        rectifier_rc=lcc.rectifier_rc,
-        rectifier_xc=lcc.rectifier_xc,
+        rectifier_rc=lcc.rectifier_rc, # not scaled on purpose as of psy v5.3
+        rectifier_xc=lcc.rectifier_xc, # not scaled on purpose as of psy v5.3
         rectifier_base_voltage=lcc.rectifier_base_voltage,
         inverter_bridges=lcc.inverter_bridges,
         inverter_extinction_angle_limits=get_min_max(lcc.inverter_extinction_angle_limits),
-        inverter_rc=lcc.inverter_rc,
-        inverter_xc=lcc.inverter_xc,
+        inverter_rc=lcc.inverter_rc, # not scaled on purpose as of psy v5.3
+        inverter_xc=lcc.inverter_xc, # not scaled on purpose as of psy v5.3
         inverter_base_voltage=lcc.inverter_base_voltage,
         power_mode=lcc.power_mode,
         switch_mode_voltage=lcc.switch_mode_voltage,
@@ -587,7 +595,7 @@ function psy2openapi(vsc::PSY.TwoTerminalVSCLine, ids::IDGenerator)
         active_power_limits_to=get_min_max(
             scale(vsc.active_power_limits_to, PSY.get_base_power(vsc)),
         ),
-        g=vsc.g,
+        g=vsc.g, # not scaled on purpose as of psy v5.3
         dc_current=vsc.dc_current,
         reactive_power_from=scale(vsc.reactive_power_from, PSY.get_base_power(vsc)),
         dc_voltage_control_from=vsc.dc_voltage_control_from,

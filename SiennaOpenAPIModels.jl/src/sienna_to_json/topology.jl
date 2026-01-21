@@ -3,13 +3,13 @@ function psy2openapi(bus::PSY.ACBus, ids::IDGenerator)
         id=getid!(ids, bus),
         number=bus.number,
         name=bus.name,
+        available=bus.available,
         bustype=string(bus.bustype),
         angle=bus.angle,
         magnitude=bus.magnitude,
         voltage_limits=get_min_max(bus.voltage_limits),
         base_voltage=bus.base_voltage,
         area=getid!(ids, bus.area),
-        available=bus.available,
         load_zone=getid!(ids, bus.load_zone),
     )
 end
