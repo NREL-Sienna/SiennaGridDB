@@ -18,13 +18,13 @@ function openapi2psy(arc::Arc, resolver::Resolver)
 end
 
 function openapi2psy(area::Area, resolver::Resolver)
-    if PSY.get_base_power(resolver.sys) == 0.0
-        error("base power is 0.0")
-    end
     PSY.Area(
         name=area.name,
-        peak_active_power=(area.peak_active_power / PSY.get_base_power(resolver.sys)),
-        peak_reactive_power=(area.peak_reactive_power / PSY.get_base_power(resolver.sys)),
+        peak_active_power=divide(area.peak_active_power, PSY.get_base_power(resolver.sys)),
+        peak_reactive_power=divide(
+            area.peak_reactive_power,
+            PSY.get_base_power(resolver.sys),
+        ),
         load_response=area.load_response,
     )
 end
@@ -41,15 +41,17 @@ function openapi2psy(dcbus::DCBus, resolver::Resolver)
         load_zone=resolver(dcbus.load_zone),
     )
 end
+
 function openapi2psy(load_zone::LoadZone, resolver::Resolver)
-    if PSY.get_base_power(resolver.sys) == 0.0
-        error("base power is 0.0")
-    end
     PSY.LoadZone(
         name=load_zone.name,
-        peak_active_power=(load_zone.peak_active_power / PSY.get_base_power(resolver.sys)),
-        peak_reactive_power=(
-            load_zone.peak_reactive_power / PSY.get_base_power(resolver.sys)
+        peak_active_power=divide(
+            load_zone.peak_active_power,
+            PSY.get_base_power(resolver.sys),
+        ),
+        peak_reactive_power=divide(
+            load_zone.peak_reactive_power,
+            PSY.get_base_power(resolver.sys),
         ),
     )
 end

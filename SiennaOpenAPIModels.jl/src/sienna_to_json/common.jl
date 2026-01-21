@@ -60,23 +60,37 @@ end
 Multiply both values of a NamedTuple by a scalar
 """
 function scale(nt::NamedTuple{T, Tuple{Float64, Float64}}, scalar::Float64) where {T}
+    scalar == 0.0 && error("Scaling by zero (check that base_power is set)")
     NamedTuple{T, Tuple{Float64, Float64}}((nt[1] * scalar, nt[2] * scalar))
 end
 
 scale(::Nothing, ::Float64) = nothing
-scale(x::Float64, scalar::Float64) = scalar * x
-scale(x::ComplexF64, scalar::Float64) = scalar * x
+function scale(x::Float64, scalar::Float64)
+    scalar == 0.0 && error("Scaling by zero (check that base_power is set)")
+    scalar * x
+end
+function scale(x::ComplexF64, scalar::Float64)
+    scalar == 0.0 && error("Scaling by zero (check that base_power is set)")
+    scalar * x
+end
 
 """
 Divide both values of a NamedTuple by a scalar
 """
 function divide(nt::NamedTuple{T, Tuple{Float64, Float64}}, scalar::Float64) where {T}
+    scalar == 0.0 && error("Division by zero (check that base_power is set)")
     NamedTuple{T, Tuple{Float64, Float64}}((nt[1] / scalar, nt[2] / scalar))
 end
 
 divide(::Nothing, ::Float64) = nothing
-divide(x::Float64, scalar::Float64) = x / scalar
-divide(x::ComplexF64, scalar::Float64) = x / scalar
+function divide(x::Float64, scalar::Float64)
+    scalar == 0.0 && error("Division by zero (check that base_power is set)")
+    x / scalar
+end
+function divide(x::ComplexF64, scalar::Float64)
+    scalar == 0.0 && error("Division by zero (check that base_power is set)")
+    x / scalar
+end
 
 # Function to properly scale r, x, g, b, and primary_shunt
 
