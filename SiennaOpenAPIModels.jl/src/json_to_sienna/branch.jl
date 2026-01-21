@@ -152,6 +152,7 @@ function openapi2psy(transformer::PhaseShiftingTransformer, resolver::Resolver)
         active_power_flow=divide(transformer.active_power_flow, transformer.base_power),
         reactive_power_flow=divide(transformer.reactive_power_flow, transformer.base_power),
         arc=resolver(transformer.arc),
+        # Based off scaling TwoWindingTransformers in PSY/src/models/components.jl
         r=divide(
             transformer.r,
             get_Z_fraction(transformer.base_voltage_primary, transformer.base_power),
