@@ -510,7 +510,7 @@ end
         test_convert = SiennaOpenAPIModels.psy2openapi(taptransformer, IDGenerator())
         test_roundtrip(SiennaOpenAPIModels.TapTransformer, test_convert)
         @test test_convert.id == 1
-        @test test_convert.rating ≈ 242.33565282942757
+        @test test_convert.rating ≈ 24233.565282942757
         @test test_convert.primary_shunt.real == 0.0
         @test test_convert.x == 1.1109
     end

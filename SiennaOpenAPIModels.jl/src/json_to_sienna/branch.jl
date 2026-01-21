@@ -320,7 +320,7 @@ function openapi2psy(taptransform::TapTransformer, resolver::Resolver)
             get_Z_fraction(taptransform.base_voltage_primary, taptransform.base_power),
         ), # assuming primary, not secondary, base voltage
         tap=taptransform.tap,
-        rating=taptransform.rating,
+        rating=divide(taptransform.rating, taptransform.base_power),
         base_power=taptransform.base_power,
         base_voltage_primary=taptransform.base_voltage_primary,
         base_voltage_secondary=taptransform.base_voltage_secondary,

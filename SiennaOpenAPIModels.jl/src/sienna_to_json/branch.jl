@@ -316,7 +316,7 @@ function psy2openapi(transformer::PSY.TapTransformer, ids::IDGenerator)
             ),
         ), # assuming primary, not secondary, base voltage
         tap=transformer.tap,
-        rating=transformer.rating,
+        rating=scale(transformer.rating, transformer.base_power),
         base_power=transformer.base_power,
         base_voltage_primary=transformer.base_voltage_primary,
         base_voltage_secondary=transformer.base_voltage_secondary,
