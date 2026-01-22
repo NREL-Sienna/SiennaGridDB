@@ -1,11 +1,11 @@
 # InterruptiblePowerLoad
 
-
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**name** | **String** |  | [default to nothing]
 **id** | **Int64** |  | [default to nothing]
+**name** | **String** |  | [default to nothing]
 **available** | **Bool** |  | [default to nothing]
 **bus** | **Int64** |  | [default to nothing]
 **active_power** | **Float64** |  | [default to nothing]
@@ -14,9 +14,7 @@ Name | Type | Description | Notes
 **max_reactive_power** | **Float64** |  | [default to nothing]
 **base_power** | **Float64** |  | [default to nothing]
 **operation_cost** | [***LoadCost**](LoadCost.md) |  | [default to nothing]
+**conformity** | **String** |  | [optional] [default to "UNDEFINED"]
 **dynamic_injector** | **Any** |  | [optional] [default to nothing]
 
-
 [[Back to Model list]](../README.md#models) [[Back to API list]](../README.md#api-endpoints) [[Back to README]](../README.md)
-
-

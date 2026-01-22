@@ -5,27 +5,27 @@
 
     Area(;
         id=nothing,
-        load_response=0.0,
         name=nothing,
         peak_active_power=0.0,
         peak_reactive_power=0.0,
+        load_response=0.0,
     )
 
     - id::Int64
-    - load_response::Float64
     - name::String
     - peak_active_power::Float64
     - peak_reactive_power::Float64
+    - load_response::Float64
 """
 Base.@kwdef mutable struct Area <: OpenAPI.APIModel
     id::Union{Nothing, Int64} = nothing
-    load_response::Union{Nothing, Float64} = 0.0
     name::Union{Nothing, String} = nothing
     peak_active_power::Union{Nothing, Float64} = 0.0
     peak_reactive_power::Union{Nothing, Float64} = 0.0
+    load_response::Union{Nothing, Float64} = 0.0
 
-    function Area(id, load_response, name, peak_active_power, peak_reactive_power)
-        o = new(id, load_response, name, peak_active_power, peak_reactive_power)
+    function Area(id, name, peak_active_power, peak_reactive_power, load_response)
+        o = new(id, name, peak_active_power, peak_reactive_power, load_response)
         OpenAPI.validate_properties(o)
         return o
     end
@@ -33,10 +33,10 @@ end # type Area
 
 const _property_types_Area = Dict{Symbol, String}(
     Symbol("id") => "Int64",
-    Symbol("load_response") => "Float64",
     Symbol("name") => "String",
     Symbol("peak_active_power") => "Float64",
     Symbol("peak_reactive_power") => "Float64",
+    Symbol("load_response") => "Float64",
 )
 OpenAPI.property_type(::Type{Area}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_Area[name]))}
@@ -49,10 +49,10 @@ end
 
 function OpenAPI.validate_properties(o::Area)
     OpenAPI.validate_property(Area, Symbol("id"), o.id)
-    OpenAPI.validate_property(Area, Symbol("load_response"), o.load_response)
     OpenAPI.validate_property(Area, Symbol("name"), o.name)
     OpenAPI.validate_property(Area, Symbol("peak_active_power"), o.peak_active_power)
     OpenAPI.validate_property(Area, Symbol("peak_reactive_power"), o.peak_reactive_power)
+    OpenAPI.validate_property(Area, Symbol("load_response"), o.load_response)
 end
 
 function OpenAPI.validate_property(::Type{Area}, name::Symbol, val) end

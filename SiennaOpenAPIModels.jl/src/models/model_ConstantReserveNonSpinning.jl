@@ -4,59 +4,59 @@
 @doc raw"""ConstantReserveNonSpinning
 
     ConstantReserveNonSpinning(;
-        available=nothing,
-        deployed_fraction=0.0,
         id=nothing,
-        max_output_fraction=1.0,
-        max_participation_factor=1.0,
         name=nothing,
+        available=nothing,
+        time_frame=nothing,
         requirement=nothing,
         sustained_time=3600.0,
-        time_frame=nothing,
+        max_output_fraction=1.0,
+        max_participation_factor=1.0,
+        deployed_fraction=0.0,
     )
 
-    - available::Bool
-    - deployed_fraction::Float64
     - id::Int64
-    - max_output_fraction::Float64
-    - max_participation_factor::Float64
     - name::String
+    - available::Bool
+    - time_frame::Float64
     - requirement::Float64
     - sustained_time::Float64
-    - time_frame::Float64
+    - max_output_fraction::Float64
+    - max_participation_factor::Float64
+    - deployed_fraction::Float64
 """
 Base.@kwdef mutable struct ConstantReserveNonSpinning <: OpenAPI.APIModel
-    available::Union{Nothing, Bool} = nothing
-    deployed_fraction::Union{Nothing, Float64} = 0.0
     id::Union{Nothing, Int64} = nothing
-    max_output_fraction::Union{Nothing, Float64} = 1.0
-    max_participation_factor::Union{Nothing, Float64} = 1.0
     name::Union{Nothing, String} = nothing
+    available::Union{Nothing, Bool} = nothing
+    time_frame::Union{Nothing, Float64} = nothing
     requirement::Union{Nothing, Float64} = nothing
     sustained_time::Union{Nothing, Float64} = 3600.0
-    time_frame::Union{Nothing, Float64} = nothing
+    max_output_fraction::Union{Nothing, Float64} = 1.0
+    max_participation_factor::Union{Nothing, Float64} = 1.0
+    deployed_fraction::Union{Nothing, Float64} = 0.0
 
     function ConstantReserveNonSpinning(
-        available,
-        deployed_fraction,
         id,
-        max_output_fraction,
-        max_participation_factor,
         name,
+        available,
+        time_frame,
         requirement,
         sustained_time,
-        time_frame,
+        max_output_fraction,
+        max_participation_factor,
+        deployed_fraction,
     )
         o = new(
-            available,
-            deployed_fraction,
             id,
-            max_output_fraction,
-            max_participation_factor,
             name,
+            available,
+            time_frame,
             requirement,
             sustained_time,
-            time_frame,
+            max_output_fraction,
+            max_participation_factor,
+            deployed_fraction,
         )
         OpenAPI.validate_properties(o)
         return o
@@ -64,47 +64,37 @@ Base.@kwdef mutable struct ConstantReserveNonSpinning <: OpenAPI.APIModel
 end # type ConstantReserveNonSpinning
 
 const _property_types_ConstantReserveNonSpinning = Dict{Symbol, String}(
-    Symbol("available") => "Bool",
-    Symbol("deployed_fraction") => "Float64",
     Symbol("id") => "Int64",
-    Symbol("max_output_fraction") => "Float64",
-    Symbol("max_participation_factor") => "Float64",
     Symbol("name") => "String",
+    Symbol("available") => "Bool",
+    Symbol("time_frame") => "Float64",
     Symbol("requirement") => "Float64",
     Symbol("sustained_time") => "Float64",
-    Symbol("time_frame") => "Float64",
+    Symbol("max_output_fraction") => "Float64",
+    Symbol("max_participation_factor") => "Float64",
+    Symbol("deployed_fraction") => "Float64",
 )
 OpenAPI.property_type(::Type{ConstantReserveNonSpinning}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_ConstantReserveNonSpinning[name]))}
 
 function OpenAPI.check_required(o::ConstantReserveNonSpinning)
-    o.available === nothing && (return false)
     o.id === nothing && (return false)
     o.name === nothing && (return false)
-    o.requirement === nothing && (return false)
+    o.available === nothing && (return false)
     o.time_frame === nothing && (return false)
+    o.requirement === nothing && (return false)
     true
 end
 
 function OpenAPI.validate_properties(o::ConstantReserveNonSpinning)
+    OpenAPI.validate_property(ConstantReserveNonSpinning, Symbol("id"), o.id)
+    OpenAPI.validate_property(ConstantReserveNonSpinning, Symbol("name"), o.name)
     OpenAPI.validate_property(ConstantReserveNonSpinning, Symbol("available"), o.available)
     OpenAPI.validate_property(
         ConstantReserveNonSpinning,
-        Symbol("deployed_fraction"),
-        o.deployed_fraction,
+        Symbol("time_frame"),
+        o.time_frame,
     )
-    OpenAPI.validate_property(ConstantReserveNonSpinning, Symbol("id"), o.id)
-    OpenAPI.validate_property(
-        ConstantReserveNonSpinning,
-        Symbol("max_output_fraction"),
-        o.max_output_fraction,
-    )
-    OpenAPI.validate_property(
-        ConstantReserveNonSpinning,
-        Symbol("max_participation_factor"),
-        o.max_participation_factor,
-    )
-    OpenAPI.validate_property(ConstantReserveNonSpinning, Symbol("name"), o.name)
     OpenAPI.validate_property(
         ConstantReserveNonSpinning,
         Symbol("requirement"),
@@ -117,8 +107,18 @@ function OpenAPI.validate_properties(o::ConstantReserveNonSpinning)
     )
     OpenAPI.validate_property(
         ConstantReserveNonSpinning,
-        Symbol("time_frame"),
-        o.time_frame,
+        Symbol("max_output_fraction"),
+        o.max_output_fraction,
+    )
+    OpenAPI.validate_property(
+        ConstantReserveNonSpinning,
+        Symbol("max_participation_factor"),
+        o.max_participation_factor,
+    )
+    OpenAPI.validate_property(
+        ConstantReserveNonSpinning,
+        Symbol("deployed_fraction"),
+        o.deployed_fraction,
     )
 end
 

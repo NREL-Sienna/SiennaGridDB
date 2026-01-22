@@ -4,77 +4,77 @@
 @doc raw"""ExponentialLoad
 
     ExponentialLoad(;
-        name=nothing,
         id=nothing,
+        name=nothing,
         available=nothing,
         bus=nothing,
         active_power=nothing,
         reactive_power=nothing,
-        max_active_power=nothing,
-        max_reactive_power=nothing,
-        base_power=nothing,
         alpha=nothing,
         beta=nothing,
+        base_power=nothing,
+        max_active_power=nothing,
+        max_reactive_power=nothing,
         conformity="UNDEFINED",
         dynamic_injector=nothing,
     )
 
-    - name::String
     - id::Int64
+    - name::String
     - available::Bool
     - bus::Int64
     - active_power::Float64
     - reactive_power::Float64
-    - max_active_power::Float64
-    - max_reactive_power::Float64
-    - base_power::Float64
     - alpha::Float64
     - beta::Float64
+    - base_power::Float64
+    - max_active_power::Float64
+    - max_reactive_power::Float64
     - conformity::String
     - dynamic_injector::Any
 """
 Base.@kwdef mutable struct ExponentialLoad <: OpenAPI.APIModel
-    name::Union{Nothing, String} = nothing
     id::Union{Nothing, Int64} = nothing
+    name::Union{Nothing, String} = nothing
     available::Union{Nothing, Bool} = nothing
     bus::Union{Nothing, Int64} = nothing
     active_power::Union{Nothing, Float64} = nothing
     reactive_power::Union{Nothing, Float64} = nothing
-    max_active_power::Union{Nothing, Float64} = nothing
-    max_reactive_power::Union{Nothing, Float64} = nothing
-    base_power::Union{Nothing, Float64} = nothing
     alpha::Union{Nothing, Float64} = nothing
     beta::Union{Nothing, Float64} = nothing
+    base_power::Union{Nothing, Float64} = nothing
+    max_active_power::Union{Nothing, Float64} = nothing
+    max_reactive_power::Union{Nothing, Float64} = nothing
     conformity::Union{Nothing, String} = "UNDEFINED"
     dynamic_injector::Union{Nothing, Any} = nothing
 
     function ExponentialLoad(
-        name,
         id,
+        name,
         available,
         bus,
         active_power,
         reactive_power,
-        max_active_power,
-        max_reactive_power,
-        base_power,
         alpha,
         beta,
+        base_power,
+        max_active_power,
+        max_reactive_power,
         conformity,
         dynamic_injector,
     )
         o = new(
-            name,
             id,
+            name,
             available,
             bus,
             active_power,
             reactive_power,
-            max_active_power,
-            max_reactive_power,
-            base_power,
             alpha,
             beta,
+            base_power,
+            max_active_power,
+            max_reactive_power,
             conformity,
             dynamic_injector,
         )
@@ -84,17 +84,17 @@ Base.@kwdef mutable struct ExponentialLoad <: OpenAPI.APIModel
 end # type ExponentialLoad
 
 const _property_types_ExponentialLoad = Dict{Symbol, String}(
-    Symbol("name") => "String",
     Symbol("id") => "Int64",
+    Symbol("name") => "String",
     Symbol("available") => "Bool",
     Symbol("bus") => "Int64",
     Symbol("active_power") => "Float64",
     Symbol("reactive_power") => "Float64",
-    Symbol("max_active_power") => "Float64",
-    Symbol("max_reactive_power") => "Float64",
-    Symbol("base_power") => "Float64",
     Symbol("alpha") => "Float64",
     Symbol("beta") => "Float64",
+    Symbol("base_power") => "Float64",
+    Symbol("max_active_power") => "Float64",
+    Symbol("max_reactive_power") => "Float64",
     Symbol("conformity") => "String",
     Symbol("dynamic_injector") => "Any",
 )
@@ -102,27 +102,30 @@ OpenAPI.property_type(::Type{ExponentialLoad}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_ExponentialLoad[name]))}
 
 function OpenAPI.check_required(o::ExponentialLoad)
-    o.name === nothing && (return false)
     o.id === nothing && (return false)
+    o.name === nothing && (return false)
     o.available === nothing && (return false)
     o.bus === nothing && (return false)
     o.active_power === nothing && (return false)
     o.reactive_power === nothing && (return false)
-    o.max_active_power === nothing && (return false)
-    o.max_reactive_power === nothing && (return false)
-    o.base_power === nothing && (return false)
     o.alpha === nothing && (return false)
     o.beta === nothing && (return false)
+    o.base_power === nothing && (return false)
+    o.max_active_power === nothing && (return false)
+    o.max_reactive_power === nothing && (return false)
     true
 end
 
 function OpenAPI.validate_properties(o::ExponentialLoad)
-    OpenAPI.validate_property(ExponentialLoad, Symbol("name"), o.name)
     OpenAPI.validate_property(ExponentialLoad, Symbol("id"), o.id)
+    OpenAPI.validate_property(ExponentialLoad, Symbol("name"), o.name)
     OpenAPI.validate_property(ExponentialLoad, Symbol("available"), o.available)
     OpenAPI.validate_property(ExponentialLoad, Symbol("bus"), o.bus)
     OpenAPI.validate_property(ExponentialLoad, Symbol("active_power"), o.active_power)
     OpenAPI.validate_property(ExponentialLoad, Symbol("reactive_power"), o.reactive_power)
+    OpenAPI.validate_property(ExponentialLoad, Symbol("alpha"), o.alpha)
+    OpenAPI.validate_property(ExponentialLoad, Symbol("beta"), o.beta)
+    OpenAPI.validate_property(ExponentialLoad, Symbol("base_power"), o.base_power)
     OpenAPI.validate_property(
         ExponentialLoad,
         Symbol("max_active_power"),
@@ -133,9 +136,6 @@ function OpenAPI.validate_properties(o::ExponentialLoad)
         Symbol("max_reactive_power"),
         o.max_reactive_power,
     )
-    OpenAPI.validate_property(ExponentialLoad, Symbol("base_power"), o.base_power)
-    OpenAPI.validate_property(ExponentialLoad, Symbol("alpha"), o.alpha)
-    OpenAPI.validate_property(ExponentialLoad, Symbol("beta"), o.beta)
     OpenAPI.validate_property(ExponentialLoad, Symbol("conformity"), o.conformity)
     OpenAPI.validate_property(
         ExponentialLoad,

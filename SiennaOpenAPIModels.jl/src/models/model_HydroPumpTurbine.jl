@@ -15,17 +15,18 @@
         reactive_power_limits=nothing,
         active_power_limits_pump=nothing,
         outflow_limits=nothing,
-        head_reservoir=nothing,
-        tail_reservoir=nothing,
         powerhouse_elevation=nothing,
         ramp_limits=nothing,
         time_limits=nothing,
         base_power=nothing,
+        status="OFF",
+        time_at_status=10000.0,
         operation_cost=nothing,
         active_power_pump=0.0,
         efficiency=nothing,
         transition_time=nothing,
         minimum_time=nothing,
+        travel_time=nothing,
         conversion_factor=1.0,
         must_run=false,
         prime_mover_type="OT",
@@ -43,17 +44,18 @@
     - reactive_power_limits::MinMax
     - active_power_limits_pump::MinMax
     - outflow_limits::MinMax
-    - head_reservoir::Int64
-    - tail_reservoir::Int64
     - powerhouse_elevation::Float64
     - ramp_limits::UpDown
     - time_limits::UpDown
     - base_power::Float64
-    - operation_cost::HydroStorageGenerationCost
+    - status::String
+    - time_at_status::Float64
+    - operation_cost::HydroGenerationCost
     - active_power_pump::Float64
     - efficiency::TurbinePump
     - transition_time::TurbinePump
     - minimum_time::TurbinePump
+    - travel_time::Float64
     - conversion_factor::Float64
     - must_run::Bool
     - prime_mover_type::String
@@ -71,17 +73,18 @@ Base.@kwdef mutable struct HydroPumpTurbine <: OpenAPI.APIModel
     reactive_power_limits = nothing # spec type: Union{ Nothing, MinMax }
     active_power_limits_pump = nothing # spec type: Union{ Nothing, MinMax }
     outflow_limits = nothing # spec type: Union{ Nothing, MinMax }
-    head_reservoir::Union{Nothing, Int64} = nothing
-    tail_reservoir::Union{Nothing, Int64} = nothing
     powerhouse_elevation::Union{Nothing, Float64} = nothing
     ramp_limits = nothing # spec type: Union{ Nothing, UpDown }
     time_limits = nothing # spec type: Union{ Nothing, UpDown }
     base_power::Union{Nothing, Float64} = nothing
-    operation_cost = nothing # spec type: Union{ Nothing, HydroStorageGenerationCost }
+    status::Union{Nothing, String} = "OFF"
+    time_at_status::Union{Nothing, Float64} = 10000.0
+    operation_cost = nothing # spec type: Union{ Nothing, HydroGenerationCost }
     active_power_pump::Union{Nothing, Float64} = 0.0
     efficiency = nothing # spec type: Union{ Nothing, TurbinePump }
     transition_time = nothing # spec type: Union{ Nothing, TurbinePump }
     minimum_time = nothing # spec type: Union{ Nothing, TurbinePump }
+    travel_time::Union{Nothing, Float64} = nothing
     conversion_factor::Union{Nothing, Float64} = 1.0
     must_run::Union{Nothing, Bool} = false
     prime_mover_type::Union{Nothing, String} = "OT"
@@ -99,17 +102,18 @@ Base.@kwdef mutable struct HydroPumpTurbine <: OpenAPI.APIModel
         reactive_power_limits,
         active_power_limits_pump,
         outflow_limits,
-        head_reservoir,
-        tail_reservoir,
         powerhouse_elevation,
         ramp_limits,
         time_limits,
         base_power,
+        status,
+        time_at_status,
         operation_cost,
         active_power_pump,
         efficiency,
         transition_time,
         minimum_time,
+        travel_time,
         conversion_factor,
         must_run,
         prime_mover_type,
@@ -127,17 +131,18 @@ Base.@kwdef mutable struct HydroPumpTurbine <: OpenAPI.APIModel
             reactive_power_limits,
             active_power_limits_pump,
             outflow_limits,
-            head_reservoir,
-            tail_reservoir,
             powerhouse_elevation,
             ramp_limits,
             time_limits,
             base_power,
+            status,
+            time_at_status,
             operation_cost,
             active_power_pump,
             efficiency,
             transition_time,
             minimum_time,
+            travel_time,
             conversion_factor,
             must_run,
             prime_mover_type,
@@ -160,17 +165,18 @@ const _property_types_HydroPumpTurbine = Dict{Symbol, String}(
     Symbol("reactive_power_limits") => "MinMax",
     Symbol("active_power_limits_pump") => "MinMax",
     Symbol("outflow_limits") => "MinMax",
-    Symbol("head_reservoir") => "Int64",
-    Symbol("tail_reservoir") => "Int64",
     Symbol("powerhouse_elevation") => "Float64",
     Symbol("ramp_limits") => "UpDown",
     Symbol("time_limits") => "UpDown",
     Symbol("base_power") => "Float64",
-    Symbol("operation_cost") => "HydroStorageGenerationCost",
+    Symbol("status") => "String",
+    Symbol("time_at_status") => "Float64",
+    Symbol("operation_cost") => "HydroGenerationCost",
     Symbol("active_power_pump") => "Float64",
     Symbol("efficiency") => "TurbinePump",
     Symbol("transition_time") => "TurbinePump",
     Symbol("minimum_time") => "TurbinePump",
+    Symbol("travel_time") => "Float64",
     Symbol("conversion_factor") => "Float64",
     Symbol("must_run") => "Bool",
     Symbol("prime_mover_type") => "String",
@@ -189,8 +195,6 @@ function OpenAPI.check_required(o::HydroPumpTurbine)
     o.rating === nothing && (return false)
     o.active_power_limits === nothing && (return false)
     o.active_power_limits_pump === nothing && (return false)
-    o.head_reservoir === nothing && (return false)
-    o.tail_reservoir === nothing && (return false)
     o.powerhouse_elevation === nothing && (return false)
     o.base_power === nothing && (return false)
     true
@@ -220,8 +224,6 @@ function OpenAPI.validate_properties(o::HydroPumpTurbine)
         o.active_power_limits_pump,
     )
     OpenAPI.validate_property(HydroPumpTurbine, Symbol("outflow_limits"), o.outflow_limits)
-    OpenAPI.validate_property(HydroPumpTurbine, Symbol("head_reservoir"), o.head_reservoir)
-    OpenAPI.validate_property(HydroPumpTurbine, Symbol("tail_reservoir"), o.tail_reservoir)
     OpenAPI.validate_property(
         HydroPumpTurbine,
         Symbol("powerhouse_elevation"),
@@ -230,6 +232,8 @@ function OpenAPI.validate_properties(o::HydroPumpTurbine)
     OpenAPI.validate_property(HydroPumpTurbine, Symbol("ramp_limits"), o.ramp_limits)
     OpenAPI.validate_property(HydroPumpTurbine, Symbol("time_limits"), o.time_limits)
     OpenAPI.validate_property(HydroPumpTurbine, Symbol("base_power"), o.base_power)
+    OpenAPI.validate_property(HydroPumpTurbine, Symbol("status"), o.status)
+    OpenAPI.validate_property(HydroPumpTurbine, Symbol("time_at_status"), o.time_at_status)
     OpenAPI.validate_property(HydroPumpTurbine, Symbol("operation_cost"), o.operation_cost)
     OpenAPI.validate_property(
         HydroPumpTurbine,
@@ -243,6 +247,7 @@ function OpenAPI.validate_properties(o::HydroPumpTurbine)
         o.transition_time,
     )
     OpenAPI.validate_property(HydroPumpTurbine, Symbol("minimum_time"), o.minimum_time)
+    OpenAPI.validate_property(HydroPumpTurbine, Symbol("travel_time"), o.travel_time)
     OpenAPI.validate_property(
         HydroPumpTurbine,
         Symbol("conversion_factor"),
@@ -262,6 +267,10 @@ function OpenAPI.validate_properties(o::HydroPumpTurbine)
 end
 
 function OpenAPI.validate_property(::Type{HydroPumpTurbine}, name::Symbol, val)
+    if name === Symbol("status")
+        OpenAPI.validate_param(name, "HydroPumpTurbine", :enum, val, ["PUMP", "GEN", "OFF"])
+    end
+
     if name === Symbol("prime_mover_type")
         OpenAPI.validate_param(
             name,

@@ -22,6 +22,7 @@
         rating_b=nothing,
         rating_c=nothing,
         phase_angle_limits=nothing,
+        control_objective="UNDEFINED",
     )
 
     - id::Int64
@@ -42,6 +43,7 @@
     - rating_b::Float64
     - rating_c::Float64
     - phase_angle_limits::MinMax
+    - control_objective::String
 """
 Base.@kwdef mutable struct PhaseShiftingTransformer <: OpenAPI.APIModel
     id::Union{Nothing, Int64} = nothing
@@ -62,6 +64,7 @@ Base.@kwdef mutable struct PhaseShiftingTransformer <: OpenAPI.APIModel
     rating_b::Union{Nothing, Float64} = nothing
     rating_c::Union{Nothing, Float64} = nothing
     phase_angle_limits = nothing # spec type: Union{ Nothing, MinMax }
+    control_objective::Union{Nothing, String} = "UNDEFINED"
 
     function PhaseShiftingTransformer(
         id,
@@ -82,6 +85,7 @@ Base.@kwdef mutable struct PhaseShiftingTransformer <: OpenAPI.APIModel
         rating_b,
         rating_c,
         phase_angle_limits,
+        control_objective,
     )
         o = new(
             id,
@@ -102,6 +106,7 @@ Base.@kwdef mutable struct PhaseShiftingTransformer <: OpenAPI.APIModel
             rating_b,
             rating_c,
             phase_angle_limits,
+            control_objective,
         )
         OpenAPI.validate_properties(o)
         return o
@@ -127,6 +132,7 @@ const _property_types_PhaseShiftingTransformer = Dict{Symbol, String}(
     Symbol("rating_b") => "Float64",
     Symbol("rating_c") => "Float64",
     Symbol("phase_angle_limits") => "MinMax",
+    Symbol("control_objective") => "String",
 )
 OpenAPI.property_type(::Type{PhaseShiftingTransformer}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_PhaseShiftingTransformer[name]))}
@@ -189,6 +195,34 @@ function OpenAPI.validate_properties(o::PhaseShiftingTransformer)
         Symbol("phase_angle_limits"),
         o.phase_angle_limits,
     )
+    OpenAPI.validate_property(
+        PhaseShiftingTransformer,
+        Symbol("control_objective"),
+        o.control_objective,
+    )
 end
 
-function OpenAPI.validate_property(::Type{PhaseShiftingTransformer}, name::Symbol, val) end
+function OpenAPI.validate_property(::Type{PhaseShiftingTransformer}, name::Symbol, val)
+    if name === Symbol("control_objective")
+        OpenAPI.validate_param(
+            name,
+            "PhaseShiftingTransformer",
+            :enum,
+            val,
+            [
+                "UNDEFINED",
+                "VOLTAGE_DISABLED",
+                "REACTIVE_POWER_FLOW_DISABLED",
+                "ACTIVE_POWER_FLOW_DISABLED",
+                "CONTROL_OF_DC_LINE_DISABLED",
+                "ASYMETRIC_ACTIVE_POWER_FLOW_DISABLED",
+                "FIXED",
+                "VOLTAGE",
+                "REACTIVE_POWER_FLOW",
+                "ACTIVE_POWER_FLOW",
+                "CONTROL_OF_DC_LINE",
+                "ASYMETRIC_ACTIVE_POWER_FLOW",
+            ],
+        )
+    end
+end

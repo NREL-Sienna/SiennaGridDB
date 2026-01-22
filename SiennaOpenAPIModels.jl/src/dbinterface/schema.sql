@@ -22,17 +22,20 @@ DROP TABLE IF EXISTS transmission_lines;
 
 DROP TABLE IF EXISTS planning_regions;
 
-DROP TABLE IF EXISTS time_series;
-
 DROP TABLE IF EXISTS transmission_interchanges;
 
 DROP TABLE IF EXISTS entities;
 
 DROP TABLE IF EXISTS time_series_associations;
 
-DROP TABLE IF EXISTS operational_data;
-
+-- NOTE: operational_data is now a view, not a table (see views.sql)
 DROP TABLE IF EXISTS attributes;
+
+DROP TABLE IF EXISTS loads;
+
+DROP TABLE IF EXISTS static_time_series;
+
+DROP TABLE IF EXISTS entity_types;
 
 DROP TABLE IF EXISTS supplemental_attributes;
 
@@ -157,7 +160,7 @@ CREATE TABLE storage_units (
     name text NOT NULL,
     prime_mover text NOT NULL REFERENCES prime_mover_types(name),
     -- Energy capacity
-    max_capacity real NOT NULL,
+    max_capacity real,
     balancing_topology integer NOT NULL REFERENCES balancing_topologies (id),
     efficiency_up real CHECK (
         efficiency_up > 0
@@ -180,8 +183,9 @@ CREATE TABLE hydro_reservoir(
 );
 
 CREATE TABLE hydro_reservoir_connections(
-    turbine_id integer NOT NULL REFERENCES entities(id),
-    reservoir_id integer NOT NULL REFERENCES hydro_reservoir(id)
+    source_id integer NOT NULL REFERENCES entities(id),
+    sink_id integer NOT NULL REFERENCES entities(id),
+    PRIMARY KEY (source_id, sink_id)
 );
 
 -- NOTE: The purpose of this table is to capture technologies available for
@@ -203,26 +207,6 @@ CREATE TABLE transport_technologies(
     scenario text NULL,
     UNIQUE(id, arc_id, scenario)
 );
-
--- NOTE: The purpose of this table is to link operational parameters to multiple
--- entities like existing units (real paramters) or supply technologies
--- (expected parameters).
--- The same operational data could be attached to multiple entities.
-CREATE TABLE operational_data (
-    id integer PRIMARY KEY,
-    entity_id integer NOT NULL,
-    active_power_limit_min real NOT NULL CHECK (active_power_limit_min >= 0),
-    must_run bool,
-    uptime real NOT NULL CHECK (uptime >= 0),
-    downtime real NOT NULL CHECK (downtime >= 0),
-    ramp_up real NOT NULL,
-    ramp_down real NOT NULL,
-    operational_cost json NULL,
-    -- We can add what type of operational cost it is or other parameters (e.g., variable)
-    operational_cost_type text generated always AS (json_type(operational_cost)) virtual,
-    FOREIGN KEY (entity_id) REFERENCES entities(id)
-);
-
 
 -- NOTE: Attributes are additional parameters that can be linked to entities.
 -- The main purpose of this is when there is an important field that is not
@@ -270,7 +254,7 @@ CREATE TABLE time_series_associations(
     window_count INTEGER,
     length INTEGER,
     name TEXT NOT NULL,
-    owner_uuid TEXT NOT NULL,
+    owner_id INTEGER NOT NULL REFERENCES entities(id),
     owner_type TEXT NOT NULL,
     owner_category TEXT NOT NULL,
     features TEXT NOT NULL,
@@ -279,7 +263,7 @@ CREATE TABLE time_series_associations(
     units TEXT NULL
 );
 CREATE UNIQUE INDEX "by_c_n_tst_features" ON "time_series_associations" (
-    "owner_uuid",
+    "owner_id",
     "time_series_type",
     "name",
     "resolution",

@@ -13,15 +13,17 @@
         rating=nothing,
         active_power_limits=nothing,
         reactive_power_limits=nothing,
-        outflow_limits=nothing,
+        base_power=nothing,
+        operation_cost=nothing,
         powerhouse_elevation=nothing,
         ramp_limits=nothing,
         time_limits=nothing,
-        base_power=nothing,
-        operation_cost=nothing,
+        outflow_limits=nothing,
         efficiency=1.0,
+        turbine_type="UNKNOWN",
         conversion_factor=1.0,
-        reservoirs=nothing,
+        prime_mover_type="OT",
+        travel_time=nothing,
         dynamic_injector=nothing,
     )
 
@@ -34,15 +36,17 @@
     - rating::Float64
     - active_power_limits::MinMax
     - reactive_power_limits::MinMax
-    - outflow_limits::MinMax
+    - base_power::Float64
+    - operation_cost::HydroGenerationCost
     - powerhouse_elevation::Float64
     - ramp_limits::UpDown
     - time_limits::UpDown
-    - base_power::Float64
-    - operation_cost::HydroGenerationCost
+    - outflow_limits::MinMax
     - efficiency::Float64
+    - turbine_type::String
     - conversion_factor::Float64
-    - reservoirs::Vector{Int64}
+    - prime_mover_type::String
+    - travel_time::Float64
     - dynamic_injector::Any
 """
 Base.@kwdef mutable struct HydroTurbine <: OpenAPI.APIModel
@@ -55,15 +59,17 @@ Base.@kwdef mutable struct HydroTurbine <: OpenAPI.APIModel
     rating::Union{Nothing, Float64} = nothing
     active_power_limits = nothing # spec type: Union{ Nothing, MinMax }
     reactive_power_limits = nothing # spec type: Union{ Nothing, MinMax }
-    outflow_limits = nothing # spec type: Union{ Nothing, MinMax }
+    base_power::Union{Nothing, Float64} = nothing
+    operation_cost = nothing # spec type: Union{ Nothing, HydroGenerationCost }
     powerhouse_elevation::Union{Nothing, Float64} = nothing
     ramp_limits = nothing # spec type: Union{ Nothing, UpDown }
     time_limits = nothing # spec type: Union{ Nothing, UpDown }
-    base_power::Union{Nothing, Float64} = nothing
-    operation_cost = nothing # spec type: Union{ Nothing, HydroGenerationCost }
+    outflow_limits = nothing # spec type: Union{ Nothing, MinMax }
     efficiency::Union{Nothing, Float64} = 1.0
+    turbine_type::Union{Nothing, String} = "UNKNOWN"
     conversion_factor::Union{Nothing, Float64} = 1.0
-    reservoirs::Union{Nothing, Vector{Int64}} = nothing
+    prime_mover_type::Union{Nothing, String} = "OT"
+    travel_time::Union{Nothing, Float64} = nothing
     dynamic_injector::Union{Nothing, Any} = nothing
 
     function HydroTurbine(
@@ -76,15 +82,17 @@ Base.@kwdef mutable struct HydroTurbine <: OpenAPI.APIModel
         rating,
         active_power_limits,
         reactive_power_limits,
-        outflow_limits,
+        base_power,
+        operation_cost,
         powerhouse_elevation,
         ramp_limits,
         time_limits,
-        base_power,
-        operation_cost,
+        outflow_limits,
         efficiency,
+        turbine_type,
         conversion_factor,
-        reservoirs,
+        prime_mover_type,
+        travel_time,
         dynamic_injector,
     )
         o = new(
@@ -97,15 +105,17 @@ Base.@kwdef mutable struct HydroTurbine <: OpenAPI.APIModel
             rating,
             active_power_limits,
             reactive_power_limits,
-            outflow_limits,
+            base_power,
+            operation_cost,
             powerhouse_elevation,
             ramp_limits,
             time_limits,
-            base_power,
-            operation_cost,
+            outflow_limits,
             efficiency,
+            turbine_type,
             conversion_factor,
-            reservoirs,
+            prime_mover_type,
+            travel_time,
             dynamic_injector,
         )
         OpenAPI.validate_properties(o)
@@ -123,15 +133,17 @@ const _property_types_HydroTurbine = Dict{Symbol, String}(
     Symbol("rating") => "Float64",
     Symbol("active_power_limits") => "MinMax",
     Symbol("reactive_power_limits") => "MinMax",
-    Symbol("outflow_limits") => "MinMax",
+    Symbol("base_power") => "Float64",
+    Symbol("operation_cost") => "HydroGenerationCost",
     Symbol("powerhouse_elevation") => "Float64",
     Symbol("ramp_limits") => "UpDown",
     Symbol("time_limits") => "UpDown",
-    Symbol("base_power") => "Float64",
-    Symbol("operation_cost") => "HydroGenerationCost",
+    Symbol("outflow_limits") => "MinMax",
     Symbol("efficiency") => "Float64",
+    Symbol("turbine_type") => "String",
     Symbol("conversion_factor") => "Float64",
-    Symbol("reservoirs") => "Vector{Int64}",
+    Symbol("prime_mover_type") => "String",
+    Symbol("travel_time") => "Float64",
     Symbol("dynamic_injector") => "Any",
 )
 OpenAPI.property_type(::Type{HydroTurbine}, name::Symbol) =
@@ -146,8 +158,8 @@ function OpenAPI.check_required(o::HydroTurbine)
     o.reactive_power === nothing && (return false)
     o.rating === nothing && (return false)
     o.active_power_limits === nothing && (return false)
-    o.powerhouse_elevation === nothing && (return false)
     o.base_power === nothing && (return false)
+    o.powerhouse_elevation === nothing && (return false)
     true
 end
 
@@ -169,7 +181,8 @@ function OpenAPI.validate_properties(o::HydroTurbine)
         Symbol("reactive_power_limits"),
         o.reactive_power_limits,
     )
-    OpenAPI.validate_property(HydroTurbine, Symbol("outflow_limits"), o.outflow_limits)
+    OpenAPI.validate_property(HydroTurbine, Symbol("base_power"), o.base_power)
+    OpenAPI.validate_property(HydroTurbine, Symbol("operation_cost"), o.operation_cost)
     OpenAPI.validate_property(
         HydroTurbine,
         Symbol("powerhouse_elevation"),
@@ -177,16 +190,72 @@ function OpenAPI.validate_properties(o::HydroTurbine)
     )
     OpenAPI.validate_property(HydroTurbine, Symbol("ramp_limits"), o.ramp_limits)
     OpenAPI.validate_property(HydroTurbine, Symbol("time_limits"), o.time_limits)
-    OpenAPI.validate_property(HydroTurbine, Symbol("base_power"), o.base_power)
-    OpenAPI.validate_property(HydroTurbine, Symbol("operation_cost"), o.operation_cost)
+    OpenAPI.validate_property(HydroTurbine, Symbol("outflow_limits"), o.outflow_limits)
     OpenAPI.validate_property(HydroTurbine, Symbol("efficiency"), o.efficiency)
+    OpenAPI.validate_property(HydroTurbine, Symbol("turbine_type"), o.turbine_type)
     OpenAPI.validate_property(
         HydroTurbine,
         Symbol("conversion_factor"),
         o.conversion_factor,
     )
-    OpenAPI.validate_property(HydroTurbine, Symbol("reservoirs"), o.reservoirs)
+    OpenAPI.validate_property(HydroTurbine, Symbol("prime_mover_type"), o.prime_mover_type)
+    OpenAPI.validate_property(HydroTurbine, Symbol("travel_time"), o.travel_time)
     OpenAPI.validate_property(HydroTurbine, Symbol("dynamic_injector"), o.dynamic_injector)
 end
 
-function OpenAPI.validate_property(::Type{HydroTurbine}, name::Symbol, val) end
+function OpenAPI.validate_property(::Type{HydroTurbine}, name::Symbol, val)
+    if name === Symbol("turbine_type")
+        OpenAPI.validate_param(
+            name,
+            "HydroTurbine",
+            :enum,
+            val,
+            [
+                "UNKNOWN",
+                "PELTON",
+                "FRANCIS",
+                "KAPLAN",
+                "TURGO",
+                "CROSSFLOW",
+                "BULB",
+                "DERIAZ",
+                "PROPELLER",
+                "OTHER",
+            ],
+        )
+    end
+
+    if name === Symbol("prime_mover_type")
+        OpenAPI.validate_param(
+            name,
+            "HydroTurbine",
+            :enum,
+            val,
+            [
+                "BA",
+                "BT",
+                "CA",
+                "CC",
+                "CE",
+                "CP",
+                "CS",
+                "CT",
+                "ES",
+                "FC",
+                "FW",
+                "GT",
+                "HA",
+                "HB",
+                "HK",
+                "HY",
+                "IC",
+                "PS",
+                "OT",
+                "ST",
+                "PVe",
+                "WT",
+                "WS",
+            ],
+        )
+    end
+end

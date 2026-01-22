@@ -11,10 +11,10 @@ module SiennaOpenAPIModels
 
 using OpenAPI
 using StructHelpers: @batteries
-import PowerSystems
+import PowerSystems as PSY
 import Dates
+import InfrastructureSystems as IS
 
-const PSY = PowerSystems
 const API_VERSION = "1.0.0"
 
 export psy2openapi
@@ -47,12 +47,10 @@ include("modelincludes.jl")
 @batteries FuelCurve
 @batteries FuelCurveFuelCost
 @batteries HydroDispatch
-@batteries HydroEnergyReservoir
 @batteries HydroGenerationCost
 @batteries HydroPumpTurbine
 @batteries HydroReservoir
 @batteries HydroReservoirCost
-@batteries HydroStorageGenerationCost
 @batteries HydroTurbine
 @batteries ImportExportCost
 @batteries IncrementalCurve
@@ -62,13 +60,16 @@ include("modelincludes.jl")
 @batteries InputOutputCurveFunctionData
 @batteries InterconnectingConverter
 @batteries InterruptiblePowerLoad
+@batteries InterruptibleStandardLoad
 @batteries Line
 @batteries LinearFunctionData
 @batteries LoadCost
 @batteries LoadZone
 @batteries MinMax
 @batteries MonitoredLine
+@batteries MotorLoad
 @batteries PhaseShiftingTransformer
+@batteries PhaseShiftingTransformer3W
 @batteries PiecewiseLinearData
 @batteries PiecewiseStepData
 @batteries PowerLoad
@@ -117,8 +118,6 @@ include("json_to_sienna/topology.jl")
 include("json_to_sienna/static_injections.jl")
 include("json_to_sienna/branch.jl")
 include("json_to_sienna/service.jl")
-
-include("dbinterface/value_curve.jl")
 
 include("dbinterface/sqlite.jl")
 include("dbinterface/time_series.jl")

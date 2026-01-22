@@ -9,6 +9,7 @@
         available=nothing,
         bus=nothing,
         Y=nothing,
+        initial_status=nothing,
         number_of_steps=nothing,
         Y_increase=nothing,
         admittance_limits=nothing,
@@ -20,6 +21,7 @@
     - available::Bool
     - bus::Int64
     - Y::ComplexNumber
+    - initial_status::Vector{Int64}
     - number_of_steps::Vector{Int64}
     - Y_increase::Vector{ComplexNumber}
     - admittance_limits::MinMax
@@ -31,6 +33,7 @@ Base.@kwdef mutable struct SwitchedAdmittance <: OpenAPI.APIModel
     available::Union{Nothing, Bool} = nothing
     bus::Union{Nothing, Int64} = nothing
     Y = nothing # spec type: Union{ Nothing, ComplexNumber }
+    initial_status::Union{Nothing, Vector{Int64}} = nothing
     number_of_steps::Union{Nothing, Vector{Int64}} = nothing
     Y_increase::Union{Nothing, Vector} = nothing # spec type: Union{ Nothing, Vector{ComplexNumber} }
     admittance_limits = nothing # spec type: Union{ Nothing, MinMax }
@@ -42,6 +45,7 @@ Base.@kwdef mutable struct SwitchedAdmittance <: OpenAPI.APIModel
         available,
         bus,
         Y,
+        initial_status,
         number_of_steps,
         Y_increase,
         admittance_limits,
@@ -53,6 +57,7 @@ Base.@kwdef mutable struct SwitchedAdmittance <: OpenAPI.APIModel
             available,
             bus,
             Y,
+            initial_status,
             number_of_steps,
             Y_increase,
             admittance_limits,
@@ -69,6 +74,7 @@ const _property_types_SwitchedAdmittance = Dict{Symbol, String}(
     Symbol("available") => "Bool",
     Symbol("bus") => "Int64",
     Symbol("Y") => "ComplexNumber",
+    Symbol("initial_status") => "Vector{Int64}",
     Symbol("number_of_steps") => "Vector{Int64}",
     Symbol("Y_increase") => "Vector{ComplexNumber}",
     Symbol("admittance_limits") => "MinMax",
@@ -92,6 +98,11 @@ function OpenAPI.validate_properties(o::SwitchedAdmittance)
     OpenAPI.validate_property(SwitchedAdmittance, Symbol("available"), o.available)
     OpenAPI.validate_property(SwitchedAdmittance, Symbol("bus"), o.bus)
     OpenAPI.validate_property(SwitchedAdmittance, Symbol("Y"), o.Y)
+    OpenAPI.validate_property(
+        SwitchedAdmittance,
+        Symbol("initial_status"),
+        o.initial_status,
+    )
     OpenAPI.validate_property(
         SwitchedAdmittance,
         Symbol("number_of_steps"),

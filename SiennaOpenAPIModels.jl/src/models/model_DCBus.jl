@@ -5,6 +5,7 @@
 
     DCBus(;
         area=nothing,
+        available=nothing,
         base_voltage=nothing,
         id=nothing,
         load_zone=nothing,
@@ -15,6 +16,7 @@
     )
 
     - area::Int64
+    - available::Bool
     - base_voltage::Float64
     - id::Int64
     - load_zone::Int64
@@ -25,6 +27,7 @@
 """
 Base.@kwdef mutable struct DCBus <: OpenAPI.APIModel
     area::Union{Nothing, Int64} = nothing
+    available::Union{Nothing, Bool} = nothing
     base_voltage::Union{Nothing, Float64} = nothing
     id::Union{Nothing, Int64} = nothing
     load_zone::Union{Nothing, Int64} = nothing
@@ -35,6 +38,7 @@ Base.@kwdef mutable struct DCBus <: OpenAPI.APIModel
 
     function DCBus(
         area,
+        available,
         base_voltage,
         id,
         load_zone,
@@ -43,7 +47,17 @@ Base.@kwdef mutable struct DCBus <: OpenAPI.APIModel
         number,
         voltage_limits,
     )
-        o = new(area, base_voltage, id, load_zone, magnitude, name, number, voltage_limits)
+        o = new(
+            area,
+            available,
+            base_voltage,
+            id,
+            load_zone,
+            magnitude,
+            name,
+            number,
+            voltage_limits,
+        )
         OpenAPI.validate_properties(o)
         return o
     end
@@ -51,6 +65,7 @@ end # type DCBus
 
 const _property_types_DCBus = Dict{Symbol, String}(
     Symbol("area") => "Int64",
+    Symbol("available") => "Bool",
     Symbol("base_voltage") => "Float64",
     Symbol("id") => "Int64",
     Symbol("load_zone") => "Int64",
@@ -63,6 +78,7 @@ OpenAPI.property_type(::Type{DCBus}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_DCBus[name]))}
 
 function OpenAPI.check_required(o::DCBus)
+    o.available === nothing && (return false)
     o.id === nothing && (return false)
     o.name === nothing && (return false)
     o.number === nothing && (return false)
@@ -71,6 +87,7 @@ end
 
 function OpenAPI.validate_properties(o::DCBus)
     OpenAPI.validate_property(DCBus, Symbol("area"), o.area)
+    OpenAPI.validate_property(DCBus, Symbol("available"), o.available)
     OpenAPI.validate_property(DCBus, Symbol("base_voltage"), o.base_voltage)
     OpenAPI.validate_property(DCBus, Symbol("id"), o.id)
     OpenAPI.validate_property(DCBus, Symbol("load_zone"), o.load_zone)
