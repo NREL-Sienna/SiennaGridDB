@@ -1,11 +1,11 @@
 function psip2openapi(storage::PSIP.StorageTechnology, ids::IDGenerator)
     StorageTechnology(; #How to handle parametric types, get it from power_systems_type?
         name=storage.name,
-        id=storage.id,
+        id=getid!(ids, storage),
         available=storage.available,
-        region=[PSIP.get_id(r) for r in storage.region],
+        region=[PSIP.get_name(r) for r in storage.region],
         prime_mover_type=string(storage.prime_mover_type),
-        storage_tech=get_storage_tech_enum(storage.storage_tech),
+        storage_tech=string(storage.storage_tech),
         lifetime=storage.lifetime,
         min_discharge_fraction = storage.min_discharge_fraction,
         duration_limits=get_min_max(storage.duration_limits),
@@ -28,9 +28,9 @@ end
 function psip2openapi(demand::PSIP.DemandRequirement, ids::IDGenerator)
     DemandRequirement(;
         name=demand.name,
-        id=demand.id,
+        id=getid!(ids, demand),
         available=demand.available,
-        region=[PSIP.get_id(r) for r in demand.region],
+        region=[PSIP.get_name(r) for r in demand.region],
         power_systems_type=demand.power_systems_type,
         peak_demand_mw=demand.peak_demand_mw,
         unserved_demand_curve = get_value_curve(demand.unserved_demand_curve),
@@ -41,9 +41,9 @@ end
 function psip2openapi(demand::PSIP.DemandSideTechnology, ids::IDGenerator)
     DemandSideTechnology(;
         name=demand.name,
-        id=demand.id,
+        id=getid!(ids, demand),
         available=demand.available,
-        region=[PSIP.get_id(r) for r in demand.region],
+        region=[PSIP.get_name(r) for r in demand.region],
         power_systems_type=demand.power_systems_type,
         price_per_unit = get_value_curve(demand.price_per_unit),
         curtailment_cost = get_value_curve(demand.curtailment_cost),
@@ -60,10 +60,10 @@ end
 function psip2openapi(supply::PSIP.SupplyTechnology, ids::IDGenerator)
     SupplyTechnology(;
         name=supply.name,
-        id=supply.id,
+        id=getid!(ids, supply),
         available=supply.available,
         power_systems_type=supply.power_systems_type,
-        region=[PSIP.get_id(r) for r in supply.region],
+        region=[PSIP.get_name(r) for r in supply.region],
         prime_mover_type=string(supply.prime_mover_type),
         financial_data = get_technology_financial_data(supply.financial_data), 
         fuel=[string(f) for f in supply.fuel],
@@ -84,11 +84,11 @@ end
 function psip2openapi(line::PSIP.AggregateTransportTechnology, ids::IDGenerator)
     AggregateTransportTechnology(;
         name=line.name,
-        id=line.id,
+        id=getid!(ids, line),
         available=line.available,
         power_systems_type=line.power_systems_type,
-        start_region=PSIP.get_id(line.start_region),
-        end_region=PSIP.get_id(line.end_region),
+        start_region=PSIP.get_name(line.start_region),
+        end_region=PSIP.get_name(line.end_region),
         capital_costs = get_value_curve(line.capital_costs),
         financial_data = get_technology_financial_data(line.financial_data), 
         unit_size=line.unit_size,
@@ -100,11 +100,11 @@ end
 function psip2openapi(line::PSIP.NodalACTransportTechnology, ids::IDGenerator)
     NodalACTransportTechnology(;
         name=line.name,
-        id=line.id,
+        id=getid!(ids, line),
         available=line.available,
         power_systems_type=line.power_systems_type,
-        start_node=PSIP.get_id(line.start_node),
-        end_node=PSIP.get_id(line.end_node),
+        start_node=PSIP.get_name(line.start_node),
+        end_node=PSIP.get_name(line.end_node),
         capital_costs = get_value_curve(line.capital_costs),
         financial_data = get_technology_financial_data(line.financial_data), 
         unit_size=line.unit_size,
@@ -118,11 +118,11 @@ end
 function psip2openapi(line::PSIP.NodalHVDCTransportTechnology, ids::IDGenerator)
     NodalHVDCTransportTechnology(;
         name=line.name,
-        id=line.id,
+        id=getid!(ids, line),
         available=line.available,
         power_systems_type=line.power_systems_type,
-        start_node=PSIP.get_id(line.start_node),
-        end_node=PSIP.get_id(line.end_node),
+        start_node=PSIP.get_name(line.start_node),
+        end_node=PSIP.get_name(line.end_node),
         capital_costs = get_value_curve(line.capital_costs),
         financial_data = get_technology_financial_data(line.financial_data), 
         unit_size=line.unit_size,
