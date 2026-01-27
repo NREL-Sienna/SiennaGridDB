@@ -33,7 +33,7 @@
 
     - name::String
     - uuid::String
-    - region::Vector{Int64}
+    - region::Vector{String}
     - id::Int64
     - available::Bool
     - power_systems_type::String
@@ -59,7 +59,7 @@
 Base.@kwdef mutable struct StorageTechnology <: OpenAPI.APIModel
     name::Union{Nothing, String} = nothing
     uuid::Union{Nothing, String} = nothing
-    region::Union{Nothing, Vector{Int64}} = nothing
+    region::Union{Nothing, Vector{String}} = nothing
     id::Union{Nothing, Int64} = nothing
     available::Union{Nothing, Bool} = nothing
     power_systems_type::Union{Nothing, String} = nothing
@@ -111,7 +111,7 @@ Base.@kwdef mutable struct StorageTechnology <: OpenAPI.APIModel
     end
 end # type StorageTechnology
 
-const _property_types_StorageTechnology = Dict{Symbol,String}(Symbol("name")=>"String", Symbol("uuid")=>"String", Symbol("region")=>"Vector{Int64}", Symbol("id")=>"Int64", Symbol("available")=>"Bool", Symbol("power_systems_type")=>"String", Symbol("min_discharge_fraction")=>"Float64", Symbol("prime_mover_type")=>"String", Symbol("storage_tech")=>"String", Symbol("capital_costs_energy")=>"ValueCurve", Symbol("capital_costs_charge")=>"ValueCurve", Symbol("capital_costs_discharge")=>"ValueCurve", Symbol("operation_costs")=>"StorageCost", Symbol("unit_size_discharge")=>"Float64", Symbol("unit_size_charge")=>"Float64", Symbol("unit_size_energy")=>"Float64", Symbol("capacity_limits_charge")=>"MinMax", Symbol("capacity_limits_discharge")=>"MinMax", Symbol("capacity_limits_energy")=>"MinMax", Symbol("duration_limits")=>"MinMax", Symbol("efficiency")=>"InOut", Symbol("losses")=>"Float64", Symbol("lifetime")=>"Int64", Symbol("financial_data")=>"TechnologyFinancialData", )
+const _property_types_StorageTechnology = Dict{Symbol,String}(Symbol("name")=>"String", Symbol("uuid")=>"String", Symbol("region")=>"Vector{String}", Symbol("id")=>"Int64", Symbol("available")=>"Bool", Symbol("power_systems_type")=>"String", Symbol("min_discharge_fraction")=>"Float64", Symbol("prime_mover_type")=>"String", Symbol("storage_tech")=>"String", Symbol("capital_costs_energy")=>"ValueCurve", Symbol("capital_costs_charge")=>"ValueCurve", Symbol("capital_costs_discharge")=>"ValueCurve", Symbol("operation_costs")=>"StorageCost", Symbol("unit_size_discharge")=>"Float64", Symbol("unit_size_charge")=>"Float64", Symbol("unit_size_energy")=>"Float64", Symbol("capacity_limits_charge")=>"MinMax", Symbol("capacity_limits_discharge")=>"MinMax", Symbol("capacity_limits_energy")=>"MinMax", Symbol("duration_limits")=>"MinMax", Symbol("efficiency")=>"InOut", Symbol("losses")=>"Float64", Symbol("lifetime")=>"Int64", Symbol("financial_data")=>"TechnologyFinancialData", )
 OpenAPI.property_type(::Type{ StorageTechnology }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_StorageTechnology[name]))}
 
 function check_required(o::StorageTechnology)

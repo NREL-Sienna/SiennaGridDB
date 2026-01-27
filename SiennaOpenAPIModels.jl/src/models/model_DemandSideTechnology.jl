@@ -27,7 +27,7 @@
     - uuid::String
     - id::Int64
     - available::Bool
-    - region::Vector{Int64}
+    - region::Vector{String}
     - power_systems_type::String
     - technology_efficiency::Float64
     - price_per_unit::ValueCurve
@@ -45,7 +45,7 @@ Base.@kwdef mutable struct DemandSideTechnology <: OpenAPI.APIModel
     uuid::Union{Nothing, String} = nothing
     id::Union{Nothing, Int64} = nothing
     available::Union{Nothing, Bool} = nothing
-    region::Union{Nothing, Vector{Int64}} = nothing
+    region::Union{Nothing, Vector{String}} = nothing
     power_systems_type::Union{Nothing, String} = nothing
     technology_efficiency::Union{Nothing, Float64} = 0.0
     price_per_unit = nothing # spec type: Union{ Nothing, ValueCurve }
@@ -79,7 +79,7 @@ Base.@kwdef mutable struct DemandSideTechnology <: OpenAPI.APIModel
     end
 end # type DemandSideTechnology
 
-const _property_types_DemandSideTechnology = Dict{Symbol,String}(Symbol("name")=>"String", Symbol("uuid")=>"String", Symbol("id")=>"Int64", Symbol("available")=>"Bool", Symbol("region")=>"Vector{Int64}", Symbol("power_systems_type")=>"String", Symbol("technology_efficiency")=>"Float64", Symbol("price_per_unit")=>"ValueCurve", Symbol("min_power")=>"Float64", Symbol("peak_demand_mw")=>"Float64", Symbol("max_demand_delay")=>"Float64", Symbol("max_demand_advance")=>"Float64", Symbol("demand_energy_efficiency")=>"Float64", Symbol("shift_variable_cost")=>"ValueCurve", Symbol("curtailment_cost")=>"ValueCurve", Symbol("max_demand_curtailment")=>"Float64", )
+const _property_types_DemandSideTechnology = Dict{Symbol,String}(Symbol("name")=>"String", Symbol("uuid")=>"String", Symbol("id")=>"Int64", Symbol("available")=>"Bool", Symbol("region")=>"Vector{String}", Symbol("power_systems_type")=>"String", Symbol("technology_efficiency")=>"Float64", Symbol("price_per_unit")=>"ValueCurve", Symbol("min_power")=>"Float64", Symbol("peak_demand_mw")=>"Float64", Symbol("max_demand_delay")=>"Float64", Symbol("max_demand_advance")=>"Float64", Symbol("demand_energy_efficiency")=>"Float64", Symbol("shift_variable_cost")=>"ValueCurve", Symbol("curtailment_cost")=>"ValueCurve", Symbol("max_demand_curtailment")=>"Float64", )
 OpenAPI.property_type(::Type{ DemandSideTechnology }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_DemandSideTechnology[name]))}
 
 function check_required(o::DemandSideTechnology)

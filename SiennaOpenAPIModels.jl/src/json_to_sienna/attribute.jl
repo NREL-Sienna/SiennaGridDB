@@ -37,11 +37,3 @@ function openapi2psip(attribute::ExistingCapacity, resolver::Resolver)
         existing_technologies=attribute.existing_technologies,
     )
 end
-
-function psip2openapi(attribute::PSIP.RetirementPotential, ids::IDGenerator)
-    RetirementPotential(;
-        planned_retirement_year=attribute.planned_retirement_year,
-        eligible_generators=attribute.eligible_generators,
-        build_year=attribute.build_year,
-    )
-end
