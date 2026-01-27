@@ -51,7 +51,7 @@ function get_row(
     table_name::AbstractString,
     schema::Tables.Schema,
     c::OpenAPI.APIModel,
-    ::PSY.Component,
+    ::Union{PSY.Component, PSIP.Technology, PSIP.RegionTopology},
 )
     return tuple(
         (
@@ -110,6 +110,52 @@ end
 function get_row(
     ::AbstractString,
     ::Tables.Schema,
+    c::StorageTechnology,
+    ::PSIP.StorageTechnology,
+)
+    return (
+        c.id,
+        c.prime_mover_type,
+        nothing,
+        c.region,
+        nothing,
+        nothing
+    )
+end
+
+function get_row(
+    ::AbstractString,
+    ::Tables.Schema,
+    c::SupplyTechnology,
+    ::PSIP.SupplyTechnology,
+)
+    return (
+        c.id,
+        c.prime_mover_type,
+        c.fuel,
+        c.region,
+        nothing,
+        nothing
+    )
+end
+
+function get_row(
+    ::AbstractString,
+    ::Tables.Schema,
+    c::DemandRequirement,
+    ::PSIP.DemandRequirement,
+)
+    return (
+        c.id,
+        c.name,
+        c.region,
+        nothing
+    )
+end
+
+function get_row(
+    ::AbstractString,
+    ::Tables.Schema,
     c::HydroPumpTurbine,
     ::PSY.HydroPumpTurbine,
 )
@@ -145,13 +191,18 @@ function add_components_to_tables!(
 ) where {T <: OpenAPI.APIModel}
     for component in components
         uuid = IS.get_uuid(component)
-        openapi_component = psy2openapi(component, ids)
+        if T in PSIP_TYPES
+            openapi_component = psip2openapi(component, ids)
+        else
+            openapi_component = psy2openapi(component, ids)
+        end
         row = get_row(table_name, schema, openapi_component, component)
         try
             DBInterface.execute(entity_statement, (openapi_component.id,))
             DBInterface.execute(table_statement, row)
         catch e
             if isa(e, SQLite.SQLiteException)
+                #print(openapi_component)
                 error("Failed to insert into $(table_name): $(e.msg) with values $(row)")
             else
                 rethrow(e)
@@ -565,17 +616,11 @@ end
 ### PSIP Stuff ###
 ##################
 
-function portfolio2db!(db, portfolio::PSIP.Portfolio, ids::IDGenerator)
-
-    DBInterface.transaction(db) do
-        for (T, OPENAPI_T) in zip(ALL_PSY_TYPES, ALL_TYPES)
-            send_table_to_db!(OPENAPI_T, db, PSY.get_components(T, sys), ids)
-        end
-    end
+function portfolio2db!(db, portfolio::PSIP.Portfolio, ids::IDGenerator; time_series=false)
 
     DBInterface.transaction(db) do
         for (T, OPENAPI_T) in zip(ALL_PSIP_TYPES, PSIP_TYPES)
-            if T <: PSIP.Regions
+            if T <: PSIP.RegionTopology
                 send_table_to_db!(OPENAPI_T, db, PSIP.get_regions(T, portfolio), ids)
             elseif T <: PSIP.Technology
                 send_table_to_db!(OPENAPI_T, db, PSIP.get_technologies(T, portfolio), ids)
@@ -615,7 +660,7 @@ function add_components_to_portfolio!(
     end
 end
 
-function db2portfolio!(portfolio::PSIP.PSIP, db, resolver::Resolver)
+function db2portfolio!(portfolio::PSIP.Portfolio, db, resolver::Resolver)
     attributes = get_entity_attributes(db)
     row_counts = Dict{String, Int64}()
     all_entities = 0
