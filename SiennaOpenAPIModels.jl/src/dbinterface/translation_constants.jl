@@ -38,6 +38,15 @@ const TYPE_TO_TABLE_LIST = [
     ThermalMultiStart => "generation_units",
     RenewableNonDispatch => "generation_units",
     HydroReservoir => "hydro_reservoir",
+    Zone => "planning_regions", 
+    Node => "balancing_topologies", #What should we do if we want to use the same nodes for both system and portfolio?
+    NodalACTransportTechnology => "transport_technologies",
+    NodalHVDCTransportTechnology => "transport_technologies",
+    AggregateTransportTechnology => "transport_technologies",
+    StorageTechnology => "supply_technologies",
+    SupplyTechnology => "supply_technologies",
+    #DemandRequirement => "loads", #Should go to a separate table?
+    #DemandSideTechnology => "balancing_topologies" # Should go to a separate table?
 ]
 
 const TYPE_TO_TABLE = Dict(TYPE_TO_TABLE_LIST)
@@ -99,4 +108,63 @@ const ALL_DESERIALIZABLE_TYPES = [
     ThermalMultiStart,
     RenewableNonDispatch,
     HydroReservoir,
+]
+
+##################
+### PSIP Stuff ###
+##################
+
+const PSIP_OPENAPI_FIELDS_TO_DB = Dict(
+    ("transport_technologies", "from_node") => "from_node_id",
+    ("transport_technologies", "to_node") => "to_node_id",
+    ("supply_technologies", "region") => "balancing_topology",
+    ("storage_technologies", "region") => "balancing_topology",
+    ("loads", "region") => "balancing_topology",
+    ("supply_technologies", "prime_mover_type") => "prime_mover",
+    ("storage_technologies", "prime_mover_type") => "prime_mover",
+)
+
+const DB_TO_PSIP_OPENAPI_FIELDS = Dict((s[1], t) => s[2] for (s, t) in PSIP_OPENAPI_FIELDS_TO_DB)
+
+const PSIP_TYPE_TO_TABLE_LIST = [
+    Zone => "planning_regions", 
+    Node => "balancing_topologies", #What should we do if we want to use the same nodes for both system and portfolio?
+    NodalACTransportTechnology => "transport_technologies",
+    NodalHVDCTransportTechnology => "transport_technologies",
+    AggregateTransportTechnology => "transport_technologies",
+    StorageTechnology => "storage_technologies",
+    SupplyTechnology => "supply_technologies",
+    #DemandRequirement => "loads", #Should go to a separate table?
+    #DemandSideTechnology => "balancing_topologies" # Should go to a separate table?
+]
+
+const PSIP_TYPE_TO_TABLE = Dict(PSIP_TYPE_TO_TABLE_LIST)
+
+const ALL_PSIP_TYPES = [
+    PSIP.Zone,
+    PSIP.Node,
+    PSIP.NodalACTransportTechnology,
+    PSIP.NodalHVDCTransportTechnology,
+    PSIP.AggregateTransportTechnology,
+    PSIP.StorageTechnology,
+    PSIP.SupplyTechnology,
+    #PSIP.DemandRequirement,
+    #PSIP.DemandSideTechnology
+]
+
+const PSIP_TYPES = first.(PSIP_TYPE_TO_TABLE_LIST)
+const PSIP_TO_OPENAPI_TYPE = Dict(k => v for (k, v) in zip(ALL_PSIP_TYPES, PSIP_TYPES))
+const OPENAPI_TYPE_TO_PSIP = Dict(v => k for (k, v) in zip(ALL_PSIP_TYPES, PSIP_TYPES))
+const PSIP_TYPE_NAMES = Dict(string(t) => t for t in PSIP_TYPES)
+
+const PSIP_DESERIALIZABLE_TYPES = [
+    Zone,
+    Node,
+    NodalACTransportTechnology,
+    NodalHVDCTransportTechnology,
+    AggregateTransportTechnology,
+    StorageTechnology,
+    SupplyTechnology,
+    #DemandRequirement,
+    #DemandSideTechnology
 ]
