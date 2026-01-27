@@ -32,7 +32,7 @@
     - resistance::Float64
     - voltage::Float64
     - reactance::Float64
-    - financial_data::Any
+    - financial_data::TechnologyFinancialData
 """
 Base.@kwdef mutable struct NodalACTransportTechnology <: OpenAPI.APIModel
     name::Union{Nothing, String} = nothing
@@ -47,7 +47,7 @@ Base.@kwdef mutable struct NodalACTransportTechnology <: OpenAPI.APIModel
     resistance::Union{Nothing, Float64} = 0.0
     voltage::Union{Nothing, Float64} = 0.0
     reactance::Union{Nothing, Float64} = 0.0
-    financial_data::Union{Nothing, Any} = nothing
+    financial_data = nothing # spec type: Union{ Nothing, TechnologyFinancialData }
 
     function NodalACTransportTechnology(name, uuid, id, available, power_systems_type, start_node, end_node, capacity_limits, capital_costs, resistance, voltage, reactance, financial_data, )
         OpenAPI.validate_property(NodalACTransportTechnology, Symbol("name"), name)
@@ -67,7 +67,7 @@ Base.@kwdef mutable struct NodalACTransportTechnology <: OpenAPI.APIModel
     end
 end # type NodalACTransportTechnology
 
-const _property_types_NodalACTransportTechnology = Dict{Symbol,String}(Symbol("name")=>"String", Symbol("uuid")=>"String", Symbol("id")=>"Int64", Symbol("available")=>"Bool", Symbol("power_systems_type")=>"String", Symbol("start_node")=>"Int64", Symbol("end_node")=>"Int64", Symbol("capacity_limits")=>"MinMax", Symbol("capital_costs")=>"ValueCurve", Symbol("resistance")=>"Float64", Symbol("voltage")=>"Float64", Symbol("reactance")=>"Float64", Symbol("financial_data")=>"Any", )
+const _property_types_NodalACTransportTechnology = Dict{Symbol,String}(Symbol("name")=>"String", Symbol("uuid")=>"String", Symbol("id")=>"Int64", Symbol("available")=>"Bool", Symbol("power_systems_type")=>"String", Symbol("start_node")=>"Int64", Symbol("end_node")=>"Int64", Symbol("capacity_limits")=>"MinMax", Symbol("capital_costs")=>"ValueCurve", Symbol("resistance")=>"Float64", Symbol("voltage")=>"Float64", Symbol("reactance")=>"Float64", Symbol("financial_data")=>"TechnologyFinancialData", )
 OpenAPI.property_type(::Type{ NodalACTransportTechnology }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_NodalACTransportTechnology[name]))}
 
 function check_required(o::NodalACTransportTechnology)

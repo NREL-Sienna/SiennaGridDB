@@ -46,7 +46,7 @@
     - power_systems_type::String
     - base_year::Int64
     - region::Vector{Int64}
-    - financial_data::Any
+    - financial_data::TechnologyFinancialData
     - available::Bool
     - balancing_topology::String
     - capital_costs_solar::ValueCurve
@@ -81,7 +81,7 @@ Base.@kwdef mutable struct ColocatedSupplyStorageTechnology <: OpenAPI.APIModel
     power_systems_type::Union{Nothing, String} = nothing
     base_year::Union{Nothing, Int64} = nothing
     region::Union{Nothing, Vector{Int64}} = nothing
-    financial_data::Union{Nothing, Any} = nothing
+    financial_data = nothing # spec type: Union{ Nothing, TechnologyFinancialData }
     available::Union{Nothing, Bool} = nothing
     balancing_topology::Union{Nothing, String} = nothing
     capital_costs_solar = nothing # spec type: Union{ Nothing, ValueCurve }
@@ -147,7 +147,7 @@ Base.@kwdef mutable struct ColocatedSupplyStorageTechnology <: OpenAPI.APIModel
     end
 end # type ColocatedSupplyStorageTechnology
 
-const _property_types_ColocatedSupplyStorageTechnology = Dict{Symbol,String}(Symbol("name")=>"String", Symbol("uuid")=>"String", Symbol("id")=>"Int64", Symbol("power_systems_type")=>"String", Symbol("base_year")=>"Int64", Symbol("region")=>"Vector{Int64}", Symbol("financial_data")=>"Any", Symbol("available")=>"Bool", Symbol("balancing_topology")=>"String", Symbol("capital_costs_solar")=>"ValueCurve", Symbol("operation_costs_solar")=>"RenewableGenerationCost", Symbol("capacity_limits_solar")=>"MinMax", Symbol("lifetime_solar")=>"Int64", Symbol("capital_costs_wind")=>"ValueCurve", Symbol("operation_costs_wind")=>"RenewableGenerationCost", Symbol("capacity_limits_wind")=>"MinMax", Symbol("lifetime_wind")=>"Int64", Symbol("capital_costs_energy")=>"ValueCurve", Symbol("capital_costs_power")=>"ValueCurve", Symbol("operation_costs_energy")=>"StorageCost", Symbol("operation_costs_power")=>"StorageCost", Symbol("capacity_power_limits")=>"MinMax", Symbol("capacity_energy_limits")=>"MinMax", Symbol("duration_limits")=>"MinMax", Symbol("efficiency_storage")=>"InOut", Symbol("losses_storage")=>"Float64", Symbol("lifetime_storage")=>"Int64", Symbol("max_inverter_capacity")=>"Float64", Symbol("min_inverter_capacity")=>"Float64", Symbol("capital_costs_inverter")=>"ValueCurve", Symbol("operation_costs_inverter")=>"ProductionVariableCostCurve", Symbol("inverter_efficiency")=>"Float64", Symbol("inverter_supply_ratio")=>"Float64", )
+const _property_types_ColocatedSupplyStorageTechnology = Dict{Symbol,String}(Symbol("name")=>"String", Symbol("uuid")=>"String", Symbol("id")=>"Int64", Symbol("power_systems_type")=>"String", Symbol("base_year")=>"Int64", Symbol("region")=>"Vector{Int64}", Symbol("financial_data")=>"TechnologyFinancialData", Symbol("available")=>"Bool", Symbol("balancing_topology")=>"String", Symbol("capital_costs_solar")=>"ValueCurve", Symbol("operation_costs_solar")=>"RenewableGenerationCost", Symbol("capacity_limits_solar")=>"MinMax", Symbol("lifetime_solar")=>"Int64", Symbol("capital_costs_wind")=>"ValueCurve", Symbol("operation_costs_wind")=>"RenewableGenerationCost", Symbol("capacity_limits_wind")=>"MinMax", Symbol("lifetime_wind")=>"Int64", Symbol("capital_costs_energy")=>"ValueCurve", Symbol("capital_costs_power")=>"ValueCurve", Symbol("operation_costs_energy")=>"StorageCost", Symbol("operation_costs_power")=>"StorageCost", Symbol("capacity_power_limits")=>"MinMax", Symbol("capacity_energy_limits")=>"MinMax", Symbol("duration_limits")=>"MinMax", Symbol("efficiency_storage")=>"InOut", Symbol("losses_storage")=>"Float64", Symbol("lifetime_storage")=>"Int64", Symbol("max_inverter_capacity")=>"Float64", Symbol("min_inverter_capacity")=>"Float64", Symbol("capital_costs_inverter")=>"ValueCurve", Symbol("operation_costs_inverter")=>"ProductionVariableCostCurve", Symbol("inverter_efficiency")=>"Float64", Symbol("inverter_supply_ratio")=>"Float64", )
 OpenAPI.property_type(::Type{ ColocatedSupplyStorageTechnology }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_ColocatedSupplyStorageTechnology[name]))}
 
 function check_required(o::ColocatedSupplyStorageTechnology)
