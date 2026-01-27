@@ -12,6 +12,7 @@ module SiennaOpenAPIModels
 using OpenAPI
 using StructHelpers: @batteries
 import PowerSystems as PSY
+import PowerSystemsInvestmentsPortfolios as PSIP
 import Dates
 import InfrastructureSystems as IS
 
