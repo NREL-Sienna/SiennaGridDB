@@ -356,7 +356,7 @@ function getid!(idgen::IDGenerator, uuid::UUID)
     end
 end
 
-function getid!(idgen::IDGenerator, component::PSY.Component)
+function getid!(idgen::IDGenerator, component::Union{PSY.Component, PSIP.Technology, PSIP.RegionTopology})
     getid!(idgen, IS.get_uuid(component))
 end
 
