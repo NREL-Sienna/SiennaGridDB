@@ -618,6 +618,8 @@ end
 
 function portfolio2db!(db, portfolio::PSIP.Portfolio, ids::IDGenerator; time_series=false)
 
+    sys2db!(db, PSIP.get_base_system(portfolio), ids; time_series=time_series)
+
     DBInterface.transaction(db) do
         for (T, OPENAPI_T) in zip(ALL_PSIP_TYPES, PSIP_TYPES)
             if T <: PSIP.RegionTopology
@@ -632,7 +634,6 @@ function portfolio2db!(db, portfolio::PSIP.Portfolio, ids::IDGenerator; time_ser
         serialize_timeseries!(db, portfolio, ids)
     end
 
-    sys2db!(db, PSIP.get_base_system(portfolio), ids)
 end
 
 function add_components_to_portfolio!(

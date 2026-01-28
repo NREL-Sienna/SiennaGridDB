@@ -161,7 +161,12 @@ function transform_associations!(sys::PSY.System, associations, ids::IDGenerator
 end
 
 function transform_associations!(sys::PSIP.Portfolio, associations, ids::IDGenerator)
+
+    # Determine number of associations were in the base system to offset IDs from portfolio
+    counts = PSY.get_time_series_counts(PSIP.get_base_system(sys))
+
     associations = PSY.DataFrames.coalesce.(associations, nothing)
+    associations.id .+= counts.components_with_time_series
     type_strings =
         SiennaOpenAPIModels.PSIP_DESERIALIZABLE_TYPES .|> (x -> last(split(string(x), ".")))
     deserializable_string(x) = in(x, type_strings)
@@ -191,6 +196,7 @@ VALUES ($(join(repeat("?", length(TABLE_SCHEMAS["time_series_associations"].name
     )
 
     for row in Tables.rowtable(associations)
+        #print(row.id, " ", row.time_series_uuid, "\n")
         DBInterface.execute(statement, tuple(row...))
     end
 end
