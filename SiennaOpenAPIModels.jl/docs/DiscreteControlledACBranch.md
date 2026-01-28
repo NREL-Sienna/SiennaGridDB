@@ -1,7 +1,7 @@
 # DiscreteControlledACBranch
 
-## Properties
 
+## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **Int64** |  | [default to nothing]
@@ -16,4 +16,7 @@ Name | Type | Description | Notes
 **discrete_branch_type** | **String** |  | [optional] [default to "OTHER"]
 **branch_status** | **String** |  | [optional] [default to "CLOSED"]
 
+
 [[Back to Model list]](../README.md#models) [[Back to API list]](../README.md#api-endpoints) [[Back to README]](../README.md)
+
+

@@ -1,7 +1,7 @@
 # Transformer2W
 
-## Properties
 
+## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **Int64** |  | [default to nothing]
@@ -21,4 +21,7 @@ Name | Type | Description | Notes
 **rating_c** | **Float64** |  | [optional] [default to nothing]
 **winding_group_number** | **String** |  | [optional] [default to "UNDEFINED"]
 
+
 [[Back to Model list]](../README.md#models) [[Back to API list]](../README.md#api-endpoints) [[Back to README]](../README.md)
+
+

@@ -1,7 +1,7 @@
 # PhaseShiftingTransformer
 
-## Properties
 
+## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **Int64** |  | [default to nothing]
@@ -24,4 +24,7 @@ Name | Type | Description | Notes
 **phase_angle_limits** | [***MinMax**](MinMax.md) |  | [optional] [default to nothing]
 **control_objective** | **String** |  | [optional] [default to "UNDEFINED"]
 
+
 [[Back to Model list]](../README.md#models) [[Back to API list]](../README.md#api-endpoints) [[Back to README]](../README.md)
+
+

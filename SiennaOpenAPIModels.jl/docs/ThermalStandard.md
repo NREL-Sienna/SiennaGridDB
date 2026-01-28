@@ -1,7 +1,7 @@
 # ThermalStandard
 
-## Properties
 
+## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **Int64** |  | [default to nothing]
@@ -24,4 +24,7 @@ Name | Type | Description | Notes
 **time_at_status** | **Float64** |  | [optional] [default to 10000.0]
 **dynamic_injector** | **Any** |  | [optional] [default to nothing]
 
+
 [[Back to Model list]](../README.md#models) [[Back to API list]](../README.md#api-endpoints) [[Back to README]](../README.md)
+
+

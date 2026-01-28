@@ -26,6 +26,7 @@ include("modelincludes.jl")
 
 @batteries ACBus
 @batteries AGC
+@batteries ActiveRenewableControllerAB
 @batteries Arc
 @batteries Area
 @batteries AreaInterchange
@@ -37,10 +38,12 @@ include("modelincludes.jl")
 @batteries ConstantReserveNonSpinning
 @batteries CostCurve
 @batteries DCBus
+@batteries DbdPnts
 @batteries DiscreteControlledACBranch
 @batteries EnergyReservoirStorage
 @batteries ExponentialLoad
 @batteries FACTSControlDevice
+@batteries FdbdPnts
 @batteries FixedAdmittance
 @batteries FromTo
 @batteries FromToToFrom
@@ -75,14 +78,20 @@ include("modelincludes.jl")
 @batteries PowerLoad
 @batteries ProductionVariableCostCurve
 @batteries QuadraticFunctionData
+@batteries RECurrentControlB
+@batteries ReactiveRenewableControllerAB
 @batteries RenewableDispatch
+@batteries RenewableEnergyConverterTypeA
 @batteries RenewableGenerationCost
 @batteries RenewableNonDispatch
+@batteries RoundRotorMachine
+@batteries SEXS
 @batteries ShiftablePowerLoad
 @batteries Source
 @batteries StandardLoad
 @batteries StartUpShutDown
 @batteries StartUpStages
+@batteries SteamTurbineGov1
 @batteries StorageCost
 @batteries StorageCostStartUp
 @batteries StorageCostStartUpOneOf

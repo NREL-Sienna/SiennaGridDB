@@ -6,6 +6,14 @@ function get_complex_number(complex_number::ComplexF64)
     ComplexNumber(real=real(complex_number), imag=imag(complex_number))
 end
 
+function get_dbd_pnts(dbd::NamedTuple{(:dbd1, :dbd2), Tuple{Float64, Float64}})
+    DbdPnts(dbd1=dbd.dbd1, dbd2=dbd.dbd2)
+end
+
+function get_fdbd_pnts(fdbd::NamedTuple{(:fdbd1, :fdbd2), Tuple{Float64, Float64}})
+    FdbdPnts(fdbd1=fdbd.fdbd1, fdbd2=fdbd.fdbd2)
+end
+
 function get_from_to(from_to::NamedTuple{(:from, :to), Tuple{Float64, Float64}})
     FromTo(from=from_to.from, to=from_to.to)
 end

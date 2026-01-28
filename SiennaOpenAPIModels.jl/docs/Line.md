@@ -1,7 +1,7 @@
 # Line
 
-## Properties
 
+## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **Int64** |  | [default to nothing]
@@ -19,4 +19,7 @@ Name | Type | Description | Notes
 **angle_limits** | [***MinMax**](MinMax.md) |  | [default to nothing]
 **g** | [***FromTo**](FromTo.md) |  | [optional] [default to nothing]
 
+
 [[Back to Model list]](../README.md#models) [[Back to API list]](../README.md#api-endpoints) [[Back to README]](../README.md)
+
+

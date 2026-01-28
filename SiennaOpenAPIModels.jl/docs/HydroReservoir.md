@@ -1,7 +1,7 @@
 # HydroReservoir
 
-## Properties
 
+## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **Int64** |  | [default to nothing]
@@ -21,4 +21,7 @@ Name | Type | Description | Notes
 **operation_cost** | [***HydroReservoirCost**](HydroReservoirCost.md) |  | [default to nothing]
 **level_data_type** | **String** |  | [optional] [default to "USABLE_VOLUME"]
 
+
 [[Back to Model list]](../README.md#models) [[Back to API list]](../README.md#api-endpoints) [[Back to README]](../README.md)
+
+

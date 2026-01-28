@@ -1,7 +1,7 @@
 # TwoTerminalGenericHVDCLine
 
-## Properties
 
+## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **Int64** |  | [default to nothing]
@@ -15,4 +15,7 @@ Name | Type | Description | Notes
 **reactive_power_limits_to** | [***MinMax**](MinMax.md) |  | [default to nothing]
 **loss** | [***TwoTerminalLoss**](TwoTerminalLoss.md) |  | [optional] [default to nothing]
 
+
 [[Back to Model list]](../README.md#models) [[Back to API list]](../README.md#api-endpoints) [[Back to README]](../README.md)
+
+

@@ -1,7 +1,7 @@
 # DCBus
 
-## Properties
 
+## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **area** | **Int64** |  | [optional] [default to nothing]
@@ -14,4 +14,7 @@ Name | Type | Description | Notes
 **number** | **Float64** |  | [default to nothing]
 **voltage_limits** | [***MinMax**](MinMax.md) |  | [optional] [default to nothing]
 
+
 [[Back to Model list]](../README.md#models) [[Back to API list]](../README.md#api-endpoints) [[Back to README]](../README.md)
+
+

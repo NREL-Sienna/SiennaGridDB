@@ -20,6 +20,14 @@ function get_julia_complex(obj::ComplexNumber)
     Complex(obj.real, obj.imag)
 end
 
+function get_tuple_dbd_pnts(obj::DbdPnts)
+    return (dbd1=obj.dbd1, dbd2=obj.dbd2)
+end
+
+function get_tuple_fdbd_pnts(obj::FdbdPnts)
+    return (fdbd1=obj.fdbd1, fdbd2=obj.fdbd2)
+end
+
 function get_tuple_from_to(obj::FromTo)
     return (from=obj.from, to=obj.to)
 end

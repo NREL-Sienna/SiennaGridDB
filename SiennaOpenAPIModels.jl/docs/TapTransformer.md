@@ -1,7 +1,7 @@
 # TapTransformer
 
-## Properties
 
+## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **Int64** |  | [default to nothing]
@@ -23,4 +23,7 @@ Name | Type | Description | Notes
 **winding_group_number** | **String** |  | [optional] [default to "UNDEFINED"]
 **control_objective** | **String** |  | [optional] [default to "UNDEFINED"]
 
+
 [[Back to Model list]](../README.md#models) [[Back to API list]](../README.md#api-endpoints) [[Back to README]](../README.md)
+
+

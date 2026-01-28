@@ -1,7 +1,7 @@
 # RenewableDispatch
 
-## Properties
 
+## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **Int64** |  | [default to nothing]
@@ -11,11 +11,14 @@ Name | Type | Description | Notes
 **active_power** | **Float64** |  | [default to nothing]
 **reactive_power** | **Float64** |  | [default to nothing]
 **rating** | **Float64** |  | [default to nothing]
-**prime_mover_type** | **String** |  | [default to "OT"]
+**prime_mover_type** | **String** |  | [default to "HY"]
 **reactive_power_limits** | [***MinMax**](MinMax.md) |  | [optional] [default to nothing]
 **power_factor** | **Float64** |  | [default to nothing]
 **operation_cost** | [***RenewableGenerationCost**](RenewableGenerationCost.md) |  | [default to nothing]
 **base_power** | **Float64** |  | [default to nothing]
 **dynamic_injector** | **Any** |  | [optional] [default to nothing]
 
+
 [[Back to Model list]](../README.md#models) [[Back to API list]](../README.md#api-endpoints) [[Back to README]](../README.md)
+
+

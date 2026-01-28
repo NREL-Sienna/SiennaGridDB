@@ -1,7 +1,7 @@
 # ThermalMultiStart
 
-## Properties
 
+## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **Int64** |  | [default to nothing]
@@ -12,7 +12,7 @@ Name | Type | Description | Notes
 **active_power** | **Float64** |  | [default to nothing]
 **reactive_power** | **Float64** |  | [default to nothing]
 **rating** | **Float64** |  | [default to nothing]
-**prime_mover_type** | **String** |  | [default to "OT"]
+**prime_mover_type** | **String** |  | [default to "HY"]
 **fuel** | **String** | Thermal fuels that reflect options in the EIA annual energy review. | [default to "OTHER"]
 **active_power_limits** | [***MinMax**](MinMax.md) |  | [default to nothing]
 **reactive_power_limits** | [***MinMax**](MinMax.md) |  | [optional] [default to nothing]
@@ -27,4 +27,7 @@ Name | Type | Description | Notes
 **must_run** | **Bool** |  | [optional] [default to false]
 **dynamic_injector** | **Any** |  | [optional] [default to nothing]
 
+
 [[Back to Model list]](../README.md#models) [[Back to API list]](../README.md#api-endpoints) [[Back to README]](../README.md)
+
+

@@ -1,7 +1,7 @@
 # HydroTurbine
 
-## Properties
 
+## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **Int64** |  | [default to nothing]
@@ -22,8 +22,11 @@ Name | Type | Description | Notes
 **efficiency** | **Float64** |  | [optional] [default to 1.0]
 **turbine_type** | **String** |  | [optional] [default to "UNKNOWN"]
 **conversion_factor** | **Float64** |  | [optional] [default to 1.0]
-**prime_mover_type** | **String** |  | [optional] [default to "OT"]
+**prime_mover_type** | **String** |  | [optional] [default to "HY"]
 **travel_time** | **Float64** |  | [optional] [default to nothing]
 **dynamic_injector** | **Any** |  | [optional] [default to nothing]
 
+
 [[Back to Model list]](../README.md#models) [[Back to API list]](../README.md#api-endpoints) [[Back to README]](../README.md)
+
+

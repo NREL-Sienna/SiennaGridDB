@@ -1,7 +1,7 @@
 # Transformer3W
 
-## Properties
 
+## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **Int64** |  | [default to nothing]
@@ -54,4 +54,7 @@ Name | Type | Description | Notes
 **control_objective_secondary** | **String** |  | [optional] [default to "UNDEFINED"]
 **control_objective_tertiary** | **String** |  | [optional] [default to "UNDEFINED"]
 
+
 [[Back to Model list]](../README.md#models) [[Back to API list]](../README.md#api-endpoints) [[Back to README]](../README.md)
+
+
