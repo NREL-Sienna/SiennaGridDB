@@ -42,10 +42,10 @@
     - from_branch_control::Int64
     - to_branch_control::Int64
     - branch_id_control::String
-    - VC_Flag::Int64 : Voltage Compensator Flag for REPCA1, is this meant to also be 0 or 1?
-    - Ref_Flag::Int64
-    - PF_Flag::Int64
-    - V_Flag::Int64
+    - VC_Flag::Bool
+    - Ref_Flag::Bool
+    - PF_Flag::Bool
+    - V_Flag::Bool
     - T_fltr::Float64
     - K_p::Float64
     - K_i::Float64
@@ -74,10 +74,10 @@ Base.@kwdef mutable struct ReactiveRenewableControllerAB <: OpenAPI.APIModel
     from_branch_control::Union{Nothing, Int64} = nothing
     to_branch_control::Union{Nothing, Int64} = nothing
     branch_id_control::Union{Nothing, String} = nothing
-    VC_Flag::Union{Nothing, Int64} = nothing
-    Ref_Flag::Union{Nothing, Int64} = nothing
-    PF_Flag::Union{Nothing, Int64} = nothing
-    V_Flag::Union{Nothing, Int64} = nothing
+    VC_Flag::Union{Nothing, Bool} = nothing
+    Ref_Flag::Union{Nothing, Bool} = nothing
+    PF_Flag::Union{Nothing, Bool} = nothing
+    V_Flag::Union{Nothing, Bool} = nothing
     T_fltr::Union{Nothing, Float64} = nothing
     K_p::Union{Nothing, Float64} = nothing
     K_i::Union{Nothing, Float64} = nothing
@@ -107,7 +107,7 @@ Base.@kwdef mutable struct ReactiveRenewableControllerAB <: OpenAPI.APIModel
     end
 end # type ReactiveRenewableControllerAB
 
-const _property_types_ReactiveRenewableControllerAB = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("bus_control")=>"Int64", Symbol("from_branch_control")=>"Int64", Symbol("to_branch_control")=>"Int64", Symbol("branch_id_control")=>"String", Symbol("VC_Flag")=>"Int64", Symbol("Ref_Flag")=>"Int64", Symbol("PF_Flag")=>"Int64", Symbol("V_Flag")=>"Int64", Symbol("T_fltr")=>"Float64", Symbol("K_p")=>"Float64", Symbol("K_i")=>"Float64", Symbol("T_ft")=>"Float64", Symbol("T_fv")=>"Float64", Symbol("V_frz")=>"Float64", Symbol("R_c")=>"Float64", Symbol("X_c")=>"Float64", Symbol("K_c")=>"Float64", Symbol("e_lim")=>"MinMax", Symbol("dbd_pnts")=>"DbdPnts", Symbol("Q_lim")=>"MinMax", Symbol("T_p")=>"Float64", Symbol("Q_lim_inner")=>"MinMax", Symbol("V_lim")=>"MinMax", Symbol("K_qp")=>"Float64", Symbol("K_qi")=>"Float64", Symbol("Q_ref")=>"Float64", Symbol("V_ref")=>"Float64", Symbol("states")=>"Vector{String}", Symbol("n_states")=>"Int64", )
+const _property_types_ReactiveRenewableControllerAB = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("bus_control")=>"Int64", Symbol("from_branch_control")=>"Int64", Symbol("to_branch_control")=>"Int64", Symbol("branch_id_control")=>"String", Symbol("VC_Flag")=>"Bool", Symbol("Ref_Flag")=>"Bool", Symbol("PF_Flag")=>"Bool", Symbol("V_Flag")=>"Bool", Symbol("T_fltr")=>"Float64", Symbol("K_p")=>"Float64", Symbol("K_i")=>"Float64", Symbol("T_ft")=>"Float64", Symbol("T_fv")=>"Float64", Symbol("V_frz")=>"Float64", Symbol("R_c")=>"Float64", Symbol("X_c")=>"Float64", Symbol("K_c")=>"Float64", Symbol("e_lim")=>"MinMax", Symbol("dbd_pnts")=>"DbdPnts", Symbol("Q_lim")=>"MinMax", Symbol("T_p")=>"Float64", Symbol("Q_lim_inner")=>"MinMax", Symbol("V_lim")=>"MinMax", Symbol("K_qp")=>"Float64", Symbol("K_qi")=>"Float64", Symbol("Q_ref")=>"Float64", Symbol("V_ref")=>"Float64", Symbol("states")=>"Vector{String}", Symbol("n_states")=>"Int64", )
 OpenAPI.property_type(::Type{ ReactiveRenewableControllerAB }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_ReactiveRenewableControllerAB[name]))}
 
 function OpenAPI.check_required(o::ReactiveRenewableControllerAB)
@@ -183,19 +183,7 @@ function OpenAPI.validate_property(::Type{ ReactiveRenewableControllerAB }, name
 
 
 
-    if name === Symbol("Ref_Flag")
-        OpenAPI.validate_param(name, "ReactiveRenewableControllerAB", :enum, val, [0, 1])
-    end
 
-
-    if name === Symbol("PF_Flag")
-        OpenAPI.validate_param(name, "ReactiveRenewableControllerAB", :enum, val, [0, 1])
-    end
-
-
-    if name === Symbol("V_Flag")
-        OpenAPI.validate_param(name, "ReactiveRenewableControllerAB", :enum, val, [0, 1])
-    end
 
 
 

@@ -23,11 +23,11 @@
     )
 
     - id::Int64
-    - Q_Flag::Int64 : Q Flag used for I_qinj, is this meant to also be 0 or 1?
-    - PQ_Flag::Int64 : PQ Flag used for the Current Limit Logic, is this meant to also be 0 or 1?
+    - Q_Flag::Bool
+    - PQ_Flag::Bool
     - Vdip_lim::MinMax
     - T_rv::Float64
-    - dbd_pnts::Int64
+    - dbd_pnts::DbdPnts
     - K_qv::Float64
     - Iqinj_lim::MinMax
     - V_ref0::Float64
@@ -40,11 +40,11 @@
 """
 Base.@kwdef mutable struct RECurrentControlB <: OpenAPI.APIModel
     id::Union{Nothing, Int64} = nothing
-    Q_Flag::Union{Nothing, Int64} = nothing
-    PQ_Flag::Union{Nothing, Int64} = nothing
+    Q_Flag::Union{Nothing, Bool} = nothing
+    PQ_Flag::Union{Nothing, Bool} = nothing
     Vdip_lim = nothing # spec type: Union{ Nothing, MinMax }
     T_rv::Union{Nothing, Float64} = nothing
-    dbd_pnts::Union{Nothing, Int64} = nothing
+    dbd_pnts = nothing # spec type: Union{ Nothing, DbdPnts }
     K_qv::Union{Nothing, Float64} = nothing
     Iqinj_lim = nothing # spec type: Union{ Nothing, MinMax }
     V_ref0::Union{Nothing, Float64} = nothing
@@ -62,7 +62,7 @@ Base.@kwdef mutable struct RECurrentControlB <: OpenAPI.APIModel
     end
 end # type RECurrentControlB
 
-const _property_types_RECurrentControlB = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("Q_Flag")=>"Int64", Symbol("PQ_Flag")=>"Int64", Symbol("Vdip_lim")=>"MinMax", Symbol("T_rv")=>"Float64", Symbol("dbd_pnts")=>"Int64", Symbol("K_qv")=>"Float64", Symbol("Iqinj_lim")=>"MinMax", Symbol("V_ref0")=>"Float64", Symbol("K_vp")=>"Float64", Symbol("K_vi")=>"Float64", Symbol("T_iq")=>"Float64", Symbol("I_max")=>"Float64", Symbol("states")=>"Vector{String}", Symbol("n_states")=>"Int64", )
+const _property_types_RECurrentControlB = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("Q_Flag")=>"Bool", Symbol("PQ_Flag")=>"Bool", Symbol("Vdip_lim")=>"MinMax", Symbol("T_rv")=>"Float64", Symbol("dbd_pnts")=>"DbdPnts", Symbol("K_qv")=>"Float64", Symbol("Iqinj_lim")=>"MinMax", Symbol("V_ref0")=>"Float64", Symbol("K_vp")=>"Float64", Symbol("K_vi")=>"Float64", Symbol("T_iq")=>"Float64", Symbol("I_max")=>"Float64", Symbol("states")=>"Vector{String}", Symbol("n_states")=>"Int64", )
 OpenAPI.property_type(::Type{ RECurrentControlB }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_RECurrentControlB[name]))}
 
 function OpenAPI.check_required(o::RECurrentControlB)
@@ -108,10 +108,6 @@ function OpenAPI.validate_property(::Type{ RECurrentControlB }, name::Symbol, va
 
 
 
-
-    if name === Symbol("dbd_pnts")
-        OpenAPI.validate_param(name, "RECurrentControlB", :enum, val, [0, 1])
-    end
 
 
 

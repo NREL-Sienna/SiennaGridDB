@@ -5,11 +5,11 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **Int64** |  | [default to nothing]
-**Q_Flag** | **Int64** | Q Flag used for I_qinj, is this meant to also be 0 or 1? | [default to nothing]
-**PQ_Flag** | **Int64** | PQ Flag used for the Current Limit Logic, is this meant to also be 0 or 1? | [default to nothing]
+**Q_Flag** | **Bool** |  | [default to nothing]
+**PQ_Flag** | **Bool** |  | [default to nothing]
 **Vdip_lim** | [***MinMax**](MinMax.md) |  | [default to nothing]
 **T_rv** | **Float64** |  | [default to nothing]
-**dbd_pnts** | **Int64** |  | [default to nothing]
+**dbd_pnts** | [***DbdPnts**](DbdPnts.md) |  | [default to nothing]
 **K_qv** | **Float64** |  | [default to nothing]
 **Iqinj_lim** | [***MinMax**](MinMax.md) |  | [default to nothing]
 **V_ref0** | **Float64** |  | [default to nothing]

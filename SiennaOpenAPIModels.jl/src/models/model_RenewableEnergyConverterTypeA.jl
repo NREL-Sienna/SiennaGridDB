@@ -39,7 +39,7 @@
     - K_hv::Float64
     - Iqr_lims::MinMax
     - Accel::Float64
-    - Lvpl_sw::Int64
+    - Lvpl_sw::Bool
     - Q_ref::Float64
     - R_source::Float64
     - X_source::Float64
@@ -60,7 +60,7 @@ Base.@kwdef mutable struct RenewableEnergyConverterTypeA <: OpenAPI.APIModel
     K_hv::Union{Nothing, Float64} = nothing
     Iqr_lims = nothing # spec type: Union{ Nothing, MinMax }
     Accel::Union{Nothing, Float64} = nothing
-    Lvpl_sw::Union{Nothing, Int64} = nothing
+    Lvpl_sw::Union{Nothing, Bool} = nothing
     Q_ref::Union{Nothing, Float64} = 1.0
     R_source::Union{Nothing, Float64} = 0.0
     X_source::Union{Nothing, Float64} = 100000.0
@@ -74,7 +74,7 @@ Base.@kwdef mutable struct RenewableEnergyConverterTypeA <: OpenAPI.APIModel
     end
 end # type RenewableEnergyConverterTypeA
 
-const _property_types_RenewableEnergyConverterTypeA = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("T_g")=>"Float64", Symbol("Rrpwr")=>"Float64", Symbol("Brkpt")=>"Float64", Symbol("Zerox")=>"Float64", Symbol("Lvpl1")=>"Float64", Symbol("Vo_lim")=>"Float64", Symbol("Lv_pnts")=>"MinMax", Symbol("Io_lim")=>"Float64", Symbol("T_fltr")=>"Float64", Symbol("K_hv")=>"Float64", Symbol("Iqr_lims")=>"MinMax", Symbol("Accel")=>"Float64", Symbol("Lvpl_sw")=>"Int64", Symbol("Q_ref")=>"Float64", Symbol("R_source")=>"Float64", Symbol("X_source")=>"Float64", Symbol("states")=>"Vector{String}", Symbol("n_states")=>"Int64", )
+const _property_types_RenewableEnergyConverterTypeA = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("T_g")=>"Float64", Symbol("Rrpwr")=>"Float64", Symbol("Brkpt")=>"Float64", Symbol("Zerox")=>"Float64", Symbol("Lvpl1")=>"Float64", Symbol("Vo_lim")=>"Float64", Symbol("Lv_pnts")=>"MinMax", Symbol("Io_lim")=>"Float64", Symbol("T_fltr")=>"Float64", Symbol("K_hv")=>"Float64", Symbol("Iqr_lims")=>"MinMax", Symbol("Accel")=>"Float64", Symbol("Lvpl_sw")=>"Bool", Symbol("Q_ref")=>"Float64", Symbol("R_source")=>"Float64", Symbol("X_source")=>"Float64", Symbol("states")=>"Vector{String}", Symbol("n_states")=>"Int64", )
 OpenAPI.property_type(::Type{ RenewableEnergyConverterTypeA }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_RenewableEnergyConverterTypeA[name]))}
 
 function OpenAPI.check_required(o::RenewableEnergyConverterTypeA)
@@ -132,10 +132,6 @@ function OpenAPI.validate_property(::Type{ RenewableEnergyConverterTypeA }, name
 
 
 
-
-    if name === Symbol("Lvpl_sw")
-        OpenAPI.validate_param(name, "RenewableEnergyConverterTypeA", :enum, val, [0, 1])
-    end
 
 
 

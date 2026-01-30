@@ -13,14 +13,14 @@ function openapi2psy(round_rotor::RoundRotorMachine, resolver::Resolver)
         Xl=round_rotor.Xl,
         Se=round_rotor.Se, 
         # a generic tuple, openapi2psy(SwitchedAdmittance).initial_status as reference for handling
-        γ_d1=round_rotor.gamma_d1,
-        γ_q1=round_rotor.gamma_q1,
-        γ_d2=round_rotor.gamma_d2,
-        γ_q2=round_rotor.gamma_q2,
-        γ_qd=round_rotor.gamma_qd,
-        states=map(string, round_rotor.states), 
+        γ_d1=round_rotor.gamma_d1, # do not modify (DNM)
+        γ_q1=round_rotor.gamma_q1, # DNM
+        γ_d2=round_rotor.gamma_d2, # DNM
+        γ_q2=round_rotor.gamma_q2, # DNM
+        γ_qd=round_rotor.gamma_qd, # DNM
+        states=map(string, round_rotor.states), # DNM
         # not sure how else to handle the states since they aren't an enum in PSY/src/definitions.jl
-        n_states=round_rotor.n_states,
+        n_states=round_rotor.n_states, # DNM
     )
 end
 
@@ -32,9 +32,9 @@ function openapi2psy(sexs::SEXS, resolver::Resolver)
         Te=sexs.Te,
         V_lim=get_tuple_min_max(sexs.V_lim),
         V_ref=sexs.V_ref,
-        states=map(string, sexs.states),
-        n_states=sexs.states,
-        states_types=map(string, sexs.states_types),
+        states=map(string, sexs.states), # DNM
+        n_states=sexs.states, # DNM
+        states_types=map(string, sexs.states_types), # DNM
         # not sure how else to handle the states/states_types since they aren't an enum in PSY/src/definitions.jl
     )
 end
@@ -51,9 +51,9 @@ function openapi2psy(gov1::SteamTurbineGov1, resolver::Resolver)
         DB_l=gov1.DB_l,
         T_rate=gov1.T_rate,
         P_ref=gov1.P_ref,
-        states=map(string, gov1.states),
-        n_states=gov1.n_states,
-        states_types=map(string, gov1.states_types),
+        states=map(string, gov1.states), # DNM
+        n_states=gov1.n_states, # DNM
+        states_types=map(string, gov1.states_types), # DNM
         # not sure how else to handle the states/states_types since they aren't an enum in PSY/src/definitions.jl
     )
 end

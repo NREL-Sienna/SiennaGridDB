@@ -9,7 +9,7 @@ Name | Type | Description | Notes
 **from_branch_control** | **Int64** |  | [default to nothing]
 **to_branch_control** | **Int64** |  | [default to nothing]
 **branch_id_control** | **String** |  | [default to nothing]
-**Freq_Flag** | **Int64** |  | [default to nothing]
+**Freq_Flag** | **Bool** |  | [default to nothing]
 **K_pg** | **Float64** |  | [default to nothing]
 **K_ig** | **Float64** |  | [default to nothing]
 **T_p** | **Float64** |  | [default to nothing]

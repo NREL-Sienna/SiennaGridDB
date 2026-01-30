@@ -2,7 +2,7 @@
 # Do not modify this file directly. Modify the OpenAPI specification instead.
 
 
-@doc raw"""Fdbd_pnts
+@doc raw"""FdbdPnts
 
     FdbdPnts(;
         fdbd1=nothing,

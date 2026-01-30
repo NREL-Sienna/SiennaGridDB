@@ -7,7 +7,7 @@ function psy2openapi(controller::PSY.ActiveRenewableControllerAB, ids::IDGenerat
         branch_id_control=controller.branch_id_control,
         # above 4 variables are ints representing objects id, 0 indicates a special case
         # I am not sure if i need to wrap them in getid!
-        Freq_Flag=controller.Freq_Flag, # in the schema, handled with object Boolean, not sure how to handle it here
+        Freq_Flag=Bool(controller.Freq_Flag), # parses 1 as true, 0 as false
         K_pg=controller.K_pg,
         K_ig=controller.K_ig,
         T_p=controller.T_p,
@@ -21,16 +21,16 @@ function psy2openapi(controller::PSY.ActiveRenewableControllerAB, ids::IDGenerat
         P_lim_inner=get_min_max(controller.P_lim_inner),
         T_pord=controller.T_pord,
         P_ref=controller.P_ref,
-        states=map(string, controller.states),
-        n_states=controller.n_states,
+        states=map(string, controller.states), # do not modify (DNM)
+        n_states=controller.n_states, # DNM
     )
 end
 
 function psy2openapi(controller::PSY.RECurrentControlB, ids::IDGenerator)
     RECurrentControlB(
         id=getid!(ids, controller),
-        Q_Flag=controller.Q_Flag, # docs imply boolean but unclear
-        PQ_Flag=controller.PQ_Flag, # docs imply boolean but unclear
+        Q_Flag=Bool(controller.Q_Flag),
+        PQ_Flag=Bool(controller.PQ_Flag),
         Vdip_lim=get_min_max(controller.Vdip_lim),
         T_rv=controller.T_rv,
         dbd_pnts=get_dbd_pnts(controller.dbd_pnts),
@@ -41,8 +41,8 @@ function psy2openapi(controller::PSY.RECurrentControlB, ids::IDGenerator)
         K_vi=controller.K_vi,
         T_iq=controller.T_iq,
         I_max=controller.I_max,
-        states=map(string, controller.states),
-        n_states=controller.n_states,
+        states=map(string, controller.states), # DNM
+        n_states=controller.n_states, # DNM
     )
 end
 
@@ -55,10 +55,10 @@ function psy2openapi(controller::PSY.ReactiveRenewableControllerAB, ids::IDGener
         branch_id_control=controller.branch_id_control,
         # above 4 variables are ints representing objects id, 0 indicates a special case
         # I am not sure if i need to wrap them in getid!
-        VC_Flag=controller.VC_Flag, # docs imply boolean but unclear
-        Ref_Flag=controller.Ref_Flag, # in the schema, handled with object Boolean
-        PF_Flag=controller.PF_Flag, # Boolean
-        V_Flag=controller.V_Flag, # Boolean
+        VC_Flag=Bool(controller.VC_Flag),
+        Ref_Flag=Bool(controller.Ref_Flag),
+        PF_Flag=Bool(controller.PF_Flag),
+        V_Flag=Bool(controller.V_Flag),
         T_fltr=controller.T_fltr,
         K_p=controller.K_p,
         K_i=controller.K_i,
@@ -78,8 +78,8 @@ function psy2openapi(controller::PSY.ReactiveRenewableControllerAB, ids::IDGener
         K_qi=controller.K_qi,
         Q_ref=controller.Q_ref,
         V_ref=controller.V_ref,
-        states=map(string, controller.states),
-        n_states=controller.n_states,
+        states=map(string, controller.states), # DNM
+        n_states=controller.n_states, # DNM
     )
 end
 
@@ -98,11 +98,11 @@ function psy2openapi(energy_conv::PSY.RenewableEnergyConverterTypeA, ids::IDGene
         K_hv=energy_conv.K_hv,
         Iqr_lims=get_min_max(energy_conv.Iqr_lims),
         Accel=energy_conv.Accel,
-        Lvpl_sw=energy_conv.Lvpl_sw, # Boolean
+        Lvpl_sw=Bool(energy_conv.Lvpl_sw),
         Q_ref=energy_conv.Q_ref,
         R_source=energy_conv.R_source,
         X_source=energy_conv.X_source,
-        states=map(string, energy_conv.states),
-        n_states=energy_conv.n_states,
+        states=map(string, energy_conv.states), # DNM
+        n_states=energy_conv.n_states, # DNM
     )
 end

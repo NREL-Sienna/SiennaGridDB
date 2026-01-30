@@ -33,7 +33,7 @@
     - from_branch_control::Int64
     - to_branch_control::Int64
     - branch_id_control::String
-    - Freq_Flag::Int64
+    - Freq_Flag::Bool
     - K_pg::Float64
     - K_ig::Float64
     - T_p::Float64
@@ -56,7 +56,7 @@ Base.@kwdef mutable struct ActiveRenewableControllerAB <: OpenAPI.APIModel
     from_branch_control::Union{Nothing, Int64} = nothing
     to_branch_control::Union{Nothing, Int64} = nothing
     branch_id_control::Union{Nothing, String} = nothing
-    Freq_Flag::Union{Nothing, Int64} = nothing
+    Freq_Flag::Union{Nothing, Bool} = nothing
     K_pg::Union{Nothing, Float64} = nothing
     K_ig::Union{Nothing, Float64} = nothing
     T_p::Union{Nothing, Float64} = nothing
@@ -80,7 +80,7 @@ Base.@kwdef mutable struct ActiveRenewableControllerAB <: OpenAPI.APIModel
     end
 end # type ActiveRenewableControllerAB
 
-const _property_types_ActiveRenewableControllerAB = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("bus_control")=>"Int64", Symbol("from_branch_control")=>"Int64", Symbol("to_branch_control")=>"Int64", Symbol("branch_id_control")=>"String", Symbol("Freq_Flag")=>"Int64", Symbol("K_pg")=>"Float64", Symbol("K_ig")=>"Float64", Symbol("T_p")=>"Float64", Symbol("fdbd_pnts")=>"FdbdPnts", Symbol("fe_lim")=>"MinMax", Symbol("P_lim")=>"MinMax", Symbol("T_g")=>"Float64", Symbol("D_dn")=>"Float64", Symbol("D_up")=>"Float64", Symbol("dP_lim")=>"MinMax", Symbol("P_lim_inner")=>"MinMax", Symbol("T_pord")=>"Float64", Symbol("P_ref")=>"Float64", Symbol("states")=>"Vector{String}", Symbol("n_states")=>"Int64", )
+const _property_types_ActiveRenewableControllerAB = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("bus_control")=>"Int64", Symbol("from_branch_control")=>"Int64", Symbol("to_branch_control")=>"Int64", Symbol("branch_id_control")=>"String", Symbol("Freq_Flag")=>"Bool", Symbol("K_pg")=>"Float64", Symbol("K_ig")=>"Float64", Symbol("T_p")=>"Float64", Symbol("fdbd_pnts")=>"FdbdPnts", Symbol("fe_lim")=>"MinMax", Symbol("P_lim")=>"MinMax", Symbol("T_g")=>"Float64", Symbol("D_dn")=>"Float64", Symbol("D_up")=>"Float64", Symbol("dP_lim")=>"MinMax", Symbol("P_lim_inner")=>"MinMax", Symbol("T_pord")=>"Float64", Symbol("P_ref")=>"Float64", Symbol("states")=>"Vector{String}", Symbol("n_states")=>"Int64", )
 OpenAPI.property_type(::Type{ ActiveRenewableControllerAB }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_ActiveRenewableControllerAB[name]))}
 
 function OpenAPI.check_required(o::ActiveRenewableControllerAB)
@@ -136,10 +136,6 @@ function OpenAPI.validate_property(::Type{ ActiveRenewableControllerAB }, name::
 
 
 
-
-    if name === Symbol("Freq_Flag")
-        OpenAPI.validate_param(name, "ActiveRenewableControllerAB", :enum, val, [0, 1])
-    end
 
 
 

@@ -17,7 +17,7 @@ Name | Type | Description | Notes
 **K_hv** | **Float64** |  | [default to nothing]
 **Iqr_lims** | [***MinMax**](MinMax.md) |  | [default to nothing]
 **Accel** | **Float64** |  | [default to nothing]
-**Lvpl_sw** | **Int64** |  | [default to nothing]
+**Lvpl_sw** | **Bool** |  | [default to nothing]
 **Q_ref** | **Float64** |  | [optional] [default to 1.0]
 **R_source** | **Float64** |  | [optional] [default to 0.0]
 **X_source** | **Float64** |  | [optional] [default to 100000.0]
