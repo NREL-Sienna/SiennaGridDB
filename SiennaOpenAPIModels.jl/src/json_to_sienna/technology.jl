@@ -1,11 +1,11 @@
-function openapi2psip(storage::StorageTechnology, resolver::Resolver)
-    PSIP.StorageTechnology(; #How to handle parametric types, get it from power_systems_type?
+function openapi2psip(storage::StorageTechnology, resolver::PortfolioResolver)
+    PSIP.StorageTechnology{getproperty(PSY, Symbol(storage.power_systems_type))}(;
         name=storage.name,
         id=storage.id,
         available=storage.available,
         region=[resolver(r) for r in storage.region],
-        prime_mover_type=get_prime_mover_enum(storage.prime_mover_type),
-        storage_tech=get_storage_tech_enum(storage.storage_tech),
+        prime_mover_type=PSY.PrimeMovers(storage.prime_mover_type),
+        storage_tech=PSY.StorageTech(storage.storage_tech),
         lifetime=storage.lifetime,
         min_discharge_fraction = storage.min_discharge_fraction,
         duration_limits=get_tuple_min_max(storage.duration_limits),
@@ -16,7 +16,7 @@ function openapi2psip(storage::StorageTechnology, resolver::Resolver)
         capital_costs_discharge = get_sienna_value_curve(storage.capital_costs_discharge),
         capital_costs_energy = get_sienna_value_curve(storage.capital_costs_energy),
         operation_costs=get_sienna_operation_cost(storage.operation_costs),
-        financial_data = get_sienna_technology_financial_data(storage.financial_data), #TODO: Write this function
+        financial_data = get_sienna_technology_financial_data(storage.financial_data), 
         power_systems_type = storage.power_systems_type,
         unit_size_charge = storage.unit_size_charge,
         unit_size_discharge = storage.unit_size_discharge,
@@ -25,8 +25,8 @@ function openapi2psip(storage::StorageTechnology, resolver::Resolver)
     )
 end
 
-function openapi2psip(demand::DemandRequirement, resolver::Resolver)
-    PSIP.DemandRequirement(;
+function openapi2psip(demand::DemandRequirement, resolver::PortfolioResolver)
+    PSIP.DemandRequirement{getproperty(PSY, Symbol(demand.power_systems_type))}(;
         name=demand.name,
         id=demand.id,
         available=demand.available,
@@ -38,8 +38,8 @@ function openapi2psip(demand::DemandRequirement, resolver::Resolver)
     )
 end
 
-function openapi2psip(demand::DemandSideTechnology, resolver::Resolver)
-    PSIP.DemandSideTechnology(;
+function openapi2psip(demand::DemandSideTechnology, resolver::PortfolioResolver)
+    PSIP.DemandSideTechnology{getproperty(PSY, Symbol(demand.power_systems_type))}(;
         name=demand.name,
         id=demand.id,
         available=demand.available,
@@ -57,15 +57,15 @@ function openapi2psip(demand::DemandSideTechnology, resolver::Resolver)
     )
 end
 
-function openapi2psip(supply::SupplyTechnology, resolver::Resolver)
-    PSIP.SupplyTechnology(;
+function openapi2psip(supply::SupplyTechnology, resolver::PortfolioResolver)
+    PSIP.SupplyTechnology{getproperty(PSY, Symbol(supply.power_systems_type))}(;
         name=supply.name,
         id=supply.id,
         available=supply.available,
         power_systems_type=supply.power_systems_type,
         region=[resolver(r) for r in supply.region],
-        prime_mover_type=get_prime_mover_enum(supply.prime_mover_type),
-        financial_data = get_sienna_technology_financial_data(supply.financial_data), #TODO: Write this function
+        prime_mover_type=PSY.PrimeMovers(supply.prime_mover_type),
+        financial_data = get_sienna_technology_financial_data(supply.financial_data), 
         fuel=[get_fuel_type_enum(f) for f in supply.fuel],
         ramp_limits=get_tuple_up_down(supply.ramp_limits),
         capital_costs = get_sienna_value_curve(supply.capital_costs),
@@ -81,8 +81,8 @@ function openapi2psip(supply::SupplyTechnology, resolver::Resolver)
     )
 end
 
-function openapi2psip(line::AggregateTransportTechnology, resolver::Resolver)
-    PSIP.AggregateTransportTechnology(;
+function openapi2psip(line::AggregateTransportTechnology, resolver::PortfolioResolver)
+    PSIP.AggregateTransportTechnology{getproperty(PSY, Symbol(line.power_systems_type))}(;
         name=line.name,
         id=line.id,
         available=line.available,
@@ -90,15 +90,15 @@ function openapi2psip(line::AggregateTransportTechnology, resolver::Resolver)
         start_region=resolver(line.start_region),
         end_region=resolver(line.end_region),
         capital_costs = get_sienna_value_curve(line.capital_costs),
-        financial_data = get_sienna_technology_financial_data(line.financial_data), #TODO: Write this function
+        financial_data = get_sienna_technology_financial_data(line.financial_data),
         unit_size=line.unit_size,
         line_loss=line.line_loss,
         capacity_limits = get_tuple_min_max(line.capacity_limits),
     )
 end
 
-function openapi2psip(line::NodalACTransportTechnology, resolver::Resolver)
-    PSIP.NodalACTransportTechnology(;
+function openapi2psip(line::NodalACTransportTechnology, resolver::PortfolioResolver)
+    PSIP.NodalACTransportTechnology{getproperty(PSY, Symbol(line.power_systems_type))}(;
         name=line.name,
         id=line.id,
         available=line.available,
@@ -106,7 +106,7 @@ function openapi2psip(line::NodalACTransportTechnology, resolver::Resolver)
         start_node=resolver(line.start_node),
         end_node=resolver(line.end_node),
         capital_costs = get_sienna_value_curve(line.capital_costs),
-        financial_data = get_sienna_technology_financial_data(line.financial_data), #TODO: Write this function
+        financial_data = get_sienna_technology_financial_data(line.financial_data),
         unit_size=line.unit_size,
         resistance=line.resistance,
         reactance=line.reactance,
@@ -115,8 +115,8 @@ function openapi2psip(line::NodalACTransportTechnology, resolver::Resolver)
     )
 end
 
-function openapi2psip(line::NodalHVDCTransportTechnology, resolver::Resolver)
-    PSIP.NodalHVDCTransportTechnology(;
+function openapi2psip(line::NodalHVDCTransportTechnology, resolver::PortfolioResolver)
+    PSIP.NodalHVDCTransportTechnology{getproperty(PSY, Symbol(line.power_systems_type))}(;
         name=line.name,
         id=line.id,
         available=line.available,
@@ -124,7 +124,7 @@ function openapi2psip(line::NodalHVDCTransportTechnology, resolver::Resolver)
         start_node=resolver(line.start_node),
         end_node=resolver(line.end_node),
         capital_costs = get_sienna_value_curve(line.capital_costs),
-        financial_data = get_sienna_technology_financial_data(line.financial_data), #TODO: Write this function
+        financial_data = get_sienna_technology_financial_data(line.financial_data),
         unit_size=line.unit_size,
         capacity_limits = get_tuple_min_max(line.capacity_limits),
     )
