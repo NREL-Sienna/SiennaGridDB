@@ -20,6 +20,8 @@ const API_VERSION = "1.0.0"
 
 export psy2openapi
 export openapi2psy
+export psip2openapi
+export openapi2psip
 export IDGenerator
 export getid!
 
