@@ -255,6 +255,19 @@ function get_sienna_function_data(function_data::QuadraticFunctionData)
     )
 end
 
+function get_sienna_technology_financial_data(
+    financial_data::TechnologyFinancialData,
+)
+    PSIP.TechnologyFinancialData(
+        capital_recovery_period=financial_data.capital_recovery_period,
+        technology_base_year=financial_data.technology_base_year,
+        debt_fraction=financial_data.debt_fraction,
+        debt_rate=financial_data.debt_rate,
+        return_on_equity=financial_data.return_on_equity,
+        tax_rate=financial_data.tax_rate,
+    )
+end
+
 # Resolver stuff
 
 mutable struct Resolver
@@ -277,3 +290,27 @@ end
 function (resolve::Resolver)(id::Nothing)
     nothing
 end
+
+# PSIP Resolver stuff
+
+mutable struct PortfolioResolver
+    portfolio::PSIP.Portfolio
+    id2uuid::Dict{Int64, UUID}
+end
+
+function resolver_from_id_generator(idgen::IDGenerator, portfolio::PSIP.Portfolio)
+    inverted_dict = Dict()
+    for (uuid, id) in idgen.uuid2int
+        inverted_dict[id] = uuid
+    end
+    return PortfolioResolver(portfolio, inverted_dict)
+end
+
+function (resolve::PortfolioResolver)(id::Int64)
+    IS.get_component(resolve.portfolio.data, resolve.id2uuid[id])
+end
+
+function (resolve::PortfolioResolver)(id::Nothing)
+    nothing
+end
+
