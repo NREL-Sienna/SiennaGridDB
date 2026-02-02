@@ -642,7 +642,7 @@ function add_components_to_portfolio!(
     table_name,
     rows,
     attributes::Dict{Int64, Dict{String, Any}},
-    resolver::Resolver,
+    resolver::PortfolioResolver,
 ) where {OpenAPI_T}
     for row in rows
         extra_attributes = get(attributes, row.id, Dict{String, Any}())
@@ -652,22 +652,22 @@ function add_components_to_portfolio!(
         if haskey(dict, "uuid")
             IS.set_uuid!(IS.get_internal(sienna_obj), Base.UUID(dict["uuid"]))
         end
-        if typeof(siennaobj) <: PSIP.Region
+        if typeof(sienna_obj) <: PSIP.RegionTopology
             PSIP.add_region!(portfolio, sienna_obj)
-        elseif typeof(siennaobj) <: PSIP.Technology
+        elseif typeof(sienna_obj) <: PSIP.Technology
             PSIP.add_technology!(portfolio, sienna_obj)
         end
         resolver.id2uuid[row.id] = IS.get_uuid(sienna_obj)
     end
 end
 
-function db2portfolio!(portfolio::PSIP.Portfolio, db, resolver::Resolver)
+function db2portfolio!(portfolio::PSIP.Portfolio, db, resolver::PortfolioResolver)
     attributes = get_entity_attributes(db)
     row_counts = Dict{String, Int64}()
     all_entities = 0
     # We need to parse ALL_TYPES in a specific order to resolver correctly
     for OPENAPI_T in PSIP_DESERIALIZABLE_TYPES
-        table_name = PSIP_TYPE_TO_TABLE[OPENAPI_T]
+        table_name = TYPE_TO_TABLE[OPENAPI_T]
         obj_type = last(split(string(OPENAPI_T), "."))
         # Query the specific table joining with entities to filter by type
         query = get_query_for_table_name(table_name)
@@ -690,9 +690,9 @@ function db2portfolio!(portfolio::PSIP.Portfolio, db, resolver::Resolver)
     end
 end
 
-function make_portfolio_from_db(db) #Should also pass the desired aggregation level probably?
+function db2portfolio(db) #Should also pass the desired aggregation level probably?
     portfolio = PSIP.Portfolio() 
-    resolver = Resolver(portfolio, Dict{Int64, UUID}())
+    resolver = PortfolioResolver(portfolio, Dict{Int64, UUID}())
     db2portfolio!(portfolio, db, resolver)
     portfolio.base_system = make_system_from_db(db)
     return portfolio
