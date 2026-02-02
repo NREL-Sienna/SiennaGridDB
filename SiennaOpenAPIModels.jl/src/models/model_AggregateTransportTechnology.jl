@@ -24,8 +24,8 @@
     - id::Int64
     - available::Bool
     - power_systems_type::String
-    - start_region::String
-    - end_region::String
+    - start_region::Int64
+    - end_region::Int64
     - capacity_limits::MinMax
     - capital_costs::ValueCurve
     - line_loss::Float64
@@ -38,8 +38,8 @@ Base.@kwdef mutable struct AggregateTransportTechnology <: OpenAPI.APIModel
     id::Union{Nothing, Int64} = nothing
     available::Union{Nothing, Bool} = nothing
     power_systems_type::Union{Nothing, String} = nothing
-    start_region::Union{Nothing, String} = nothing
-    end_region::Union{Nothing, String} = nothing
+    start_region::Union{Nothing, Int64} = nothing
+    end_region::Union{Nothing, Int64} = nothing
     capacity_limits = nothing # spec type: Union{ Nothing, MinMax }
     capital_costs = nothing # spec type: Union{ Nothing, ValueCurve }
     line_loss::Union{Nothing, Float64} = nothing
@@ -63,7 +63,7 @@ Base.@kwdef mutable struct AggregateTransportTechnology <: OpenAPI.APIModel
     end
 end # type AggregateTransportTechnology
 
-const _property_types_AggregateTransportTechnology = Dict{Symbol,String}(Symbol("name")=>"String", Symbol("uuid")=>"String", Symbol("id")=>"Int64", Symbol("available")=>"Bool", Symbol("power_systems_type")=>"String", Symbol("start_region")=>"String", Symbol("end_region")=>"String", Symbol("capacity_limits")=>"MinMax", Symbol("capital_costs")=>"ValueCurve", Symbol("line_loss")=>"Float64", Symbol("unit_size")=>"Float64", Symbol("financial_data")=>"TechnologyFinancialData", )
+const _property_types_AggregateTransportTechnology = Dict{Symbol,String}(Symbol("name")=>"String", Symbol("uuid")=>"String", Symbol("id")=>"Int64", Symbol("available")=>"Bool", Symbol("power_systems_type")=>"String", Symbol("start_region")=>"Int64", Symbol("end_region")=>"Int64", Symbol("capacity_limits")=>"MinMax", Symbol("capital_costs")=>"ValueCurve", Symbol("line_loss")=>"Float64", Symbol("unit_size")=>"Float64", Symbol("financial_data")=>"TechnologyFinancialData", )
 OpenAPI.property_type(::Type{ AggregateTransportTechnology }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_AggregateTransportTechnology[name]))}
 
 function check_required(o::AggregateTransportTechnology)

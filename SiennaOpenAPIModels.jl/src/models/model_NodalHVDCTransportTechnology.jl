@@ -24,8 +24,8 @@
     - id::Int64
     - available::Bool
     - power_systems_type::String
-    - start_node::String
-    - end_node::String
+    - start_node::Int64
+    - end_node::Int64
     - capacity_limits::MinMax
     - capital_costs::ValueCurve
     - line_loss::Float64
@@ -38,8 +38,8 @@ Base.@kwdef mutable struct NodalHVDCTransportTechnology <: OpenAPI.APIModel
     id::Union{Nothing, Int64} = nothing
     available::Union{Nothing, Bool} = nothing
     power_systems_type::Union{Nothing, String} = nothing
-    start_node::Union{Nothing, String} = nothing
-    end_node::Union{Nothing, String} = nothing
+    start_node::Union{Nothing, Int64} = nothing
+    end_node::Union{Nothing, Int64} = nothing
     capacity_limits = nothing # spec type: Union{ Nothing, MinMax }
     capital_costs = nothing # spec type: Union{ Nothing, ValueCurve }
     line_loss::Union{Nothing, Float64} = nothing
@@ -63,7 +63,7 @@ Base.@kwdef mutable struct NodalHVDCTransportTechnology <: OpenAPI.APIModel
     end
 end # type NodalHVDCTransportTechnology
 
-const _property_types_NodalHVDCTransportTechnology = Dict{Symbol,String}(Symbol("name")=>"String", Symbol("uuid")=>"String", Symbol("id")=>"Int64", Symbol("available")=>"Bool", Symbol("power_systems_type")=>"String", Symbol("start_node")=>"String", Symbol("end_node")=>"String", Symbol("capacity_limits")=>"MinMax", Symbol("capital_costs")=>"ValueCurve", Symbol("line_loss")=>"Float64", Symbol("unit_size")=>"Float64", Symbol("financial_data")=>"TechnologyFinancialData", )
+const _property_types_NodalHVDCTransportTechnology = Dict{Symbol,String}(Symbol("name")=>"String", Symbol("uuid")=>"String", Symbol("id")=>"Int64", Symbol("available")=>"Bool", Symbol("power_systems_type")=>"String", Symbol("start_node")=>"Int64", Symbol("end_node")=>"Int64", Symbol("capacity_limits")=>"MinMax", Symbol("capital_costs")=>"ValueCurve", Symbol("line_loss")=>"Float64", Symbol("unit_size")=>"Float64", Symbol("financial_data")=>"TechnologyFinancialData", )
 OpenAPI.property_type(::Type{ NodalHVDCTransportTechnology }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_NodalHVDCTransportTechnology[name]))}
 
 function check_required(o::NodalHVDCTransportTechnology)

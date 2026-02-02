@@ -22,7 +22,7 @@
     - available::Bool
     - power_systems_type::String
     - peak_demand_mw::Float64
-    - region::Vector{String}
+    - region::Vector{Int64}
     - value_of_lost_load::Float64
     - unserved_demand_curve::ValueCurve
 """
@@ -33,7 +33,7 @@ Base.@kwdef mutable struct DemandRequirement <: OpenAPI.APIModel
     available::Union{Nothing, Bool} = true
     power_systems_type::Union{Nothing, String} = nothing
     peak_demand_mw::Union{Nothing, Float64} = 0.0
-    region::Union{Nothing, Vector{String}} = nothing
+    region::Union{Nothing, Vector{Int64}} = nothing
     value_of_lost_load::Union{Nothing, Float64} = nothing
     unserved_demand_curve = nothing # spec type: Union{ Nothing, ValueCurve }
 
@@ -51,7 +51,7 @@ Base.@kwdef mutable struct DemandRequirement <: OpenAPI.APIModel
     end
 end # type DemandRequirement
 
-const _property_types_DemandRequirement = Dict{Symbol,String}(Symbol("name")=>"String", Symbol("uuid")=>"String", Symbol("id")=>"Int64", Symbol("available")=>"Bool", Symbol("power_systems_type")=>"String", Symbol("peak_demand_mw")=>"Float64", Symbol("region")=>"Vector{String}", Symbol("value_of_lost_load")=>"Float64", Symbol("unserved_demand_curve")=>"ValueCurve", )
+const _property_types_DemandRequirement = Dict{Symbol,String}(Symbol("name")=>"String", Symbol("uuid")=>"String", Symbol("id")=>"Int64", Symbol("available")=>"Bool", Symbol("power_systems_type")=>"String", Symbol("peak_demand_mw")=>"Float64", Symbol("region")=>"Vector{Int64}", Symbol("value_of_lost_load")=>"Float64", Symbol("unserved_demand_curve")=>"ValueCurve", )
 OpenAPI.property_type(::Type{ DemandRequirement }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_DemandRequirement[name]))}
 
 function check_required(o::DemandRequirement)
