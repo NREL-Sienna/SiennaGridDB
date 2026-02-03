@@ -83,7 +83,10 @@ function get_example_metadata_uuids(sys::Union{PSY.System, PSIP.Portfolio})
     )
 end
 
-function get_time_series_from_metadata_uuid(sys::Union{PSY.System, PSIP.Portfolio}, metadata_uuid)
+function get_time_series_from_metadata_uuid(
+    sys::Union{PSY.System, PSIP.Portfolio},
+    metadata_uuid,
+)
     ts_metadata = sys.data.time_series_manager.metadata_store.metadata_uuids[metadata_uuid]
 
     start_time = IS._check_start_time(nothing, ts_metadata)
@@ -181,7 +184,11 @@ function transform_associations!(sys::PSIP.Portfolio, associations, ids::IDGener
     return associations
 end
 
-function serialize_timeseries_associations!(db, sys::Union{PSY.System, PSIP.Portfolio}, ids::IDGenerator)
+function serialize_timeseries_associations!(
+    db,
+    sys::Union{PSY.System, PSIP.Portfolio},
+    ids::IDGenerator,
+)
     associations = IS.sql(
         sys.data.time_series_manager.metadata_store,
         """SELECT $(join(INFRASYS_TS_SCHEMA.names, ", "))

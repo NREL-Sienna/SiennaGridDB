@@ -113,14 +113,7 @@ function get_row(
     c::StorageTechnology,
     ::PSIP.StorageTechnology,
 )
-    return (
-        c.id,
-        c.prime_mover_type,
-        nothing,
-        c.region,
-        nothing,
-        nothing
-    )
+    return (c.id, c.prime_mover_type, nothing, c.region, nothing, nothing)
 end
 
 function get_row(
@@ -129,14 +122,7 @@ function get_row(
     c::SupplyTechnology,
     ::PSIP.SupplyTechnology,
 )
-    return (
-        c.id,
-        c.prime_mover_type,
-        c.fuel,
-        c.region,
-        nothing,
-        nothing
-    )
+    return (c.id, c.prime_mover_type, c.fuel, c.region, nothing, nothing)
 end
 
 function get_row(
@@ -145,12 +131,7 @@ function get_row(
     c::DemandRequirement,
     ::PSIP.DemandRequirement,
 )
-    return (
-        c.id,
-        c.name,
-        c.region,
-        nothing
-    )
+    return (c.id, c.name, c.region, nothing)
 end
 
 function get_row(
@@ -617,7 +598,6 @@ end
 ##################
 
 function portfolio2db!(db, portfolio::PSIP.Portfolio, ids::IDGenerator; time_series=false)
-
     sys2db!(db, PSIP.get_base_system(portfolio), ids; time_series=time_series)
 
     DBInterface.transaction(db) do
@@ -633,7 +613,6 @@ function portfolio2db!(db, portfolio::PSIP.Portfolio, ids::IDGenerator; time_ser
     if time_series
         serialize_timeseries!(db, portfolio, ids)
     end
-
 end
 
 function add_components_to_portfolio!(
@@ -672,7 +651,14 @@ function db2portfolio!(portfolio::PSIP.Portfolio, db, resolver::Resolver)
         # Query the specific table joining with entities to filter by type
         query = get_query_for_table_name(table_name)
         rows = DBInterface.execute(db, query, (obj_type,))
-        add_components_to_portfolio!(OPENAPI_T, portfolio, table_name, rows, attributes, resolver)
+        add_components_to_portfolio!(
+            OPENAPI_T,
+            portfolio,
+            table_name,
+            rows,
+            attributes,
+            resolver,
+        )
         row_counts[table_name] =
             get(row_counts, table_name, 0) + (length(resolver.id2uuid) - all_entities)
         all_entities = length(resolver.id2uuid)
@@ -691,7 +677,7 @@ function db2portfolio!(portfolio::PSIP.Portfolio, db, resolver::Resolver)
 end
 
 function db2portfolio(db) #Should also pass the desired aggregation level probably?
-    portfolio = PSIP.Portfolio() 
+    portfolio = PSIP.Portfolio()
     resolver = Resolver(portfolio, Dict{Int64, UUID}())
     db2portfolio!(portfolio, db, resolver)
     portfolio.base_system = db2sys(db)

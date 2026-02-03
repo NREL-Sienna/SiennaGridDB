@@ -38,7 +38,7 @@ const TYPE_TO_TABLE_LIST = [
     ThermalMultiStart => "generation_units",
     RenewableNonDispatch => "generation_units",
     HydroReservoir => "hydro_reservoir",
-    Zone => "planning_regions", 
+    Zone => "planning_regions",
     Node => "balancing_topologies", #What should we do if we want to use the same nodes for both system and portfolio?
     NodalACTransportTechnology => "transport_technologies",
     NodalHVDCTransportTechnology => "transport_technologies",
@@ -124,10 +124,11 @@ const PSIP_OPENAPI_FIELDS_TO_DB = Dict(
     ("storage_technologies", "prime_mover_type") => "prime_mover",
 )
 
-const DB_TO_PSIP_OPENAPI_FIELDS = Dict((s[1], t) => s[2] for (s, t) in PSIP_OPENAPI_FIELDS_TO_DB)
+const DB_TO_PSIP_OPENAPI_FIELDS =
+    Dict((s[1], t) => s[2] for (s, t) in PSIP_OPENAPI_FIELDS_TO_DB)
 
 const PSIP_TYPE_TO_TABLE_LIST = [
-    Zone => "planning_regions", 
+    Zone => "planning_regions",
     Node => "balancing_topologies", #What should we do if we want to use the same nodes for both system and portfolio?
     NodalACTransportTechnology => "transport_technologies",
     NodalHVDCTransportTechnology => "transport_technologies",

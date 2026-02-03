@@ -144,13 +144,11 @@ function get_sienna_operation_cost(cost::SupplyTechnologyOperationCosts)
     end
 end
 
-get_sienna_fuel_dictionary(dict::Dict{String, Float64}) = Dict(
-    PSY.ThermalFuels(k) => v for (k, v) in dict
-)
+get_sienna_fuel_dictionary(dict::Dict{String, Float64}) =
+    Dict(PSY.ThermalFuels(k) => v for (k, v) in dict)
 
-get_sienna_fuel_dictionary(dict::Dict{String, MinMax}) = Dict(
-    PSY.ThermalFuels(k) => get_tuple_min_max(v) for (k, v) in dict
-)
+get_sienna_fuel_dictionary(dict::Dict{String, MinMax}) =
+    Dict(PSY.ThermalFuels(k) => get_tuple_min_max(v) for (k, v) in dict)
 
 # Getter functions used within the operation cost getters, including startups,
 # variable costs, value curves, and function data
@@ -280,9 +278,7 @@ function get_sienna_function_data(function_data::QuadraticFunctionData)
     )
 end
 
-function get_sienna_technology_financial_data(
-    financial_data::TechnologyFinancialData,
-)
+function get_sienna_technology_financial_data(financial_data::TechnologyFinancialData)
     PSIP.TechnologyFinancialData(
         capital_recovery_period=financial_data.capital_recovery_period,
         technology_base_year=financial_data.technology_base_year,
@@ -300,7 +296,10 @@ mutable struct Resolver
     id2uuid::Dict{Int64, UUID}
 end
 
-function resolver_from_id_generator(idgen::IDGenerator, sys::Union{PSY.System, PSIP.Portfolio})
+function resolver_from_id_generator(
+    idgen::IDGenerator,
+    sys::Union{PSY.System, PSIP.Portfolio},
+)
     inverted_dict = Dict()
     for (uuid, id) in idgen.uuid2int
         inverted_dict[id] = uuid
@@ -319,4 +318,3 @@ end
 function (resolve::Resolver)(id::Nothing)
     nothing
 end
-

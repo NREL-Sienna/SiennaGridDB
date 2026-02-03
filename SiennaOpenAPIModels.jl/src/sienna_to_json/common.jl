@@ -308,12 +308,12 @@ end
 
 function get_technology_financial_data(financial_data::PSIP.TechnologyFinancialData) #This is actually not in openAPI, let's fix this
     TechnologyFinancialData(;
-        capital_recovery_period = financial_data.capital_recovery_period,
-        technology_base_year = financial_data.technology_base_year,
-        debt_fraction = financial_data.debt_fraction,
-        debt_rate = financial_data.debt_rate,
-        return_on_equity = financial_data.return_on_equity,
-        tax_rate = financial_data.tax_rate,
+        capital_recovery_period=financial_data.capital_recovery_period,
+        technology_base_year=financial_data.technology_base_year,
+        debt_fraction=financial_data.debt_fraction,
+        debt_rate=financial_data.debt_rate,
+        return_on_equity=financial_data.return_on_equity,
+        tax_rate=financial_data.tax_rate,
     )
 end
 
@@ -329,7 +329,6 @@ function get_fuel_dictionary(fuels::Dict)
     end
     return fuel_dictionary
 end
-
 
 # UUID stuff
 
@@ -356,7 +355,10 @@ function getid!(idgen::IDGenerator, uuid::UUID)
     end
 end
 
-function getid!(idgen::IDGenerator, component::Union{PSY.Component, PSIP.Technology, PSIP.RegionTopology})
+function getid!(
+    idgen::IDGenerator,
+    component::Union{PSY.Component, PSIP.Technology, PSIP.RegionTopology},
+)
     getid!(idgen, IS.get_uuid(component))
 end
 
