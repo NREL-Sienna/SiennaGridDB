@@ -23,22 +23,27 @@ Base.@kwdef mutable struct StartUpStages <: OpenAPI.APIModel
     warm::Union{Nothing, Float64} = nothing
 
     function StartUpStages(startup_stages_type, cold, hot, warm, )
-        OpenAPI.validate_property(StartUpStages, Symbol("startup_stages_type"), startup_stages_type)
-        OpenAPI.validate_property(StartUpStages, Symbol("cold"), cold)
-        OpenAPI.validate_property(StartUpStages, Symbol("hot"), hot)
-        OpenAPI.validate_property(StartUpStages, Symbol("warm"), warm)
-        return new(startup_stages_type, cold, hot, warm, )
+        o = new(startup_stages_type, cold, hot, warm, )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type StartUpStages
 
 const _property_types_StartUpStages = Dict{Symbol,String}(Symbol("startup_stages_type")=>"String", Symbol("cold")=>"Float64", Symbol("hot")=>"Float64", Symbol("warm")=>"Float64", )
 OpenAPI.property_type(::Type{ StartUpStages }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_StartUpStages[name]))}
 
-function check_required(o::StartUpStages)
+function OpenAPI.check_required(o::StartUpStages)
     o.cold === nothing && (return false)
     o.hot === nothing && (return false)
     o.warm === nothing && (return false)
     true
+end
+
+function OpenAPI.validate_properties(o::StartUpStages)
+    OpenAPI.validate_property(StartUpStages, Symbol("startup_stages_type"), o.startup_stages_type)
+    OpenAPI.validate_property(StartUpStages, Symbol("cold"), o.cold)
+    OpenAPI.validate_property(StartUpStages, Symbol("hot"), o.hot)
+    OpenAPI.validate_property(StartUpStages, Symbol("warm"), o.warm)
 end
 
 function OpenAPI.validate_property(::Type{ StartUpStages }, name::Symbol, val)

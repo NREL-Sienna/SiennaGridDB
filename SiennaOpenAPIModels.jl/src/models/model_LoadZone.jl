@@ -23,23 +23,28 @@ Base.@kwdef mutable struct LoadZone <: OpenAPI.APIModel
     peak_reactive_power::Union{Nothing, Float64} = nothing
 
     function LoadZone(id, name, peak_active_power, peak_reactive_power, )
-        OpenAPI.validate_property(LoadZone, Symbol("id"), id)
-        OpenAPI.validate_property(LoadZone, Symbol("name"), name)
-        OpenAPI.validate_property(LoadZone, Symbol("peak_active_power"), peak_active_power)
-        OpenAPI.validate_property(LoadZone, Symbol("peak_reactive_power"), peak_reactive_power)
-        return new(id, name, peak_active_power, peak_reactive_power, )
+        o = new(id, name, peak_active_power, peak_reactive_power, )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type LoadZone
 
 const _property_types_LoadZone = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("name")=>"String", Symbol("peak_active_power")=>"Float64", Symbol("peak_reactive_power")=>"Float64", )
 OpenAPI.property_type(::Type{ LoadZone }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_LoadZone[name]))}
 
-function check_required(o::LoadZone)
+function OpenAPI.check_required(o::LoadZone)
     o.id === nothing && (return false)
     o.name === nothing && (return false)
     o.peak_active_power === nothing && (return false)
     o.peak_reactive_power === nothing && (return false)
     true
+end
+
+function OpenAPI.validate_properties(o::LoadZone)
+    OpenAPI.validate_property(LoadZone, Symbol("id"), o.id)
+    OpenAPI.validate_property(LoadZone, Symbol("name"), o.name)
+    OpenAPI.validate_property(LoadZone, Symbol("peak_active_power"), o.peak_active_power)
+    OpenAPI.validate_property(LoadZone, Symbol("peak_reactive_power"), o.peak_reactive_power)
 end
 
 function OpenAPI.validate_property(::Type{ LoadZone }, name::Symbol, val)

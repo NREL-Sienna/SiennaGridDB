@@ -26,25 +26,30 @@ Base.@kwdef mutable struct ConstantReserveGroup <: OpenAPI.APIModel
     reserve_direction::Union{Nothing, String} = nothing
 
     function ConstantReserveGroup(id, name, available, requirement, reserve_direction, )
-        OpenAPI.validate_property(ConstantReserveGroup, Symbol("id"), id)
-        OpenAPI.validate_property(ConstantReserveGroup, Symbol("name"), name)
-        OpenAPI.validate_property(ConstantReserveGroup, Symbol("available"), available)
-        OpenAPI.validate_property(ConstantReserveGroup, Symbol("requirement"), requirement)
-        OpenAPI.validate_property(ConstantReserveGroup, Symbol("reserve_direction"), reserve_direction)
-        return new(id, name, available, requirement, reserve_direction, )
+        o = new(id, name, available, requirement, reserve_direction, )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type ConstantReserveGroup
 
 const _property_types_ConstantReserveGroup = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("name")=>"String", Symbol("available")=>"Bool", Symbol("requirement")=>"Float64", Symbol("reserve_direction")=>"String", )
 OpenAPI.property_type(::Type{ ConstantReserveGroup }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_ConstantReserveGroup[name]))}
 
-function check_required(o::ConstantReserveGroup)
+function OpenAPI.check_required(o::ConstantReserveGroup)
     o.id === nothing && (return false)
     o.name === nothing && (return false)
     o.available === nothing && (return false)
     o.requirement === nothing && (return false)
     o.reserve_direction === nothing && (return false)
     true
+end
+
+function OpenAPI.validate_properties(o::ConstantReserveGroup)
+    OpenAPI.validate_property(ConstantReserveGroup, Symbol("id"), o.id)
+    OpenAPI.validate_property(ConstantReserveGroup, Symbol("name"), o.name)
+    OpenAPI.validate_property(ConstantReserveGroup, Symbol("available"), o.available)
+    OpenAPI.validate_property(ConstantReserveGroup, Symbol("requirement"), o.requirement)
+    OpenAPI.validate_property(ConstantReserveGroup, Symbol("reserve_direction"), o.reserve_direction)
 end
 
 function OpenAPI.validate_property(::Type{ ConstantReserveGroup }, name::Symbol, val)

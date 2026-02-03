@@ -44,31 +44,36 @@ Base.@kwdef mutable struct ACBus <: OpenAPI.APIModel
     voltage_limits = nothing # spec type: Union{ Nothing, MinMax }
 
     function ACBus(angle, area, available, base_voltage, bustype, id, load_zone, magnitude, name, number, voltage_limits, )
-        OpenAPI.validate_property(ACBus, Symbol("angle"), angle)
-        OpenAPI.validate_property(ACBus, Symbol("area"), area)
-        OpenAPI.validate_property(ACBus, Symbol("available"), available)
-        OpenAPI.validate_property(ACBus, Symbol("base_voltage"), base_voltage)
-        OpenAPI.validate_property(ACBus, Symbol("bustype"), bustype)
-        OpenAPI.validate_property(ACBus, Symbol("id"), id)
-        OpenAPI.validate_property(ACBus, Symbol("load_zone"), load_zone)
-        OpenAPI.validate_property(ACBus, Symbol("magnitude"), magnitude)
-        OpenAPI.validate_property(ACBus, Symbol("name"), name)
-        OpenAPI.validate_property(ACBus, Symbol("number"), number)
-        OpenAPI.validate_property(ACBus, Symbol("voltage_limits"), voltage_limits)
-        return new(angle, area, available, base_voltage, bustype, id, load_zone, magnitude, name, number, voltage_limits, )
+        o = new(angle, area, available, base_voltage, bustype, id, load_zone, magnitude, name, number, voltage_limits, )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type ACBus
 
 const _property_types_ACBus = Dict{Symbol,String}(Symbol("angle")=>"Float64", Symbol("area")=>"Int64", Symbol("available")=>"Bool", Symbol("base_voltage")=>"Float64", Symbol("bustype")=>"String", Symbol("id")=>"Int64", Symbol("load_zone")=>"Int64", Symbol("magnitude")=>"Float64", Symbol("name")=>"String", Symbol("number")=>"Int64", Symbol("voltage_limits")=>"MinMax", )
 OpenAPI.property_type(::Type{ ACBus }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_ACBus[name]))}
 
-function check_required(o::ACBus)
+function OpenAPI.check_required(o::ACBus)
     o.available === nothing && (return false)
     o.bustype === nothing && (return false)
     o.id === nothing && (return false)
     o.name === nothing && (return false)
     o.number === nothing && (return false)
     true
+end
+
+function OpenAPI.validate_properties(o::ACBus)
+    OpenAPI.validate_property(ACBus, Symbol("angle"), o.angle)
+    OpenAPI.validate_property(ACBus, Symbol("area"), o.area)
+    OpenAPI.validate_property(ACBus, Symbol("available"), o.available)
+    OpenAPI.validate_property(ACBus, Symbol("base_voltage"), o.base_voltage)
+    OpenAPI.validate_property(ACBus, Symbol("bustype"), o.bustype)
+    OpenAPI.validate_property(ACBus, Symbol("id"), o.id)
+    OpenAPI.validate_property(ACBus, Symbol("load_zone"), o.load_zone)
+    OpenAPI.validate_property(ACBus, Symbol("magnitude"), o.magnitude)
+    OpenAPI.validate_property(ACBus, Symbol("name"), o.name)
+    OpenAPI.validate_property(ACBus, Symbol("number"), o.number)
+    OpenAPI.validate_property(ACBus, Symbol("voltage_limits"), o.voltage_limits)
 end
 
 function OpenAPI.validate_property(::Type{ ACBus }, name::Symbol, val)

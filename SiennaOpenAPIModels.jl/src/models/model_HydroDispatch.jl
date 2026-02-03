@@ -12,7 +12,7 @@
         active_power=nothing,
         reactive_power=nothing,
         rating=nothing,
-        prime_mover_type="OT",
+        prime_mover_type=nothing,
         active_power_limits=nothing,
         reactive_power_limits=nothing,
         ramp_limits=nothing,
@@ -50,7 +50,7 @@ Base.@kwdef mutable struct HydroDispatch <: OpenAPI.APIModel
     active_power::Union{Nothing, Float64} = nothing
     reactive_power::Union{Nothing, Float64} = nothing
     rating::Union{Nothing, Float64} = nothing
-    prime_mover_type::Union{Nothing, String} = "OT"
+    prime_mover_type::Union{Nothing, String} = nothing
     active_power_limits = nothing # spec type: Union{ Nothing, MinMax }
     reactive_power_limits = nothing # spec type: Union{ Nothing, MinMax }
     ramp_limits = nothing # spec type: Union{ Nothing, UpDown }
@@ -62,31 +62,16 @@ Base.@kwdef mutable struct HydroDispatch <: OpenAPI.APIModel
     dynamic_injector::Union{Nothing, Any} = nothing
 
     function HydroDispatch(id, name, available, bus, active_power, reactive_power, rating, prime_mover_type, active_power_limits, reactive_power_limits, ramp_limits, time_limits, base_power, status, time_at_status, operation_cost, dynamic_injector, )
-        OpenAPI.validate_property(HydroDispatch, Symbol("id"), id)
-        OpenAPI.validate_property(HydroDispatch, Symbol("name"), name)
-        OpenAPI.validate_property(HydroDispatch, Symbol("available"), available)
-        OpenAPI.validate_property(HydroDispatch, Symbol("bus"), bus)
-        OpenAPI.validate_property(HydroDispatch, Symbol("active_power"), active_power)
-        OpenAPI.validate_property(HydroDispatch, Symbol("reactive_power"), reactive_power)
-        OpenAPI.validate_property(HydroDispatch, Symbol("rating"), rating)
-        OpenAPI.validate_property(HydroDispatch, Symbol("prime_mover_type"), prime_mover_type)
-        OpenAPI.validate_property(HydroDispatch, Symbol("active_power_limits"), active_power_limits)
-        OpenAPI.validate_property(HydroDispatch, Symbol("reactive_power_limits"), reactive_power_limits)
-        OpenAPI.validate_property(HydroDispatch, Symbol("ramp_limits"), ramp_limits)
-        OpenAPI.validate_property(HydroDispatch, Symbol("time_limits"), time_limits)
-        OpenAPI.validate_property(HydroDispatch, Symbol("base_power"), base_power)
-        OpenAPI.validate_property(HydroDispatch, Symbol("status"), status)
-        OpenAPI.validate_property(HydroDispatch, Symbol("time_at_status"), time_at_status)
-        OpenAPI.validate_property(HydroDispatch, Symbol("operation_cost"), operation_cost)
-        OpenAPI.validate_property(HydroDispatch, Symbol("dynamic_injector"), dynamic_injector)
-        return new(id, name, available, bus, active_power, reactive_power, rating, prime_mover_type, active_power_limits, reactive_power_limits, ramp_limits, time_limits, base_power, status, time_at_status, operation_cost, dynamic_injector, )
+        o = new(id, name, available, bus, active_power, reactive_power, rating, prime_mover_type, active_power_limits, reactive_power_limits, ramp_limits, time_limits, base_power, status, time_at_status, operation_cost, dynamic_injector, )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type HydroDispatch
 
 const _property_types_HydroDispatch = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("name")=>"String", Symbol("available")=>"Bool", Symbol("bus")=>"Int64", Symbol("active_power")=>"Float64", Symbol("reactive_power")=>"Float64", Symbol("rating")=>"Float64", Symbol("prime_mover_type")=>"String", Symbol("active_power_limits")=>"MinMax", Symbol("reactive_power_limits")=>"MinMax", Symbol("ramp_limits")=>"UpDown", Symbol("time_limits")=>"UpDown", Symbol("base_power")=>"Float64", Symbol("status")=>"Bool", Symbol("time_at_status")=>"Float64", Symbol("operation_cost")=>"HydroGenerationCost", Symbol("dynamic_injector")=>"Any", )
 OpenAPI.property_type(::Type{ HydroDispatch }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_HydroDispatch[name]))}
 
-function check_required(o::HydroDispatch)
+function OpenAPI.check_required(o::HydroDispatch)
     o.id === nothing && (return false)
     o.name === nothing && (return false)
     o.available === nothing && (return false)
@@ -98,6 +83,26 @@ function check_required(o::HydroDispatch)
     o.active_power_limits === nothing && (return false)
     o.base_power === nothing && (return false)
     true
+end
+
+function OpenAPI.validate_properties(o::HydroDispatch)
+    OpenAPI.validate_property(HydroDispatch, Symbol("id"), o.id)
+    OpenAPI.validate_property(HydroDispatch, Symbol("name"), o.name)
+    OpenAPI.validate_property(HydroDispatch, Symbol("available"), o.available)
+    OpenAPI.validate_property(HydroDispatch, Symbol("bus"), o.bus)
+    OpenAPI.validate_property(HydroDispatch, Symbol("active_power"), o.active_power)
+    OpenAPI.validate_property(HydroDispatch, Symbol("reactive_power"), o.reactive_power)
+    OpenAPI.validate_property(HydroDispatch, Symbol("rating"), o.rating)
+    OpenAPI.validate_property(HydroDispatch, Symbol("prime_mover_type"), o.prime_mover_type)
+    OpenAPI.validate_property(HydroDispatch, Symbol("active_power_limits"), o.active_power_limits)
+    OpenAPI.validate_property(HydroDispatch, Symbol("reactive_power_limits"), o.reactive_power_limits)
+    OpenAPI.validate_property(HydroDispatch, Symbol("ramp_limits"), o.ramp_limits)
+    OpenAPI.validate_property(HydroDispatch, Symbol("time_limits"), o.time_limits)
+    OpenAPI.validate_property(HydroDispatch, Symbol("base_power"), o.base_power)
+    OpenAPI.validate_property(HydroDispatch, Symbol("status"), o.status)
+    OpenAPI.validate_property(HydroDispatch, Symbol("time_at_status"), o.time_at_status)
+    OpenAPI.validate_property(HydroDispatch, Symbol("operation_cost"), o.operation_cost)
+    OpenAPI.validate_property(HydroDispatch, Symbol("dynamic_injector"), o.dynamic_injector)
 end
 
 function OpenAPI.validate_property(::Type{ HydroDispatch }, name::Symbol, val)

@@ -20,19 +20,24 @@ Base.@kwdef mutable struct Zone <: OpenAPI.APIModel
     id::Union{Nothing, Int64} = nothing
 
     function Zone(name, uuid, id, )
-        OpenAPI.validate_property(Zone, Symbol("name"), name)
-        OpenAPI.validate_property(Zone, Symbol("uuid"), uuid)
-        OpenAPI.validate_property(Zone, Symbol("id"), id)
-        return new(name, uuid, id, )
+        o = new(name, uuid, id, )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type Zone
 
 const _property_types_Zone = Dict{Symbol,String}(Symbol("name")=>"String", Symbol("uuid")=>"String", Symbol("id")=>"Int64", )
 OpenAPI.property_type(::Type{ Zone }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_Zone[name]))}
 
-function check_required(o::Zone)
+function OpenAPI.check_required(o::Zone)
     o.name === nothing && (return false)
     true
+end
+
+function OpenAPI.validate_properties(o::Zone)
+    OpenAPI.validate_property(Zone, Symbol("name"), o.name)
+    OpenAPI.validate_property(Zone, Symbol("uuid"), o.uuid)
+    OpenAPI.validate_property(Zone, Symbol("id"), o.id)
 end
 
 function OpenAPI.validate_property(::Type{ Zone }, name::Symbol, val)

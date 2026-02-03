@@ -21,19 +21,24 @@ Base.@kwdef mutable struct LoadCost <: OpenAPI.APIModel
     variable = nothing # spec type: Union{ Nothing, CostCurve }
 
     function LoadCost(cost_type, fixed, variable, )
-        OpenAPI.validate_property(LoadCost, Symbol("cost_type"), cost_type)
-        OpenAPI.validate_property(LoadCost, Symbol("fixed"), fixed)
-        OpenAPI.validate_property(LoadCost, Symbol("variable"), variable)
-        return new(cost_type, fixed, variable, )
+        o = new(cost_type, fixed, variable, )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type LoadCost
 
 const _property_types_LoadCost = Dict{Symbol,String}(Symbol("cost_type")=>"String", Symbol("fixed")=>"Float64", Symbol("variable")=>"CostCurve", )
 OpenAPI.property_type(::Type{ LoadCost }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_LoadCost[name]))}
 
-function check_required(o::LoadCost)
+function OpenAPI.check_required(o::LoadCost)
     o.variable === nothing && (return false)
     true
+end
+
+function OpenAPI.validate_properties(o::LoadCost)
+    OpenAPI.validate_property(LoadCost, Symbol("cost_type"), o.cost_type)
+    OpenAPI.validate_property(LoadCost, Symbol("fixed"), o.fixed)
+    OpenAPI.validate_property(LoadCost, Symbol("variable"), o.variable)
 end
 
 function OpenAPI.validate_property(::Type{ LoadCost }, name::Symbol, val)

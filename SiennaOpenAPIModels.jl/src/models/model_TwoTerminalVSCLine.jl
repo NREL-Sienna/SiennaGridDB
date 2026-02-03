@@ -57,7 +57,7 @@
     - converter_loss_from::InputOutputCurve
     - max_dc_current_from::Float64
     - rating_from::Float64
-    - reactive_power_limits_from::MinMax3
+    - reactive_power_limits_from::MinMax
     - power_factor_weighting_fraction_from::Float64
     - voltage_limits_from::MinMax
     - reactive_power_to::Float64
@@ -68,9 +68,9 @@
     - converter_loss_to::InputOutputCurve
     - max_dc_current_to::Float64
     - rating_to::Float64
-    - reactive_power_limits_to::MinMax3
+    - reactive_power_limits_to::MinMax
     - power_factor_weighting_fraction_to::Float64
-    - voltage_limits_to::MinMax4
+    - voltage_limits_to::MinMax
 """
 Base.@kwdef mutable struct TwoTerminalVSCLine <: OpenAPI.APIModel
     id::Union{Nothing, Int64} = nothing
@@ -91,7 +91,7 @@ Base.@kwdef mutable struct TwoTerminalVSCLine <: OpenAPI.APIModel
     converter_loss_from = nothing # spec type: Union{ Nothing, InputOutputCurve }
     max_dc_current_from::Union{Nothing, Float64} = 100000000
     rating_from::Union{Nothing, Float64} = 100000000
-    reactive_power_limits_from = nothing # spec type: Union{ Nothing, MinMax3 }
+    reactive_power_limits_from = nothing # spec type: Union{ Nothing, MinMax }
     power_factor_weighting_fraction_from::Union{Nothing, Float64} = 1.0
     voltage_limits_from = nothing # spec type: Union{ Nothing, MinMax }
     reactive_power_to::Union{Nothing, Float64} = 0.0
@@ -102,51 +102,21 @@ Base.@kwdef mutable struct TwoTerminalVSCLine <: OpenAPI.APIModel
     converter_loss_to = nothing # spec type: Union{ Nothing, InputOutputCurve }
     max_dc_current_to::Union{Nothing, Float64} = 100000000
     rating_to::Union{Nothing, Float64} = 100000000
-    reactive_power_limits_to = nothing # spec type: Union{ Nothing, MinMax3 }
+    reactive_power_limits_to = nothing # spec type: Union{ Nothing, MinMax }
     power_factor_weighting_fraction_to::Union{Nothing, Float64} = 1.0
-    voltage_limits_to = nothing # spec type: Union{ Nothing, MinMax4 }
+    voltage_limits_to = nothing # spec type: Union{ Nothing, MinMax }
 
     function TwoTerminalVSCLine(id, name, available, arc, active_power_flow, rating, active_power_limits_from, active_power_limits_to, g, dc_current, reactive_power_from, dc_voltage_control_from, ac_voltage_control_from, dc_setpoint_from, ac_setpoint_from, converter_loss_from, max_dc_current_from, rating_from, reactive_power_limits_from, power_factor_weighting_fraction_from, voltage_limits_from, reactive_power_to, dc_voltage_control_to, ac_voltage_control_to, dc_setpoint_to, ac_setpoint_to, converter_loss_to, max_dc_current_to, rating_to, reactive_power_limits_to, power_factor_weighting_fraction_to, voltage_limits_to, )
-        OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("id"), id)
-        OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("name"), name)
-        OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("available"), available)
-        OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("arc"), arc)
-        OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("active_power_flow"), active_power_flow)
-        OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("rating"), rating)
-        OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("active_power_limits_from"), active_power_limits_from)
-        OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("active_power_limits_to"), active_power_limits_to)
-        OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("g"), g)
-        OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("dc_current"), dc_current)
-        OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("reactive_power_from"), reactive_power_from)
-        OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("dc_voltage_control_from"), dc_voltage_control_from)
-        OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("ac_voltage_control_from"), ac_voltage_control_from)
-        OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("dc_setpoint_from"), dc_setpoint_from)
-        OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("ac_setpoint_from"), ac_setpoint_from)
-        OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("converter_loss_from"), converter_loss_from)
-        OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("max_dc_current_from"), max_dc_current_from)
-        OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("rating_from"), rating_from)
-        OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("reactive_power_limits_from"), reactive_power_limits_from)
-        OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("power_factor_weighting_fraction_from"), power_factor_weighting_fraction_from)
-        OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("voltage_limits_from"), voltage_limits_from)
-        OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("reactive_power_to"), reactive_power_to)
-        OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("dc_voltage_control_to"), dc_voltage_control_to)
-        OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("ac_voltage_control_to"), ac_voltage_control_to)
-        OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("dc_setpoint_to"), dc_setpoint_to)
-        OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("ac_setpoint_to"), ac_setpoint_to)
-        OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("converter_loss_to"), converter_loss_to)
-        OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("max_dc_current_to"), max_dc_current_to)
-        OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("rating_to"), rating_to)
-        OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("reactive_power_limits_to"), reactive_power_limits_to)
-        OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("power_factor_weighting_fraction_to"), power_factor_weighting_fraction_to)
-        OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("voltage_limits_to"), voltage_limits_to)
-        return new(id, name, available, arc, active_power_flow, rating, active_power_limits_from, active_power_limits_to, g, dc_current, reactive_power_from, dc_voltage_control_from, ac_voltage_control_from, dc_setpoint_from, ac_setpoint_from, converter_loss_from, max_dc_current_from, rating_from, reactive_power_limits_from, power_factor_weighting_fraction_from, voltage_limits_from, reactive_power_to, dc_voltage_control_to, ac_voltage_control_to, dc_setpoint_to, ac_setpoint_to, converter_loss_to, max_dc_current_to, rating_to, reactive_power_limits_to, power_factor_weighting_fraction_to, voltage_limits_to, )
+        o = new(id, name, available, arc, active_power_flow, rating, active_power_limits_from, active_power_limits_to, g, dc_current, reactive_power_from, dc_voltage_control_from, ac_voltage_control_from, dc_setpoint_from, ac_setpoint_from, converter_loss_from, max_dc_current_from, rating_from, reactive_power_limits_from, power_factor_weighting_fraction_from, voltage_limits_from, reactive_power_to, dc_voltage_control_to, ac_voltage_control_to, dc_setpoint_to, ac_setpoint_to, converter_loss_to, max_dc_current_to, rating_to, reactive_power_limits_to, power_factor_weighting_fraction_to, voltage_limits_to, )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type TwoTerminalVSCLine
 
-const _property_types_TwoTerminalVSCLine = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("name")=>"String", Symbol("available")=>"Bool", Symbol("arc")=>"Int64", Symbol("active_power_flow")=>"Float64", Symbol("rating")=>"Float64", Symbol("active_power_limits_from")=>"MinMax", Symbol("active_power_limits_to")=>"MinMax", Symbol("g")=>"Float64", Symbol("dc_current")=>"Float64", Symbol("reactive_power_from")=>"Float64", Symbol("dc_voltage_control_from")=>"Bool", Symbol("ac_voltage_control_from")=>"Bool", Symbol("dc_setpoint_from")=>"Float64", Symbol("ac_setpoint_from")=>"Float64", Symbol("converter_loss_from")=>"InputOutputCurve", Symbol("max_dc_current_from")=>"Float64", Symbol("rating_from")=>"Float64", Symbol("reactive_power_limits_from")=>"MinMax3", Symbol("power_factor_weighting_fraction_from")=>"Float64", Symbol("voltage_limits_from")=>"MinMax", Symbol("reactive_power_to")=>"Float64", Symbol("dc_voltage_control_to")=>"Bool", Symbol("ac_voltage_control_to")=>"Bool", Symbol("dc_setpoint_to")=>"Float64", Symbol("ac_setpoint_to")=>"Float64", Symbol("converter_loss_to")=>"InputOutputCurve", Symbol("max_dc_current_to")=>"Float64", Symbol("rating_to")=>"Float64", Symbol("reactive_power_limits_to")=>"MinMax3", Symbol("power_factor_weighting_fraction_to")=>"Float64", Symbol("voltage_limits_to")=>"MinMax4", )
+const _property_types_TwoTerminalVSCLine = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("name")=>"String", Symbol("available")=>"Bool", Symbol("arc")=>"Int64", Symbol("active_power_flow")=>"Float64", Symbol("rating")=>"Float64", Symbol("active_power_limits_from")=>"MinMax", Symbol("active_power_limits_to")=>"MinMax", Symbol("g")=>"Float64", Symbol("dc_current")=>"Float64", Symbol("reactive_power_from")=>"Float64", Symbol("dc_voltage_control_from")=>"Bool", Symbol("ac_voltage_control_from")=>"Bool", Symbol("dc_setpoint_from")=>"Float64", Symbol("ac_setpoint_from")=>"Float64", Symbol("converter_loss_from")=>"InputOutputCurve", Symbol("max_dc_current_from")=>"Float64", Symbol("rating_from")=>"Float64", Symbol("reactive_power_limits_from")=>"MinMax", Symbol("power_factor_weighting_fraction_from")=>"Float64", Symbol("voltage_limits_from")=>"MinMax", Symbol("reactive_power_to")=>"Float64", Symbol("dc_voltage_control_to")=>"Bool", Symbol("ac_voltage_control_to")=>"Bool", Symbol("dc_setpoint_to")=>"Float64", Symbol("ac_setpoint_to")=>"Float64", Symbol("converter_loss_to")=>"InputOutputCurve", Symbol("max_dc_current_to")=>"Float64", Symbol("rating_to")=>"Float64", Symbol("reactive_power_limits_to")=>"MinMax", Symbol("power_factor_weighting_fraction_to")=>"Float64", Symbol("voltage_limits_to")=>"MinMax", )
 OpenAPI.property_type(::Type{ TwoTerminalVSCLine }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_TwoTerminalVSCLine[name]))}
 
-function check_required(o::TwoTerminalVSCLine)
+function OpenAPI.check_required(o::TwoTerminalVSCLine)
     o.id === nothing && (return false)
     o.name === nothing && (return false)
     o.available === nothing && (return false)
@@ -156,6 +126,41 @@ function check_required(o::TwoTerminalVSCLine)
     o.active_power_limits_from === nothing && (return false)
     o.active_power_limits_to === nothing && (return false)
     true
+end
+
+function OpenAPI.validate_properties(o::TwoTerminalVSCLine)
+    OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("id"), o.id)
+    OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("name"), o.name)
+    OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("available"), o.available)
+    OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("arc"), o.arc)
+    OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("active_power_flow"), o.active_power_flow)
+    OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("rating"), o.rating)
+    OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("active_power_limits_from"), o.active_power_limits_from)
+    OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("active_power_limits_to"), o.active_power_limits_to)
+    OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("g"), o.g)
+    OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("dc_current"), o.dc_current)
+    OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("reactive_power_from"), o.reactive_power_from)
+    OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("dc_voltage_control_from"), o.dc_voltage_control_from)
+    OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("ac_voltage_control_from"), o.ac_voltage_control_from)
+    OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("dc_setpoint_from"), o.dc_setpoint_from)
+    OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("ac_setpoint_from"), o.ac_setpoint_from)
+    OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("converter_loss_from"), o.converter_loss_from)
+    OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("max_dc_current_from"), o.max_dc_current_from)
+    OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("rating_from"), o.rating_from)
+    OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("reactive_power_limits_from"), o.reactive_power_limits_from)
+    OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("power_factor_weighting_fraction_from"), o.power_factor_weighting_fraction_from)
+    OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("voltage_limits_from"), o.voltage_limits_from)
+    OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("reactive_power_to"), o.reactive_power_to)
+    OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("dc_voltage_control_to"), o.dc_voltage_control_to)
+    OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("ac_voltage_control_to"), o.ac_voltage_control_to)
+    OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("dc_setpoint_to"), o.dc_setpoint_to)
+    OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("ac_setpoint_to"), o.ac_setpoint_to)
+    OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("converter_loss_to"), o.converter_loss_to)
+    OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("max_dc_current_to"), o.max_dc_current_to)
+    OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("rating_to"), o.rating_to)
+    OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("reactive_power_limits_to"), o.reactive_power_limits_to)
+    OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("power_factor_weighting_fraction_to"), o.power_factor_weighting_fraction_to)
+    OpenAPI.validate_property(TwoTerminalVSCLine, Symbol("voltage_limits_to"), o.voltage_limits_to)
 end
 
 function OpenAPI.validate_property(::Type{ TwoTerminalVSCLine }, name::Symbol, val)

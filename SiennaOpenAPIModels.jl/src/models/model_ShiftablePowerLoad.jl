@@ -50,27 +50,16 @@ Base.@kwdef mutable struct ShiftablePowerLoad <: OpenAPI.APIModel
     dynamic_injector::Union{Nothing, Any} = nothing
 
     function ShiftablePowerLoad(id, name, available, bus, active_power, active_power_limits, reactive_power, max_active_power, max_reactive_power, base_power, load_balance_time_horizon, operation_cost, dynamic_injector, )
-        OpenAPI.validate_property(ShiftablePowerLoad, Symbol("id"), id)
-        OpenAPI.validate_property(ShiftablePowerLoad, Symbol("name"), name)
-        OpenAPI.validate_property(ShiftablePowerLoad, Symbol("available"), available)
-        OpenAPI.validate_property(ShiftablePowerLoad, Symbol("bus"), bus)
-        OpenAPI.validate_property(ShiftablePowerLoad, Symbol("active_power"), active_power)
-        OpenAPI.validate_property(ShiftablePowerLoad, Symbol("active_power_limits"), active_power_limits)
-        OpenAPI.validate_property(ShiftablePowerLoad, Symbol("reactive_power"), reactive_power)
-        OpenAPI.validate_property(ShiftablePowerLoad, Symbol("max_active_power"), max_active_power)
-        OpenAPI.validate_property(ShiftablePowerLoad, Symbol("max_reactive_power"), max_reactive_power)
-        OpenAPI.validate_property(ShiftablePowerLoad, Symbol("base_power"), base_power)
-        OpenAPI.validate_property(ShiftablePowerLoad, Symbol("load_balance_time_horizon"), load_balance_time_horizon)
-        OpenAPI.validate_property(ShiftablePowerLoad, Symbol("operation_cost"), operation_cost)
-        OpenAPI.validate_property(ShiftablePowerLoad, Symbol("dynamic_injector"), dynamic_injector)
-        return new(id, name, available, bus, active_power, active_power_limits, reactive_power, max_active_power, max_reactive_power, base_power, load_balance_time_horizon, operation_cost, dynamic_injector, )
+        o = new(id, name, available, bus, active_power, active_power_limits, reactive_power, max_active_power, max_reactive_power, base_power, load_balance_time_horizon, operation_cost, dynamic_injector, )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type ShiftablePowerLoad
 
 const _property_types_ShiftablePowerLoad = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("name")=>"String", Symbol("available")=>"Bool", Symbol("bus")=>"Int64", Symbol("active_power")=>"Float64", Symbol("active_power_limits")=>"MinMax", Symbol("reactive_power")=>"Float64", Symbol("max_active_power")=>"Float64", Symbol("max_reactive_power")=>"Float64", Symbol("base_power")=>"Float64", Symbol("load_balance_time_horizon")=>"Int64", Symbol("operation_cost")=>"LoadCost", Symbol("dynamic_injector")=>"Any", )
 OpenAPI.property_type(::Type{ ShiftablePowerLoad }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_ShiftablePowerLoad[name]))}
 
-function check_required(o::ShiftablePowerLoad)
+function OpenAPI.check_required(o::ShiftablePowerLoad)
     o.id === nothing && (return false)
     o.name === nothing && (return false)
     o.available === nothing && (return false)
@@ -84,6 +73,22 @@ function check_required(o::ShiftablePowerLoad)
     o.load_balance_time_horizon === nothing && (return false)
     o.operation_cost === nothing && (return false)
     true
+end
+
+function OpenAPI.validate_properties(o::ShiftablePowerLoad)
+    OpenAPI.validate_property(ShiftablePowerLoad, Symbol("id"), o.id)
+    OpenAPI.validate_property(ShiftablePowerLoad, Symbol("name"), o.name)
+    OpenAPI.validate_property(ShiftablePowerLoad, Symbol("available"), o.available)
+    OpenAPI.validate_property(ShiftablePowerLoad, Symbol("bus"), o.bus)
+    OpenAPI.validate_property(ShiftablePowerLoad, Symbol("active_power"), o.active_power)
+    OpenAPI.validate_property(ShiftablePowerLoad, Symbol("active_power_limits"), o.active_power_limits)
+    OpenAPI.validate_property(ShiftablePowerLoad, Symbol("reactive_power"), o.reactive_power)
+    OpenAPI.validate_property(ShiftablePowerLoad, Symbol("max_active_power"), o.max_active_power)
+    OpenAPI.validate_property(ShiftablePowerLoad, Symbol("max_reactive_power"), o.max_reactive_power)
+    OpenAPI.validate_property(ShiftablePowerLoad, Symbol("base_power"), o.base_power)
+    OpenAPI.validate_property(ShiftablePowerLoad, Symbol("load_balance_time_horizon"), o.load_balance_time_horizon)
+    OpenAPI.validate_property(ShiftablePowerLoad, Symbol("operation_cost"), o.operation_cost)
+    OpenAPI.validate_property(ShiftablePowerLoad, Symbol("dynamic_injector"), o.dynamic_injector)
 end
 
 function OpenAPI.validate_property(::Type{ ShiftablePowerLoad }, name::Symbol, val)

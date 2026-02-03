@@ -53,28 +53,16 @@ Base.@kwdef mutable struct Line <: OpenAPI.APIModel
     g = nothing # spec type: Union{ Nothing, FromTo }
 
     function Line(id, name, available, active_power_flow, reactive_power_flow, arc, r, x, b, rating, rating_b, rating_c, angle_limits, g, )
-        OpenAPI.validate_property(Line, Symbol("id"), id)
-        OpenAPI.validate_property(Line, Symbol("name"), name)
-        OpenAPI.validate_property(Line, Symbol("available"), available)
-        OpenAPI.validate_property(Line, Symbol("active_power_flow"), active_power_flow)
-        OpenAPI.validate_property(Line, Symbol("reactive_power_flow"), reactive_power_flow)
-        OpenAPI.validate_property(Line, Symbol("arc"), arc)
-        OpenAPI.validate_property(Line, Symbol("r"), r)
-        OpenAPI.validate_property(Line, Symbol("x"), x)
-        OpenAPI.validate_property(Line, Symbol("b"), b)
-        OpenAPI.validate_property(Line, Symbol("rating"), rating)
-        OpenAPI.validate_property(Line, Symbol("rating_b"), rating_b)
-        OpenAPI.validate_property(Line, Symbol("rating_c"), rating_c)
-        OpenAPI.validate_property(Line, Symbol("angle_limits"), angle_limits)
-        OpenAPI.validate_property(Line, Symbol("g"), g)
-        return new(id, name, available, active_power_flow, reactive_power_flow, arc, r, x, b, rating, rating_b, rating_c, angle_limits, g, )
+        o = new(id, name, available, active_power_flow, reactive_power_flow, arc, r, x, b, rating, rating_b, rating_c, angle_limits, g, )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type Line
 
 const _property_types_Line = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("name")=>"String", Symbol("available")=>"Bool", Symbol("active_power_flow")=>"Float64", Symbol("reactive_power_flow")=>"Float64", Symbol("arc")=>"Int64", Symbol("r")=>"Float64", Symbol("x")=>"Float64", Symbol("b")=>"FromTo", Symbol("rating")=>"Float64", Symbol("rating_b")=>"Float64", Symbol("rating_c")=>"Float64", Symbol("angle_limits")=>"MinMax", Symbol("g")=>"FromTo", )
 OpenAPI.property_type(::Type{ Line }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_Line[name]))}
 
-function check_required(o::Line)
+function OpenAPI.check_required(o::Line)
     o.id === nothing && (return false)
     o.name === nothing && (return false)
     o.available === nothing && (return false)
@@ -86,6 +74,23 @@ function check_required(o::Line)
     o.rating === nothing && (return false)
     o.angle_limits === nothing && (return false)
     true
+end
+
+function OpenAPI.validate_properties(o::Line)
+    OpenAPI.validate_property(Line, Symbol("id"), o.id)
+    OpenAPI.validate_property(Line, Symbol("name"), o.name)
+    OpenAPI.validate_property(Line, Symbol("available"), o.available)
+    OpenAPI.validate_property(Line, Symbol("active_power_flow"), o.active_power_flow)
+    OpenAPI.validate_property(Line, Symbol("reactive_power_flow"), o.reactive_power_flow)
+    OpenAPI.validate_property(Line, Symbol("arc"), o.arc)
+    OpenAPI.validate_property(Line, Symbol("r"), o.r)
+    OpenAPI.validate_property(Line, Symbol("x"), o.x)
+    OpenAPI.validate_property(Line, Symbol("b"), o.b)
+    OpenAPI.validate_property(Line, Symbol("rating"), o.rating)
+    OpenAPI.validate_property(Line, Symbol("rating_b"), o.rating_b)
+    OpenAPI.validate_property(Line, Symbol("rating_c"), o.rating_c)
+    OpenAPI.validate_property(Line, Symbol("angle_limits"), o.angle_limits)
+    OpenAPI.validate_property(Line, Symbol("g"), o.g)
 end
 
 function OpenAPI.validate_property(::Type{ Line }, name::Symbol, val)

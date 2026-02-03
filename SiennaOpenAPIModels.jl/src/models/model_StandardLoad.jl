@@ -68,39 +68,44 @@ Base.@kwdef mutable struct StandardLoad <: OpenAPI.APIModel
     dynamic_injector::Union{Nothing, Any} = nothing
 
     function StandardLoad(id, name, available, bus, base_power, constant_active_power, constant_reactive_power, impedance_active_power, impedance_reactive_power, current_active_power, current_reactive_power, max_constant_active_power, max_constant_reactive_power, max_impedance_active_power, max_impedance_reactive_power, max_current_active_power, max_current_reactive_power, conformity, dynamic_injector, )
-        OpenAPI.validate_property(StandardLoad, Symbol("id"), id)
-        OpenAPI.validate_property(StandardLoad, Symbol("name"), name)
-        OpenAPI.validate_property(StandardLoad, Symbol("available"), available)
-        OpenAPI.validate_property(StandardLoad, Symbol("bus"), bus)
-        OpenAPI.validate_property(StandardLoad, Symbol("base_power"), base_power)
-        OpenAPI.validate_property(StandardLoad, Symbol("constant_active_power"), constant_active_power)
-        OpenAPI.validate_property(StandardLoad, Symbol("constant_reactive_power"), constant_reactive_power)
-        OpenAPI.validate_property(StandardLoad, Symbol("impedance_active_power"), impedance_active_power)
-        OpenAPI.validate_property(StandardLoad, Symbol("impedance_reactive_power"), impedance_reactive_power)
-        OpenAPI.validate_property(StandardLoad, Symbol("current_active_power"), current_active_power)
-        OpenAPI.validate_property(StandardLoad, Symbol("current_reactive_power"), current_reactive_power)
-        OpenAPI.validate_property(StandardLoad, Symbol("max_constant_active_power"), max_constant_active_power)
-        OpenAPI.validate_property(StandardLoad, Symbol("max_constant_reactive_power"), max_constant_reactive_power)
-        OpenAPI.validate_property(StandardLoad, Symbol("max_impedance_active_power"), max_impedance_active_power)
-        OpenAPI.validate_property(StandardLoad, Symbol("max_impedance_reactive_power"), max_impedance_reactive_power)
-        OpenAPI.validate_property(StandardLoad, Symbol("max_current_active_power"), max_current_active_power)
-        OpenAPI.validate_property(StandardLoad, Symbol("max_current_reactive_power"), max_current_reactive_power)
-        OpenAPI.validate_property(StandardLoad, Symbol("conformity"), conformity)
-        OpenAPI.validate_property(StandardLoad, Symbol("dynamic_injector"), dynamic_injector)
-        return new(id, name, available, bus, base_power, constant_active_power, constant_reactive_power, impedance_active_power, impedance_reactive_power, current_active_power, current_reactive_power, max_constant_active_power, max_constant_reactive_power, max_impedance_active_power, max_impedance_reactive_power, max_current_active_power, max_current_reactive_power, conformity, dynamic_injector, )
+        o = new(id, name, available, bus, base_power, constant_active_power, constant_reactive_power, impedance_active_power, impedance_reactive_power, current_active_power, current_reactive_power, max_constant_active_power, max_constant_reactive_power, max_impedance_active_power, max_impedance_reactive_power, max_current_active_power, max_current_reactive_power, conformity, dynamic_injector, )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type StandardLoad
 
 const _property_types_StandardLoad = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("name")=>"String", Symbol("available")=>"Bool", Symbol("bus")=>"Int64", Symbol("base_power")=>"Float64", Symbol("constant_active_power")=>"Float64", Symbol("constant_reactive_power")=>"Float64", Symbol("impedance_active_power")=>"Float64", Symbol("impedance_reactive_power")=>"Float64", Symbol("current_active_power")=>"Float64", Symbol("current_reactive_power")=>"Float64", Symbol("max_constant_active_power")=>"Float64", Symbol("max_constant_reactive_power")=>"Float64", Symbol("max_impedance_active_power")=>"Float64", Symbol("max_impedance_reactive_power")=>"Float64", Symbol("max_current_active_power")=>"Float64", Symbol("max_current_reactive_power")=>"Float64", Symbol("conformity")=>"String", Symbol("dynamic_injector")=>"Any", )
 OpenAPI.property_type(::Type{ StandardLoad }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_StandardLoad[name]))}
 
-function check_required(o::StandardLoad)
+function OpenAPI.check_required(o::StandardLoad)
     o.id === nothing && (return false)
     o.name === nothing && (return false)
     o.available === nothing && (return false)
     o.bus === nothing && (return false)
     o.base_power === nothing && (return false)
     true
+end
+
+function OpenAPI.validate_properties(o::StandardLoad)
+    OpenAPI.validate_property(StandardLoad, Symbol("id"), o.id)
+    OpenAPI.validate_property(StandardLoad, Symbol("name"), o.name)
+    OpenAPI.validate_property(StandardLoad, Symbol("available"), o.available)
+    OpenAPI.validate_property(StandardLoad, Symbol("bus"), o.bus)
+    OpenAPI.validate_property(StandardLoad, Symbol("base_power"), o.base_power)
+    OpenAPI.validate_property(StandardLoad, Symbol("constant_active_power"), o.constant_active_power)
+    OpenAPI.validate_property(StandardLoad, Symbol("constant_reactive_power"), o.constant_reactive_power)
+    OpenAPI.validate_property(StandardLoad, Symbol("impedance_active_power"), o.impedance_active_power)
+    OpenAPI.validate_property(StandardLoad, Symbol("impedance_reactive_power"), o.impedance_reactive_power)
+    OpenAPI.validate_property(StandardLoad, Symbol("current_active_power"), o.current_active_power)
+    OpenAPI.validate_property(StandardLoad, Symbol("current_reactive_power"), o.current_reactive_power)
+    OpenAPI.validate_property(StandardLoad, Symbol("max_constant_active_power"), o.max_constant_active_power)
+    OpenAPI.validate_property(StandardLoad, Symbol("max_constant_reactive_power"), o.max_constant_reactive_power)
+    OpenAPI.validate_property(StandardLoad, Symbol("max_impedance_active_power"), o.max_impedance_active_power)
+    OpenAPI.validate_property(StandardLoad, Symbol("max_impedance_reactive_power"), o.max_impedance_reactive_power)
+    OpenAPI.validate_property(StandardLoad, Symbol("max_current_active_power"), o.max_current_active_power)
+    OpenAPI.validate_property(StandardLoad, Symbol("max_current_reactive_power"), o.max_current_reactive_power)
+    OpenAPI.validate_property(StandardLoad, Symbol("conformity"), o.conformity)
+    OpenAPI.validate_property(StandardLoad, Symbol("dynamic_injector"), o.dynamic_injector)
 end
 
 function OpenAPI.validate_property(::Type{ StandardLoad }, name::Symbol, val)

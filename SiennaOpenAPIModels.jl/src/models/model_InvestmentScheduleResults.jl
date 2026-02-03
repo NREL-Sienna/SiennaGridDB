@@ -20,18 +20,23 @@ Base.@kwdef mutable struct InvestmentScheduleResults <: OpenAPI.APIModel
     results::Union{Nothing, Vector} = nothing # spec type: Union{ Nothing, Vector{InvestmentScheduleResultsResultsInner} }
 
     function InvestmentScheduleResults(start_dates, end_dates, results, )
-        OpenAPI.validate_property(InvestmentScheduleResults, Symbol("start_dates"), start_dates)
-        OpenAPI.validate_property(InvestmentScheduleResults, Symbol("end_dates"), end_dates)
-        OpenAPI.validate_property(InvestmentScheduleResults, Symbol("results"), results)
-        return new(start_dates, end_dates, results, )
+        o = new(start_dates, end_dates, results, )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type InvestmentScheduleResults
 
 const _property_types_InvestmentScheduleResults = Dict{Symbol,String}(Symbol("start_dates")=>"Vector{String}", Symbol("end_dates")=>"Vector{String}", Symbol("results")=>"Vector{InvestmentScheduleResultsResultsInner}", )
 OpenAPI.property_type(::Type{ InvestmentScheduleResults }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_InvestmentScheduleResults[name]))}
 
-function check_required(o::InvestmentScheduleResults)
+function OpenAPI.check_required(o::InvestmentScheduleResults)
     true
+end
+
+function OpenAPI.validate_properties(o::InvestmentScheduleResults)
+    OpenAPI.validate_property(InvestmentScheduleResults, Symbol("start_dates"), o.start_dates)
+    OpenAPI.validate_property(InvestmentScheduleResults, Symbol("end_dates"), o.end_dates)
+    OpenAPI.validate_property(InvestmentScheduleResults, Symbol("results"), o.results)
 end
 
 function OpenAPI.validate_property(::Type{ InvestmentScheduleResults }, name::Symbol, val)

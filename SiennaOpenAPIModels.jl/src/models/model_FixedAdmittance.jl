@@ -29,26 +29,31 @@ Base.@kwdef mutable struct FixedAdmittance <: OpenAPI.APIModel
     dynamic_injector::Union{Nothing, Any} = nothing
 
     function FixedAdmittance(id, name, available, bus, Y, dynamic_injector, )
-        OpenAPI.validate_property(FixedAdmittance, Symbol("id"), id)
-        OpenAPI.validate_property(FixedAdmittance, Symbol("name"), name)
-        OpenAPI.validate_property(FixedAdmittance, Symbol("available"), available)
-        OpenAPI.validate_property(FixedAdmittance, Symbol("bus"), bus)
-        OpenAPI.validate_property(FixedAdmittance, Symbol("Y"), Y)
-        OpenAPI.validate_property(FixedAdmittance, Symbol("dynamic_injector"), dynamic_injector)
-        return new(id, name, available, bus, Y, dynamic_injector, )
+        o = new(id, name, available, bus, Y, dynamic_injector, )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type FixedAdmittance
 
 const _property_types_FixedAdmittance = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("name")=>"String", Symbol("available")=>"Bool", Symbol("bus")=>"Int64", Symbol("Y")=>"ComplexNumber", Symbol("dynamic_injector")=>"Any", )
 OpenAPI.property_type(::Type{ FixedAdmittance }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_FixedAdmittance[name]))}
 
-function check_required(o::FixedAdmittance)
+function OpenAPI.check_required(o::FixedAdmittance)
     o.id === nothing && (return false)
     o.name === nothing && (return false)
     o.available === nothing && (return false)
     o.bus === nothing && (return false)
     o.Y === nothing && (return false)
     true
+end
+
+function OpenAPI.validate_properties(o::FixedAdmittance)
+    OpenAPI.validate_property(FixedAdmittance, Symbol("id"), o.id)
+    OpenAPI.validate_property(FixedAdmittance, Symbol("name"), o.name)
+    OpenAPI.validate_property(FixedAdmittance, Symbol("available"), o.available)
+    OpenAPI.validate_property(FixedAdmittance, Symbol("bus"), o.bus)
+    OpenAPI.validate_property(FixedAdmittance, Symbol("Y"), o.Y)
+    OpenAPI.validate_property(FixedAdmittance, Symbol("dynamic_injector"), o.dynamic_injector)
 end
 
 function OpenAPI.validate_property(::Type{ FixedAdmittance }, name::Symbol, val)

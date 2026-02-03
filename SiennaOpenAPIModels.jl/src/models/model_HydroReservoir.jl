@@ -28,7 +28,7 @@
     - available::Bool
     - storage_level_limits::MinMax
     - initial_level::Float64
-    - spillage_limits::MinMax5
+    - spillage_limits::MinMax
     - inflow::Float64
     - outflow::Float64
     - level_targets::Float64
@@ -46,7 +46,7 @@ Base.@kwdef mutable struct HydroReservoir <: OpenAPI.APIModel
     available::Union{Nothing, Bool} = nothing
     storage_level_limits = nothing # spec type: Union{ Nothing, MinMax }
     initial_level::Union{Nothing, Float64} = nothing
-    spillage_limits = nothing # spec type: Union{ Nothing, MinMax5 }
+    spillage_limits = nothing # spec type: Union{ Nothing, MinMax }
     inflow::Union{Nothing, Float64} = nothing
     outflow::Union{Nothing, Float64} = nothing
     level_targets::Union{Nothing, Float64} = nothing
@@ -59,30 +59,16 @@ Base.@kwdef mutable struct HydroReservoir <: OpenAPI.APIModel
     level_data_type::Union{Nothing, String} = "USABLE_VOLUME"
 
     function HydroReservoir(id, name, available, storage_level_limits, initial_level, spillage_limits, inflow, outflow, level_targets, intake_elevation, head_to_volume_factor, upstream_turbines, downstream_turbines, upstream_reservoirs, operation_cost, level_data_type, )
-        OpenAPI.validate_property(HydroReservoir, Symbol("id"), id)
-        OpenAPI.validate_property(HydroReservoir, Symbol("name"), name)
-        OpenAPI.validate_property(HydroReservoir, Symbol("available"), available)
-        OpenAPI.validate_property(HydroReservoir, Symbol("storage_level_limits"), storage_level_limits)
-        OpenAPI.validate_property(HydroReservoir, Symbol("initial_level"), initial_level)
-        OpenAPI.validate_property(HydroReservoir, Symbol("spillage_limits"), spillage_limits)
-        OpenAPI.validate_property(HydroReservoir, Symbol("inflow"), inflow)
-        OpenAPI.validate_property(HydroReservoir, Symbol("outflow"), outflow)
-        OpenAPI.validate_property(HydroReservoir, Symbol("level_targets"), level_targets)
-        OpenAPI.validate_property(HydroReservoir, Symbol("intake_elevation"), intake_elevation)
-        OpenAPI.validate_property(HydroReservoir, Symbol("head_to_volume_factor"), head_to_volume_factor)
-        OpenAPI.validate_property(HydroReservoir, Symbol("upstream_turbines"), upstream_turbines)
-        OpenAPI.validate_property(HydroReservoir, Symbol("downstream_turbines"), downstream_turbines)
-        OpenAPI.validate_property(HydroReservoir, Symbol("upstream_reservoirs"), upstream_reservoirs)
-        OpenAPI.validate_property(HydroReservoir, Symbol("operation_cost"), operation_cost)
-        OpenAPI.validate_property(HydroReservoir, Symbol("level_data_type"), level_data_type)
-        return new(id, name, available, storage_level_limits, initial_level, spillage_limits, inflow, outflow, level_targets, intake_elevation, head_to_volume_factor, upstream_turbines, downstream_turbines, upstream_reservoirs, operation_cost, level_data_type, )
+        o = new(id, name, available, storage_level_limits, initial_level, spillage_limits, inflow, outflow, level_targets, intake_elevation, head_to_volume_factor, upstream_turbines, downstream_turbines, upstream_reservoirs, operation_cost, level_data_type, )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type HydroReservoir
 
-const _property_types_HydroReservoir = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("name")=>"String", Symbol("available")=>"Bool", Symbol("storage_level_limits")=>"MinMax", Symbol("initial_level")=>"Float64", Symbol("spillage_limits")=>"MinMax5", Symbol("inflow")=>"Float64", Symbol("outflow")=>"Float64", Symbol("level_targets")=>"Float64", Symbol("intake_elevation")=>"Float64", Symbol("head_to_volume_factor")=>"ValueCurve", Symbol("upstream_turbines")=>"Vector{Int64}", Symbol("downstream_turbines")=>"Vector{Int64}", Symbol("upstream_reservoirs")=>"Vector{Int64}", Symbol("operation_cost")=>"HydroReservoirCost", Symbol("level_data_type")=>"String", )
+const _property_types_HydroReservoir = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("name")=>"String", Symbol("available")=>"Bool", Symbol("storage_level_limits")=>"MinMax", Symbol("initial_level")=>"Float64", Symbol("spillage_limits")=>"MinMax", Symbol("inflow")=>"Float64", Symbol("outflow")=>"Float64", Symbol("level_targets")=>"Float64", Symbol("intake_elevation")=>"Float64", Symbol("head_to_volume_factor")=>"ValueCurve", Symbol("upstream_turbines")=>"Vector{Int64}", Symbol("downstream_turbines")=>"Vector{Int64}", Symbol("upstream_reservoirs")=>"Vector{Int64}", Symbol("operation_cost")=>"HydroReservoirCost", Symbol("level_data_type")=>"String", )
 OpenAPI.property_type(::Type{ HydroReservoir }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_HydroReservoir[name]))}
 
-function check_required(o::HydroReservoir)
+function OpenAPI.check_required(o::HydroReservoir)
     o.id === nothing && (return false)
     o.name === nothing && (return false)
     o.available === nothing && (return false)
@@ -94,6 +80,25 @@ function check_required(o::HydroReservoir)
     o.head_to_volume_factor === nothing && (return false)
     o.operation_cost === nothing && (return false)
     true
+end
+
+function OpenAPI.validate_properties(o::HydroReservoir)
+    OpenAPI.validate_property(HydroReservoir, Symbol("id"), o.id)
+    OpenAPI.validate_property(HydroReservoir, Symbol("name"), o.name)
+    OpenAPI.validate_property(HydroReservoir, Symbol("available"), o.available)
+    OpenAPI.validate_property(HydroReservoir, Symbol("storage_level_limits"), o.storage_level_limits)
+    OpenAPI.validate_property(HydroReservoir, Symbol("initial_level"), o.initial_level)
+    OpenAPI.validate_property(HydroReservoir, Symbol("spillage_limits"), o.spillage_limits)
+    OpenAPI.validate_property(HydroReservoir, Symbol("inflow"), o.inflow)
+    OpenAPI.validate_property(HydroReservoir, Symbol("outflow"), o.outflow)
+    OpenAPI.validate_property(HydroReservoir, Symbol("level_targets"), o.level_targets)
+    OpenAPI.validate_property(HydroReservoir, Symbol("intake_elevation"), o.intake_elevation)
+    OpenAPI.validate_property(HydroReservoir, Symbol("head_to_volume_factor"), o.head_to_volume_factor)
+    OpenAPI.validate_property(HydroReservoir, Symbol("upstream_turbines"), o.upstream_turbines)
+    OpenAPI.validate_property(HydroReservoir, Symbol("downstream_turbines"), o.downstream_turbines)
+    OpenAPI.validate_property(HydroReservoir, Symbol("upstream_reservoirs"), o.upstream_reservoirs)
+    OpenAPI.validate_property(HydroReservoir, Symbol("operation_cost"), o.operation_cost)
+    OpenAPI.validate_property(HydroReservoir, Symbol("level_data_type"), o.level_data_type)
 end
 
 function OpenAPI.validate_property(::Type{ HydroReservoir }, name::Symbol, val)

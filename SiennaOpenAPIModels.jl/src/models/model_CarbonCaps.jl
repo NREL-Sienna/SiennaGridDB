@@ -35,25 +35,30 @@ Base.@kwdef mutable struct CarbonCaps <: OpenAPI.APIModel
     max_mtons::Union{Nothing, Float64} = nothing
 
     function CarbonCaps(name, uuid, id, available, eligible_regions, target_year, max_tons_mwh, max_mtons, )
-        OpenAPI.validate_property(CarbonCaps, Symbol("name"), name)
-        OpenAPI.validate_property(CarbonCaps, Symbol("uuid"), uuid)
-        OpenAPI.validate_property(CarbonCaps, Symbol("id"), id)
-        OpenAPI.validate_property(CarbonCaps, Symbol("available"), available)
-        OpenAPI.validate_property(CarbonCaps, Symbol("eligible_regions"), eligible_regions)
-        OpenAPI.validate_property(CarbonCaps, Symbol("target_year"), target_year)
-        OpenAPI.validate_property(CarbonCaps, Symbol("max_tons_mwh"), max_tons_mwh)
-        OpenAPI.validate_property(CarbonCaps, Symbol("max_mtons"), max_mtons)
-        return new(name, uuid, id, available, eligible_regions, target_year, max_tons_mwh, max_mtons, )
+        o = new(name, uuid, id, available, eligible_regions, target_year, max_tons_mwh, max_mtons, )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type CarbonCaps
 
 const _property_types_CarbonCaps = Dict{Symbol,String}(Symbol("name")=>"String", Symbol("uuid")=>"String", Symbol("id")=>"Int64", Symbol("available")=>"Bool", Symbol("eligible_regions")=>"Vector{Int64}", Symbol("target_year")=>"Int64", Symbol("max_tons_mwh")=>"Float64", Symbol("max_mtons")=>"Float64", )
 OpenAPI.property_type(::Type{ CarbonCaps }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_CarbonCaps[name]))}
 
-function check_required(o::CarbonCaps)
+function OpenAPI.check_required(o::CarbonCaps)
     o.name === nothing && (return false)
     o.available === nothing && (return false)
     true
+end
+
+function OpenAPI.validate_properties(o::CarbonCaps)
+    OpenAPI.validate_property(CarbonCaps, Symbol("name"), o.name)
+    OpenAPI.validate_property(CarbonCaps, Symbol("uuid"), o.uuid)
+    OpenAPI.validate_property(CarbonCaps, Symbol("id"), o.id)
+    OpenAPI.validate_property(CarbonCaps, Symbol("available"), o.available)
+    OpenAPI.validate_property(CarbonCaps, Symbol("eligible_regions"), o.eligible_regions)
+    OpenAPI.validate_property(CarbonCaps, Symbol("target_year"), o.target_year)
+    OpenAPI.validate_property(CarbonCaps, Symbol("max_tons_mwh"), o.max_tons_mwh)
+    OpenAPI.validate_property(CarbonCaps, Symbol("max_mtons"), o.max_mtons)
 end
 
 function OpenAPI.validate_property(::Type{ CarbonCaps }, name::Symbol, val)

@@ -23,19 +23,24 @@ Base.@kwdef mutable struct RetirementPotential <: OpenAPI.APIModel
     uuid::Union{Nothing, String} = nothing
 
     function RetirementPotential(eligible_generators, planned_retirement_year, build_year, uuid, )
-        OpenAPI.validate_property(RetirementPotential, Symbol("eligible_generators"), eligible_generators)
-        OpenAPI.validate_property(RetirementPotential, Symbol("planned_retirement_year"), planned_retirement_year)
-        OpenAPI.validate_property(RetirementPotential, Symbol("build_year"), build_year)
-        OpenAPI.validate_property(RetirementPotential, Symbol("uuid"), uuid)
-        return new(eligible_generators, planned_retirement_year, build_year, uuid, )
+        o = new(eligible_generators, planned_retirement_year, build_year, uuid, )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type RetirementPotential
 
 const _property_types_RetirementPotential = Dict{Symbol,String}(Symbol("eligible_generators")=>"Vector{String}", Symbol("planned_retirement_year")=>"Dict{String, Int64}", Symbol("build_year")=>"Dict{String, Int64}", Symbol("uuid")=>"String", )
 OpenAPI.property_type(::Type{ RetirementPotential }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_RetirementPotential[name]))}
 
-function check_required(o::RetirementPotential)
+function OpenAPI.check_required(o::RetirementPotential)
     true
+end
+
+function OpenAPI.validate_properties(o::RetirementPotential)
+    OpenAPI.validate_property(RetirementPotential, Symbol("eligible_generators"), o.eligible_generators)
+    OpenAPI.validate_property(RetirementPotential, Symbol("planned_retirement_year"), o.planned_retirement_year)
+    OpenAPI.validate_property(RetirementPotential, Symbol("build_year"), o.build_year)
+    OpenAPI.validate_property(RetirementPotential, Symbol("uuid"), o.uuid)
 end
 
 function OpenAPI.validate_property(::Type{ RetirementPotential }, name::Symbol, val)

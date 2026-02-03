@@ -68,33 +68,16 @@ Base.@kwdef mutable struct ThermalStandard <: OpenAPI.APIModel
     dynamic_injector::Union{Nothing, Any} = nothing
 
     function ThermalStandard(id, name, available, status, bus, active_power, reactive_power, rating, active_power_limits, reactive_power_limits, ramp_limits, operation_cost, base_power, time_limits, must_run, prime_mover_type, fuel_type, time_at_status, dynamic_injector, )
-        OpenAPI.validate_property(ThermalStandard, Symbol("id"), id)
-        OpenAPI.validate_property(ThermalStandard, Symbol("name"), name)
-        OpenAPI.validate_property(ThermalStandard, Symbol("available"), available)
-        OpenAPI.validate_property(ThermalStandard, Symbol("status"), status)
-        OpenAPI.validate_property(ThermalStandard, Symbol("bus"), bus)
-        OpenAPI.validate_property(ThermalStandard, Symbol("active_power"), active_power)
-        OpenAPI.validate_property(ThermalStandard, Symbol("reactive_power"), reactive_power)
-        OpenAPI.validate_property(ThermalStandard, Symbol("rating"), rating)
-        OpenAPI.validate_property(ThermalStandard, Symbol("active_power_limits"), active_power_limits)
-        OpenAPI.validate_property(ThermalStandard, Symbol("reactive_power_limits"), reactive_power_limits)
-        OpenAPI.validate_property(ThermalStandard, Symbol("ramp_limits"), ramp_limits)
-        OpenAPI.validate_property(ThermalStandard, Symbol("operation_cost"), operation_cost)
-        OpenAPI.validate_property(ThermalStandard, Symbol("base_power"), base_power)
-        OpenAPI.validate_property(ThermalStandard, Symbol("time_limits"), time_limits)
-        OpenAPI.validate_property(ThermalStandard, Symbol("must_run"), must_run)
-        OpenAPI.validate_property(ThermalStandard, Symbol("prime_mover_type"), prime_mover_type)
-        OpenAPI.validate_property(ThermalStandard, Symbol("fuel_type"), fuel_type)
-        OpenAPI.validate_property(ThermalStandard, Symbol("time_at_status"), time_at_status)
-        OpenAPI.validate_property(ThermalStandard, Symbol("dynamic_injector"), dynamic_injector)
-        return new(id, name, available, status, bus, active_power, reactive_power, rating, active_power_limits, reactive_power_limits, ramp_limits, operation_cost, base_power, time_limits, must_run, prime_mover_type, fuel_type, time_at_status, dynamic_injector, )
+        o = new(id, name, available, status, bus, active_power, reactive_power, rating, active_power_limits, reactive_power_limits, ramp_limits, operation_cost, base_power, time_limits, must_run, prime_mover_type, fuel_type, time_at_status, dynamic_injector, )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type ThermalStandard
 
 const _property_types_ThermalStandard = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("name")=>"String", Symbol("available")=>"Bool", Symbol("status")=>"Bool", Symbol("bus")=>"Int64", Symbol("active_power")=>"Float64", Symbol("reactive_power")=>"Float64", Symbol("rating")=>"Float64", Symbol("active_power_limits")=>"MinMax", Symbol("reactive_power_limits")=>"MinMax", Symbol("ramp_limits")=>"UpDown", Symbol("operation_cost")=>"ThermalGenerationCost", Symbol("base_power")=>"Float64", Symbol("time_limits")=>"UpDown", Symbol("must_run")=>"Bool", Symbol("prime_mover_type")=>"String", Symbol("fuel_type")=>"String", Symbol("time_at_status")=>"Float64", Symbol("dynamic_injector")=>"Any", )
 OpenAPI.property_type(::Type{ ThermalStandard }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_ThermalStandard[name]))}
 
-function check_required(o::ThermalStandard)
+function OpenAPI.check_required(o::ThermalStandard)
     o.id === nothing && (return false)
     o.name === nothing && (return false)
     o.available === nothing && (return false)
@@ -107,6 +90,28 @@ function check_required(o::ThermalStandard)
     o.operation_cost === nothing && (return false)
     o.base_power === nothing && (return false)
     true
+end
+
+function OpenAPI.validate_properties(o::ThermalStandard)
+    OpenAPI.validate_property(ThermalStandard, Symbol("id"), o.id)
+    OpenAPI.validate_property(ThermalStandard, Symbol("name"), o.name)
+    OpenAPI.validate_property(ThermalStandard, Symbol("available"), o.available)
+    OpenAPI.validate_property(ThermalStandard, Symbol("status"), o.status)
+    OpenAPI.validate_property(ThermalStandard, Symbol("bus"), o.bus)
+    OpenAPI.validate_property(ThermalStandard, Symbol("active_power"), o.active_power)
+    OpenAPI.validate_property(ThermalStandard, Symbol("reactive_power"), o.reactive_power)
+    OpenAPI.validate_property(ThermalStandard, Symbol("rating"), o.rating)
+    OpenAPI.validate_property(ThermalStandard, Symbol("active_power_limits"), o.active_power_limits)
+    OpenAPI.validate_property(ThermalStandard, Symbol("reactive_power_limits"), o.reactive_power_limits)
+    OpenAPI.validate_property(ThermalStandard, Symbol("ramp_limits"), o.ramp_limits)
+    OpenAPI.validate_property(ThermalStandard, Symbol("operation_cost"), o.operation_cost)
+    OpenAPI.validate_property(ThermalStandard, Symbol("base_power"), o.base_power)
+    OpenAPI.validate_property(ThermalStandard, Symbol("time_limits"), o.time_limits)
+    OpenAPI.validate_property(ThermalStandard, Symbol("must_run"), o.must_run)
+    OpenAPI.validate_property(ThermalStandard, Symbol("prime_mover_type"), o.prime_mover_type)
+    OpenAPI.validate_property(ThermalStandard, Symbol("fuel_type"), o.fuel_type)
+    OpenAPI.validate_property(ThermalStandard, Symbol("time_at_status"), o.time_at_status)
+    OpenAPI.validate_property(ThermalStandard, Symbol("dynamic_injector"), o.dynamic_injector)
 end
 
 function OpenAPI.validate_property(::Type{ ThermalStandard }, name::Symbol, val)

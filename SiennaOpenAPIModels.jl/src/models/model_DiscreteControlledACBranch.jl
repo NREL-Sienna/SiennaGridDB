@@ -44,25 +44,16 @@ Base.@kwdef mutable struct DiscreteControlledACBranch <: OpenAPI.APIModel
     branch_status::Union{Nothing, String} = "CLOSED"
 
     function DiscreteControlledACBranch(id, name, available, active_power_flow, reactive_power_flow, arc, r, x, rating, discrete_branch_type, branch_status, )
-        OpenAPI.validate_property(DiscreteControlledACBranch, Symbol("id"), id)
-        OpenAPI.validate_property(DiscreteControlledACBranch, Symbol("name"), name)
-        OpenAPI.validate_property(DiscreteControlledACBranch, Symbol("available"), available)
-        OpenAPI.validate_property(DiscreteControlledACBranch, Symbol("active_power_flow"), active_power_flow)
-        OpenAPI.validate_property(DiscreteControlledACBranch, Symbol("reactive_power_flow"), reactive_power_flow)
-        OpenAPI.validate_property(DiscreteControlledACBranch, Symbol("arc"), arc)
-        OpenAPI.validate_property(DiscreteControlledACBranch, Symbol("r"), r)
-        OpenAPI.validate_property(DiscreteControlledACBranch, Symbol("x"), x)
-        OpenAPI.validate_property(DiscreteControlledACBranch, Symbol("rating"), rating)
-        OpenAPI.validate_property(DiscreteControlledACBranch, Symbol("discrete_branch_type"), discrete_branch_type)
-        OpenAPI.validate_property(DiscreteControlledACBranch, Symbol("branch_status"), branch_status)
-        return new(id, name, available, active_power_flow, reactive_power_flow, arc, r, x, rating, discrete_branch_type, branch_status, )
+        o = new(id, name, available, active_power_flow, reactive_power_flow, arc, r, x, rating, discrete_branch_type, branch_status, )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type DiscreteControlledACBranch
 
 const _property_types_DiscreteControlledACBranch = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("name")=>"String", Symbol("available")=>"Bool", Symbol("active_power_flow")=>"Float64", Symbol("reactive_power_flow")=>"Float64", Symbol("arc")=>"Int64", Symbol("r")=>"Float64", Symbol("x")=>"Float64", Symbol("rating")=>"Float64", Symbol("discrete_branch_type")=>"String", Symbol("branch_status")=>"String", )
 OpenAPI.property_type(::Type{ DiscreteControlledACBranch }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_DiscreteControlledACBranch[name]))}
 
-function check_required(o::DiscreteControlledACBranch)
+function OpenAPI.check_required(o::DiscreteControlledACBranch)
     o.id === nothing && (return false)
     o.name === nothing && (return false)
     o.available === nothing && (return false)
@@ -73,6 +64,20 @@ function check_required(o::DiscreteControlledACBranch)
     o.x === nothing && (return false)
     o.rating === nothing && (return false)
     true
+end
+
+function OpenAPI.validate_properties(o::DiscreteControlledACBranch)
+    OpenAPI.validate_property(DiscreteControlledACBranch, Symbol("id"), o.id)
+    OpenAPI.validate_property(DiscreteControlledACBranch, Symbol("name"), o.name)
+    OpenAPI.validate_property(DiscreteControlledACBranch, Symbol("available"), o.available)
+    OpenAPI.validate_property(DiscreteControlledACBranch, Symbol("active_power_flow"), o.active_power_flow)
+    OpenAPI.validate_property(DiscreteControlledACBranch, Symbol("reactive_power_flow"), o.reactive_power_flow)
+    OpenAPI.validate_property(DiscreteControlledACBranch, Symbol("arc"), o.arc)
+    OpenAPI.validate_property(DiscreteControlledACBranch, Symbol("r"), o.r)
+    OpenAPI.validate_property(DiscreteControlledACBranch, Symbol("x"), o.x)
+    OpenAPI.validate_property(DiscreteControlledACBranch, Symbol("rating"), o.rating)
+    OpenAPI.validate_property(DiscreteControlledACBranch, Symbol("discrete_branch_type"), o.discrete_branch_type)
+    OpenAPI.validate_property(DiscreteControlledACBranch, Symbol("branch_status"), o.branch_status)
 end
 
 function OpenAPI.validate_property(::Type{ DiscreteControlledACBranch }, name::Symbol, val)

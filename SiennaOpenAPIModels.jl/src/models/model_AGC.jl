@@ -41,24 +41,16 @@ Base.@kwdef mutable struct AGC <: OpenAPI.APIModel
     initial_ace::Union{Nothing, Float64} = 0.0
 
     function AGC(id, name, available, bias, K_p, K_i, K_d, delta_t, area, initial_ace, )
-        OpenAPI.validate_property(AGC, Symbol("id"), id)
-        OpenAPI.validate_property(AGC, Symbol("name"), name)
-        OpenAPI.validate_property(AGC, Symbol("available"), available)
-        OpenAPI.validate_property(AGC, Symbol("bias"), bias)
-        OpenAPI.validate_property(AGC, Symbol("K_p"), K_p)
-        OpenAPI.validate_property(AGC, Symbol("K_i"), K_i)
-        OpenAPI.validate_property(AGC, Symbol("K_d"), K_d)
-        OpenAPI.validate_property(AGC, Symbol("delta_t"), delta_t)
-        OpenAPI.validate_property(AGC, Symbol("area"), area)
-        OpenAPI.validate_property(AGC, Symbol("initial_ace"), initial_ace)
-        return new(id, name, available, bias, K_p, K_i, K_d, delta_t, area, initial_ace, )
+        o = new(id, name, available, bias, K_p, K_i, K_d, delta_t, area, initial_ace, )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type AGC
 
 const _property_types_AGC = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("name")=>"String", Symbol("available")=>"Bool", Symbol("bias")=>"Float64", Symbol("K_p")=>"Float64", Symbol("K_i")=>"Float64", Symbol("K_d")=>"Float64", Symbol("delta_t")=>"Float64", Symbol("area")=>"Int64", Symbol("initial_ace")=>"Float64", )
 OpenAPI.property_type(::Type{ AGC }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_AGC[name]))}
 
-function check_required(o::AGC)
+function OpenAPI.check_required(o::AGC)
     o.id === nothing && (return false)
     o.name === nothing && (return false)
     o.available === nothing && (return false)
@@ -68,6 +60,19 @@ function check_required(o::AGC)
     o.K_d === nothing && (return false)
     o.delta_t === nothing && (return false)
     true
+end
+
+function OpenAPI.validate_properties(o::AGC)
+    OpenAPI.validate_property(AGC, Symbol("id"), o.id)
+    OpenAPI.validate_property(AGC, Symbol("name"), o.name)
+    OpenAPI.validate_property(AGC, Symbol("available"), o.available)
+    OpenAPI.validate_property(AGC, Symbol("bias"), o.bias)
+    OpenAPI.validate_property(AGC, Symbol("K_p"), o.K_p)
+    OpenAPI.validate_property(AGC, Symbol("K_i"), o.K_i)
+    OpenAPI.validate_property(AGC, Symbol("K_d"), o.K_d)
+    OpenAPI.validate_property(AGC, Symbol("delta_t"), o.delta_t)
+    OpenAPI.validate_property(AGC, Symbol("area"), o.area)
+    OpenAPI.validate_property(AGC, Symbol("initial_ace"), o.initial_ace)
 end
 
 function OpenAPI.validate_property(::Type{ AGC }, name::Symbol, val)

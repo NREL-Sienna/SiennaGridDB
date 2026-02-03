@@ -32,25 +32,30 @@ Base.@kwdef mutable struct MaximumCapacityRequirements <: OpenAPI.APIModel
     max_capacity_mw::Union{Nothing, Float64} = nothing
 
     function MaximumCapacityRequirements(name, uuid, id, available, target_year, eligible_resources, max_capacity_mw, )
-        OpenAPI.validate_property(MaximumCapacityRequirements, Symbol("name"), name)
-        OpenAPI.validate_property(MaximumCapacityRequirements, Symbol("uuid"), uuid)
-        OpenAPI.validate_property(MaximumCapacityRequirements, Symbol("id"), id)
-        OpenAPI.validate_property(MaximumCapacityRequirements, Symbol("available"), available)
-        OpenAPI.validate_property(MaximumCapacityRequirements, Symbol("target_year"), target_year)
-        OpenAPI.validate_property(MaximumCapacityRequirements, Symbol("eligible_resources"), eligible_resources)
-        OpenAPI.validate_property(MaximumCapacityRequirements, Symbol("max_capacity_mw"), max_capacity_mw)
-        return new(name, uuid, id, available, target_year, eligible_resources, max_capacity_mw, )
+        o = new(name, uuid, id, available, target_year, eligible_resources, max_capacity_mw, )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type MaximumCapacityRequirements
 
 const _property_types_MaximumCapacityRequirements = Dict{Symbol,String}(Symbol("name")=>"String", Symbol("uuid")=>"String", Symbol("id")=>"Int64", Symbol("available")=>"Bool", Symbol("target_year")=>"Int64", Symbol("eligible_resources")=>"Vector{Int64}", Symbol("max_capacity_mw")=>"Float64", )
 OpenAPI.property_type(::Type{ MaximumCapacityRequirements }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_MaximumCapacityRequirements[name]))}
 
-function check_required(o::MaximumCapacityRequirements)
+function OpenAPI.check_required(o::MaximumCapacityRequirements)
     o.name === nothing && (return false)
     o.available === nothing && (return false)
     o.eligible_resources === nothing && (return false)
     true
+end
+
+function OpenAPI.validate_properties(o::MaximumCapacityRequirements)
+    OpenAPI.validate_property(MaximumCapacityRequirements, Symbol("name"), o.name)
+    OpenAPI.validate_property(MaximumCapacityRequirements, Symbol("uuid"), o.uuid)
+    OpenAPI.validate_property(MaximumCapacityRequirements, Symbol("id"), o.id)
+    OpenAPI.validate_property(MaximumCapacityRequirements, Symbol("available"), o.available)
+    OpenAPI.validate_property(MaximumCapacityRequirements, Symbol("target_year"), o.target_year)
+    OpenAPI.validate_property(MaximumCapacityRequirements, Symbol("eligible_resources"), o.eligible_resources)
+    OpenAPI.validate_property(MaximumCapacityRequirements, Symbol("max_capacity_mw"), o.max_capacity_mw)
 end
 
 function OpenAPI.validate_property(::Type{ MaximumCapacityRequirements }, name::Symbol, val)

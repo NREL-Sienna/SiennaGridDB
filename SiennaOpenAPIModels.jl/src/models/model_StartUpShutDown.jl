@@ -17,17 +17,22 @@ Base.@kwdef mutable struct StartUpShutDown <: OpenAPI.APIModel
     shutdown::Union{Nothing, Float64} = nothing
 
     function StartUpShutDown(startup, shutdown, )
-        OpenAPI.validate_property(StartUpShutDown, Symbol("startup"), startup)
-        OpenAPI.validate_property(StartUpShutDown, Symbol("shutdown"), shutdown)
-        return new(startup, shutdown, )
+        o = new(startup, shutdown, )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type StartUpShutDown
 
 const _property_types_StartUpShutDown = Dict{Symbol,String}(Symbol("startup")=>"Float64", Symbol("shutdown")=>"Float64", )
 OpenAPI.property_type(::Type{ StartUpShutDown }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_StartUpShutDown[name]))}
 
-function check_required(o::StartUpShutDown)
+function OpenAPI.check_required(o::StartUpShutDown)
     true
+end
+
+function OpenAPI.validate_properties(o::StartUpShutDown)
+    OpenAPI.validate_property(StartUpShutDown, Symbol("startup"), o.startup)
+    OpenAPI.validate_property(StartUpShutDown, Symbol("shutdown"), o.shutdown)
 end
 
 function OpenAPI.validate_property(::Type{ StartUpShutDown }, name::Symbol, val)

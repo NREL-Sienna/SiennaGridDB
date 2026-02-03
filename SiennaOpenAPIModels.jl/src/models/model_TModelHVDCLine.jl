@@ -41,24 +41,16 @@ Base.@kwdef mutable struct TModelHVDCLine <: OpenAPI.APIModel
     active_power_limits_to = nothing # spec type: Union{ Nothing, MinMax }
 
     function TModelHVDCLine(id, name, available, active_power_flow, arc, r, l, c, active_power_limits_from, active_power_limits_to, )
-        OpenAPI.validate_property(TModelHVDCLine, Symbol("id"), id)
-        OpenAPI.validate_property(TModelHVDCLine, Symbol("name"), name)
-        OpenAPI.validate_property(TModelHVDCLine, Symbol("available"), available)
-        OpenAPI.validate_property(TModelHVDCLine, Symbol("active_power_flow"), active_power_flow)
-        OpenAPI.validate_property(TModelHVDCLine, Symbol("arc"), arc)
-        OpenAPI.validate_property(TModelHVDCLine, Symbol("r"), r)
-        OpenAPI.validate_property(TModelHVDCLine, Symbol("l"), l)
-        OpenAPI.validate_property(TModelHVDCLine, Symbol("c"), c)
-        OpenAPI.validate_property(TModelHVDCLine, Symbol("active_power_limits_from"), active_power_limits_from)
-        OpenAPI.validate_property(TModelHVDCLine, Symbol("active_power_limits_to"), active_power_limits_to)
-        return new(id, name, available, active_power_flow, arc, r, l, c, active_power_limits_from, active_power_limits_to, )
+        o = new(id, name, available, active_power_flow, arc, r, l, c, active_power_limits_from, active_power_limits_to, )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type TModelHVDCLine
 
 const _property_types_TModelHVDCLine = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("name")=>"String", Symbol("available")=>"Bool", Symbol("active_power_flow")=>"Float64", Symbol("arc")=>"Int64", Symbol("r")=>"Float64", Symbol("l")=>"Float64", Symbol("c")=>"Float64", Symbol("active_power_limits_from")=>"MinMax", Symbol("active_power_limits_to")=>"MinMax", )
 OpenAPI.property_type(::Type{ TModelHVDCLine }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_TModelHVDCLine[name]))}
 
-function check_required(o::TModelHVDCLine)
+function OpenAPI.check_required(o::TModelHVDCLine)
     o.id === nothing && (return false)
     o.name === nothing && (return false)
     o.available === nothing && (return false)
@@ -70,6 +62,19 @@ function check_required(o::TModelHVDCLine)
     o.active_power_limits_from === nothing && (return false)
     o.active_power_limits_to === nothing && (return false)
     true
+end
+
+function OpenAPI.validate_properties(o::TModelHVDCLine)
+    OpenAPI.validate_property(TModelHVDCLine, Symbol("id"), o.id)
+    OpenAPI.validate_property(TModelHVDCLine, Symbol("name"), o.name)
+    OpenAPI.validate_property(TModelHVDCLine, Symbol("available"), o.available)
+    OpenAPI.validate_property(TModelHVDCLine, Symbol("active_power_flow"), o.active_power_flow)
+    OpenAPI.validate_property(TModelHVDCLine, Symbol("arc"), o.arc)
+    OpenAPI.validate_property(TModelHVDCLine, Symbol("r"), o.r)
+    OpenAPI.validate_property(TModelHVDCLine, Symbol("l"), o.l)
+    OpenAPI.validate_property(TModelHVDCLine, Symbol("c"), o.c)
+    OpenAPI.validate_property(TModelHVDCLine, Symbol("active_power_limits_from"), o.active_power_limits_from)
+    OpenAPI.validate_property(TModelHVDCLine, Symbol("active_power_limits_to"), o.active_power_limits_to)
 end
 
 function OpenAPI.validate_property(::Type{ TModelHVDCLine }, name::Symbol, val)

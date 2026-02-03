@@ -41,24 +41,16 @@ Base.@kwdef mutable struct TwoTerminalGenericHVDCLine <: OpenAPI.APIModel
     loss = nothing # spec type: Union{ Nothing, TwoTerminalLoss }
 
     function TwoTerminalGenericHVDCLine(id, name, available, active_power_flow, arc, active_power_limits_from, active_power_limits_to, reactive_power_limits_from, reactive_power_limits_to, loss, )
-        OpenAPI.validate_property(TwoTerminalGenericHVDCLine, Symbol("id"), id)
-        OpenAPI.validate_property(TwoTerminalGenericHVDCLine, Symbol("name"), name)
-        OpenAPI.validate_property(TwoTerminalGenericHVDCLine, Symbol("available"), available)
-        OpenAPI.validate_property(TwoTerminalGenericHVDCLine, Symbol("active_power_flow"), active_power_flow)
-        OpenAPI.validate_property(TwoTerminalGenericHVDCLine, Symbol("arc"), arc)
-        OpenAPI.validate_property(TwoTerminalGenericHVDCLine, Symbol("active_power_limits_from"), active_power_limits_from)
-        OpenAPI.validate_property(TwoTerminalGenericHVDCLine, Symbol("active_power_limits_to"), active_power_limits_to)
-        OpenAPI.validate_property(TwoTerminalGenericHVDCLine, Symbol("reactive_power_limits_from"), reactive_power_limits_from)
-        OpenAPI.validate_property(TwoTerminalGenericHVDCLine, Symbol("reactive_power_limits_to"), reactive_power_limits_to)
-        OpenAPI.validate_property(TwoTerminalGenericHVDCLine, Symbol("loss"), loss)
-        return new(id, name, available, active_power_flow, arc, active_power_limits_from, active_power_limits_to, reactive_power_limits_from, reactive_power_limits_to, loss, )
+        o = new(id, name, available, active_power_flow, arc, active_power_limits_from, active_power_limits_to, reactive_power_limits_from, reactive_power_limits_to, loss, )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type TwoTerminalGenericHVDCLine
 
 const _property_types_TwoTerminalGenericHVDCLine = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("name")=>"String", Symbol("available")=>"Bool", Symbol("active_power_flow")=>"Float64", Symbol("arc")=>"Int64", Symbol("active_power_limits_from")=>"MinMax", Symbol("active_power_limits_to")=>"MinMax", Symbol("reactive_power_limits_from")=>"MinMax", Symbol("reactive_power_limits_to")=>"MinMax", Symbol("loss")=>"TwoTerminalLoss", )
 OpenAPI.property_type(::Type{ TwoTerminalGenericHVDCLine }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_TwoTerminalGenericHVDCLine[name]))}
 
-function check_required(o::TwoTerminalGenericHVDCLine)
+function OpenAPI.check_required(o::TwoTerminalGenericHVDCLine)
     o.id === nothing && (return false)
     o.name === nothing && (return false)
     o.available === nothing && (return false)
@@ -69,6 +61,19 @@ function check_required(o::TwoTerminalGenericHVDCLine)
     o.reactive_power_limits_from === nothing && (return false)
     o.reactive_power_limits_to === nothing && (return false)
     true
+end
+
+function OpenAPI.validate_properties(o::TwoTerminalGenericHVDCLine)
+    OpenAPI.validate_property(TwoTerminalGenericHVDCLine, Symbol("id"), o.id)
+    OpenAPI.validate_property(TwoTerminalGenericHVDCLine, Symbol("name"), o.name)
+    OpenAPI.validate_property(TwoTerminalGenericHVDCLine, Symbol("available"), o.available)
+    OpenAPI.validate_property(TwoTerminalGenericHVDCLine, Symbol("active_power_flow"), o.active_power_flow)
+    OpenAPI.validate_property(TwoTerminalGenericHVDCLine, Symbol("arc"), o.arc)
+    OpenAPI.validate_property(TwoTerminalGenericHVDCLine, Symbol("active_power_limits_from"), o.active_power_limits_from)
+    OpenAPI.validate_property(TwoTerminalGenericHVDCLine, Symbol("active_power_limits_to"), o.active_power_limits_to)
+    OpenAPI.validate_property(TwoTerminalGenericHVDCLine, Symbol("reactive_power_limits_from"), o.reactive_power_limits_from)
+    OpenAPI.validate_property(TwoTerminalGenericHVDCLine, Symbol("reactive_power_limits_to"), o.reactive_power_limits_to)
+    OpenAPI.validate_property(TwoTerminalGenericHVDCLine, Symbol("loss"), o.loss)
 end
 
 function OpenAPI.validate_property(::Type{ TwoTerminalGenericHVDCLine }, name::Symbol, val)

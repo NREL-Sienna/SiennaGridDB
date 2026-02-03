@@ -103,7 +103,7 @@
     - rating_primary::Float64
     - rating_secondary::Float64
     - rating_tertiary::Float64
-    - phase_angle_limits::MinMax1
+    - phase_angle_limits::MinMax
     - control_objective_primary::String
     - control_objective_secondary::String
     - control_objective_tertiary::String
@@ -155,70 +155,22 @@ Base.@kwdef mutable struct PhaseShiftingTransformer3W <: OpenAPI.APIModel
     rating_primary::Union{Nothing, Float64} = 0.0
     rating_secondary::Union{Nothing, Float64} = 0.0
     rating_tertiary::Union{Nothing, Float64} = 0.0
-    phase_angle_limits = nothing # spec type: Union{ Nothing, MinMax1 }
+    phase_angle_limits = nothing # spec type: Union{ Nothing, MinMax }
     control_objective_primary::Union{Nothing, String} = "UNDEFINED"
     control_objective_secondary::Union{Nothing, String} = "UNDEFINED"
     control_objective_tertiary::Union{Nothing, String} = "UNDEFINED"
 
     function PhaseShiftingTransformer3W(id, name, available, primary_star_arc, secondary_star_arc, tertiary_star_arc, star_bus, active_power_flow_primary, reactive_power_flow_primary, active_power_flow_secondary, reactive_power_flow_secondary, active_power_flow_tertiary, reactive_power_flow_tertiary, r_primary, x_primary, r_secondary, x_secondary, r_tertiary, x_tertiary, rating, r_12, x_12, r_23, x_23, r_13, x_13, alpha_primary, alpha_secondary, alpha_tertiary, base_power_12, base_power_23, base_power_13, base_voltage_primary, base_voltage_secondary, base_voltage_tertiary, g, b, primary_turns_ratio, secondary_turns_ratio, tertiary_turns_ratio, available_primary, available_secondary, available_tertiary, rating_primary, rating_secondary, rating_tertiary, phase_angle_limits, control_objective_primary, control_objective_secondary, control_objective_tertiary, )
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("id"), id)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("name"), name)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("available"), available)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("primary_star_arc"), primary_star_arc)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("secondary_star_arc"), secondary_star_arc)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("tertiary_star_arc"), tertiary_star_arc)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("star_bus"), star_bus)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("active_power_flow_primary"), active_power_flow_primary)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("reactive_power_flow_primary"), reactive_power_flow_primary)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("active_power_flow_secondary"), active_power_flow_secondary)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("reactive_power_flow_secondary"), reactive_power_flow_secondary)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("active_power_flow_tertiary"), active_power_flow_tertiary)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("reactive_power_flow_tertiary"), reactive_power_flow_tertiary)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("r_primary"), r_primary)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("x_primary"), x_primary)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("r_secondary"), r_secondary)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("x_secondary"), x_secondary)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("r_tertiary"), r_tertiary)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("x_tertiary"), x_tertiary)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("rating"), rating)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("r_12"), r_12)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("x_12"), x_12)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("r_23"), r_23)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("x_23"), x_23)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("r_13"), r_13)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("x_13"), x_13)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("alpha_primary"), alpha_primary)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("alpha_secondary"), alpha_secondary)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("alpha_tertiary"), alpha_tertiary)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("base_power_12"), base_power_12)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("base_power_23"), base_power_23)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("base_power_13"), base_power_13)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("base_voltage_primary"), base_voltage_primary)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("base_voltage_secondary"), base_voltage_secondary)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("base_voltage_tertiary"), base_voltage_tertiary)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("g"), g)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("b"), b)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("primary_turns_ratio"), primary_turns_ratio)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("secondary_turns_ratio"), secondary_turns_ratio)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("tertiary_turns_ratio"), tertiary_turns_ratio)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("available_primary"), available_primary)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("available_secondary"), available_secondary)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("available_tertiary"), available_tertiary)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("rating_primary"), rating_primary)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("rating_secondary"), rating_secondary)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("rating_tertiary"), rating_tertiary)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("phase_angle_limits"), phase_angle_limits)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("control_objective_primary"), control_objective_primary)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("control_objective_secondary"), control_objective_secondary)
-        OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("control_objective_tertiary"), control_objective_tertiary)
-        return new(id, name, available, primary_star_arc, secondary_star_arc, tertiary_star_arc, star_bus, active_power_flow_primary, reactive_power_flow_primary, active_power_flow_secondary, reactive_power_flow_secondary, active_power_flow_tertiary, reactive_power_flow_tertiary, r_primary, x_primary, r_secondary, x_secondary, r_tertiary, x_tertiary, rating, r_12, x_12, r_23, x_23, r_13, x_13, alpha_primary, alpha_secondary, alpha_tertiary, base_power_12, base_power_23, base_power_13, base_voltage_primary, base_voltage_secondary, base_voltage_tertiary, g, b, primary_turns_ratio, secondary_turns_ratio, tertiary_turns_ratio, available_primary, available_secondary, available_tertiary, rating_primary, rating_secondary, rating_tertiary, phase_angle_limits, control_objective_primary, control_objective_secondary, control_objective_tertiary, )
+        o = new(id, name, available, primary_star_arc, secondary_star_arc, tertiary_star_arc, star_bus, active_power_flow_primary, reactive_power_flow_primary, active_power_flow_secondary, reactive_power_flow_secondary, active_power_flow_tertiary, reactive_power_flow_tertiary, r_primary, x_primary, r_secondary, x_secondary, r_tertiary, x_tertiary, rating, r_12, x_12, r_23, x_23, r_13, x_13, alpha_primary, alpha_secondary, alpha_tertiary, base_power_12, base_power_23, base_power_13, base_voltage_primary, base_voltage_secondary, base_voltage_tertiary, g, b, primary_turns_ratio, secondary_turns_ratio, tertiary_turns_ratio, available_primary, available_secondary, available_tertiary, rating_primary, rating_secondary, rating_tertiary, phase_angle_limits, control_objective_primary, control_objective_secondary, control_objective_tertiary, )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type PhaseShiftingTransformer3W
 
-const _property_types_PhaseShiftingTransformer3W = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("name")=>"String", Symbol("available")=>"Bool", Symbol("primary_star_arc")=>"Int64", Symbol("secondary_star_arc")=>"Int64", Symbol("tertiary_star_arc")=>"Int64", Symbol("star_bus")=>"Int64", Symbol("active_power_flow_primary")=>"Float64", Symbol("reactive_power_flow_primary")=>"Float64", Symbol("active_power_flow_secondary")=>"Float64", Symbol("reactive_power_flow_secondary")=>"Float64", Symbol("active_power_flow_tertiary")=>"Float64", Symbol("reactive_power_flow_tertiary")=>"Float64", Symbol("r_primary")=>"Float64", Symbol("x_primary")=>"Float64", Symbol("r_secondary")=>"Float64", Symbol("x_secondary")=>"Float64", Symbol("r_tertiary")=>"Float64", Symbol("x_tertiary")=>"Float64", Symbol("rating")=>"Float64", Symbol("r_12")=>"Float64", Symbol("x_12")=>"Float64", Symbol("r_23")=>"Float64", Symbol("x_23")=>"Float64", Symbol("r_13")=>"Float64", Symbol("x_13")=>"Float64", Symbol("alpha_primary")=>"Float64", Symbol("alpha_secondary")=>"Float64", Symbol("alpha_tertiary")=>"Float64", Symbol("base_power_12")=>"Float64", Symbol("base_power_23")=>"Float64", Symbol("base_power_13")=>"Float64", Symbol("base_voltage_primary")=>"Float64", Symbol("base_voltage_secondary")=>"Float64", Symbol("base_voltage_tertiary")=>"Float64", Symbol("g")=>"Float64", Symbol("b")=>"Float64", Symbol("primary_turns_ratio")=>"Float64", Symbol("secondary_turns_ratio")=>"Float64", Symbol("tertiary_turns_ratio")=>"Float64", Symbol("available_primary")=>"Bool", Symbol("available_secondary")=>"Bool", Symbol("available_tertiary")=>"Bool", Symbol("rating_primary")=>"Float64", Symbol("rating_secondary")=>"Float64", Symbol("rating_tertiary")=>"Float64", Symbol("phase_angle_limits")=>"MinMax1", Symbol("control_objective_primary")=>"String", Symbol("control_objective_secondary")=>"String", Symbol("control_objective_tertiary")=>"String", )
+const _property_types_PhaseShiftingTransformer3W = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("name")=>"String", Symbol("available")=>"Bool", Symbol("primary_star_arc")=>"Int64", Symbol("secondary_star_arc")=>"Int64", Symbol("tertiary_star_arc")=>"Int64", Symbol("star_bus")=>"Int64", Symbol("active_power_flow_primary")=>"Float64", Symbol("reactive_power_flow_primary")=>"Float64", Symbol("active_power_flow_secondary")=>"Float64", Symbol("reactive_power_flow_secondary")=>"Float64", Symbol("active_power_flow_tertiary")=>"Float64", Symbol("reactive_power_flow_tertiary")=>"Float64", Symbol("r_primary")=>"Float64", Symbol("x_primary")=>"Float64", Symbol("r_secondary")=>"Float64", Symbol("x_secondary")=>"Float64", Symbol("r_tertiary")=>"Float64", Symbol("x_tertiary")=>"Float64", Symbol("rating")=>"Float64", Symbol("r_12")=>"Float64", Symbol("x_12")=>"Float64", Symbol("r_23")=>"Float64", Symbol("x_23")=>"Float64", Symbol("r_13")=>"Float64", Symbol("x_13")=>"Float64", Symbol("alpha_primary")=>"Float64", Symbol("alpha_secondary")=>"Float64", Symbol("alpha_tertiary")=>"Float64", Symbol("base_power_12")=>"Float64", Symbol("base_power_23")=>"Float64", Symbol("base_power_13")=>"Float64", Symbol("base_voltage_primary")=>"Float64", Symbol("base_voltage_secondary")=>"Float64", Symbol("base_voltage_tertiary")=>"Float64", Symbol("g")=>"Float64", Symbol("b")=>"Float64", Symbol("primary_turns_ratio")=>"Float64", Symbol("secondary_turns_ratio")=>"Float64", Symbol("tertiary_turns_ratio")=>"Float64", Symbol("available_primary")=>"Bool", Symbol("available_secondary")=>"Bool", Symbol("available_tertiary")=>"Bool", Symbol("rating_primary")=>"Float64", Symbol("rating_secondary")=>"Float64", Symbol("rating_tertiary")=>"Float64", Symbol("phase_angle_limits")=>"MinMax", Symbol("control_objective_primary")=>"String", Symbol("control_objective_secondary")=>"String", Symbol("control_objective_tertiary")=>"String", )
 OpenAPI.property_type(::Type{ PhaseShiftingTransformer3W }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_PhaseShiftingTransformer3W[name]))}
 
-function check_required(o::PhaseShiftingTransformer3W)
+function OpenAPI.check_required(o::PhaseShiftingTransformer3W)
     o.id === nothing && (return false)
     o.name === nothing && (return false)
     o.available === nothing && (return false)
@@ -251,6 +203,59 @@ function check_required(o::PhaseShiftingTransformer3W)
     o.base_power_23 === nothing && (return false)
     o.base_power_13 === nothing && (return false)
     true
+end
+
+function OpenAPI.validate_properties(o::PhaseShiftingTransformer3W)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("id"), o.id)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("name"), o.name)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("available"), o.available)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("primary_star_arc"), o.primary_star_arc)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("secondary_star_arc"), o.secondary_star_arc)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("tertiary_star_arc"), o.tertiary_star_arc)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("star_bus"), o.star_bus)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("active_power_flow_primary"), o.active_power_flow_primary)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("reactive_power_flow_primary"), o.reactive_power_flow_primary)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("active_power_flow_secondary"), o.active_power_flow_secondary)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("reactive_power_flow_secondary"), o.reactive_power_flow_secondary)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("active_power_flow_tertiary"), o.active_power_flow_tertiary)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("reactive_power_flow_tertiary"), o.reactive_power_flow_tertiary)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("r_primary"), o.r_primary)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("x_primary"), o.x_primary)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("r_secondary"), o.r_secondary)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("x_secondary"), o.x_secondary)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("r_tertiary"), o.r_tertiary)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("x_tertiary"), o.x_tertiary)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("rating"), o.rating)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("r_12"), o.r_12)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("x_12"), o.x_12)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("r_23"), o.r_23)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("x_23"), o.x_23)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("r_13"), o.r_13)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("x_13"), o.x_13)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("alpha_primary"), o.alpha_primary)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("alpha_secondary"), o.alpha_secondary)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("alpha_tertiary"), o.alpha_tertiary)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("base_power_12"), o.base_power_12)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("base_power_23"), o.base_power_23)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("base_power_13"), o.base_power_13)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("base_voltage_primary"), o.base_voltage_primary)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("base_voltage_secondary"), o.base_voltage_secondary)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("base_voltage_tertiary"), o.base_voltage_tertiary)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("g"), o.g)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("b"), o.b)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("primary_turns_ratio"), o.primary_turns_ratio)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("secondary_turns_ratio"), o.secondary_turns_ratio)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("tertiary_turns_ratio"), o.tertiary_turns_ratio)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("available_primary"), o.available_primary)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("available_secondary"), o.available_secondary)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("available_tertiary"), o.available_tertiary)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("rating_primary"), o.rating_primary)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("rating_secondary"), o.rating_secondary)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("rating_tertiary"), o.rating_tertiary)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("phase_angle_limits"), o.phase_angle_limits)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("control_objective_primary"), o.control_objective_primary)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("control_objective_secondary"), o.control_objective_secondary)
+    OpenAPI.validate_property(PhaseShiftingTransformer3W, Symbol("control_objective_tertiary"), o.control_objective_tertiary)
 end
 
 function OpenAPI.validate_property(::Type{ PhaseShiftingTransformer3W }, name::Symbol, val)

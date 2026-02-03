@@ -76,14 +76,14 @@
     - rectifier_capacitor_reactance::Float64
     - inverter_transformer_ratio::Float64
     - inverter_tap_setting::Float64
-    - inverter_tap_limits::MinMax2
+    - inverter_tap_limits::MinMax
     - inverter_tap_step::Float64
     - inverter_extinction_angle::Float64
     - inverter_capacitor_reactance::Float64
-    - active_power_limits_from::MinMax3
-    - active_power_limits_to::MinMax3
-    - reactive_power_limits_from::MinMax3
-    - reactive_power_limits_to::MinMax3
+    - active_power_limits_from::MinMax
+    - active_power_limits_to::MinMax
+    - reactive_power_limits_from::MinMax
+    - reactive_power_limits_to::MinMax
     - loss::TwoTerminalLoss
 """
 Base.@kwdef mutable struct TwoTerminalLCCLine <: OpenAPI.APIModel
@@ -117,64 +117,27 @@ Base.@kwdef mutable struct TwoTerminalLCCLine <: OpenAPI.APIModel
     rectifier_capacitor_reactance::Union{Nothing, Float64} = 0.0
     inverter_transformer_ratio::Union{Nothing, Float64} = 1.0
     inverter_tap_setting::Union{Nothing, Float64} = 1.0
-    inverter_tap_limits = nothing # spec type: Union{ Nothing, MinMax2 }
+    inverter_tap_limits = nothing # spec type: Union{ Nothing, MinMax }
     inverter_tap_step::Union{Nothing, Float64} = 0.0625
     inverter_extinction_angle::Union{Nothing, Float64} = 0.0
     inverter_capacitor_reactance::Union{Nothing, Float64} = 0.0
-    active_power_limits_from = nothing # spec type: Union{ Nothing, MinMax3 }
-    active_power_limits_to = nothing # spec type: Union{ Nothing, MinMax3 }
-    reactive_power_limits_from = nothing # spec type: Union{ Nothing, MinMax3 }
-    reactive_power_limits_to = nothing # spec type: Union{ Nothing, MinMax3 }
+    active_power_limits_from = nothing # spec type: Union{ Nothing, MinMax }
+    active_power_limits_to = nothing # spec type: Union{ Nothing, MinMax }
+    reactive_power_limits_from = nothing # spec type: Union{ Nothing, MinMax }
+    reactive_power_limits_to = nothing # spec type: Union{ Nothing, MinMax }
     loss = nothing # spec type: Union{ Nothing, TwoTerminalLoss }
 
     function TwoTerminalLCCLine(id, name, available, arc, active_power_flow, r, transfer_setpoint, scheduled_dc_voltage, rectifier_bridges, rectifier_delay_angle_limits, rectifier_rc, rectifier_xc, rectifier_base_voltage, inverter_bridges, inverter_extinction_angle_limits, inverter_rc, inverter_xc, inverter_base_voltage, power_mode, switch_mode_voltage, compounding_resistance, min_compounding_voltage, rectifier_transformer_ratio, rectifier_tap_setting, rectifier_tap_limits, rectifier_tap_step, rectifier_delay_angle, rectifier_capacitor_reactance, inverter_transformer_ratio, inverter_tap_setting, inverter_tap_limits, inverter_tap_step, inverter_extinction_angle, inverter_capacitor_reactance, active_power_limits_from, active_power_limits_to, reactive_power_limits_from, reactive_power_limits_to, loss, )
-        OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("id"), id)
-        OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("name"), name)
-        OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("available"), available)
-        OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("arc"), arc)
-        OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("active_power_flow"), active_power_flow)
-        OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("r"), r)
-        OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("transfer_setpoint"), transfer_setpoint)
-        OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("scheduled_dc_voltage"), scheduled_dc_voltage)
-        OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("rectifier_bridges"), rectifier_bridges)
-        OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("rectifier_delay_angle_limits"), rectifier_delay_angle_limits)
-        OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("rectifier_rc"), rectifier_rc)
-        OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("rectifier_xc"), rectifier_xc)
-        OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("rectifier_base_voltage"), rectifier_base_voltage)
-        OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("inverter_bridges"), inverter_bridges)
-        OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("inverter_extinction_angle_limits"), inverter_extinction_angle_limits)
-        OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("inverter_rc"), inverter_rc)
-        OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("inverter_xc"), inverter_xc)
-        OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("inverter_base_voltage"), inverter_base_voltage)
-        OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("power_mode"), power_mode)
-        OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("switch_mode_voltage"), switch_mode_voltage)
-        OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("compounding_resistance"), compounding_resistance)
-        OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("min_compounding_voltage"), min_compounding_voltage)
-        OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("rectifier_transformer_ratio"), rectifier_transformer_ratio)
-        OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("rectifier_tap_setting"), rectifier_tap_setting)
-        OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("rectifier_tap_limits"), rectifier_tap_limits)
-        OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("rectifier_tap_step"), rectifier_tap_step)
-        OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("rectifier_delay_angle"), rectifier_delay_angle)
-        OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("rectifier_capacitor_reactance"), rectifier_capacitor_reactance)
-        OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("inverter_transformer_ratio"), inverter_transformer_ratio)
-        OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("inverter_tap_setting"), inverter_tap_setting)
-        OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("inverter_tap_limits"), inverter_tap_limits)
-        OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("inverter_tap_step"), inverter_tap_step)
-        OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("inverter_extinction_angle"), inverter_extinction_angle)
-        OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("inverter_capacitor_reactance"), inverter_capacitor_reactance)
-        OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("active_power_limits_from"), active_power_limits_from)
-        OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("active_power_limits_to"), active_power_limits_to)
-        OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("reactive_power_limits_from"), reactive_power_limits_from)
-        OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("reactive_power_limits_to"), reactive_power_limits_to)
-        OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("loss"), loss)
-        return new(id, name, available, arc, active_power_flow, r, transfer_setpoint, scheduled_dc_voltage, rectifier_bridges, rectifier_delay_angle_limits, rectifier_rc, rectifier_xc, rectifier_base_voltage, inverter_bridges, inverter_extinction_angle_limits, inverter_rc, inverter_xc, inverter_base_voltage, power_mode, switch_mode_voltage, compounding_resistance, min_compounding_voltage, rectifier_transformer_ratio, rectifier_tap_setting, rectifier_tap_limits, rectifier_tap_step, rectifier_delay_angle, rectifier_capacitor_reactance, inverter_transformer_ratio, inverter_tap_setting, inverter_tap_limits, inverter_tap_step, inverter_extinction_angle, inverter_capacitor_reactance, active_power_limits_from, active_power_limits_to, reactive_power_limits_from, reactive_power_limits_to, loss, )
+        o = new(id, name, available, arc, active_power_flow, r, transfer_setpoint, scheduled_dc_voltage, rectifier_bridges, rectifier_delay_angle_limits, rectifier_rc, rectifier_xc, rectifier_base_voltage, inverter_bridges, inverter_extinction_angle_limits, inverter_rc, inverter_xc, inverter_base_voltage, power_mode, switch_mode_voltage, compounding_resistance, min_compounding_voltage, rectifier_transformer_ratio, rectifier_tap_setting, rectifier_tap_limits, rectifier_tap_step, rectifier_delay_angle, rectifier_capacitor_reactance, inverter_transformer_ratio, inverter_tap_setting, inverter_tap_limits, inverter_tap_step, inverter_extinction_angle, inverter_capacitor_reactance, active_power_limits_from, active_power_limits_to, reactive_power_limits_from, reactive_power_limits_to, loss, )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type TwoTerminalLCCLine
 
-const _property_types_TwoTerminalLCCLine = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("name")=>"String", Symbol("available")=>"Bool", Symbol("arc")=>"Int64", Symbol("active_power_flow")=>"Float64", Symbol("r")=>"Float64", Symbol("transfer_setpoint")=>"Float64", Symbol("scheduled_dc_voltage")=>"Float64", Symbol("rectifier_bridges")=>"Int64", Symbol("rectifier_delay_angle_limits")=>"MinMax", Symbol("rectifier_rc")=>"Float64", Symbol("rectifier_xc")=>"Float64", Symbol("rectifier_base_voltage")=>"Float64", Symbol("inverter_bridges")=>"Int64", Symbol("inverter_extinction_angle_limits")=>"MinMax", Symbol("inverter_rc")=>"Float64", Symbol("inverter_xc")=>"Float64", Symbol("inverter_base_voltage")=>"Float64", Symbol("power_mode")=>"Bool", Symbol("switch_mode_voltage")=>"Float64", Symbol("compounding_resistance")=>"Float64", Symbol("min_compounding_voltage")=>"Float64", Symbol("rectifier_transformer_ratio")=>"Float64", Symbol("rectifier_tap_setting")=>"Float64", Symbol("rectifier_tap_limits")=>"MinMax", Symbol("rectifier_tap_step")=>"Float64", Symbol("rectifier_delay_angle")=>"Float64", Symbol("rectifier_capacitor_reactance")=>"Float64", Symbol("inverter_transformer_ratio")=>"Float64", Symbol("inverter_tap_setting")=>"Float64", Symbol("inverter_tap_limits")=>"MinMax2", Symbol("inverter_tap_step")=>"Float64", Symbol("inverter_extinction_angle")=>"Float64", Symbol("inverter_capacitor_reactance")=>"Float64", Symbol("active_power_limits_from")=>"MinMax3", Symbol("active_power_limits_to")=>"MinMax3", Symbol("reactive_power_limits_from")=>"MinMax3", Symbol("reactive_power_limits_to")=>"MinMax3", Symbol("loss")=>"TwoTerminalLoss", )
+const _property_types_TwoTerminalLCCLine = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("name")=>"String", Symbol("available")=>"Bool", Symbol("arc")=>"Int64", Symbol("active_power_flow")=>"Float64", Symbol("r")=>"Float64", Symbol("transfer_setpoint")=>"Float64", Symbol("scheduled_dc_voltage")=>"Float64", Symbol("rectifier_bridges")=>"Int64", Symbol("rectifier_delay_angle_limits")=>"MinMax", Symbol("rectifier_rc")=>"Float64", Symbol("rectifier_xc")=>"Float64", Symbol("rectifier_base_voltage")=>"Float64", Symbol("inverter_bridges")=>"Int64", Symbol("inverter_extinction_angle_limits")=>"MinMax", Symbol("inverter_rc")=>"Float64", Symbol("inverter_xc")=>"Float64", Symbol("inverter_base_voltage")=>"Float64", Symbol("power_mode")=>"Bool", Symbol("switch_mode_voltage")=>"Float64", Symbol("compounding_resistance")=>"Float64", Symbol("min_compounding_voltage")=>"Float64", Symbol("rectifier_transformer_ratio")=>"Float64", Symbol("rectifier_tap_setting")=>"Float64", Symbol("rectifier_tap_limits")=>"MinMax", Symbol("rectifier_tap_step")=>"Float64", Symbol("rectifier_delay_angle")=>"Float64", Symbol("rectifier_capacitor_reactance")=>"Float64", Symbol("inverter_transformer_ratio")=>"Float64", Symbol("inverter_tap_setting")=>"Float64", Symbol("inverter_tap_limits")=>"MinMax", Symbol("inverter_tap_step")=>"Float64", Symbol("inverter_extinction_angle")=>"Float64", Symbol("inverter_capacitor_reactance")=>"Float64", Symbol("active_power_limits_from")=>"MinMax", Symbol("active_power_limits_to")=>"MinMax", Symbol("reactive_power_limits_from")=>"MinMax", Symbol("reactive_power_limits_to")=>"MinMax", Symbol("loss")=>"TwoTerminalLoss", )
 OpenAPI.property_type(::Type{ TwoTerminalLCCLine }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_TwoTerminalLCCLine[name]))}
 
-function check_required(o::TwoTerminalLCCLine)
+function OpenAPI.check_required(o::TwoTerminalLCCLine)
     o.id === nothing && (return false)
     o.name === nothing && (return false)
     o.available === nothing && (return false)
@@ -194,6 +157,48 @@ function check_required(o::TwoTerminalLCCLine)
     o.inverter_xc === nothing && (return false)
     o.inverter_base_voltage === nothing && (return false)
     true
+end
+
+function OpenAPI.validate_properties(o::TwoTerminalLCCLine)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("id"), o.id)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("name"), o.name)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("available"), o.available)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("arc"), o.arc)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("active_power_flow"), o.active_power_flow)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("r"), o.r)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("transfer_setpoint"), o.transfer_setpoint)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("scheduled_dc_voltage"), o.scheduled_dc_voltage)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("rectifier_bridges"), o.rectifier_bridges)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("rectifier_delay_angle_limits"), o.rectifier_delay_angle_limits)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("rectifier_rc"), o.rectifier_rc)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("rectifier_xc"), o.rectifier_xc)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("rectifier_base_voltage"), o.rectifier_base_voltage)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("inverter_bridges"), o.inverter_bridges)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("inverter_extinction_angle_limits"), o.inverter_extinction_angle_limits)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("inverter_rc"), o.inverter_rc)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("inverter_xc"), o.inverter_xc)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("inverter_base_voltage"), o.inverter_base_voltage)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("power_mode"), o.power_mode)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("switch_mode_voltage"), o.switch_mode_voltage)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("compounding_resistance"), o.compounding_resistance)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("min_compounding_voltage"), o.min_compounding_voltage)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("rectifier_transformer_ratio"), o.rectifier_transformer_ratio)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("rectifier_tap_setting"), o.rectifier_tap_setting)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("rectifier_tap_limits"), o.rectifier_tap_limits)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("rectifier_tap_step"), o.rectifier_tap_step)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("rectifier_delay_angle"), o.rectifier_delay_angle)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("rectifier_capacitor_reactance"), o.rectifier_capacitor_reactance)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("inverter_transformer_ratio"), o.inverter_transformer_ratio)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("inverter_tap_setting"), o.inverter_tap_setting)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("inverter_tap_limits"), o.inverter_tap_limits)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("inverter_tap_step"), o.inverter_tap_step)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("inverter_extinction_angle"), o.inverter_extinction_angle)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("inverter_capacitor_reactance"), o.inverter_capacitor_reactance)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("active_power_limits_from"), o.active_power_limits_from)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("active_power_limits_to"), o.active_power_limits_to)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("reactive_power_limits_from"), o.reactive_power_limits_from)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("reactive_power_limits_to"), o.reactive_power_limits_to)
+    OpenAPI.validate_property(TwoTerminalLCCLine, Symbol("loss"), o.loss)
 end
 
 function OpenAPI.validate_property(::Type{ TwoTerminalLCCLine }, name::Symbol, val)

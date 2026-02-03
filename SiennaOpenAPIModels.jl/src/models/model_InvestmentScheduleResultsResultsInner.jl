@@ -23,19 +23,24 @@ Base.@kwdef mutable struct InvestmentScheduleResultsResultsInner <: OpenAPI.APIM
     installations::Union{Nothing, Any} = nothing
 
     function InvestmentScheduleResultsResultsInner(technology, parameter, name, installations, )
-        OpenAPI.validate_property(InvestmentScheduleResultsResultsInner, Symbol("technology"), technology)
-        OpenAPI.validate_property(InvestmentScheduleResultsResultsInner, Symbol("parameter"), parameter)
-        OpenAPI.validate_property(InvestmentScheduleResultsResultsInner, Symbol("name"), name)
-        OpenAPI.validate_property(InvestmentScheduleResultsResultsInner, Symbol("installations"), installations)
-        return new(technology, parameter, name, installations, )
+        o = new(technology, parameter, name, installations, )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type InvestmentScheduleResultsResultsInner
 
 const _property_types_InvestmentScheduleResultsResultsInner = Dict{Symbol,String}(Symbol("technology")=>"String", Symbol("parameter")=>"String", Symbol("name")=>"String", Symbol("installations")=>"Any", )
 OpenAPI.property_type(::Type{ InvestmentScheduleResultsResultsInner }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_InvestmentScheduleResultsResultsInner[name]))}
 
-function check_required(o::InvestmentScheduleResultsResultsInner)
+function OpenAPI.check_required(o::InvestmentScheduleResultsResultsInner)
     true
+end
+
+function OpenAPI.validate_properties(o::InvestmentScheduleResultsResultsInner)
+    OpenAPI.validate_property(InvestmentScheduleResultsResultsInner, Symbol("technology"), o.technology)
+    OpenAPI.validate_property(InvestmentScheduleResultsResultsInner, Symbol("parameter"), o.parameter)
+    OpenAPI.validate_property(InvestmentScheduleResultsResultsInner, Symbol("name"), o.name)
+    OpenAPI.validate_property(InvestmentScheduleResultsResultsInner, Symbol("installations"), o.installations)
 end
 
 function OpenAPI.validate_property(::Type{ InvestmentScheduleResultsResultsInner }, name::Symbol, val)

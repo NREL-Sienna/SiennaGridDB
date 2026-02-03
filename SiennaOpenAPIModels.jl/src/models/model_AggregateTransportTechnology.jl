@@ -47,29 +47,34 @@ Base.@kwdef mutable struct AggregateTransportTechnology <: OpenAPI.APIModel
     financial_data = nothing # spec type: Union{ Nothing, TechnologyFinancialData }
 
     function AggregateTransportTechnology(name, uuid, id, available, power_systems_type, start_region, end_region, capacity_limits, capital_costs, line_loss, unit_size, financial_data, )
-        OpenAPI.validate_property(AggregateTransportTechnology, Symbol("name"), name)
-        OpenAPI.validate_property(AggregateTransportTechnology, Symbol("uuid"), uuid)
-        OpenAPI.validate_property(AggregateTransportTechnology, Symbol("id"), id)
-        OpenAPI.validate_property(AggregateTransportTechnology, Symbol("available"), available)
-        OpenAPI.validate_property(AggregateTransportTechnology, Symbol("power_systems_type"), power_systems_type)
-        OpenAPI.validate_property(AggregateTransportTechnology, Symbol("start_region"), start_region)
-        OpenAPI.validate_property(AggregateTransportTechnology, Symbol("end_region"), end_region)
-        OpenAPI.validate_property(AggregateTransportTechnology, Symbol("capacity_limits"), capacity_limits)
-        OpenAPI.validate_property(AggregateTransportTechnology, Symbol("capital_costs"), capital_costs)
-        OpenAPI.validate_property(AggregateTransportTechnology, Symbol("line_loss"), line_loss)
-        OpenAPI.validate_property(AggregateTransportTechnology, Symbol("unit_size"), unit_size)
-        OpenAPI.validate_property(AggregateTransportTechnology, Symbol("financial_data"), financial_data)
-        return new(name, uuid, id, available, power_systems_type, start_region, end_region, capacity_limits, capital_costs, line_loss, unit_size, financial_data, )
+        o = new(name, uuid, id, available, power_systems_type, start_region, end_region, capacity_limits, capital_costs, line_loss, unit_size, financial_data, )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type AggregateTransportTechnology
 
 const _property_types_AggregateTransportTechnology = Dict{Symbol,String}(Symbol("name")=>"String", Symbol("uuid")=>"String", Symbol("id")=>"Int64", Symbol("available")=>"Bool", Symbol("power_systems_type")=>"String", Symbol("start_region")=>"Int64", Symbol("end_region")=>"Int64", Symbol("capacity_limits")=>"MinMax", Symbol("capital_costs")=>"ValueCurve", Symbol("line_loss")=>"Float64", Symbol("unit_size")=>"Float64", Symbol("financial_data")=>"TechnologyFinancialData", )
 OpenAPI.property_type(::Type{ AggregateTransportTechnology }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_AggregateTransportTechnology[name]))}
 
-function check_required(o::AggregateTransportTechnology)
+function OpenAPI.check_required(o::AggregateTransportTechnology)
     o.name === nothing && (return false)
     o.available === nothing && (return false)
     true
+end
+
+function OpenAPI.validate_properties(o::AggregateTransportTechnology)
+    OpenAPI.validate_property(AggregateTransportTechnology, Symbol("name"), o.name)
+    OpenAPI.validate_property(AggregateTransportTechnology, Symbol("uuid"), o.uuid)
+    OpenAPI.validate_property(AggregateTransportTechnology, Symbol("id"), o.id)
+    OpenAPI.validate_property(AggregateTransportTechnology, Symbol("available"), o.available)
+    OpenAPI.validate_property(AggregateTransportTechnology, Symbol("power_systems_type"), o.power_systems_type)
+    OpenAPI.validate_property(AggregateTransportTechnology, Symbol("start_region"), o.start_region)
+    OpenAPI.validate_property(AggregateTransportTechnology, Symbol("end_region"), o.end_region)
+    OpenAPI.validate_property(AggregateTransportTechnology, Symbol("capacity_limits"), o.capacity_limits)
+    OpenAPI.validate_property(AggregateTransportTechnology, Symbol("capital_costs"), o.capital_costs)
+    OpenAPI.validate_property(AggregateTransportTechnology, Symbol("line_loss"), o.line_loss)
+    OpenAPI.validate_property(AggregateTransportTechnology, Symbol("unit_size"), o.unit_size)
+    OpenAPI.validate_property(AggregateTransportTechnology, Symbol("financial_data"), o.financial_data)
 end
 
 function OpenAPI.validate_property(::Type{ AggregateTransportTechnology }, name::Symbol, val)

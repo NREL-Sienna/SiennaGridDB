@@ -47,26 +47,16 @@ Base.@kwdef mutable struct MotorLoad <: OpenAPI.APIModel
     dynamic_injector::Union{Nothing, Any} = nothing
 
     function MotorLoad(id, name, available, bus, active_power, reactive_power, base_power, rating, max_active_power, reactive_power_limits, motor_technology, dynamic_injector, )
-        OpenAPI.validate_property(MotorLoad, Symbol("id"), id)
-        OpenAPI.validate_property(MotorLoad, Symbol("name"), name)
-        OpenAPI.validate_property(MotorLoad, Symbol("available"), available)
-        OpenAPI.validate_property(MotorLoad, Symbol("bus"), bus)
-        OpenAPI.validate_property(MotorLoad, Symbol("active_power"), active_power)
-        OpenAPI.validate_property(MotorLoad, Symbol("reactive_power"), reactive_power)
-        OpenAPI.validate_property(MotorLoad, Symbol("base_power"), base_power)
-        OpenAPI.validate_property(MotorLoad, Symbol("rating"), rating)
-        OpenAPI.validate_property(MotorLoad, Symbol("max_active_power"), max_active_power)
-        OpenAPI.validate_property(MotorLoad, Symbol("reactive_power_limits"), reactive_power_limits)
-        OpenAPI.validate_property(MotorLoad, Symbol("motor_technology"), motor_technology)
-        OpenAPI.validate_property(MotorLoad, Symbol("dynamic_injector"), dynamic_injector)
-        return new(id, name, available, bus, active_power, reactive_power, base_power, rating, max_active_power, reactive_power_limits, motor_technology, dynamic_injector, )
+        o = new(id, name, available, bus, active_power, reactive_power, base_power, rating, max_active_power, reactive_power_limits, motor_technology, dynamic_injector, )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type MotorLoad
 
 const _property_types_MotorLoad = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("name")=>"String", Symbol("available")=>"Bool", Symbol("bus")=>"Int64", Symbol("active_power")=>"Float64", Symbol("reactive_power")=>"Float64", Symbol("base_power")=>"Float64", Symbol("rating")=>"Float64", Symbol("max_active_power")=>"Float64", Symbol("reactive_power_limits")=>"MinMax", Symbol("motor_technology")=>"String", Symbol("dynamic_injector")=>"Any", )
 OpenAPI.property_type(::Type{ MotorLoad }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_MotorLoad[name]))}
 
-function check_required(o::MotorLoad)
+function OpenAPI.check_required(o::MotorLoad)
     o.id === nothing && (return false)
     o.name === nothing && (return false)
     o.available === nothing && (return false)
@@ -77,6 +67,21 @@ function check_required(o::MotorLoad)
     o.rating === nothing && (return false)
     o.max_active_power === nothing && (return false)
     true
+end
+
+function OpenAPI.validate_properties(o::MotorLoad)
+    OpenAPI.validate_property(MotorLoad, Symbol("id"), o.id)
+    OpenAPI.validate_property(MotorLoad, Symbol("name"), o.name)
+    OpenAPI.validate_property(MotorLoad, Symbol("available"), o.available)
+    OpenAPI.validate_property(MotorLoad, Symbol("bus"), o.bus)
+    OpenAPI.validate_property(MotorLoad, Symbol("active_power"), o.active_power)
+    OpenAPI.validate_property(MotorLoad, Symbol("reactive_power"), o.reactive_power)
+    OpenAPI.validate_property(MotorLoad, Symbol("base_power"), o.base_power)
+    OpenAPI.validate_property(MotorLoad, Symbol("rating"), o.rating)
+    OpenAPI.validate_property(MotorLoad, Symbol("max_active_power"), o.max_active_power)
+    OpenAPI.validate_property(MotorLoad, Symbol("reactive_power_limits"), o.reactive_power_limits)
+    OpenAPI.validate_property(MotorLoad, Symbol("motor_technology"), o.motor_technology)
+    OpenAPI.validate_property(MotorLoad, Symbol("dynamic_injector"), o.dynamic_injector)
 end
 
 function OpenAPI.validate_property(::Type{ MotorLoad }, name::Symbol, val)

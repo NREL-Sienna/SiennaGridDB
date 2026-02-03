@@ -29,21 +29,26 @@ Base.@kwdef mutable struct TechnologyFinancialData <: OpenAPI.APIModel
     tax_rate::Union{Nothing, Float64} = nothing
 
     function TechnologyFinancialData(capital_recovery_period, technology_base_year, debt_fraction, debt_rate, return_on_equity, tax_rate, )
-        OpenAPI.validate_property(TechnologyFinancialData, Symbol("capital_recovery_period"), capital_recovery_period)
-        OpenAPI.validate_property(TechnologyFinancialData, Symbol("technology_base_year"), technology_base_year)
-        OpenAPI.validate_property(TechnologyFinancialData, Symbol("debt_fraction"), debt_fraction)
-        OpenAPI.validate_property(TechnologyFinancialData, Symbol("debt_rate"), debt_rate)
-        OpenAPI.validate_property(TechnologyFinancialData, Symbol("return_on_equity"), return_on_equity)
-        OpenAPI.validate_property(TechnologyFinancialData, Symbol("tax_rate"), tax_rate)
-        return new(capital_recovery_period, technology_base_year, debt_fraction, debt_rate, return_on_equity, tax_rate, )
+        o = new(capital_recovery_period, technology_base_year, debt_fraction, debt_rate, return_on_equity, tax_rate, )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type TechnologyFinancialData
 
 const _property_types_TechnologyFinancialData = Dict{Symbol,String}(Symbol("capital_recovery_period")=>"Int64", Symbol("technology_base_year")=>"Int64", Symbol("debt_fraction")=>"Float64", Symbol("debt_rate")=>"Float64", Symbol("return_on_equity")=>"Float64", Symbol("tax_rate")=>"Float64", )
 OpenAPI.property_type(::Type{ TechnologyFinancialData }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_TechnologyFinancialData[name]))}
 
-function check_required(o::TechnologyFinancialData)
+function OpenAPI.check_required(o::TechnologyFinancialData)
     true
+end
+
+function OpenAPI.validate_properties(o::TechnologyFinancialData)
+    OpenAPI.validate_property(TechnologyFinancialData, Symbol("capital_recovery_period"), o.capital_recovery_period)
+    OpenAPI.validate_property(TechnologyFinancialData, Symbol("technology_base_year"), o.technology_base_year)
+    OpenAPI.validate_property(TechnologyFinancialData, Symbol("debt_fraction"), o.debt_fraction)
+    OpenAPI.validate_property(TechnologyFinancialData, Symbol("debt_rate"), o.debt_rate)
+    OpenAPI.validate_property(TechnologyFinancialData, Symbol("return_on_equity"), o.return_on_equity)
+    OpenAPI.validate_property(TechnologyFinancialData, Symbol("tax_rate"), o.tax_rate)
 end
 
 function OpenAPI.validate_property(::Type{ TechnologyFinancialData }, name::Symbol, val)

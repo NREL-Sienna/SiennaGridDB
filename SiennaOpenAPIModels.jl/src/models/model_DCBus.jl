@@ -38,28 +38,33 @@ Base.@kwdef mutable struct DCBus <: OpenAPI.APIModel
     voltage_limits = nothing # spec type: Union{ Nothing, MinMax }
 
     function DCBus(area, available, base_voltage, id, load_zone, magnitude, name, number, voltage_limits, )
-        OpenAPI.validate_property(DCBus, Symbol("area"), area)
-        OpenAPI.validate_property(DCBus, Symbol("available"), available)
-        OpenAPI.validate_property(DCBus, Symbol("base_voltage"), base_voltage)
-        OpenAPI.validate_property(DCBus, Symbol("id"), id)
-        OpenAPI.validate_property(DCBus, Symbol("load_zone"), load_zone)
-        OpenAPI.validate_property(DCBus, Symbol("magnitude"), magnitude)
-        OpenAPI.validate_property(DCBus, Symbol("name"), name)
-        OpenAPI.validate_property(DCBus, Symbol("number"), number)
-        OpenAPI.validate_property(DCBus, Symbol("voltage_limits"), voltage_limits)
-        return new(area, available, base_voltage, id, load_zone, magnitude, name, number, voltage_limits, )
+        o = new(area, available, base_voltage, id, load_zone, magnitude, name, number, voltage_limits, )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type DCBus
 
 const _property_types_DCBus = Dict{Symbol,String}(Symbol("area")=>"Int64", Symbol("available")=>"Bool", Symbol("base_voltage")=>"Float64", Symbol("id")=>"Int64", Symbol("load_zone")=>"Int64", Symbol("magnitude")=>"Float64", Symbol("name")=>"String", Symbol("number")=>"Float64", Symbol("voltage_limits")=>"MinMax", )
 OpenAPI.property_type(::Type{ DCBus }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_DCBus[name]))}
 
-function check_required(o::DCBus)
+function OpenAPI.check_required(o::DCBus)
     o.available === nothing && (return false)
     o.id === nothing && (return false)
     o.name === nothing && (return false)
     o.number === nothing && (return false)
     true
+end
+
+function OpenAPI.validate_properties(o::DCBus)
+    OpenAPI.validate_property(DCBus, Symbol("area"), o.area)
+    OpenAPI.validate_property(DCBus, Symbol("available"), o.available)
+    OpenAPI.validate_property(DCBus, Symbol("base_voltage"), o.base_voltage)
+    OpenAPI.validate_property(DCBus, Symbol("id"), o.id)
+    OpenAPI.validate_property(DCBus, Symbol("load_zone"), o.load_zone)
+    OpenAPI.validate_property(DCBus, Symbol("magnitude"), o.magnitude)
+    OpenAPI.validate_property(DCBus, Symbol("name"), o.name)
+    OpenAPI.validate_property(DCBus, Symbol("number"), o.number)
+    OpenAPI.validate_property(DCBus, Symbol("voltage_limits"), o.voltage_limits)
 end
 
 function OpenAPI.validate_property(::Type{ DCBus }, name::Symbol, val)

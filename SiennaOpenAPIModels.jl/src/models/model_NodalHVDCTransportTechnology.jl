@@ -47,30 +47,35 @@ Base.@kwdef mutable struct NodalHVDCTransportTechnology <: OpenAPI.APIModel
     financial_data = nothing # spec type: Union{ Nothing, TechnologyFinancialData }
 
     function NodalHVDCTransportTechnology(name, uuid, id, available, power_systems_type, start_node, end_node, capacity_limits, capital_costs, line_loss, unit_size, financial_data, )
-        OpenAPI.validate_property(NodalHVDCTransportTechnology, Symbol("name"), name)
-        OpenAPI.validate_property(NodalHVDCTransportTechnology, Symbol("uuid"), uuid)
-        OpenAPI.validate_property(NodalHVDCTransportTechnology, Symbol("id"), id)
-        OpenAPI.validate_property(NodalHVDCTransportTechnology, Symbol("available"), available)
-        OpenAPI.validate_property(NodalHVDCTransportTechnology, Symbol("power_systems_type"), power_systems_type)
-        OpenAPI.validate_property(NodalHVDCTransportTechnology, Symbol("start_node"), start_node)
-        OpenAPI.validate_property(NodalHVDCTransportTechnology, Symbol("end_node"), end_node)
-        OpenAPI.validate_property(NodalHVDCTransportTechnology, Symbol("capacity_limits"), capacity_limits)
-        OpenAPI.validate_property(NodalHVDCTransportTechnology, Symbol("capital_costs"), capital_costs)
-        OpenAPI.validate_property(NodalHVDCTransportTechnology, Symbol("line_loss"), line_loss)
-        OpenAPI.validate_property(NodalHVDCTransportTechnology, Symbol("unit_size"), unit_size)
-        OpenAPI.validate_property(NodalHVDCTransportTechnology, Symbol("financial_data"), financial_data)
-        return new(name, uuid, id, available, power_systems_type, start_node, end_node, capacity_limits, capital_costs, line_loss, unit_size, financial_data, )
+        o = new(name, uuid, id, available, power_systems_type, start_node, end_node, capacity_limits, capital_costs, line_loss, unit_size, financial_data, )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type NodalHVDCTransportTechnology
 
 const _property_types_NodalHVDCTransportTechnology = Dict{Symbol,String}(Symbol("name")=>"String", Symbol("uuid")=>"String", Symbol("id")=>"Int64", Symbol("available")=>"Bool", Symbol("power_systems_type")=>"String", Symbol("start_node")=>"Int64", Symbol("end_node")=>"Int64", Symbol("capacity_limits")=>"MinMax", Symbol("capital_costs")=>"ValueCurve", Symbol("line_loss")=>"Float64", Symbol("unit_size")=>"Float64", Symbol("financial_data")=>"TechnologyFinancialData", )
 OpenAPI.property_type(::Type{ NodalHVDCTransportTechnology }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_NodalHVDCTransportTechnology[name]))}
 
-function check_required(o::NodalHVDCTransportTechnology)
+function OpenAPI.check_required(o::NodalHVDCTransportTechnology)
     o.name === nothing && (return false)
     o.id === nothing && (return false)
     o.available === nothing && (return false)
     true
+end
+
+function OpenAPI.validate_properties(o::NodalHVDCTransportTechnology)
+    OpenAPI.validate_property(NodalHVDCTransportTechnology, Symbol("name"), o.name)
+    OpenAPI.validate_property(NodalHVDCTransportTechnology, Symbol("uuid"), o.uuid)
+    OpenAPI.validate_property(NodalHVDCTransportTechnology, Symbol("id"), o.id)
+    OpenAPI.validate_property(NodalHVDCTransportTechnology, Symbol("available"), o.available)
+    OpenAPI.validate_property(NodalHVDCTransportTechnology, Symbol("power_systems_type"), o.power_systems_type)
+    OpenAPI.validate_property(NodalHVDCTransportTechnology, Symbol("start_node"), o.start_node)
+    OpenAPI.validate_property(NodalHVDCTransportTechnology, Symbol("end_node"), o.end_node)
+    OpenAPI.validate_property(NodalHVDCTransportTechnology, Symbol("capacity_limits"), o.capacity_limits)
+    OpenAPI.validate_property(NodalHVDCTransportTechnology, Symbol("capital_costs"), o.capital_costs)
+    OpenAPI.validate_property(NodalHVDCTransportTechnology, Symbol("line_loss"), o.line_loss)
+    OpenAPI.validate_property(NodalHVDCTransportTechnology, Symbol("unit_size"), o.unit_size)
+    OpenAPI.validate_property(NodalHVDCTransportTechnology, Symbol("financial_data"), o.financial_data)
 end
 
 function OpenAPI.validate_property(::Type{ NodalHVDCTransportTechnology }, name::Symbol, val)

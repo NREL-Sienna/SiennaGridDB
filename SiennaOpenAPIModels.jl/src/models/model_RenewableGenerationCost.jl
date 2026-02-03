@@ -9,7 +9,7 @@ Cost representation for renewable generation units
         cost_type="RENEWABLE",
         curtailment_cost=nothing,
         variable=nothing,
-        fixed=FixedEnum._0_0,
+        fixed=0.0,
     )
 
     - cost_type::String
@@ -21,23 +21,28 @@ Base.@kwdef mutable struct RenewableGenerationCost <: OpenAPI.APIModel
     cost_type::Union{Nothing, String} = "RENEWABLE"
     curtailment_cost = nothing # spec type: Union{ Nothing, CostCurve }
     variable = nothing # spec type: Union{ Nothing, CostCurve }
-    fixed::Union{Nothing, Float64} = FixedEnum._0_0
+    fixed::Union{Nothing, Float64} = 0.0
 
     function RenewableGenerationCost(cost_type, curtailment_cost, variable, fixed, )
-        OpenAPI.validate_property(RenewableGenerationCost, Symbol("cost_type"), cost_type)
-        OpenAPI.validate_property(RenewableGenerationCost, Symbol("curtailment_cost"), curtailment_cost)
-        OpenAPI.validate_property(RenewableGenerationCost, Symbol("variable"), variable)
-        OpenAPI.validate_property(RenewableGenerationCost, Symbol("fixed"), fixed)
-        return new(cost_type, curtailment_cost, variable, fixed, )
+        o = new(cost_type, curtailment_cost, variable, fixed, )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type RenewableGenerationCost
 
 const _property_types_RenewableGenerationCost = Dict{Symbol,String}(Symbol("cost_type")=>"String", Symbol("curtailment_cost")=>"CostCurve", Symbol("variable")=>"CostCurve", Symbol("fixed")=>"Float64", )
 OpenAPI.property_type(::Type{ RenewableGenerationCost }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_RenewableGenerationCost[name]))}
 
-function check_required(o::RenewableGenerationCost)
+function OpenAPI.check_required(o::RenewableGenerationCost)
     o.variable === nothing && (return false)
     true
+end
+
+function OpenAPI.validate_properties(o::RenewableGenerationCost)
+    OpenAPI.validate_property(RenewableGenerationCost, Symbol("cost_type"), o.cost_type)
+    OpenAPI.validate_property(RenewableGenerationCost, Symbol("curtailment_cost"), o.curtailment_cost)
+    OpenAPI.validate_property(RenewableGenerationCost, Symbol("variable"), o.variable)
+    OpenAPI.validate_property(RenewableGenerationCost, Symbol("fixed"), o.fixed)
 end
 
 function OpenAPI.validate_property(::Type{ RenewableGenerationCost }, name::Symbol, val)

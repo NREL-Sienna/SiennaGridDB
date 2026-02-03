@@ -23,7 +23,7 @@
     - bus::Int64
     - reactive_power::Float64
     - rating::Float64
-    - reactive_power_limits::MinMax5
+    - reactive_power_limits::MinMax
     - base_power::Float64
     - active_power_losses::Float64
     - dynamic_injector::Any
@@ -35,30 +35,22 @@ Base.@kwdef mutable struct SynchronousCondenser <: OpenAPI.APIModel
     bus::Union{Nothing, Int64} = nothing
     reactive_power::Union{Nothing, Float64} = nothing
     rating::Union{Nothing, Float64} = nothing
-    reactive_power_limits = nothing # spec type: Union{ Nothing, MinMax5 }
+    reactive_power_limits = nothing # spec type: Union{ Nothing, MinMax }
     base_power::Union{Nothing, Float64} = nothing
     active_power_losses::Union{Nothing, Float64} = 0.0
     dynamic_injector::Union{Nothing, Any} = nothing
 
     function SynchronousCondenser(id, name, available, bus, reactive_power, rating, reactive_power_limits, base_power, active_power_losses, dynamic_injector, )
-        OpenAPI.validate_property(SynchronousCondenser, Symbol("id"), id)
-        OpenAPI.validate_property(SynchronousCondenser, Symbol("name"), name)
-        OpenAPI.validate_property(SynchronousCondenser, Symbol("available"), available)
-        OpenAPI.validate_property(SynchronousCondenser, Symbol("bus"), bus)
-        OpenAPI.validate_property(SynchronousCondenser, Symbol("reactive_power"), reactive_power)
-        OpenAPI.validate_property(SynchronousCondenser, Symbol("rating"), rating)
-        OpenAPI.validate_property(SynchronousCondenser, Symbol("reactive_power_limits"), reactive_power_limits)
-        OpenAPI.validate_property(SynchronousCondenser, Symbol("base_power"), base_power)
-        OpenAPI.validate_property(SynchronousCondenser, Symbol("active_power_losses"), active_power_losses)
-        OpenAPI.validate_property(SynchronousCondenser, Symbol("dynamic_injector"), dynamic_injector)
-        return new(id, name, available, bus, reactive_power, rating, reactive_power_limits, base_power, active_power_losses, dynamic_injector, )
+        o = new(id, name, available, bus, reactive_power, rating, reactive_power_limits, base_power, active_power_losses, dynamic_injector, )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type SynchronousCondenser
 
-const _property_types_SynchronousCondenser = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("name")=>"String", Symbol("available")=>"Bool", Symbol("bus")=>"Int64", Symbol("reactive_power")=>"Float64", Symbol("rating")=>"Float64", Symbol("reactive_power_limits")=>"MinMax5", Symbol("base_power")=>"Float64", Symbol("active_power_losses")=>"Float64", Symbol("dynamic_injector")=>"Any", )
+const _property_types_SynchronousCondenser = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("name")=>"String", Symbol("available")=>"Bool", Symbol("bus")=>"Int64", Symbol("reactive_power")=>"Float64", Symbol("rating")=>"Float64", Symbol("reactive_power_limits")=>"MinMax", Symbol("base_power")=>"Float64", Symbol("active_power_losses")=>"Float64", Symbol("dynamic_injector")=>"Any", )
 OpenAPI.property_type(::Type{ SynchronousCondenser }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_SynchronousCondenser[name]))}
 
-function check_required(o::SynchronousCondenser)
+function OpenAPI.check_required(o::SynchronousCondenser)
     o.id === nothing && (return false)
     o.name === nothing && (return false)
     o.available === nothing && (return false)
@@ -67,6 +59,19 @@ function check_required(o::SynchronousCondenser)
     o.rating === nothing && (return false)
     o.base_power === nothing && (return false)
     true
+end
+
+function OpenAPI.validate_properties(o::SynchronousCondenser)
+    OpenAPI.validate_property(SynchronousCondenser, Symbol("id"), o.id)
+    OpenAPI.validate_property(SynchronousCondenser, Symbol("name"), o.name)
+    OpenAPI.validate_property(SynchronousCondenser, Symbol("available"), o.available)
+    OpenAPI.validate_property(SynchronousCondenser, Symbol("bus"), o.bus)
+    OpenAPI.validate_property(SynchronousCondenser, Symbol("reactive_power"), o.reactive_power)
+    OpenAPI.validate_property(SynchronousCondenser, Symbol("rating"), o.rating)
+    OpenAPI.validate_property(SynchronousCondenser, Symbol("reactive_power_limits"), o.reactive_power_limits)
+    OpenAPI.validate_property(SynchronousCondenser, Symbol("base_power"), o.base_power)
+    OpenAPI.validate_property(SynchronousCondenser, Symbol("active_power_losses"), o.active_power_losses)
+    OpenAPI.validate_property(SynchronousCondenser, Symbol("dynamic_injector"), o.dynamic_injector)
 end
 
 function OpenAPI.validate_property(::Type{ SynchronousCondenser }, name::Symbol, val)

@@ -17,17 +17,22 @@ Base.@kwdef mutable struct FromTo <: OpenAPI.APIModel
     to::Union{Nothing, Float64} = nothing
 
     function FromTo(from, to, )
-        OpenAPI.validate_property(FromTo, Symbol("from"), from)
-        OpenAPI.validate_property(FromTo, Symbol("to"), to)
-        return new(from, to, )
+        o = new(from, to, )
+        OpenAPI.validate_properties(o)
+        return o
     end
 end # type FromTo
 
 const _property_types_FromTo = Dict{Symbol,String}(Symbol("from")=>"Float64", Symbol("to")=>"Float64", )
 OpenAPI.property_type(::Type{ FromTo }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_FromTo[name]))}
 
-function check_required(o::FromTo)
+function OpenAPI.check_required(o::FromTo)
     true
+end
+
+function OpenAPI.validate_properties(o::FromTo)
+    OpenAPI.validate_property(FromTo, Symbol("from"), o.from)
+    OpenAPI.validate_property(FromTo, Symbol("to"), o.to)
 end
 
 function OpenAPI.validate_property(::Type{ FromTo }, name::Symbol, val)
