@@ -311,7 +311,7 @@ function (resolve::Resolver)(id::Int64)
     if isa(resolve.sys, PSIP.Portfolio)
         return IS.get_component(resolve.sys.data, resolve.id2uuid[id])
     else
-        PSY.get_component(resolve.sys, resolve.id2uuid[id])
+        return PSY.get_component(resolve.sys, resolve.id2uuid[id])
     end
 end
 
