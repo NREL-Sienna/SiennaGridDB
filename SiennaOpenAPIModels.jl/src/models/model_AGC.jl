@@ -47,16 +47,16 @@ Base.@kwdef mutable struct AGC <: OpenAPI.APIModel
 end # type AGC
 
 const _property_types_AGC = Dict{Symbol, String}(
-    Symbol("id") => "Int64",
-    Symbol("name") => "String",
-    Symbol("available") => "Bool",
-    Symbol("bias") => "Float64",
-    Symbol("K_p") => "Float64",
-    Symbol("K_i") => "Float64",
-    Symbol("K_d") => "Float64",
-    Symbol("delta_t") => "Float64",
-    Symbol("area") => "Int64",
-    Symbol("initial_ace") => "Float64",
+    Symbol("id")=>"Int64",
+    Symbol("name")=>"String",
+    Symbol("available")=>"Bool",
+    Symbol("bias")=>"Float64",
+    Symbol("K_p")=>"Float64",
+    Symbol("K_i")=>"Float64",
+    Symbol("K_d")=>"Float64",
+    Symbol("delta_t")=>"Float64",
+    Symbol("area")=>"Int64",
+    Symbol("initial_ace")=>"Float64",
 )
 OpenAPI.property_type(::Type{AGC}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_AGC[name]))}

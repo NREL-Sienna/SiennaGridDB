@@ -64,15 +64,15 @@ Base.@kwdef mutable struct DCBus <: OpenAPI.APIModel
 end # type DCBus
 
 const _property_types_DCBus = Dict{Symbol, String}(
-    Symbol("area") => "Int64",
-    Symbol("available") => "Bool",
-    Symbol("base_voltage") => "Float64",
-    Symbol("id") => "Int64",
-    Symbol("load_zone") => "Int64",
-    Symbol("magnitude") => "Float64",
-    Symbol("name") => "String",
-    Symbol("number") => "Float64",
-    Symbol("voltage_limits") => "MinMax",
+    Symbol("area")=>"Int64",
+    Symbol("available")=>"Bool",
+    Symbol("base_voltage")=>"Float64",
+    Symbol("id")=>"Int64",
+    Symbol("load_zone")=>"Int64",
+    Symbol("magnitude")=>"Float64",
+    Symbol("name")=>"String",
+    Symbol("number")=>"Float64",
+    Symbol("voltage_limits")=>"MinMax",
 )
 OpenAPI.property_type(::Type{DCBus}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_DCBus[name]))}

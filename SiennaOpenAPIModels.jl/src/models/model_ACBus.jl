@@ -8,7 +8,7 @@
         area=nothing,
         available=nothing,
         base_voltage=nothing,
-        bustype=nothing,
+        bustype="PQ",
         id=nothing,
         load_zone=nothing,
         magnitude=nothing,
@@ -34,7 +34,7 @@ Base.@kwdef mutable struct ACBus <: OpenAPI.APIModel
     area::Union{Nothing, Int64} = nothing
     available::Union{Nothing, Bool} = nothing
     base_voltage::Union{Nothing, Float64} = nothing
-    bustype::Union{Nothing, String} = nothing
+    bustype::Union{Nothing, String} = "PQ"
     id::Union{Nothing, Int64} = nothing
     load_zone::Union{Nothing, Int64} = nothing
     magnitude::Union{Nothing, Float64} = nothing
@@ -74,17 +74,17 @@ Base.@kwdef mutable struct ACBus <: OpenAPI.APIModel
 end # type ACBus
 
 const _property_types_ACBus = Dict{Symbol, String}(
-    Symbol("angle") => "Float64",
-    Symbol("area") => "Int64",
-    Symbol("available") => "Bool",
-    Symbol("base_voltage") => "Float64",
-    Symbol("bustype") => "String",
-    Symbol("id") => "Int64",
-    Symbol("load_zone") => "Int64",
-    Symbol("magnitude") => "Float64",
-    Symbol("name") => "String",
-    Symbol("number") => "Int64",
-    Symbol("voltage_limits") => "MinMax",
+    Symbol("angle")=>"Float64",
+    Symbol("area")=>"Int64",
+    Symbol("available")=>"Bool",
+    Symbol("base_voltage")=>"Float64",
+    Symbol("bustype")=>"String",
+    Symbol("id")=>"Int64",
+    Symbol("load_zone")=>"Int64",
+    Symbol("magnitude")=>"Float64",
+    Symbol("name")=>"String",
+    Symbol("number")=>"Int64",
+    Symbol("voltage_limits")=>"MinMax",
 )
 OpenAPI.property_type(::Type{ACBus}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_ACBus[name]))}

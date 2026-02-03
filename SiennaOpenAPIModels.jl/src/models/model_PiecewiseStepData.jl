@@ -26,9 +26,9 @@ Base.@kwdef mutable struct PiecewiseStepData <: OpenAPI.APIModel
 end # type PiecewiseStepData
 
 const _property_types_PiecewiseStepData = Dict{Symbol, String}(
-    Symbol("function_type") => "String",
-    Symbol("x_coords") => "Vector{Float64}",
-    Symbol("y_coords") => "Vector{Float64}",
+    Symbol("function_type")=>"String",
+    Symbol("x_coords")=>"Vector{Float64}",
+    Symbol("y_coords")=>"Vector{Float64}",
 )
 OpenAPI.property_type(::Type{PiecewiseStepData}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_PiecewiseStepData[name]))}

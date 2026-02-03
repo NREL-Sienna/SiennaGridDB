@@ -11,7 +11,7 @@
         active_power=nothing,
         reactive_power=nothing,
         rating=nothing,
-        prime_mover_type="OT",
+        prime_mover_type=nothing,
         active_power_limits=nothing,
         reactive_power_limits=nothing,
         ramp_limits=nothing,
@@ -49,7 +49,7 @@ Base.@kwdef mutable struct HydroDispatch <: OpenAPI.APIModel
     active_power::Union{Nothing, Float64} = nothing
     reactive_power::Union{Nothing, Float64} = nothing
     rating::Union{Nothing, Float64} = nothing
-    prime_mover_type::Union{Nothing, String} = "OT"
+    prime_mover_type::Union{Nothing, String} = nothing
     active_power_limits = nothing # spec type: Union{ Nothing, MinMax }
     reactive_power_limits = nothing # spec type: Union{ Nothing, MinMax }
     ramp_limits = nothing # spec type: Union{ Nothing, UpDown }
@@ -104,23 +104,23 @@ Base.@kwdef mutable struct HydroDispatch <: OpenAPI.APIModel
 end # type HydroDispatch
 
 const _property_types_HydroDispatch = Dict{Symbol, String}(
-    Symbol("id") => "Int64",
-    Symbol("name") => "String",
-    Symbol("available") => "Bool",
-    Symbol("bus") => "Int64",
-    Symbol("active_power") => "Float64",
-    Symbol("reactive_power") => "Float64",
-    Symbol("rating") => "Float64",
-    Symbol("prime_mover_type") => "String",
-    Symbol("active_power_limits") => "MinMax",
-    Symbol("reactive_power_limits") => "MinMax",
-    Symbol("ramp_limits") => "UpDown",
-    Symbol("time_limits") => "UpDown",
-    Symbol("base_power") => "Float64",
-    Symbol("status") => "Bool",
-    Symbol("time_at_status") => "Float64",
-    Symbol("operation_cost") => "HydroGenerationCost",
-    Symbol("dynamic_injector") => "Any",
+    Symbol("id")=>"Int64",
+    Symbol("name")=>"String",
+    Symbol("available")=>"Bool",
+    Symbol("bus")=>"Int64",
+    Symbol("active_power")=>"Float64",
+    Symbol("reactive_power")=>"Float64",
+    Symbol("rating")=>"Float64",
+    Symbol("prime_mover_type")=>"String",
+    Symbol("active_power_limits")=>"MinMax",
+    Symbol("reactive_power_limits")=>"MinMax",
+    Symbol("ramp_limits")=>"UpDown",
+    Symbol("time_limits")=>"UpDown",
+    Symbol("base_power")=>"Float64",
+    Symbol("status")=>"Bool",
+    Symbol("time_at_status")=>"Float64",
+    Symbol("operation_cost")=>"HydroGenerationCost",
+    Symbol("dynamic_injector")=>"Any",
 )
 OpenAPI.property_type(::Type{HydroDispatch}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_HydroDispatch[name]))}

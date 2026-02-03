@@ -12,6 +12,7 @@ module SiennaOpenAPIModels
 using OpenAPI
 using StructHelpers: @batteries
 import PowerSystems as PSY
+import PowerSystemsInvestmentsPortfolios as PSIP
 import Dates
 import InfrastructureSystems as IS
 
@@ -19,6 +20,8 @@ const API_VERSION = "1.0.0"
 
 export psy2openapi
 export openapi2psy
+export psip2openapi
+export openapi2psip
 export IDGenerator
 export getid!
 
@@ -112,12 +115,20 @@ include("sienna_to_json/static_injections.jl")
 include("sienna_to_json/topology.jl")
 include("sienna_to_json/branch.jl")
 include("sienna_to_json/service.jl")
+include("sienna_to_json/technology.jl")
+include("sienna_to_json/region.jl")
+include("sienna_to_json/requirement.jl")
+include("sienna_to_json/attribute.jl")
 
 include("json_to_sienna/common.jl")
 include("json_to_sienna/topology.jl")
 include("json_to_sienna/static_injections.jl")
 include("json_to_sienna/branch.jl")
 include("json_to_sienna/service.jl")
+include("json_to_sienna/technology.jl")
+include("json_to_sienna/region.jl")
+include("json_to_sienna/requirement.jl")
+include("json_to_sienna/attribute.jl")
 
 include("dbinterface/sqlite.jl")
 include("dbinterface/time_series.jl")

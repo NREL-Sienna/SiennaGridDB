@@ -23,7 +23,7 @@ Base.@kwdef mutable struct MinMax <: OpenAPI.APIModel
 end # type MinMax
 
 const _property_types_MinMax =
-    Dict{Symbol, String}(Symbol("max") => "Float64", Symbol("min") => "Float64")
+    Dict{Symbol, String}(Symbol("max")=>"Float64", Symbol("min")=>"Float64")
 OpenAPI.property_type(::Type{MinMax}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_MinMax[name]))}
 

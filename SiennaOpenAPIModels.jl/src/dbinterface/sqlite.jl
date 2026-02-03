@@ -51,7 +51,7 @@ function get_row(
     table_name::AbstractString,
     schema::Tables.Schema,
     c::OpenAPI.APIModel,
-    ::PSY.Component,
+    ::Union{PSY.Component, PSIP.Technology, PSIP.RegionTopology},
 )
     return tuple(
         (
@@ -110,6 +110,33 @@ end
 function get_row(
     ::AbstractString,
     ::Tables.Schema,
+    c::StorageTechnology,
+    ::PSIP.StorageTechnology,
+)
+    return (c.id, c.prime_mover_type, nothing, c.region, nothing, nothing)
+end
+
+function get_row(
+    ::AbstractString,
+    ::Tables.Schema,
+    c::SupplyTechnology,
+    ::PSIP.SupplyTechnology,
+)
+    return (c.id, c.prime_mover_type, c.fuel, c.region, nothing, nothing)
+end
+
+function get_row(
+    ::AbstractString,
+    ::Tables.Schema,
+    c::DemandRequirement,
+    ::PSIP.DemandRequirement,
+)
+    return (c.id, c.name, c.region, nothing)
+end
+
+function get_row(
+    ::AbstractString,
+    ::Tables.Schema,
     c::HydroPumpTurbine,
     ::PSY.HydroPumpTurbine,
 )
@@ -145,13 +172,18 @@ function add_components_to_tables!(
 ) where {T <: OpenAPI.APIModel}
     for component in components
         uuid = IS.get_uuid(component)
-        openapi_component = psy2openapi(component, ids)
+        if T in PSIP_TYPES
+            openapi_component = psip2openapi(component, ids)
+        else
+            openapi_component = psy2openapi(component, ids)
+        end
         row = get_row(table_name, schema, openapi_component, component)
         try
             DBInterface.execute(entity_statement, (openapi_component.id,))
             DBInterface.execute(table_statement, row)
         catch e
             if isa(e, SQLite.SQLiteException)
+                #print(openapi_component)
                 error("Failed to insert into $(table_name): $(e.msg) with values $(row)")
             else
                 rethrow(e)
@@ -559,4 +591,95 @@ function db2sys(db; time_series=false)
     resolver = Resolver(sys, Dict{Int64, UUID}())
     db2sys!(sys, db, resolver, time_series=time_series)
     return sys
+end
+
+##################
+### PSIP Stuff ###
+##################
+
+function portfolio2db!(db, portfolio::PSIP.Portfolio, ids::IDGenerator; time_series=false)
+    sys2db!(db, PSIP.get_base_system(portfolio), ids; time_series=time_series)
+
+    DBInterface.transaction(db) do
+        for (T, OPENAPI_T) in zip(ALL_PSIP_TYPES, PSIP_TYPES)
+            if T <: PSIP.RegionTopology
+                send_table_to_db!(OPENAPI_T, db, PSIP.get_regions(T, portfolio), ids)
+            elseif T <: PSIP.Technology
+                send_table_to_db!(OPENAPI_T, db, PSIP.get_technologies(T, portfolio), ids)
+            end
+        end
+    end
+
+    if time_series
+        serialize_timeseries!(db, portfolio, ids)
+    end
+end
+
+function add_components_to_portfolio!(
+    ::Type{OpenAPI_T},
+    portfolio::PSIP.Portfolio,
+    table_name,
+    rows,
+    attributes::Dict{Int64, Dict{String, Any}},
+    resolver::Resolver,
+) where {OpenAPI_T}
+    for row in rows
+        extra_attributes = get(attributes, row.id, Dict{String, Any}())
+        dict = make_openapi_dict(OpenAPI_T, table_name, row, extra_attributes)
+        openapi_obj = OpenAPI.from_json(OpenAPI_T, dict)
+        sienna_obj = openapi2psip(openapi_obj, resolver)
+        if haskey(dict, "uuid")
+            IS.set_uuid!(IS.get_internal(sienna_obj), Base.UUID(dict["uuid"]))
+        end
+        if typeof(sienna_obj) <: PSIP.RegionTopology
+            PSIP.add_region!(portfolio, sienna_obj)
+        elseif typeof(sienna_obj) <: PSIP.Technology
+            PSIP.add_technology!(portfolio, sienna_obj)
+        end
+        resolver.id2uuid[row.id] = IS.get_uuid(sienna_obj)
+    end
+end
+
+function db2portfolio!(portfolio::PSIP.Portfolio, db, resolver::Resolver)
+    attributes = get_entity_attributes(db)
+    row_counts = Dict{String, Int64}()
+    all_entities = 0
+    # We need to parse ALL_TYPES in a specific order to resolver correctly
+    for OPENAPI_T in PSIP_DESERIALIZABLE_TYPES
+        table_name = TYPE_TO_TABLE[OPENAPI_T]
+        obj_type = last(split(string(OPENAPI_T), "."))
+        # Query the specific table joining with entities to filter by type
+        query = get_query_for_table_name(table_name)
+        rows = DBInterface.execute(db, query, (obj_type,))
+        add_components_to_portfolio!(
+            OPENAPI_T,
+            portfolio,
+            table_name,
+            rows,
+            attributes,
+            resolver,
+        )
+        row_counts[table_name] =
+            get(row_counts, table_name, 0) + (length(resolver.id2uuid) - all_entities)
+        all_entities = length(resolver.id2uuid)
+    end
+    # for (table_name, _) in TABLE_SCHEMAS
+    #     if table_name in ["attributes", "entities", "prime_mover_types", "fuels", "entity_types", "time_series_associations", "static_time_series", "time_series"]
+    #         continue
+    #     end
+    #     result = DBInterface.execute(db, "SELECT count(*) from $table_name")
+    #     db_count = first(first(result))::Int64
+    #     local_count = get(row_counts, table_name, 0)
+    #     if db_count != local_count
+    #         @warn "Table $table_name contains $db_count ids but $local_count were processed"
+    #     end
+    # end
+end
+
+function db2portfolio(db) #Should also pass the desired aggregation level probably?
+    portfolio = PSIP.Portfolio()
+    resolver = Resolver(portfolio, Dict{Int64, UUID}())
+    db2portfolio!(portfolio, db, resolver)
+    portfolio.base_system = db2sys(db)
+    return portfolio
 end

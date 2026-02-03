@@ -32,11 +32,11 @@ Base.@kwdef mutable struct FuelCurve <: OpenAPI.APIModel
 end # type FuelCurve
 
 const _property_types_FuelCurve = Dict{Symbol, String}(
-    Symbol("fuel_cost") => "FuelCurveFuelCost",
-    Symbol("power_units") => "String",
-    Symbol("value_curve") => "ValueCurve",
-    Symbol("variable_cost_type") => "String",
-    Symbol("vom_cost") => "InputOutputCurve",
+    Symbol("fuel_cost")=>"FuelCurveFuelCost",
+    Symbol("power_units")=>"String",
+    Symbol("value_curve")=>"ValueCurve",
+    Symbol("variable_cost_type")=>"String",
+    Symbol("vom_cost")=>"InputOutputCurve",
 )
 OpenAPI.property_type(::Type{FuelCurve}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_FuelCurve[name]))}

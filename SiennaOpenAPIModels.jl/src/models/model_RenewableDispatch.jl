@@ -11,7 +11,7 @@
         active_power=nothing,
         reactive_power=nothing,
         rating=nothing,
-        prime_mover_type="OT",
+        prime_mover_type="HY",
         reactive_power_limits=nothing,
         power_factor=nothing,
         operation_cost=nothing,
@@ -41,7 +41,7 @@ Base.@kwdef mutable struct RenewableDispatch <: OpenAPI.APIModel
     active_power::Union{Nothing, Float64} = nothing
     reactive_power::Union{Nothing, Float64} = nothing
     rating::Union{Nothing, Float64} = nothing
-    prime_mover_type::Union{Nothing, String} = "OT"
+    prime_mover_type::Union{Nothing, String} = "HY"
     reactive_power_limits = nothing # spec type: Union{ Nothing, MinMax }
     power_factor::Union{Nothing, Float64} = nothing
     operation_cost = nothing # spec type: Union{ Nothing, RenewableGenerationCost }
@@ -84,19 +84,19 @@ Base.@kwdef mutable struct RenewableDispatch <: OpenAPI.APIModel
 end # type RenewableDispatch
 
 const _property_types_RenewableDispatch = Dict{Symbol, String}(
-    Symbol("id") => "Int64",
-    Symbol("name") => "String",
-    Symbol("available") => "Bool",
-    Symbol("bus") => "Int64",
-    Symbol("active_power") => "Float64",
-    Symbol("reactive_power") => "Float64",
-    Symbol("rating") => "Float64",
-    Symbol("prime_mover_type") => "String",
-    Symbol("reactive_power_limits") => "MinMax",
-    Symbol("power_factor") => "Float64",
-    Symbol("operation_cost") => "RenewableGenerationCost",
-    Symbol("base_power") => "Float64",
-    Symbol("dynamic_injector") => "Any",
+    Symbol("id")=>"Int64",
+    Symbol("name")=>"String",
+    Symbol("available")=>"Bool",
+    Symbol("bus")=>"Int64",
+    Symbol("active_power")=>"Float64",
+    Symbol("reactive_power")=>"Float64",
+    Symbol("rating")=>"Float64",
+    Symbol("prime_mover_type")=>"String",
+    Symbol("reactive_power_limits")=>"MinMax",
+    Symbol("power_factor")=>"Float64",
+    Symbol("operation_cost")=>"RenewableGenerationCost",
+    Symbol("base_power")=>"Float64",
+    Symbol("dynamic_injector")=>"Any",
 )
 OpenAPI.property_type(::Type{RenewableDispatch}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_RenewableDispatch[name]))}

@@ -69,16 +69,16 @@ Base.@kwdef mutable struct VariableReserve <: OpenAPI.APIModel
 end # type VariableReserve
 
 const _property_types_VariableReserve = Dict{Symbol, String}(
-    Symbol("id") => "Int64",
-    Symbol("name") => "String",
-    Symbol("available") => "Bool",
-    Symbol("time_frame") => "Float64",
-    Symbol("requirement") => "Float64",
-    Symbol("sustained_time") => "Float64",
-    Symbol("max_output_fraction") => "Float64",
-    Symbol("max_participation_factor") => "Float64",
-    Symbol("deployed_fraction") => "Float64",
-    Symbol("reserve_direction") => "String",
+    Symbol("id")=>"Int64",
+    Symbol("name")=>"String",
+    Symbol("available")=>"Bool",
+    Symbol("time_frame")=>"Float64",
+    Symbol("requirement")=>"Float64",
+    Symbol("sustained_time")=>"Float64",
+    Symbol("max_output_fraction")=>"Float64",
+    Symbol("max_participation_factor")=>"Float64",
+    Symbol("deployed_fraction")=>"Float64",
+    Symbol("reserve_direction")=>"String",
 )
 OpenAPI.property_type(::Type{VariableReserve}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_VariableReserve[name]))}

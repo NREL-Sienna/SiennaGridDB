@@ -71,7 +71,7 @@ function get_uuid_mapping(sys::PSY.System)
     return uuid_mapping
 end
 
-function get_example_metadata_uuids(sys::PSY.System)
+function get_example_metadata_uuids(sys::Union{PSY.System, PSIP.Portfolio})
     metadata_store = sys.data.time_series_manager.metadata_store
 
     return IS.sql(
@@ -83,7 +83,10 @@ function get_example_metadata_uuids(sys::PSY.System)
     )
 end
 
-function get_time_series_from_metadata_uuid(sys::PSY.System, metadata_uuid)
+function get_time_series_from_metadata_uuid(
+    sys::Union{PSY.System, PSIP.Portfolio},
+    metadata_uuid,
+)
     ts_metadata = sys.data.time_series_manager.metadata_store.metadata_uuids[metadata_uuid]
 
     start_time = IS._check_start_time(nothing, ts_metadata)
@@ -135,7 +138,7 @@ end
 """
 Iterate through all metadata objects and serialize timeseries
 """
-function serialize_all_timeseries_data!(db, sys::PSY.System)
+function serialize_all_timeseries_data!(db, sys::Union{PSY.System, PSIP.Portfolio})
     time_series_uuid_to_metadata_uuids = get_example_metadata_uuids(sys)
 
     for (time_series_uuid, metadata_uuid) in eachrow(time_series_uuid_to_metadata_uuids)
@@ -160,7 +163,32 @@ function transform_associations!(sys::PSY.System, associations, ids::IDGenerator
     return associations
 end
 
-function serialize_timeseries_associations!(db, sys::PSY.System, ids::IDGenerator)
+function transform_associations!(sys::PSIP.Portfolio, associations, ids::IDGenerator)
+
+    # Determine number of associations were in the base system to offset IDs from portfolio
+    counts = PSY.get_time_series_counts(PSIP.get_base_system(sys))
+
+    associations = PSY.DataFrames.coalesce.(associations, nothing)
+    associations.id .+= counts.components_with_time_series
+    type_strings =
+        SiennaOpenAPIModels.PSIP_DESERIALIZABLE_TYPES .|> (x -> last(split(string(x), ".")))
+    deserializable_string(x) = in(x, type_strings)
+
+    associations = associations[deserializable_string.(associations[!, "owner_type"]), :]
+    associations[!, "owner_id"] =
+        map(owner_uuid -> getid!(ids, Base.UUID(owner_uuid)), associations[!, "owner_uuid"])
+    PSY.DataFrames.select!(
+        associations,
+        Symbol.(collect(TABLE_SCHEMAS["time_series_associations"].names)),
+    )
+    return associations
+end
+
+function serialize_timeseries_associations!(
+    db,
+    sys::Union{PSY.System, PSIP.Portfolio},
+    ids::IDGenerator,
+)
     associations = IS.sql(
         sys.data.time_series_manager.metadata_store,
         """SELECT $(join(INFRASYS_TS_SCHEMA.names, ", "))
@@ -175,11 +203,12 @@ VALUES ($(join(repeat("?", length(TABLE_SCHEMAS["time_series_associations"].name
     )
 
     for row in Tables.rowtable(associations)
+        #print(row.id, " ", row.time_series_uuid, "\n")
         DBInterface.execute(statement, tuple(row...))
     end
 end
 
-function serialize_timeseries!(db, sys::PSY.System, ids::IDGenerator)
+function serialize_timeseries!(db, sys::Union{PSY.System, PSIP.Portfolio}, ids::IDGenerator)
     DBInterface.transaction(db) do
         serialize_all_timeseries_data!(db, sys)
         serialize_timeseries_associations!(db, sys, ids)

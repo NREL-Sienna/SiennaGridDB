@@ -22,7 +22,7 @@
         efficiency=1.0,
         turbine_type="UNKNOWN",
         conversion_factor=1.0,
-        prime_mover_type="OT",
+        prime_mover_type="HY",
         travel_time=nothing,
         dynamic_injector=nothing,
     )
@@ -68,7 +68,7 @@ Base.@kwdef mutable struct HydroTurbine <: OpenAPI.APIModel
     efficiency::Union{Nothing, Float64} = 1.0
     turbine_type::Union{Nothing, String} = "UNKNOWN"
     conversion_factor::Union{Nothing, Float64} = 1.0
-    prime_mover_type::Union{Nothing, String} = "OT"
+    prime_mover_type::Union{Nothing, String} = "HY"
     travel_time::Union{Nothing, Float64} = nothing
     dynamic_injector::Union{Nothing, Any} = nothing
 
@@ -124,27 +124,27 @@ Base.@kwdef mutable struct HydroTurbine <: OpenAPI.APIModel
 end # type HydroTurbine
 
 const _property_types_HydroTurbine = Dict{Symbol, String}(
-    Symbol("id") => "Int64",
-    Symbol("name") => "String",
-    Symbol("available") => "Bool",
-    Symbol("bus") => "Int64",
-    Symbol("active_power") => "Float64",
-    Symbol("reactive_power") => "Float64",
-    Symbol("rating") => "Float64",
-    Symbol("active_power_limits") => "MinMax",
-    Symbol("reactive_power_limits") => "MinMax",
-    Symbol("base_power") => "Float64",
-    Symbol("operation_cost") => "HydroGenerationCost",
-    Symbol("powerhouse_elevation") => "Float64",
-    Symbol("ramp_limits") => "UpDown",
-    Symbol("time_limits") => "UpDown",
-    Symbol("outflow_limits") => "MinMax",
-    Symbol("efficiency") => "Float64",
-    Symbol("turbine_type") => "String",
-    Symbol("conversion_factor") => "Float64",
-    Symbol("prime_mover_type") => "String",
-    Symbol("travel_time") => "Float64",
-    Symbol("dynamic_injector") => "Any",
+    Symbol("id")=>"Int64",
+    Symbol("name")=>"String",
+    Symbol("available")=>"Bool",
+    Symbol("bus")=>"Int64",
+    Symbol("active_power")=>"Float64",
+    Symbol("reactive_power")=>"Float64",
+    Symbol("rating")=>"Float64",
+    Symbol("active_power_limits")=>"MinMax",
+    Symbol("reactive_power_limits")=>"MinMax",
+    Symbol("base_power")=>"Float64",
+    Symbol("operation_cost")=>"HydroGenerationCost",
+    Symbol("powerhouse_elevation")=>"Float64",
+    Symbol("ramp_limits")=>"UpDown",
+    Symbol("time_limits")=>"UpDown",
+    Symbol("outflow_limits")=>"MinMax",
+    Symbol("efficiency")=>"Float64",
+    Symbol("turbine_type")=>"String",
+    Symbol("conversion_factor")=>"Float64",
+    Symbol("prime_mover_type")=>"String",
+    Symbol("travel_time")=>"Float64",
+    Symbol("dynamic_injector")=>"Any",
 )
 OpenAPI.property_type(::Type{HydroTurbine}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_HydroTurbine[name]))}

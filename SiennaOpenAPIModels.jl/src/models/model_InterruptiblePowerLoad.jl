@@ -79,18 +79,18 @@ Base.@kwdef mutable struct InterruptiblePowerLoad <: OpenAPI.APIModel
 end # type InterruptiblePowerLoad
 
 const _property_types_InterruptiblePowerLoad = Dict{Symbol, String}(
-    Symbol("id") => "Int64",
-    Symbol("name") => "String",
-    Symbol("available") => "Bool",
-    Symbol("bus") => "Int64",
-    Symbol("active_power") => "Float64",
-    Symbol("reactive_power") => "Float64",
-    Symbol("max_active_power") => "Float64",
-    Symbol("max_reactive_power") => "Float64",
-    Symbol("base_power") => "Float64",
-    Symbol("operation_cost") => "LoadCost",
-    Symbol("conformity") => "String",
-    Symbol("dynamic_injector") => "Any",
+    Symbol("id")=>"Int64",
+    Symbol("name")=>"String",
+    Symbol("available")=>"Bool",
+    Symbol("bus")=>"Int64",
+    Symbol("active_power")=>"Float64",
+    Symbol("reactive_power")=>"Float64",
+    Symbol("max_active_power")=>"Float64",
+    Symbol("max_reactive_power")=>"Float64",
+    Symbol("base_power")=>"Float64",
+    Symbol("operation_cost")=>"LoadCost",
+    Symbol("conformity")=>"String",
+    Symbol("dynamic_injector")=>"Any",
 )
 OpenAPI.property_type(::Type{InterruptiblePowerLoad}, name::Symbol) =
     Union{Nothing, eval(Base.Meta.parse(_property_types_InterruptiblePowerLoad[name]))}
