@@ -127,6 +127,31 @@ function get_sienna_operation_cost(cost::ThermalGenerationCost)
     )
 end
 
+function get_sienna_operation_cost(cost::SupplyTechnologyOperationCosts)
+    if cost.value.cost_type == "THERMAL"
+        PSY.ThermalGenerationCost(
+            start_up=get_sienna_startup(cost.value.start_up),
+            shut_down=cost.value.shut_down,
+            fixed=cost.value.fixed,
+            variable=get_sienna_variable_cost(cost.value.variable),
+        )
+    elseif cost.value.cost_type == "RENEWABLE"
+        PSY.RenewableGenerationCost(
+            curtailment_cost=get_sienna_variable_cost(cost.value.curtailment_cost),
+            variable=get_sienna_variable_cost(cost.value.variable),
+            fixed=cost.value.fixed,
+        )
+    end
+end
+
+get_sienna_fuel_dictionary(dict::Dict{String, Float64}) = Dict(
+    PSY.ThermalFuels(k) => v for (k, v) in dict
+)
+
+get_sienna_fuel_dictionary(dict::Dict{String, MinMax}) = Dict(
+    PSY.ThermalFuels(k) => get_tuple_min_max(v) for (k, v) in dict
+)
+
 # Getter functions used within the operation cost getters, including startups,
 # variable costs, value curves, and function data
 
@@ -271,11 +296,11 @@ end
 # Resolver stuff
 
 mutable struct Resolver
-    sys::PSY.System
+    sys::Union{PSY.System, PSIP.Portfolio}
     id2uuid::Dict{Int64, UUID}
 end
 
-function resolver_from_id_generator(idgen::IDGenerator, sys::PSY.System)
+function resolver_from_id_generator(idgen::IDGenerator, sys::Union{PSY.System, PSIP.Portfolio})
     inverted_dict = Dict()
     for (uuid, id) in idgen.uuid2int
         inverted_dict[id] = uuid
@@ -284,33 +309,14 @@ function resolver_from_id_generator(idgen::IDGenerator, sys::PSY.System)
 end
 
 function (resolve::Resolver)(id::Int64)
-    PSY.get_component(resolve.sys, resolve.id2uuid[id])
+    if isa(resolve.sys, PSIP.Portfolio)
+        return IS.get_component(resolve.sys.data, resolve.id2uuid[id])
+    else
+        PSY.get_component(resolve.sys, resolve.id2uuid[id])
+    end
 end
 
 function (resolve::Resolver)(id::Nothing)
-    nothing
-end
-
-# PSIP Resolver stuff
-
-mutable struct PortfolioResolver
-    portfolio::PSIP.Portfolio
-    id2uuid::Dict{Int64, UUID}
-end
-
-function resolver_from_id_generator(idgen::IDGenerator, portfolio::PSIP.Portfolio)
-    inverted_dict = Dict()
-    for (uuid, id) in idgen.uuid2int
-        inverted_dict[id] = uuid
-    end
-    return PortfolioResolver(portfolio, inverted_dict)
-end
-
-function (resolve::PortfolioResolver)(id::Int64)
-    IS.get_component(resolve.portfolio.data, resolve.id2uuid[id])
-end
-
-function (resolve::PortfolioResolver)(id::Nothing)
     nothing
 end
 

@@ -1,4 +1,4 @@
-function openapi2psip(storage::StorageTechnology, resolver::PortfolioResolver)
+function openapi2psip(storage::StorageTechnology, resolver::Resolver)
     PSIP.StorageTechnology{getproperty(PSY, Symbol(storage.power_systems_type))}(;
         name=storage.name,
         id=storage.id,
@@ -25,7 +25,7 @@ function openapi2psip(storage::StorageTechnology, resolver::PortfolioResolver)
     )
 end
 
-function openapi2psip(demand::DemandRequirement, resolver::PortfolioResolver)
+function openapi2psip(demand::DemandRequirement, resolver::Resolver)
     PSIP.DemandRequirement{getproperty(PSY, Symbol(demand.power_systems_type))}(;
         name=demand.name,
         id=demand.id,
@@ -38,7 +38,7 @@ function openapi2psip(demand::DemandRequirement, resolver::PortfolioResolver)
     )
 end
 
-function openapi2psip(demand::DemandSideTechnology, resolver::PortfolioResolver)
+function openapi2psip(demand::DemandSideTechnology, resolver::Resolver)
     PSIP.DemandSideTechnology{getproperty(PSY, Symbol(demand.power_systems_type))}(;
         name=demand.name,
         id=demand.id,
@@ -57,7 +57,7 @@ function openapi2psip(demand::DemandSideTechnology, resolver::PortfolioResolver)
     )
 end
 
-function openapi2psip(supply::SupplyTechnology, resolver::PortfolioResolver)
+function openapi2psip(supply::SupplyTechnology, resolver::Resolver)
     PSIP.SupplyTechnology{getproperty(PSY, Symbol(supply.power_systems_type))}(;
         name=supply.name,
         id=supply.id,
@@ -66,7 +66,7 @@ function openapi2psip(supply::SupplyTechnology, resolver::PortfolioResolver)
         region=[resolver(r) for r in supply.region],
         prime_mover_type=PSY.PrimeMovers(supply.prime_mover_type),
         financial_data = get_sienna_technology_financial_data(supply.financial_data), 
-        fuel=[get_fuel_type_enum(f) for f in supply.fuel],
+        fuel=[PSY.ThermalFuels(f) for f in supply.fuel],
         ramp_limits=get_tuple_up_down(supply.ramp_limits),
         capital_costs = get_sienna_value_curve(supply.capital_costs),
         operation_costs=get_sienna_operation_cost(supply.operation_costs),
@@ -81,7 +81,7 @@ function openapi2psip(supply::SupplyTechnology, resolver::PortfolioResolver)
     )
 end
 
-function openapi2psip(line::AggregateTransportTechnology, resolver::PortfolioResolver)
+function openapi2psip(line::AggregateTransportTechnology, resolver::Resolver)
     PSIP.AggregateTransportTechnology{getproperty(PSY, Symbol(line.power_systems_type))}(;
         name=line.name,
         id=line.id,
@@ -97,7 +97,7 @@ function openapi2psip(line::AggregateTransportTechnology, resolver::PortfolioRes
     )
 end
 
-function openapi2psip(line::NodalACTransportTechnology, resolver::PortfolioResolver)
+function openapi2psip(line::NodalACTransportTechnology, resolver::Resolver)
     PSIP.NodalACTransportTechnology{getproperty(PSY, Symbol(line.power_systems_type))}(;
         name=line.name,
         id=line.id,
@@ -115,7 +115,7 @@ function openapi2psip(line::NodalACTransportTechnology, resolver::PortfolioResol
     )
 end
 
-function openapi2psip(line::NodalHVDCTransportTechnology, resolver::PortfolioResolver)
+function openapi2psip(line::NodalHVDCTransportTechnology, resolver::Resolver)
     PSIP.NodalHVDCTransportTechnology{getproperty(PSY, Symbol(line.power_systems_type))}(;
         name=line.name,
         id=line.id,

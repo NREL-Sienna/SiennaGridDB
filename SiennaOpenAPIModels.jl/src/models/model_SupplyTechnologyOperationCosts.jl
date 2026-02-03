@@ -16,9 +16,9 @@ end # type SupplyTechnologyOperationCosts
 function OpenAPI.property_type(::Type{ SupplyTechnologyOperationCosts }, name::Symbol, json::Dict{String,Any})
     discriminator = json["cost_type"]
     if discriminator == "RENEWABLE"
-        return eval(Base.Meta.parse("ERRORUNKNOWN"))
+        return eval(Base.Meta.parse("RenewableGenerationCost"))
     elseif discriminator == "THERMAL"
-        return eval(Base.Meta.parse("ERRORUNKNOWN"))
+        return eval(Base.Meta.parse("ThermalGenerationCost"))
     end
     throw(OpenAPI.ValidationException("Invalid discriminator value: $discriminator for SupplyTechnologyOperationCosts"))
 end

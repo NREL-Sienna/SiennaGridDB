@@ -642,7 +642,7 @@ function add_components_to_portfolio!(
     table_name,
     rows,
     attributes::Dict{Int64, Dict{String, Any}},
-    resolver::PortfolioResolver,
+    resolver::Resolver,
 ) where {OpenAPI_T}
     for row in rows
         extra_attributes = get(attributes, row.id, Dict{String, Any}())
@@ -661,7 +661,7 @@ function add_components_to_portfolio!(
     end
 end
 
-function db2portfolio!(portfolio::PSIP.Portfolio, db, resolver::PortfolioResolver)
+function db2portfolio!(portfolio::PSIP.Portfolio, db, resolver::Resolver)
     attributes = get_entity_attributes(db)
     row_counts = Dict{String, Int64}()
     all_entities = 0
@@ -677,23 +677,23 @@ function db2portfolio!(portfolio::PSIP.Portfolio, db, resolver::PortfolioResolve
             get(row_counts, table_name, 0) + (length(resolver.id2uuid) - all_entities)
         all_entities = length(resolver.id2uuid)
     end
-    for (table_name, _) in TABLE_SCHEMAS
-        if table_name in ["attributes", "entities", "prime_mover_types", "fuels", "entity_types", "time_series_associations", "static_time_series", "time_series"]
-            continue
-        end
-        result = DBInterface.execute(db, "SELECT count(*) from $table_name")
-        db_count = first(first(result))::Int64
-        local_count = get(row_counts, table_name, 0)
-        if db_count != local_count
-            @warn "Table $table_name contains $db_count ids but $local_count were processed"
-        end
-    end
+    # for (table_name, _) in TABLE_SCHEMAS
+    #     if table_name in ["attributes", "entities", "prime_mover_types", "fuels", "entity_types", "time_series_associations", "static_time_series", "time_series"]
+    #         continue
+    #     end
+    #     result = DBInterface.execute(db, "SELECT count(*) from $table_name")
+    #     db_count = first(first(result))::Int64
+    #     local_count = get(row_counts, table_name, 0)
+    #     if db_count != local_count
+    #         @warn "Table $table_name contains $db_count ids but $local_count were processed"
+    #     end
+    # end
 end
 
 function db2portfolio(db) #Should also pass the desired aggregation level probably?
     portfolio = PSIP.Portfolio() 
-    resolver = PortfolioResolver(portfolio, Dict{Int64, UUID}())
+    resolver = Resolver(portfolio, Dict{Int64, UUID}())
     db2portfolio!(portfolio, db, resolver)
-    portfolio.base_system = make_system_from_db(db)
+    portfolio.base_system = db2sys(db)
     return portfolio
 end
