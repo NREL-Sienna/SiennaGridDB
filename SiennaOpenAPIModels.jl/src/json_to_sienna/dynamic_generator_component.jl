@@ -18,9 +18,6 @@ function openapi2psy(round_rotor::RoundRotorMachine, resolver::Resolver)
         γ_d2=round_rotor.gamma_d2, # DNM
         γ_q2=round_rotor.gamma_q2, # DNM
         γ_qd=round_rotor.gamma_qd, # DNM
-        states=map(string, round_rotor.states), # DNM
-        # not sure how else to handle the states since they aren't an enum in PSY/src/definitions.jl
-        n_states=round_rotor.n_states, # DNM
     )
 end
 
@@ -51,9 +48,7 @@ function openapi2psy(gov1::SteamTurbineGov1, resolver::Resolver)
         DB_l=gov1.DB_l,
         T_rate=gov1.T_rate,
         P_ref=gov1.P_ref,
-        states=map(string, gov1.states), # DNM
-        n_states=gov1.n_states, # DNM
         states_types=map(string, gov1.states_types), # DNM
-        # not sure how else to handle the states/states_types since they aren't an enum in PSY/src/definitions.jl
+        # not sure how else to handle the states_types since its not an enum in PSY/src/definitions.jl
     )
 end

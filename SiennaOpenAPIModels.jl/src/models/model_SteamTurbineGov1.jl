@@ -16,8 +16,6 @@
         DB_l=nothing,
         T_rate=nothing,
         P_ref=nothing,
-        states=nothing,
-        n_states=2,
         states_types=nothing,
     )
 
@@ -32,8 +30,6 @@
     - DB_l::Float64
     - T_rate::Float64
     - P_ref::Float64
-    - states::Vector{String}
-    - n_states::Int64 : Do not modify
     - states_types::Vector{String} : Do not modify
 """
 Base.@kwdef mutable struct SteamTurbineGov1 <: OpenAPI.APIModel
@@ -48,18 +44,16 @@ Base.@kwdef mutable struct SteamTurbineGov1 <: OpenAPI.APIModel
     DB_l::Union{Nothing, Float64} = nothing
     T_rate::Union{Nothing, Float64} = nothing
     P_ref::Union{Nothing, Float64} = nothing
-    states::Union{Nothing, Vector{String}} = nothing
-    n_states::Union{Nothing, Int64} = 2
     states_types::Union{Nothing, Vector{String}} = nothing
 
-    function SteamTurbineGov1(id, R, T1, valve_position_limits, T2, T3, D_T, DB_h, DB_l, T_rate, P_ref, states, n_states, states_types, )
-        o = new(id, R, T1, valve_position_limits, T2, T3, D_T, DB_h, DB_l, T_rate, P_ref, states, n_states, states_types, )
+    function SteamTurbineGov1(id, R, T1, valve_position_limits, T2, T3, D_T, DB_h, DB_l, T_rate, P_ref, states_types, )
+        o = new(id, R, T1, valve_position_limits, T2, T3, D_T, DB_h, DB_l, T_rate, P_ref, states_types, )
         OpenAPI.validate_properties(o)
         return o
     end
 end # type SteamTurbineGov1
 
-const _property_types_SteamTurbineGov1 = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("R")=>"Float64", Symbol("T1")=>"Float64", Symbol("valve_position_limits")=>"MinMax", Symbol("T2")=>"Float64", Symbol("T3")=>"Float64", Symbol("D_T")=>"Float64", Symbol("DB_h")=>"Float64", Symbol("DB_l")=>"Float64", Symbol("T_rate")=>"Float64", Symbol("P_ref")=>"Float64", Symbol("states")=>"Vector{String}", Symbol("n_states")=>"Int64", Symbol("states_types")=>"Vector{String}", )
+const _property_types_SteamTurbineGov1 = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("R")=>"Float64", Symbol("T1")=>"Float64", Symbol("valve_position_limits")=>"MinMax", Symbol("T2")=>"Float64", Symbol("T3")=>"Float64", Symbol("D_T")=>"Float64", Symbol("DB_h")=>"Float64", Symbol("DB_l")=>"Float64", Symbol("T_rate")=>"Float64", Symbol("P_ref")=>"Float64", Symbol("states_types")=>"Vector{String}", )
 OpenAPI.property_type(::Type{ SteamTurbineGov1 }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_SteamTurbineGov1[name]))}
 
 function OpenAPI.check_required(o::SteamTurbineGov1)
@@ -73,7 +67,6 @@ function OpenAPI.check_required(o::SteamTurbineGov1)
     o.DB_h === nothing && (return false)
     o.DB_l === nothing && (return false)
     o.T_rate === nothing && (return false)
-    o.states === nothing && (return false)
     true
 end
 
@@ -89,8 +82,6 @@ function OpenAPI.validate_properties(o::SteamTurbineGov1)
     OpenAPI.validate_property(SteamTurbineGov1, Symbol("DB_l"), o.DB_l)
     OpenAPI.validate_property(SteamTurbineGov1, Symbol("T_rate"), o.T_rate)
     OpenAPI.validate_property(SteamTurbineGov1, Symbol("P_ref"), o.P_ref)
-    OpenAPI.validate_property(SteamTurbineGov1, Symbol("states"), o.states)
-    OpenAPI.validate_property(SteamTurbineGov1, Symbol("n_states"), o.n_states)
     OpenAPI.validate_property(SteamTurbineGov1, Symbol("states_types"), o.states_types)
 end
 
@@ -104,12 +95,6 @@ function OpenAPI.validate_property(::Type{ SteamTurbineGov1 }, name::Symbol, val
 
 
 
-
-
-
-    if name === Symbol("states")
-        OpenAPI.validate_param(name, "SteamTurbineGov1", :enum, val, ["x_g1", "x_g2"])
-    end
 
 
 

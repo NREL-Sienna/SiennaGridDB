@@ -12,8 +12,6 @@
         Te=nothing,
         V_lim=nothing,
         V_ref=1.0,
-        states=nothing,
-        n_states=2,
         states_types=nothing,
     )
 
@@ -24,8 +22,6 @@
     - Te::Float64
     - V_lim::MinMax
     - V_ref::Float64
-    - states::Vector{String} : Do not modify
-    - n_states::Int64 : Do not modify
     - states_types::Vector{String} : Do not modify
 """
 Base.@kwdef mutable struct SEXS <: OpenAPI.APIModel
@@ -36,18 +32,16 @@ Base.@kwdef mutable struct SEXS <: OpenAPI.APIModel
     Te::Union{Nothing, Float64} = nothing
     V_lim = nothing # spec type: Union{ Nothing, MinMax }
     V_ref::Union{Nothing, Float64} = 1.0
-    states::Union{Nothing, Vector{String}} = nothing
-    n_states::Union{Nothing, Int64} = 2
     states_types::Union{Nothing, Vector{String}} = nothing
 
-    function SEXS(id, Ta_Tb, Tb, K, Te, V_lim, V_ref, states, n_states, states_types, )
-        o = new(id, Ta_Tb, Tb, K, Te, V_lim, V_ref, states, n_states, states_types, )
+    function SEXS(id, Ta_Tb, Tb, K, Te, V_lim, V_ref, states_types, )
+        o = new(id, Ta_Tb, Tb, K, Te, V_lim, V_ref, states_types, )
         OpenAPI.validate_properties(o)
         return o
     end
 end # type SEXS
 
-const _property_types_SEXS = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("Ta_Tb")=>"Float64", Symbol("Tb")=>"Float64", Symbol("K")=>"Float64", Symbol("Te")=>"Float64", Symbol("V_lim")=>"MinMax", Symbol("V_ref")=>"Float64", Symbol("states")=>"Vector{String}", Symbol("n_states")=>"Int64", Symbol("states_types")=>"Vector{String}", )
+const _property_types_SEXS = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("Ta_Tb")=>"Float64", Symbol("Tb")=>"Float64", Symbol("K")=>"Float64", Symbol("Te")=>"Float64", Symbol("V_lim")=>"MinMax", Symbol("V_ref")=>"Float64", Symbol("states_types")=>"Vector{String}", )
 OpenAPI.property_type(::Type{ SEXS }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_SEXS[name]))}
 
 function OpenAPI.check_required(o::SEXS)
@@ -57,7 +51,6 @@ function OpenAPI.check_required(o::SEXS)
     o.K === nothing && (return false)
     o.Te === nothing && (return false)
     o.V_lim === nothing && (return false)
-    o.states === nothing && (return false)
     true
 end
 
@@ -69,8 +62,6 @@ function OpenAPI.validate_properties(o::SEXS)
     OpenAPI.validate_property(SEXS, Symbol("Te"), o.Te)
     OpenAPI.validate_property(SEXS, Symbol("V_lim"), o.V_lim)
     OpenAPI.validate_property(SEXS, Symbol("V_ref"), o.V_ref)
-    OpenAPI.validate_property(SEXS, Symbol("states"), o.states)
-    OpenAPI.validate_property(SEXS, Symbol("n_states"), o.n_states)
     OpenAPI.validate_property(SEXS, Symbol("states_types"), o.states_types)
 end
 
@@ -80,12 +71,6 @@ function OpenAPI.validate_property(::Type{ SEXS }, name::Symbol, val)
 
 
 
-
-
-
-    if name === Symbol("states")
-        OpenAPI.validate_param(name, "SEXS", :enum, val, ["Vf", "Vr"])
-    end
 
 
 

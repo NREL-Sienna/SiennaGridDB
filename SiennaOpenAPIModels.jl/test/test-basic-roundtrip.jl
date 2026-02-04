@@ -588,6 +588,59 @@ end
     end
 end
 
+@testset "WECC 240 RoundTrip to JSON" begin
+    wecc240 = PowerSystemCaseBuilder.build_system(
+        PowerSystemCaseBuilder.PSIDSystems,
+        "WECC 240 Bus",
+    )
+    dyn_gen_type = PSY.DynamicGenerator{PSY.RoundRotorQuadratic, PSY.SingleMass, PSY.SEXS, PSY.SteamTurbineGov1, PSY.PSSFixed}
+    wecc240_dyn_gens = collect(PSY.get_components(x -> typeof(PSY.get_dynamic_injector(x)) == dyn_gen_type, PSY.Generator, wecc240));
+#    dyn_inv_type = PSY.DynamicInverter{PSY.RenewableEnergyConverterTypeA, PSY.OuterControl, PSY.RECurrentControlB, PSY.FixedDCSource, PSY.FixedFrequency, PSY.RLFilter, Nothing}
+    wecc240_dyn_invs = collect(PSY.get_components(x -> typeof(PSY.get_dynamic_injector(x)) != dyn_gen_type, PSY.Generator, wecc240));
+    @testset "ActiveRenewableControllerAB to JSON" begin
+        activeAB = wecc240_dyn_invs[1].dynamic_injector.outer_control.active_power_control
+        @test isa(activeAB, PSY.ActiveRenewableControllerAB)
+        test_convert = SiennaOpenAPIModels.psy2openapi(activeAB, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.ActiveRenewableControllerAB, test_convert)
+    end
+    @testset "ReactiveRenewableControllerAB to JSON" begin
+        reactiveAB = wecc240_dyn_invs[1].dynamic_injector.outer_control.reactive_power_control
+        @test isa(reactiveAB, PSY.ReactiveRenewableControllerAB)
+        test_convert = SiennaOpenAPIModels.psy2openapi(reactiveAB, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.ReactiveRenewableControllerAB, test_convert)
+    end
+    @testset "RECurrentControlB to JSON" begin
+        recurrentB = wecc240_dyn_invs[1].dynamic_injector.inner_control
+        @test isa(recurrentB, PSY.RECurrentControlB)
+        test_convert = SiennaOpenAPIModels.psy2openapi(recurrentB, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.RECurrentControlB, test_convert)
+    end
+    @testset "RenewableEnergyConverterTypeA to JSON" begin
+        renew_typeA = wecc240_dyn_invs[1].dynamic_injector.converter
+        @test isa(renew_typeA, PSY.RenewableEnergyConverterTypeA)
+        test_convert = SiennaOpenAPIModels.psy2openapi(renew_typeA, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.RenewableEnergyConverterTypeA, test_convert)
+    end
+    @testset "RoundRotorMachine to JSON" begin
+        rotor_machine = wecc240_dyn_gens[1].dynamic_injector.machine.base_machine
+        @test isa(rotor_machine, PSY.RoundRotorMachine)
+        test_convert = SiennaOpenAPIModels.psy2openapi(rotor_machine, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.RoundRotorMachine, test_convert)
+    end
+    @testset "SEXS to JSON" begin
+        sexs = wecc240_dyn_gens[1].dynamic_injector.avr
+        @test isa(sexs, PSY.SEXS)
+        test_convert = SiennaOpenAPIModels.psy2openapi(sexs, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.SEXS, test_convert)
+    end
+    @testset "SteamTurbineGov1 to JSON" begin
+        steamgov1 = wecc240_dyn_gens[1].dynamic_injector.prime_mover
+        @test isa(steamgov1, PSY.SteamTurbineGov1)
+        test_convert = SiennaOpenAPIModels.psy2openapi(steamgov1, IDGenerator())
+        test_roundtrip(SiennaOpenAPIModels.SteamTurbineGov1, test_convert)
+    end
+end
+
 @testset "sys10_pjm_ac_dc RoundTrip to JSON" begin
     sys10_pjm_ac_dc = PowerSystemCaseBuilder.build_system(
         PowerSystemCaseBuilder.PSISystems,

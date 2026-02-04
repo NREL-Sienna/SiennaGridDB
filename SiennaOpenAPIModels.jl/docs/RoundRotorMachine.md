@@ -22,8 +22,6 @@ Name | Type | Description | Notes
 **gamma_d2** | **Float64** | Do not modify | [default to nothing]
 **gamma_q2** | **Float64** | Do not modify | [default to nothing]
 **gamma_qd** | **Float64** | Do not modify | [default to nothing]
-**states** | **Vector{String}** |  | [default to nothing]
-**n_states** | **Int64** | Do not modify | [optional] [default to 4]
 
 
 [[Back to Model list]](../README.md#models) [[Back to API list]](../README.md#api-endpoints) [[Back to README]](../README.md)

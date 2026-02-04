@@ -21,8 +21,6 @@ function psy2openapi(controller::PSY.ActiveRenewableControllerAB, ids::IDGenerat
         P_lim_inner=get_min_max(controller.P_lim_inner),
         T_pord=controller.T_pord,
         P_ref=controller.P_ref,
-        states=map(string, controller.states), # do not modify (DNM)
-        n_states=controller.n_states, # DNM
     )
 end
 
@@ -41,8 +39,6 @@ function psy2openapi(controller::PSY.RECurrentControlB, ids::IDGenerator)
         K_vi=controller.K_vi,
         T_iq=controller.T_iq,
         I_max=controller.I_max,
-        states=map(string, controller.states), # DNM
-        n_states=controller.n_states, # DNM
     )
 end
 
@@ -78,8 +74,6 @@ function psy2openapi(controller::PSY.ReactiveRenewableControllerAB, ids::IDGener
         K_qi=controller.K_qi,
         Q_ref=controller.Q_ref,
         V_ref=controller.V_ref,
-        states=map(string, controller.states), # DNM
-        n_states=controller.n_states, # DNM
     )
 end
 
@@ -102,7 +96,5 @@ function psy2openapi(energy_conv::PSY.RenewableEnergyConverterTypeA, ids::IDGene
         Q_ref=energy_conv.Q_ref,
         R_source=energy_conv.R_source,
         X_source=energy_conv.X_source,
-        states=map(string, energy_conv.states), # DNM
-        n_states=energy_conv.n_states, # DNM
     )
 end

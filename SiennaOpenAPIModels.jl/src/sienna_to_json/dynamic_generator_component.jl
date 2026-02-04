@@ -19,8 +19,6 @@ function psy2openapi(round_rotor::PSY.RoundRotorMachine, ids::IDGenerator)
         gamma_d2=round_rotor.γ_d2, # DNM
         gamma_q2=round_rotor.γ_q2, # DNM
         gamma_qd=round_rotor.γ_qd, # DNM
-        states=map(string, round_rotor.states), # DNM
-        n_states=round_rotor.n_states, # DNM
     )
 end
 
@@ -33,8 +31,6 @@ function psy2openapi(sexs::PSY.SEXS, ids::IDGenerator)
         Te=sexs.Te,
         V_lim=get_min_max(sexs.V_lim),
         V_ref=sexs.V_ref,
-        states=map(string, sexs.states), # DNM
-        n_states=sexs.states, # DNM
         states_types=map(string, sexs.states_types), # DNM
     )
 end
@@ -52,8 +48,6 @@ function psy2openapi(gov1::PSY.SteamTurbineGov1, ids::IDGenerator)
         DB_l=gov1.DB_l,
         T_rate=gov1.T_rate,
         P_ref=gov1.P_ref,
-        states=map(string, gov1.states), # DNM
-        n_states=gov1.n_states, # DNM
         states_types=map(string, gov1.states_types), # DNM
     )
 end

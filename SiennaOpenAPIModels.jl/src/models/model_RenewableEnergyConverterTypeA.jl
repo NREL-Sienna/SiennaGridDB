@@ -22,8 +22,6 @@
         Q_ref=1.0,
         R_source=0.0,
         X_source=100000.0,
-        states=nothing,
-        n_states=3,
     )
 
     - id::Int64
@@ -43,8 +41,6 @@
     - Q_ref::Float64
     - R_source::Float64
     - X_source::Float64
-    - states::Vector{String} : Do not modify
-    - n_states::Int64 : Do not modify
 """
 Base.@kwdef mutable struct RenewableEnergyConverterTypeA <: OpenAPI.APIModel
     id::Union{Nothing, Int64} = nothing
@@ -64,17 +60,15 @@ Base.@kwdef mutable struct RenewableEnergyConverterTypeA <: OpenAPI.APIModel
     Q_ref::Union{Nothing, Float64} = 1.0
     R_source::Union{Nothing, Float64} = 0.0
     X_source::Union{Nothing, Float64} = 100000.0
-    states::Union{Nothing, Vector{String}} = nothing
-    n_states::Union{Nothing, Int64} = 3
 
-    function RenewableEnergyConverterTypeA(id, T_g, Rrpwr, Brkpt, Zerox, Lvpl1, Vo_lim, Lv_pnts, Io_lim, T_fltr, K_hv, Iqr_lims, Accel, Lvpl_sw, Q_ref, R_source, X_source, states, n_states, )
-        o = new(id, T_g, Rrpwr, Brkpt, Zerox, Lvpl1, Vo_lim, Lv_pnts, Io_lim, T_fltr, K_hv, Iqr_lims, Accel, Lvpl_sw, Q_ref, R_source, X_source, states, n_states, )
+    function RenewableEnergyConverterTypeA(id, T_g, Rrpwr, Brkpt, Zerox, Lvpl1, Vo_lim, Lv_pnts, Io_lim, T_fltr, K_hv, Iqr_lims, Accel, Lvpl_sw, Q_ref, R_source, X_source, )
+        o = new(id, T_g, Rrpwr, Brkpt, Zerox, Lvpl1, Vo_lim, Lv_pnts, Io_lim, T_fltr, K_hv, Iqr_lims, Accel, Lvpl_sw, Q_ref, R_source, X_source, )
         OpenAPI.validate_properties(o)
         return o
     end
 end # type RenewableEnergyConverterTypeA
 
-const _property_types_RenewableEnergyConverterTypeA = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("T_g")=>"Float64", Symbol("Rrpwr")=>"Float64", Symbol("Brkpt")=>"Float64", Symbol("Zerox")=>"Float64", Symbol("Lvpl1")=>"Float64", Symbol("Vo_lim")=>"Float64", Symbol("Lv_pnts")=>"MinMax", Symbol("Io_lim")=>"Float64", Symbol("T_fltr")=>"Float64", Symbol("K_hv")=>"Float64", Symbol("Iqr_lims")=>"MinMax", Symbol("Accel")=>"Float64", Symbol("Lvpl_sw")=>"Bool", Symbol("Q_ref")=>"Float64", Symbol("R_source")=>"Float64", Symbol("X_source")=>"Float64", Symbol("states")=>"Vector{String}", Symbol("n_states")=>"Int64", )
+const _property_types_RenewableEnergyConverterTypeA = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("T_g")=>"Float64", Symbol("Rrpwr")=>"Float64", Symbol("Brkpt")=>"Float64", Symbol("Zerox")=>"Float64", Symbol("Lvpl1")=>"Float64", Symbol("Vo_lim")=>"Float64", Symbol("Lv_pnts")=>"MinMax", Symbol("Io_lim")=>"Float64", Symbol("T_fltr")=>"Float64", Symbol("K_hv")=>"Float64", Symbol("Iqr_lims")=>"MinMax", Symbol("Accel")=>"Float64", Symbol("Lvpl_sw")=>"Bool", Symbol("Q_ref")=>"Float64", Symbol("R_source")=>"Float64", Symbol("X_source")=>"Float64", )
 OpenAPI.property_type(::Type{ RenewableEnergyConverterTypeA }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_RenewableEnergyConverterTypeA[name]))}
 
 function OpenAPI.check_required(o::RenewableEnergyConverterTypeA)
@@ -92,7 +86,6 @@ function OpenAPI.check_required(o::RenewableEnergyConverterTypeA)
     o.Iqr_lims === nothing && (return false)
     o.Accel === nothing && (return false)
     o.Lvpl_sw === nothing && (return false)
-    o.states === nothing && (return false)
     true
 end
 
@@ -114,8 +107,6 @@ function OpenAPI.validate_properties(o::RenewableEnergyConverterTypeA)
     OpenAPI.validate_property(RenewableEnergyConverterTypeA, Symbol("Q_ref"), o.Q_ref)
     OpenAPI.validate_property(RenewableEnergyConverterTypeA, Symbol("R_source"), o.R_source)
     OpenAPI.validate_property(RenewableEnergyConverterTypeA, Symbol("X_source"), o.X_source)
-    OpenAPI.validate_property(RenewableEnergyConverterTypeA, Symbol("states"), o.states)
-    OpenAPI.validate_property(RenewableEnergyConverterTypeA, Symbol("n_states"), o.n_states)
 end
 
 function OpenAPI.validate_property(::Type{ RenewableEnergyConverterTypeA }, name::Symbol, val)
@@ -134,12 +125,6 @@ function OpenAPI.validate_property(::Type{ RenewableEnergyConverterTypeA }, name
 
 
 
-
-
-
-    if name === Symbol("states")
-        OpenAPI.validate_param(name, "RenewableEnergyConverterTypeA", :enum, val, ["Ip", "Iq", "VMeas"])
-    end
 
 
 end

@@ -15,8 +15,6 @@ Name | Type | Description | Notes
 **DB_l** | **Float64** |  | [default to nothing]
 **T_rate** | **Float64** |  | [default to nothing]
 **P_ref** | **Float64** |  | [optional] [default to nothing]
-**states** | **Vector{String}** |  | [default to nothing]
-**n_states** | **Int64** | Do not modify | [optional] [default to 2]
 **states_types** | **Vector{String}** | Do not modify | [optional] [default to nothing]
 
 

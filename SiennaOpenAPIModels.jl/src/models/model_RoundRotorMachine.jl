@@ -23,8 +23,6 @@
         gamma_d2=nothing,
         gamma_q2=nothing,
         gamma_qd=nothing,
-        states=nothing,
-        n_states=4,
     )
 
     - id::Int64
@@ -45,8 +43,6 @@
     - gamma_d2::Float64 : Do not modify
     - gamma_q2::Float64 : Do not modify
     - gamma_qd::Float64 : Do not modify
-    - states::Vector{String}
-    - n_states::Int64 : Do not modify
 """
 Base.@kwdef mutable struct RoundRotorMachine <: OpenAPI.APIModel
     id::Union{Nothing, Int64} = nothing
@@ -67,17 +63,15 @@ Base.@kwdef mutable struct RoundRotorMachine <: OpenAPI.APIModel
     gamma_d2::Union{Nothing, Float64} = nothing
     gamma_q2::Union{Nothing, Float64} = nothing
     gamma_qd::Union{Nothing, Float64} = nothing
-    states::Union{Nothing, Vector{String}} = nothing
-    n_states::Union{Nothing, Int64} = 4
 
-    function RoundRotorMachine(id, R, Td0_p, Td0_pp, Tq0_p, Tq0_pp, Xd, Xq, Xd_p, Xq_p, Xd_pp, Xl, Se, gamma_d1, gamma_q1, gamma_d2, gamma_q2, gamma_qd, states, n_states, )
-        o = new(id, R, Td0_p, Td0_pp, Tq0_p, Tq0_pp, Xd, Xq, Xd_p, Xq_p, Xd_pp, Xl, Se, gamma_d1, gamma_q1, gamma_d2, gamma_q2, gamma_qd, states, n_states, )
+    function RoundRotorMachine(id, R, Td0_p, Td0_pp, Tq0_p, Tq0_pp, Xd, Xq, Xd_p, Xq_p, Xd_pp, Xl, Se, gamma_d1, gamma_q1, gamma_d2, gamma_q2, gamma_qd, )
+        o = new(id, R, Td0_p, Td0_pp, Tq0_p, Tq0_pp, Xd, Xq, Xd_p, Xq_p, Xd_pp, Xl, Se, gamma_d1, gamma_q1, gamma_d2, gamma_q2, gamma_qd, )
         OpenAPI.validate_properties(o)
         return o
     end
 end # type RoundRotorMachine
 
-const _property_types_RoundRotorMachine = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("R")=>"Float64", Symbol("Td0_p")=>"Float64", Symbol("Td0_pp")=>"Float64", Symbol("Tq0_p")=>"Float64", Symbol("Tq0_pp")=>"Float64", Symbol("Xd")=>"Float64", Symbol("Xq")=>"Float64", Symbol("Xd_p")=>"Float64", Symbol("Xq_p")=>"Float64", Symbol("Xd_pp")=>"Float64", Symbol("Xl")=>"Float64", Symbol("Se")=>"Vector{Float64}", Symbol("gamma_d1")=>"Float64", Symbol("gamma_q1")=>"Float64", Symbol("gamma_d2")=>"Float64", Symbol("gamma_q2")=>"Float64", Symbol("gamma_qd")=>"Float64", Symbol("states")=>"Vector{String}", Symbol("n_states")=>"Int64", )
+const _property_types_RoundRotorMachine = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("R")=>"Float64", Symbol("Td0_p")=>"Float64", Symbol("Td0_pp")=>"Float64", Symbol("Tq0_p")=>"Float64", Symbol("Tq0_pp")=>"Float64", Symbol("Xd")=>"Float64", Symbol("Xq")=>"Float64", Symbol("Xd_p")=>"Float64", Symbol("Xq_p")=>"Float64", Symbol("Xd_pp")=>"Float64", Symbol("Xl")=>"Float64", Symbol("Se")=>"Vector{Float64}", Symbol("gamma_d1")=>"Float64", Symbol("gamma_q1")=>"Float64", Symbol("gamma_d2")=>"Float64", Symbol("gamma_q2")=>"Float64", Symbol("gamma_qd")=>"Float64", )
 OpenAPI.property_type(::Type{ RoundRotorMachine }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_RoundRotorMachine[name]))}
 
 function OpenAPI.check_required(o::RoundRotorMachine)
@@ -99,7 +93,6 @@ function OpenAPI.check_required(o::RoundRotorMachine)
     o.gamma_d2 === nothing && (return false)
     o.gamma_q2 === nothing && (return false)
     o.gamma_qd === nothing && (return false)
-    o.states === nothing && (return false)
     true
 end
 
@@ -122,8 +115,6 @@ function OpenAPI.validate_properties(o::RoundRotorMachine)
     OpenAPI.validate_property(RoundRotorMachine, Symbol("gamma_d2"), o.gamma_d2)
     OpenAPI.validate_property(RoundRotorMachine, Symbol("gamma_q2"), o.gamma_q2)
     OpenAPI.validate_property(RoundRotorMachine, Symbol("gamma_qd"), o.gamma_qd)
-    OpenAPI.validate_property(RoundRotorMachine, Symbol("states"), o.states)
-    OpenAPI.validate_property(RoundRotorMachine, Symbol("n_states"), o.n_states)
 end
 
 function OpenAPI.validate_property(::Type{ RoundRotorMachine }, name::Symbol, val)
@@ -147,12 +138,6 @@ function OpenAPI.validate_property(::Type{ RoundRotorMachine }, name::Symbol, va
 
 
 
-
-
-
-    if name === Symbol("states")
-        OpenAPI.validate_param(name, "RoundRotorMachine", :enum, val, ["eq_p", "ed_p", "phi_kd", "phi_kq"])
-    end
 
 
 end

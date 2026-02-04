@@ -17,8 +17,6 @@ Name | Type | Description | Notes
 **K_vi** | **Float64** |  | [default to nothing]
 **T_iq** | **Float64** |  | [default to nothing]
 **I_max** | **Float64** |  | [default to nothing]
-**states** | **Vector{String}** | States of the RECurrentControlB model (dependent on the Flags) | [default to nothing]
-**n_states** | **Int64** | Number of states (dependent on the Flags) | [default to nothing]
 
 
 [[Back to Model list]](../README.md#models) [[Back to API list]](../README.md#api-endpoints) [[Back to README]](../README.md)

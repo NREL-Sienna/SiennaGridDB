@@ -23,8 +23,6 @@ Name | Type | Description | Notes
 **P_lim_inner** | [***MinMax**](MinMax.md) |  | [default to nothing]
 **T_pord** | **Float64** |  | [optional] [default to nothing]
 **P_ref** | **Float64** |  | [optional] [default to 1.0]
-**states** | **Vector{String}** | States of the ActiveRenewableControllerAB model (dependent on the Flag) | [default to nothing]
-**n_states** | **Int64** | Number of states (dependent on the Flag) | [default to nothing]
 
 
 [[Back to Model list]](../README.md#models) [[Back to API list]](../README.md#api-endpoints) [[Back to README]](../README.md)

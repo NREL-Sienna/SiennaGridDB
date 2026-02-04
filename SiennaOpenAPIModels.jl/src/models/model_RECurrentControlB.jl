@@ -18,8 +18,6 @@
         K_vi=nothing,
         T_iq=nothing,
         I_max=nothing,
-        states=nothing,
-        n_states=nothing,
     )
 
     - id::Int64
@@ -35,8 +33,6 @@
     - K_vi::Float64
     - T_iq::Float64
     - I_max::Float64
-    - states::Vector{String} : States of the RECurrentControlB model (dependent on the Flags)
-    - n_states::Int64 : Number of states (dependent on the Flags)
 """
 Base.@kwdef mutable struct RECurrentControlB <: OpenAPI.APIModel
     id::Union{Nothing, Int64} = nothing
@@ -52,17 +48,15 @@ Base.@kwdef mutable struct RECurrentControlB <: OpenAPI.APIModel
     K_vi::Union{Nothing, Float64} = nothing
     T_iq::Union{Nothing, Float64} = nothing
     I_max::Union{Nothing, Float64} = nothing
-    states::Union{Nothing, Vector{String}} = nothing
-    n_states::Union{Nothing, Int64} = nothing
 
-    function RECurrentControlB(id, Q_Flag, PQ_Flag, Vdip_lim, T_rv, dbd_pnts, K_qv, Iqinj_lim, V_ref0, K_vp, K_vi, T_iq, I_max, states, n_states, )
-        o = new(id, Q_Flag, PQ_Flag, Vdip_lim, T_rv, dbd_pnts, K_qv, Iqinj_lim, V_ref0, K_vp, K_vi, T_iq, I_max, states, n_states, )
+    function RECurrentControlB(id, Q_Flag, PQ_Flag, Vdip_lim, T_rv, dbd_pnts, K_qv, Iqinj_lim, V_ref0, K_vp, K_vi, T_iq, I_max, )
+        o = new(id, Q_Flag, PQ_Flag, Vdip_lim, T_rv, dbd_pnts, K_qv, Iqinj_lim, V_ref0, K_vp, K_vi, T_iq, I_max, )
         OpenAPI.validate_properties(o)
         return o
     end
 end # type RECurrentControlB
 
-const _property_types_RECurrentControlB = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("Q_Flag")=>"Bool", Symbol("PQ_Flag")=>"Bool", Symbol("Vdip_lim")=>"MinMax", Symbol("T_rv")=>"Float64", Symbol("dbd_pnts")=>"DbdPnts", Symbol("K_qv")=>"Float64", Symbol("Iqinj_lim")=>"MinMax", Symbol("V_ref0")=>"Float64", Symbol("K_vp")=>"Float64", Symbol("K_vi")=>"Float64", Symbol("T_iq")=>"Float64", Symbol("I_max")=>"Float64", Symbol("states")=>"Vector{String}", Symbol("n_states")=>"Int64", )
+const _property_types_RECurrentControlB = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("Q_Flag")=>"Bool", Symbol("PQ_Flag")=>"Bool", Symbol("Vdip_lim")=>"MinMax", Symbol("T_rv")=>"Float64", Symbol("dbd_pnts")=>"DbdPnts", Symbol("K_qv")=>"Float64", Symbol("Iqinj_lim")=>"MinMax", Symbol("V_ref0")=>"Float64", Symbol("K_vp")=>"Float64", Symbol("K_vi")=>"Float64", Symbol("T_iq")=>"Float64", Symbol("I_max")=>"Float64", )
 OpenAPI.property_type(::Type{ RECurrentControlB }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_RECurrentControlB[name]))}
 
 function OpenAPI.check_required(o::RECurrentControlB)
@@ -79,8 +73,6 @@ function OpenAPI.check_required(o::RECurrentControlB)
     o.K_vi === nothing && (return false)
     o.T_iq === nothing && (return false)
     o.I_max === nothing && (return false)
-    o.states === nothing && (return false)
-    o.n_states === nothing && (return false)
     true
 end
 
@@ -98,13 +90,9 @@ function OpenAPI.validate_properties(o::RECurrentControlB)
     OpenAPI.validate_property(RECurrentControlB, Symbol("K_vi"), o.K_vi)
     OpenAPI.validate_property(RECurrentControlB, Symbol("T_iq"), o.T_iq)
     OpenAPI.validate_property(RECurrentControlB, Symbol("I_max"), o.I_max)
-    OpenAPI.validate_property(RECurrentControlB, Symbol("states"), o.states)
-    OpenAPI.validate_property(RECurrentControlB, Symbol("n_states"), o.n_states)
 end
 
 function OpenAPI.validate_property(::Type{ RECurrentControlB }, name::Symbol, val)
-
-
 
 
 

@@ -33,8 +33,6 @@
         K_qi=nothing,
         Q_ref=1.0,
         V_ref=1.0,
-        states=nothing,
-        n_states=nothing,
     )
 
     - id::Int64
@@ -65,8 +63,6 @@
     - K_qi::Float64
     - Q_ref::Float64
     - V_ref::Float64
-    - states::Vector{String} : States of the ReactiveRenewableControllerAB model (dependent on the Flags)
-    - n_states::Int64 : Number of states (dependent on the Flags)
 """
 Base.@kwdef mutable struct ReactiveRenewableControllerAB <: OpenAPI.APIModel
     id::Union{Nothing, Int64} = nothing
@@ -97,17 +93,15 @@ Base.@kwdef mutable struct ReactiveRenewableControllerAB <: OpenAPI.APIModel
     K_qi::Union{Nothing, Float64} = nothing
     Q_ref::Union{Nothing, Float64} = 1.0
     V_ref::Union{Nothing, Float64} = 1.0
-    states::Union{Nothing, Vector{String}} = nothing
-    n_states::Union{Nothing, Int64} = nothing
 
-    function ReactiveRenewableControllerAB(id, bus_control, from_branch_control, to_branch_control, branch_id_control, VC_Flag, Ref_Flag, PF_Flag, V_Flag, T_fltr, K_p, K_i, T_ft, T_fv, V_frz, R_c, X_c, K_c, e_lim, dbd_pnts, Q_lim, T_p, Q_lim_inner, V_lim, K_qp, K_qi, Q_ref, V_ref, states, n_states, )
-        o = new(id, bus_control, from_branch_control, to_branch_control, branch_id_control, VC_Flag, Ref_Flag, PF_Flag, V_Flag, T_fltr, K_p, K_i, T_ft, T_fv, V_frz, R_c, X_c, K_c, e_lim, dbd_pnts, Q_lim, T_p, Q_lim_inner, V_lim, K_qp, K_qi, Q_ref, V_ref, states, n_states, )
+    function ReactiveRenewableControllerAB(id, bus_control, from_branch_control, to_branch_control, branch_id_control, VC_Flag, Ref_Flag, PF_Flag, V_Flag, T_fltr, K_p, K_i, T_ft, T_fv, V_frz, R_c, X_c, K_c, e_lim, dbd_pnts, Q_lim, T_p, Q_lim_inner, V_lim, K_qp, K_qi, Q_ref, V_ref, )
+        o = new(id, bus_control, from_branch_control, to_branch_control, branch_id_control, VC_Flag, Ref_Flag, PF_Flag, V_Flag, T_fltr, K_p, K_i, T_ft, T_fv, V_frz, R_c, X_c, K_c, e_lim, dbd_pnts, Q_lim, T_p, Q_lim_inner, V_lim, K_qp, K_qi, Q_ref, V_ref, )
         OpenAPI.validate_properties(o)
         return o
     end
 end # type ReactiveRenewableControllerAB
 
-const _property_types_ReactiveRenewableControllerAB = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("bus_control")=>"Int64", Symbol("from_branch_control")=>"Int64", Symbol("to_branch_control")=>"Int64", Symbol("branch_id_control")=>"String", Symbol("VC_Flag")=>"Bool", Symbol("Ref_Flag")=>"Bool", Symbol("PF_Flag")=>"Bool", Symbol("V_Flag")=>"Bool", Symbol("T_fltr")=>"Float64", Symbol("K_p")=>"Float64", Symbol("K_i")=>"Float64", Symbol("T_ft")=>"Float64", Symbol("T_fv")=>"Float64", Symbol("V_frz")=>"Float64", Symbol("R_c")=>"Float64", Symbol("X_c")=>"Float64", Symbol("K_c")=>"Float64", Symbol("e_lim")=>"MinMax", Symbol("dbd_pnts")=>"DbdPnts", Symbol("Q_lim")=>"MinMax", Symbol("T_p")=>"Float64", Symbol("Q_lim_inner")=>"MinMax", Symbol("V_lim")=>"MinMax", Symbol("K_qp")=>"Float64", Symbol("K_qi")=>"Float64", Symbol("Q_ref")=>"Float64", Symbol("V_ref")=>"Float64", Symbol("states")=>"Vector{String}", Symbol("n_states")=>"Int64", )
+const _property_types_ReactiveRenewableControllerAB = Dict{Symbol,String}(Symbol("id")=>"Int64", Symbol("bus_control")=>"Int64", Symbol("from_branch_control")=>"Int64", Symbol("to_branch_control")=>"Int64", Symbol("branch_id_control")=>"String", Symbol("VC_Flag")=>"Bool", Symbol("Ref_Flag")=>"Bool", Symbol("PF_Flag")=>"Bool", Symbol("V_Flag")=>"Bool", Symbol("T_fltr")=>"Float64", Symbol("K_p")=>"Float64", Symbol("K_i")=>"Float64", Symbol("T_ft")=>"Float64", Symbol("T_fv")=>"Float64", Symbol("V_frz")=>"Float64", Symbol("R_c")=>"Float64", Symbol("X_c")=>"Float64", Symbol("K_c")=>"Float64", Symbol("e_lim")=>"MinMax", Symbol("dbd_pnts")=>"DbdPnts", Symbol("Q_lim")=>"MinMax", Symbol("T_p")=>"Float64", Symbol("Q_lim_inner")=>"MinMax", Symbol("V_lim")=>"MinMax", Symbol("K_qp")=>"Float64", Symbol("K_qi")=>"Float64", Symbol("Q_ref")=>"Float64", Symbol("V_ref")=>"Float64", )
 OpenAPI.property_type(::Type{ ReactiveRenewableControllerAB }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_ReactiveRenewableControllerAB[name]))}
 
 function OpenAPI.check_required(o::ReactiveRenewableControllerAB)
@@ -137,8 +131,6 @@ function OpenAPI.check_required(o::ReactiveRenewableControllerAB)
     o.V_lim === nothing && (return false)
     o.K_qp === nothing && (return false)
     o.K_qi === nothing && (return false)
-    o.states === nothing && (return false)
-    o.n_states === nothing && (return false)
     true
 end
 
@@ -171,13 +163,9 @@ function OpenAPI.validate_properties(o::ReactiveRenewableControllerAB)
     OpenAPI.validate_property(ReactiveRenewableControllerAB, Symbol("K_qi"), o.K_qi)
     OpenAPI.validate_property(ReactiveRenewableControllerAB, Symbol("Q_ref"), o.Q_ref)
     OpenAPI.validate_property(ReactiveRenewableControllerAB, Symbol("V_ref"), o.V_ref)
-    OpenAPI.validate_property(ReactiveRenewableControllerAB, Symbol("states"), o.states)
-    OpenAPI.validate_property(ReactiveRenewableControllerAB, Symbol("n_states"), o.n_states)
 end
 
 function OpenAPI.validate_property(::Type{ ReactiveRenewableControllerAB }, name::Symbol, val)
-
-
 
 
 

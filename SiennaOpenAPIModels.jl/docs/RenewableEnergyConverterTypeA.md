@@ -21,8 +21,6 @@ Name | Type | Description | Notes
 **Q_ref** | **Float64** |  | [optional] [default to 1.0]
 **R_source** | **Float64** |  | [optional] [default to 0.0]
 **X_source** | **Float64** |  | [optional] [default to 100000.0]
-**states** | **Vector{String}** | Do not modify | [default to nothing]
-**n_states** | **Int64** | Do not modify | [optional] [default to 3]
 
 
 [[Back to Model list]](../README.md#models) [[Back to API list]](../README.md#api-endpoints) [[Back to README]](../README.md)
