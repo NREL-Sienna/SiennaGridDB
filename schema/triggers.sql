@@ -228,35 +228,6 @@ SELECT CASE
     END;
 END;
 
--- Validate deterministic forecast data type and JSON array structure
-CREATE TRIGGER validate_deterministic_forecast_data_type BEFORE
-INSERT ON deterministic_forecast_data BEGIN
-SELECT CASE
-        WHEN (
-            SELECT time_series_type
-            FROM time_series_associations
-            WHERE id = NEW.time_series_id
-        ) NOT LIKE '%deterministic%'
-        AND (
-            SELECT time_series_type
-            FROM time_series_associations
-            WHERE id = NEW.time_series_id
-        ) NOT LIKE '%forecast%' THEN RAISE(
-            ABORT,
-            'Cannot insert deterministic forecast data into non-forecast time series type'
-        )
-        WHEN json_type(NEW.forecast_values) != 'array' THEN RAISE(ABORT, 'forecast_values must be a JSON array')
-        WHEN json_array_length(NEW.forecast_values) != (
-            SELECT CAST(horizon AS INTEGER)
-            FROM time_series_associations
-            WHERE id = NEW.time_series_id
-        ) THEN RAISE(
-            ABORT,
-            'forecast_values array length must match horizon from time_series_associations'
-        )
-    END;
-END;
-
 -- Enforce that a turbine can have at most 1 upstream reservoir
 -- (i.e., at most 1 row where sink is a turbine and source is a reservoir)
 CREATE TRIGGER IF NOT EXISTS enforce_turbine_single_upstream_reservoir BEFORE

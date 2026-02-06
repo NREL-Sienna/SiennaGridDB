@@ -41,9 +41,6 @@ for file in "${FILES[@]}"; do
         echo "To fix, copy from canonical to package:"
         echo "  cp $canonical $julia_copy"
         echo ""
-        echo "Diff:"
-        diff "$canonical" "$julia_copy" || true
-        echo ""
         OUT_OF_SYNC=1
     fi
 done

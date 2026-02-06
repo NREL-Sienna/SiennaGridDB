@@ -166,7 +166,7 @@ CREATE TABLE thermal_generators (
     -- Operational flags:
     must_run BOOLEAN NOT NULL DEFAULT FALSE,
     available BOOLEAN NOT NULL DEFAULT TRUE,
-    STATUS BOOLEAN NOT NULL DEFAULT FALSE,
+    status BOOLEAN NOT NULL DEFAULT FALSE,
     -- Initial setpoints:
     active_power REAL NOT NULL DEFAULT 0.0,
     reactive_power REAL NOT NULL DEFAULT 0.0,

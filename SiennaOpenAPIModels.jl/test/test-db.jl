@@ -300,7 +300,7 @@ end
         Tables.columntable(DBInterface.execute(db, "SELECT * FROM transmission_lines"))
     @test length(tx_lines.id) >= 2  # MonitoredLine + PhaseShiftingTransformer + existing
 
-    copy_of_sys = SiennaOpenAPIModels.make_system_from_db(db)
+    copy_of_sys = SiennaOpenAPIModels.db2sys(db)
     @test copy_of_sys isa PSY.System
 
     # Verify ThermalMultiStart round-tripped

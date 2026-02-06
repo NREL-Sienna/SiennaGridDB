@@ -34,6 +34,12 @@ DROP TABLE IF EXISTS time_series_associations;
 
 DROP TABLE IF EXISTS attributes;
 
+DROP TABLE IF EXISTS loads;
+
+DROP TABLE IF EXISTS static_time_series;
+
+DROP TABLE IF EXISTS entity_types;
+
 DROP TABLE IF EXISTS supplemental_attributes;
 
 DROP TABLE IF EXISTS attributes_associations;
@@ -137,7 +143,6 @@ CREATE TABLE transmission_interchanges (
 ) strict;
 
 -- NOTE: The purpose of these tables is to capture data of **existing units only**.
-
 -- Table of thermal generation units (ThermalStandard, ThermalMultiStart)
 CREATE TABLE thermal_generators (
     id INTEGER PRIMARY KEY REFERENCES entities (id),
@@ -178,7 +183,10 @@ CREATE TABLE renewable_generators (
     rating REAL NOT NULL CHECK (rating >= 0),
     base_power REAL NOT NULL CHECK (base_power > 0),
     -- Renewable-specific:
-    power_factor REAL NOT NULL DEFAULT 1.0 CHECK (power_factor > 0 AND power_factor <= 1.0),
+    power_factor REAL NOT NULL DEFAULT 1.0 CHECK (
+        power_factor > 0
+        AND power_factor <= 1.0
+    ),
     reactive_power_limits_min REAL NULL,
     reactive_power_limits_max REAL NULL,
     -- Operational flags:
@@ -221,8 +229,7 @@ CREATE TABLE hydro_generators (
     conversion_factor REAL NULL DEFAULT 1.0 CHECK (conversion_factor > 0),
     travel_time REAL NULL CHECK (travel_time >= 0),
     -- Cost (optional for hydro - has default in PSY):
-    operation_cost JSON NULL
-    -- Note: efficiency (varies by type), turbine_type, and HydroPumpTurbine-specific
+    operation_cost JSON NULL -- Note: efficiency (varies by type), turbine_type, and HydroPumpTurbine-specific
     -- fields (active_power_limits_pump, etc.) are stored in the attributes table
 );
 

@@ -1,42 +1,14 @@
-CREATE TRIGGER IF NOT EXISTS check_planning_regions_entity_exists BEFORE
-INSERT ON planning_regions
-    WHEN NOT EXISTS (
-        SELECT 1
-        FROM entities
-        WHERE id = NEW.id
-            AND entity_table = 'planning_regions'
-    ) BEGIN
-SELECT RAISE(
-        ABORT,
-        'Entity ID must exist in entities table with type planning_regions before insertion'
-    );
-END;
-
-CREATE TRIGGER IF NOT EXISTS check_balancing_topologies_entity_exists BEFORE
-INSERT ON balancing_topologies
-    WHEN NOT EXISTS (
-        SELECT 1
-        FROM entities
-        WHERE id = NEW.id
-            AND entity_table = 'balancing_topologies'
-    ) BEGIN
-SELECT RAISE(
-        ABORT,
-        'Entity ID must exist in entities table with type balancing_topologies before insertion'
-    );
-END;
-
 CREATE TRIGGER IF NOT EXISTS check_arcs_entity_exists BEFORE
 INSERT ON arcs
     WHEN NOT EXISTS (
         SELECT 1
         FROM entities
         WHERE id = NEW.id
-            AND entity_table = 'arcs'
+            AND source_table = 'arcs'
     ) BEGIN
 SELECT RAISE(
         ABORT,
-        'Entity ID must exist in entities table with type arcs before insertion'
+        'Entity ID must exist in entities table with source_table arcs before insertion'
     );
 END;
 
@@ -46,11 +18,11 @@ INSERT ON transmission_lines
         SELECT 1
         FROM entities
         WHERE id = NEW.id
-            AND entity_table = 'transmission_lines'
+            AND source_table = 'transmission_lines'
     ) BEGIN
 SELECT RAISE(
         ABORT,
-        'Entity ID must exist in entities table with type transmission_lines before insertion'
+        'Entity ID must exist in entities table with source_table transmission_lines before insertion'
     );
 END;
 
@@ -60,11 +32,11 @@ INSERT ON transmission_interchanges
         SELECT 1
         FROM entities
         WHERE id = NEW.id
-            AND entity_table = 'transmission_interchanges'
+            AND source_table = 'transmission_interchanges'
     ) BEGIN
 SELECT RAISE(
         ABORT,
-        'Entity ID must exist in entities table with type transmission_interchanges before insertion'
+        'Entity ID must exist in entities table with source_table transmission_interchanges before insertion'
     );
 END;
 
@@ -116,11 +88,11 @@ INSERT ON storage_units
         SELECT 1
         FROM entities
         WHERE id = NEW.id
-            AND entity_table = 'storage_units'
+            AND source_table = 'storage_units'
     ) BEGIN
 SELECT RAISE(
         ABORT,
-        'Entity ID must exist in entities table with type storage_units before insertion'
+        'Entity ID must exist in entities table with source_table storage_units before insertion'
     );
 END;
 
@@ -130,11 +102,11 @@ INSERT ON hydro_reservoir
         SELECT 1
         FROM entities
         WHERE id = NEW.id
-            AND entity_table = 'hydro_reservoir'
+            AND source_table = 'hydro_reservoir'
     ) BEGIN
 SELECT RAISE(
         ABORT,
-        'Entity ID must exist in entities table with type hydro_reservoir before insertion'
+        'Entity ID must exist in entities table with source_table hydro_reservoir before insertion'
     );
 END;
 
@@ -144,11 +116,11 @@ INSERT ON supply_technologies
         SELECT 1
         FROM entities
         WHERE id = NEW.id
-            AND entity_table = 'supply_technologies'
+            AND source_table = 'supply_technologies'
     ) BEGIN
 SELECT RAISE(
         ABORT,
-        'Entity ID must exist in entities table with type supply_technologies before insertion'
+        'Entity ID must exist in entities table with source_table supply_technologies before insertion'
     );
 END;
 
@@ -158,11 +130,11 @@ INSERT ON transport_technologies
         SELECT 1
         FROM entities
         WHERE id = NEW.id
-            AND entity_table = 'transport_technologies'
+            AND source_table = 'transport_technologies'
     ) BEGIN
 SELECT RAISE(
         ABORT,
-        'Entity ID must exist in entities table with type transport_technologies before insertion'
+        'Entity ID must exist in entities table with source_table transport_technologies before insertion'
     );
 END;
 
@@ -172,11 +144,11 @@ INSERT ON supplemental_attributes
         SELECT 1
         FROM entities
         WHERE id = NEW.id
-            AND entity_table = 'supplemental_attributes'
+            AND source_table = 'supplemental_attributes'
     ) BEGIN
 SELECT RAISE(
         ABORT,
-        'Entity ID must exist in entities table with type supplemental_attributes before insertion'
+        'Entity ID must exist in entities table with source_table supplemental_attributes before insertion'
     );
 END;
 
@@ -186,70 +158,99 @@ INSERT ON loads
         SELECT 1
         FROM entities
         WHERE id = NEW.id
-            AND entity_table = 'loads'
+            AND source_table = 'loads'
     ) BEGIN
 SELECT RAISE(
         ABORT,
-        'Entity ID must exist in entities table with type loads before insertion'
+        'Entity ID must exist in entities table with source_table loads before insertion'
     );
 END;
 
-CREATE TRIGGER IF NOT EXISTS enforce_arc_entity_types_insert
+
+-- Business Logic Validation Triggers
+CREATE TRIGGER enforce_arc_entity_types_insert
 AFTER
-INSERT ON arcs BEGIN -- Fetch entity types for from_id and to_id and perform checks
+INSERT ON arcs BEGIN
 SELECT CASE
-        -- Check if from_id entity type is valid
-        WHEN (
-            SELECT entity_table
+        WHEN NOT EXISTS (
+            SELECT 1
             FROM entities
             WHERE id = NEW.from_id
-        ) NOT IN ('balancing_topologies', 'planning_regions') THEN RAISE(
-            ABORT,
-            'Invalid from_id entity type: must be balancing_topologies or planning_regions'
-        ) -- Check if to_id entity type is valid
-        WHEN (
-            SELECT entity_table
+        ) THEN RAISE(ABORT, 'from_id entity does not exist')
+        WHEN NOT EXISTS (
+            SELECT 1
             FROM entities
             WHERE id = NEW.to_id
-        ) NOT IN ('balancing_topologies', 'planning_regions') THEN RAISE(
-            ABORT,
-            'Invalid to_id entity type: must be balancing_topologies or planning_regions'
-        ) -- Check if from_id and to_id entity types match
+        ) THEN RAISE(ABORT, 'to_id entity does not exist')
         WHEN (
-            SELECT entity_table
+            SELECT entity_type
             FROM entities
             WHERE id = NEW.from_id
-        ) != (
-            SELECT entity_table
-            FROM entities
-            WHERE id = NEW.to_id
+        ) NOT IN (
+            'balancing_topologies',
+            'planning_regions',
+            'LoadZone',
+            'ACBus',
+            'Area'
         ) THEN RAISE(
             ABORT,
-            'Entity types for from_id and to_id must match'
+            'Invalid from_id entity type: must be balancing topology or planning region'
+        )
+        WHEN (
+            SELECT entity_type
+            FROM entities
+            WHERE id = NEW.to_id
+        ) NOT IN (
+            'balancing_topologies',
+            'planning_regions',
+            'LoadZone',
+            'ACBus',
+            'Area'
+        ) THEN RAISE(
+            ABORT,
+            'Invalid to_id entity type: must be balancing topology or planning region'
         )
     END;
+END;
 
+-- Validate entity categories for consistency
+CREATE TRIGGER validate_entity_category_consistency BEFORE
+INSERT ON entities BEGIN
+SELECT CASE
+        WHEN NOT EXISTS (
+            SELECT 1
+            FROM entity_types
+            WHERE name = NEW.entity_type
+        ) THEN RAISE(
+            ABORT,
+            'Invalid entity_type not found in entity_types'
+        )
+    END;
 END;
 
 -- Enforce that a turbine can have at most 1 upstream reservoir
 -- (i.e., at most 1 row where sink is a turbine and source is a reservoir)
-CREATE TRIGGER IF NOT EXISTS enforce_turbine_single_upstream_reservoir
-BEFORE INSERT ON hydro_reservoir_connections
-WHEN (
-    -- Check if sink is a turbine (hydro_generators or storage_units)
-    SELECT entity_table FROM entities WHERE id = NEW.sink_id
-) IN ('hydro_generators', 'storage_units')
-AND (
-    -- Check if source is a reservoir
-    SELECT entity_table FROM entities WHERE id = NEW.source_id
-) = 'hydro_reservoir'
-BEGIN
-    SELECT CASE
+CREATE TRIGGER IF NOT EXISTS enforce_turbine_single_upstream_reservoir BEFORE
+INSERT ON hydro_reservoir_connections
+    WHEN (
+        -- Check if sink is a turbine (hydro_generators or storage_units)
+        SELECT entity_table
+        FROM entities
+        WHERE id = NEW.sink_id
+    ) IN ('hydro_generators', 'storage_units')
+    AND (
+        -- Check if source is a reservoir
+        SELECT entity_table
+        FROM entities
+        WHERE id = NEW.source_id
+    ) = 'hydro_reservoir' BEGIN
+SELECT CASE
         WHEN EXISTS (
-            SELECT 1 FROM hydro_reservoir_connections hrc
-            JOIN entities e_source ON hrc.source_id = e_source.id
+            SELECT 1
+            FROM hydro_reservoir_connections hrc
+                JOIN entities e_source ON hrc.source_id = e_source.id
             WHERE hrc.sink_id = NEW.sink_id
-            AND e_source.entity_table = 'hydro_reservoir'
+                AND e_source.entity_table = 'hydro_reservoir'
         ) THEN RAISE(
             ABORT,
             'Turbine already has an upstream reservoir. Each turbine can have at most 1 upstream reservoir.'
@@ -259,23 +260,27 @@ END;
 
 -- Enforce that a turbine can have at most 1 downstream reservoir
 -- (i.e., at most 1 row where source is a turbine and sink is a reservoir)
-CREATE TRIGGER IF NOT EXISTS enforce_turbine_single_downstream_reservoir
-BEFORE INSERT ON hydro_reservoir_connections
-WHEN (
-    -- Check if source is a turbine (hydro_generators or storage_units)
-    SELECT entity_table FROM entities WHERE id = NEW.source_id
-) IN ('hydro_generators', 'storage_units')
-AND (
-    -- Check if sink is a reservoir
-    SELECT entity_table FROM entities WHERE id = NEW.sink_id
-) = 'hydro_reservoir'
-BEGIN
-    SELECT CASE
+CREATE TRIGGER IF NOT EXISTS enforce_turbine_single_downstream_reservoir BEFORE
+INSERT ON hydro_reservoir_connections
+    WHEN (
+        -- Check if source is a turbine (hydro_generators or storage_units)
+        SELECT entity_table
+        FROM entities
+        WHERE id = NEW.source_id
+    ) IN ('hydro_generators', 'storage_units')
+    AND (
+        -- Check if sink is a reservoir
+        SELECT entity_table
+        FROM entities
+        WHERE id = NEW.sink_id
+    ) = 'hydro_reservoir' BEGIN
+SELECT CASE
         WHEN EXISTS (
-            SELECT 1 FROM hydro_reservoir_connections hrc
-            JOIN entities e_sink ON hrc.sink_id = e_sink.id
+            SELECT 1
+            FROM hydro_reservoir_connections hrc
+                JOIN entities e_sink ON hrc.sink_id = e_sink.id
             WHERE hrc.source_id = NEW.source_id
-            AND e_sink.entity_table = 'hydro_reservoir'
+                AND e_sink.entity_table = 'hydro_reservoir'
         ) THEN RAISE(
             ABORT,
             'Turbine already has a downstream reservoir. Each turbine can have at most 1 downstream reservoir.'
