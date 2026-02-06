@@ -61,6 +61,176 @@ function get_row(
     )
 end
 
+# Custom get_row for ThermalStandard to handle nested fields and name mappings
+function get_row(
+    ::AbstractString,
+    ::Tables.Schema,
+    c::ThermalStandard,
+    ::PSY.ThermalStandard,
+)
+    return (
+        c.id,
+        c.name,
+        c.prime_mover_type,
+        c.fuel_type,  # mapped from fuel_type to fuel column
+        c.bus,  # balancing_topology
+        c.rating,
+        c.base_power,
+        c.active_power_limits !== nothing ? c.active_power_limits.min : 0.0,
+        c.active_power_limits !== nothing ? c.active_power_limits.max : 0.0,
+        c.reactive_power_limits !== nothing ? c.reactive_power_limits.min : nothing,
+        c.reactive_power_limits !== nothing ? c.reactive_power_limits.max : nothing,
+        c.ramp_limits !== nothing ? c.ramp_limits.up : nothing,
+        c.ramp_limits !== nothing ? c.ramp_limits.down : nothing,
+        c.time_limits !== nothing ? c.time_limits.up : nothing,
+        c.time_limits !== nothing ? c.time_limits.down : nothing,
+        c.must_run,
+        c.available,
+        c.status,
+        c.active_power,
+        c.reactive_power,
+        c.operation_cost !== nothing ? JSON.json(c.operation_cost) : nothing,
+    )
+end
+
+# Custom get_row for ThermalMultiStart (uses `fuel` not `fuel_type`)
+function get_row(
+    ::AbstractString,
+    ::Tables.Schema,
+    c::ThermalMultiStart,
+    ::PSY.ThermalMultiStart,
+)
+    return (
+        c.id,
+        c.name,
+        c.prime_mover_type,
+        c.fuel,  # ThermalMultiStart uses `fuel`, not `fuel_type`
+        c.bus,
+        c.rating,
+        c.base_power,
+        c.active_power_limits !== nothing ? c.active_power_limits.min : 0.0,
+        c.active_power_limits !== nothing ? c.active_power_limits.max : 0.0,
+        c.reactive_power_limits !== nothing ? c.reactive_power_limits.min : nothing,
+        c.reactive_power_limits !== nothing ? c.reactive_power_limits.max : nothing,
+        c.ramp_limits !== nothing ? c.ramp_limits.up : nothing,
+        c.ramp_limits !== nothing ? c.ramp_limits.down : nothing,
+        c.time_limits !== nothing ? c.time_limits.up : nothing,
+        c.time_limits !== nothing ? c.time_limits.down : nothing,
+        c.must_run,
+        c.available,
+        c.status,
+        c.active_power,
+        c.reactive_power,
+        c.operation_cost !== nothing ? JSON.json(c.operation_cost) : nothing,
+    )
+end
+
+# Custom get_row for RenewableDispatch
+function get_row(
+    ::AbstractString,
+    ::Tables.Schema,
+    c::RenewableDispatch,
+    ::PSY.RenewableDispatch,
+)
+    return (
+        c.id,
+        c.name,
+        c.prime_mover_type,
+        c.bus,
+        c.rating,
+        c.base_power,
+        c.power_factor,
+        c.reactive_power_limits !== nothing ? c.reactive_power_limits.min : nothing,
+        c.reactive_power_limits !== nothing ? c.reactive_power_limits.max : nothing,
+        c.available,
+        c.active_power,
+        c.reactive_power,
+        c.operation_cost !== nothing ? JSON.json(c.operation_cost) : nothing,
+    )
+end
+
+# Custom get_row for RenewableNonDispatch (no reactive_power_limits or operation_cost)
+function get_row(
+    ::AbstractString,
+    ::Tables.Schema,
+    c::RenewableNonDispatch,
+    ::PSY.RenewableNonDispatch,
+)
+    return (
+        c.id,
+        c.name,
+        c.prime_mover_type,
+        c.bus,
+        c.rating,
+        c.base_power,
+        c.power_factor,
+        nothing,  # reactive_power_limits_min
+        nothing,  # reactive_power_limits_max
+        c.available,
+        c.active_power,
+        c.reactive_power,
+        nothing,  # operation_cost
+    )
+end
+
+# Custom get_row for HydroDispatch
+function get_row(::AbstractString, ::Tables.Schema, c::HydroDispatch, ::PSY.HydroDispatch)
+    return (
+        c.id,
+        c.name,
+        c.prime_mover_type,
+        c.bus,
+        c.rating,
+        c.base_power,
+        c.active_power_limits !== nothing ? c.active_power_limits.min : 0.0,
+        c.active_power_limits !== nothing ? c.active_power_limits.max : 0.0,
+        c.reactive_power_limits !== nothing ? c.reactive_power_limits.min : nothing,
+        c.reactive_power_limits !== nothing ? c.reactive_power_limits.max : nothing,
+        c.ramp_limits !== nothing ? c.ramp_limits.up : nothing,
+        c.ramp_limits !== nothing ? c.ramp_limits.down : nothing,
+        c.time_limits !== nothing ? c.time_limits.up : nothing,
+        c.time_limits !== nothing ? c.time_limits.down : nothing,
+        c.available,
+        c.active_power,
+        c.reactive_power,
+        nothing,  # powerhouse_elevation (HydroDispatch doesn't have this)
+        nothing,  # outflow_limits_min
+        nothing,  # outflow_limits_max
+        nothing,  # conversion_factor
+        nothing,  # travel_time
+        c.operation_cost !== nothing ? JSON.json(c.operation_cost) : nothing,
+    )
+end
+
+# Custom get_row for HydroTurbine
+function get_row(::AbstractString, ::Tables.Schema, c::HydroTurbine, ::PSY.HydroTurbine)
+    return (
+        c.id,
+        c.name,
+        c.prime_mover_type,
+        c.bus,
+        c.rating,
+        c.base_power,
+        c.active_power_limits !== nothing ? c.active_power_limits.min : 0.0,
+        c.active_power_limits !== nothing ? c.active_power_limits.max : 0.0,
+        c.reactive_power_limits !== nothing ? c.reactive_power_limits.min : nothing,
+        c.reactive_power_limits !== nothing ? c.reactive_power_limits.max : nothing,
+        c.ramp_limits !== nothing ? c.ramp_limits.up : nothing,
+        c.ramp_limits !== nothing ? c.ramp_limits.down : nothing,
+        c.time_limits !== nothing ? c.time_limits.up : nothing,
+        c.time_limits !== nothing ? c.time_limits.down : nothing,
+        c.available,
+        c.active_power,
+        c.reactive_power,
+        c.powerhouse_elevation,
+        c.outflow_limits !== nothing ? c.outflow_limits.min : nothing,
+        c.outflow_limits !== nothing ? c.outflow_limits.max : nothing,
+        c.conversion_factor,
+        c.travel_time,
+        c.operation_cost !== nothing ? JSON.json(c.operation_cost) : nothing,
+    )
+end
+
 function _ignoreattribute(
     ::Type{EnergyReservoirStorage},
     table_name::AbstractString,
@@ -98,12 +268,29 @@ function get_row(
         c.id,
         c.name,
         c.prime_mover_type,
-        c.storage_capacity,
+        c.storage_technology_type,
         c.bus,
-        c.efficiency.in,
-        c.efficiency.out,
         c.rating,
         c.base_power,
+        c.storage_capacity,
+        c.storage_level_limits !== nothing ? c.storage_level_limits.min : 0.0,
+        c.storage_level_limits !== nothing ? c.storage_level_limits.max : 1.0,
+        c.initial_storage_capacity_level,
+        c.input_active_power_limits !== nothing ? c.input_active_power_limits.min : 0.0,
+        c.input_active_power_limits !== nothing ? c.input_active_power_limits.max : 0.0,
+        c.output_active_power_limits !== nothing ? c.output_active_power_limits.min : 0.0,
+        c.output_active_power_limits !== nothing ? c.output_active_power_limits.max : 0.0,
+        c.efficiency.in,
+        c.efficiency.out,
+        c.reactive_power_limits !== nothing ? c.reactive_power_limits.min : nothing,
+        c.reactive_power_limits !== nothing ? c.reactive_power_limits.max : nothing,
+        c.active_power,
+        c.reactive_power,
+        c.available,
+        c.conversion_factor,
+        c.storage_target,
+        c.cycle_limits,
+        c.operation_cost !== nothing ? JSON.json(c.operation_cost) : nothing,
     )
 end
 
@@ -113,16 +300,31 @@ function get_row(
     c::HydroPumpTurbine,
     ::PSY.HydroPumpTurbine,
 )
+    # HydroPumpTurbine now goes to hydro_generators table
     return (
         c.id,
         c.name,
         c.prime_mover_type,
-        nothing,  # max_capacity - storage capacity is now in HydroReservoir
-        c.bus,
-        c.efficiency.pump,     # efficiency_up (pumping water up)
-        c.efficiency.turbine,  # efficiency_down (water going down through turbine)
+        c.bus,  # balancing_topology
         c.rating,
         c.base_power,
+        c.active_power_limits !== nothing ? c.active_power_limits.min : 0.0,
+        c.active_power_limits !== nothing ? c.active_power_limits.max : 0.0,
+        c.reactive_power_limits !== nothing ? c.reactive_power_limits.min : nothing,
+        c.reactive_power_limits !== nothing ? c.reactive_power_limits.max : nothing,
+        c.ramp_limits !== nothing ? c.ramp_limits.up : nothing,
+        c.ramp_limits !== nothing ? c.ramp_limits.down : nothing,
+        c.time_limits !== nothing ? c.time_limits.up : nothing,
+        c.time_limits !== nothing ? c.time_limits.down : nothing,
+        c.available,
+        c.active_power,
+        c.reactive_power,
+        c.powerhouse_elevation,
+        c.outflow_limits !== nothing ? c.outflow_limits.min : nothing,
+        c.outflow_limits !== nothing ? c.outflow_limits.max : nothing,
+        c.conversion_factor,
+        c.travel_time,
+        c.operation_cost !== nothing ? JSON.json(c.operation_cost) : nothing,
     )
 end
 
@@ -316,19 +518,81 @@ function get_entity_attributes(db)
     return attributes_dict
 end
 
+# Map flat DB columns to nested OpenAPI fields: nested_name => [(subfield, column_name), ...]
+const NESTED_FIELDS = Dict(
+    "active_power_limits" =>
+        [("min", "active_power_limits_min"), ("max", "active_power_limits_max")],
+    "reactive_power_limits" =>
+        [("min", "reactive_power_limits_min"), ("max", "reactive_power_limits_max")],
+    "ramp_limits" => [("up", "ramp_up"), ("down", "ramp_down")],
+    "time_limits" => [("up", "min_up_time"), ("down", "min_down_time")],
+    "outflow_limits" => [("min", "outflow_limits_min"), ("max", "outflow_limits_max")],
+    "storage_level_limits" =>
+        [("min", "storage_level_limits_min"), ("max", "storage_level_limits_max")],
+    "input_active_power_limits" => [
+        ("min", "input_active_power_limits_min"),
+        ("max", "input_active_power_limits_max"),
+    ],
+    "output_active_power_limits" => [
+        ("min", "output_active_power_limits_min"),
+        ("max", "output_active_power_limits_max"),
+    ],
+    "efficiency" => [("in", "efficiency_in"), ("out", "efficiency_out")],
+)
+
+const JSON_COLUMNS = Set(["operation_cost"])
+
+# Default values for fields that might be NULL in DB but required for certain types
+const DEFAULT_OPERATION_COST = Dict{String, Any}()
+
+function _build_openapi_dict(table_name::AbstractString, row)
+    dict = Dict{String, Any}()
+    for (k, v) in zip(propertynames(row), row)
+        key = get(DB_TO_OPENAPI_FIELDS, (table_name, string(k)), string(k))
+        val = coalesce(v, nothing)
+        if key in JSON_COLUMNS && val isa String
+            val = JSON.parse(val)
+        end
+        dict[key] = val
+    end
+    # Reconstruct nested fields from flat columns
+    for (nested_name, mappings) in NESTED_FIELDS
+        nested = Dict{String, Any}()
+        for (subfield, col_name) in mappings
+            if haskey(dict, col_name)
+                val = pop!(dict, col_name)
+                if val !== nothing
+                    nested[subfield] = val
+                end
+            end
+        end
+        !isempty(nested) && (dict[nested_name] = nested)
+    end
+    return dict
+end
+
 function make_openapi_dict(
     ::Type{T},
     table_name::AbstractString,
     row,
     extra_attributes::Dict{String, Any},
 ) where {T <: OpenAPI.APIModel}
-    return merge(
-        Dict(
-            get(DB_TO_OPENAPI_FIELDS, (table_name, string(k)), string(k)) =>
-                coalesce(v, nothing) for (k, v) in zip(propertynames(row), row)
-        ),
-        extra_attributes,
-    )
+    dict = _build_openapi_dict(table_name, row)
+    return merge(dict, extra_attributes)
+end
+
+function make_openapi_dict(
+    ::Type{RenewableDispatch},
+    table_name::AbstractString,
+    row,
+    extra_attributes::Dict{String, Any},
+)
+    dict = _build_openapi_dict(table_name, row)
+    # Provide default operation_cost if NULL
+    if get(dict, "operation_cost", nothing) === nothing
+        dict["operation_cost"] = DEFAULT_OPERATION_COST
+    end
+    return merge(dict, extra_attributes)
 end
 
 function make_openapi_dict(
@@ -337,24 +601,8 @@ function make_openapi_dict(
     row,
     extra_attributes::Dict{String, Any},
 )
-    efficiency_dict = if !isnothing(row.efficiency_up) && !isnothing(row.efficiency_down)
-        Dict{String, Any}(
-            "efficiency" => Dict{String, Any}(
-                "in" => row.efficiency_up,
-                "out" => row.efficiency_down,
-            ),
-        )
-    else
-        Dict{String, Any}()
-    end
-    return merge(
-        Dict(
-            get(DB_TO_OPENAPI_FIELDS, (table_name, string(k)), string(k)) =>
-                coalesce(v, nothing) for (k, v) in zip(propertynames(row), row)
-        ),
-        efficiency_dict,
-        extra_attributes,
-    )
+    dict = _build_openapi_dict(table_name, row)
+    return merge(dict, extra_attributes)
 end
 
 function add_components_to_sys!(
@@ -428,7 +676,7 @@ function add_components_to_sys!(
         """
         SELECT hrc.sink_id FROM hydro_reservoir_connections hrc
         JOIN entities e ON hrc.sink_id = e.id
-        WHERE hrc.source_id = ? AND e.entity_table IN ('generation_units', 'storage_units')
+        WHERE hrc.source_id = ? AND e.entity_table IN ('hydro_generators', 'storage_units')
         """,
     )
     upstream_turbines_stmt = DBInterface.prepare(
@@ -436,7 +684,7 @@ function add_components_to_sys!(
         """
         SELECT hrc.source_id FROM hydro_reservoir_connections hrc
         JOIN entities e ON hrc.source_id = e.id
-        WHERE hrc.sink_id = ? AND e.entity_table IN ('generation_units', 'storage_units')
+        WHERE hrc.sink_id = ? AND e.entity_table IN ('hydro_generators', 'storage_units')
         """,
     )
     upstream_reservoirs_stmt = DBInterface.prepare(

@@ -201,8 +201,10 @@ end
     SiennaOpenAPIModels.make_sqlite!(db)
     ids = IDGenerator()
     SiennaOpenAPIModels.sys2db!(db, sys, ids)
-    storages = Tables.columntable(DBInterface.execute(db, "SELECT * FROM storage_units"))
-    @test length(storages.id) == 1
+    # HydroPumpTurbine is now in hydro_generators, not storage_units
+    hydro_gens =
+        Tables.columntable(DBInterface.execute(db, "SELECT * FROM hydro_generators"))
+    @test length(hydro_gens.id) == 1
     reservoirs =
         Tables.columntable(DBInterface.execute(db, "SELECT * from hydro_reservoir"))
     @test length(reservoirs.id) == 2
@@ -210,4 +212,124 @@ end
     copy_of_sys = SiennaOpenAPIModels.db2sys(db)
     @test copy_of_sys isa PSY.System
     test_component_each_type(sys, copy_of_sys)
+end
+
+@testset "Uncommon types round-trip" begin
+    # Test types that aren't in standard test systems
+    sys =
+        PowerSystemCaseBuilder.build_system(PowerSystemCaseBuilder.PSISystems, "c_sys5_pjm")
+    bus1 = first(PSY.get_components(PSY.ACBus, sys))
+    buses = collect(PSY.get_components(PSY.ACBus, sys))
+    bus2 = buses[2]
+    arc = PSY.Arc(; from=bus1, to=bus2)
+    PSY.add_component!(sys, arc)
+
+    # Add ThermalMultiStart (not in any test system)
+    thermal_ms = PSY.ThermalMultiStart(
+        name="test_thermal_multistart",
+        available=true,
+        status=true,
+        bus=bus1,
+        active_power=0.5,
+        reactive_power=0.1,
+        rating=1.0,
+        active_power_limits=(min=0.2, max=1.0),
+        reactive_power_limits=(min=-0.5, max=0.5),
+        ramp_limits=(up=0.1, down=0.1),
+        power_trajectory=(startup=0.3, shutdown=0.2),
+        time_limits=(up=4.0, down=2.0),
+        start_time_limits=(hot=1.0, warm=2.0, cold=3.0),
+        start_types=3,
+        prime_mover_type=PSY.PrimeMovers.CT,
+        fuel=PSY.ThermalFuels.NATURAL_GAS,
+        base_power=100.0,
+        operation_cost=PSY.ThermalGenerationCost(nothing),
+        must_run=false,
+    )
+    PSY.add_component!(sys, thermal_ms)
+
+    # Add MonitoredLine (not in any test system)
+    monitored_line = PSY.MonitoredLine(
+        name="test_monitored_line",
+        available=true,
+        active_power_flow=0.0,
+        reactive_power_flow=0.0,
+        arc=arc,
+        r=0.01,
+        x=0.1,
+        b=(from=0.01, to=0.01),
+        rating=1.0,
+        angle_limits=(min=-0.5, max=0.5),
+        flow_limits=(from_to=1.0, to_from=1.0),
+    )
+    PSY.add_component!(sys, monitored_line)
+
+    # Add PhaseShiftingTransformer (not in any test system)
+    pst = PSY.PhaseShiftingTransformer(
+        name="test_phase_shifting_transformer",
+        available=true,
+        active_power_flow=0.0,
+        reactive_power_flow=0.0,
+        arc=arc,
+        r=0.01,
+        x=0.1,
+        primary_shunt=0.01,
+        tap=1.0,
+        α=0.0,
+        rating=1.0,
+        base_power=100.0,
+    )
+    PSY.add_component!(sys, pst)
+
+    db = SQLite.DB()
+    SiennaOpenAPIModels.make_sqlite!(db)
+    ids = IDGenerator()
+    SiennaOpenAPIModels.sys2db!(db, sys, ids)
+
+    # Verify components were inserted
+    thermal_gens = Tables.columntable(
+        DBInterface.execute(
+            db,
+            "SELECT * FROM thermal_generators WHERE name = 'test_thermal_multistart'",
+        ),
+    )
+    @test length(thermal_gens.id) == 1
+    @test thermal_gens.fuel[1] == "NATURAL_GAS"
+
+    tx_lines =
+        Tables.columntable(DBInterface.execute(db, "SELECT * FROM transmission_lines"))
+    @test length(tx_lines.id) >= 2  # MonitoredLine + PhaseShiftingTransformer + existing
+
+    copy_of_sys = SiennaOpenAPIModels.db2sys(db)
+    @test copy_of_sys isa PSY.System
+
+    # Verify ThermalMultiStart round-tripped
+    @test length(PSY.get_components(PSY.ThermalMultiStart, copy_of_sys)) == 1
+    @test IS.compare_values(
+        custom_isequivalent,
+        first(PSY.get_components(PSY.ThermalMultiStart, sys)),
+        first(PSY.get_components(PSY.ThermalMultiStart, copy_of_sys)),
+        compare_uuids=true,
+        exclude=Set([:units_info, :ext, :services]),
+    )
+
+    # Verify MonitoredLine round-tripped
+    @test length(PSY.get_components(PSY.MonitoredLine, copy_of_sys)) == 1
+    @test IS.compare_values(
+        custom_isequivalent,
+        first(PSY.get_components(PSY.MonitoredLine, sys)),
+        first(PSY.get_components(PSY.MonitoredLine, copy_of_sys)),
+        compare_uuids=true,
+        exclude=Set([:units_info, :ext, :services]),
+    )
+
+    # Verify PhaseShiftingTransformer round-tripped
+    @test length(PSY.get_components(PSY.PhaseShiftingTransformer, copy_of_sys)) == 1
+    @test IS.compare_values(
+        custom_isequivalent,
+        first(PSY.get_components(PSY.PhaseShiftingTransformer, sys)),
+        first(PSY.get_components(PSY.PhaseShiftingTransformer, copy_of_sys)),
+        compare_uuids=true,
+        exclude=Set([:units_info, :ext, :services]),
+    )
 end
