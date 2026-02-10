@@ -190,8 +190,8 @@ CREATE TABLE renewable_generators (
     -- Initial setpoints:
     active_power REAL NOT NULL DEFAULT 0.0,
     reactive_power REAL NOT NULL DEFAULT 0.0,
-    -- Cost (only for RenewableDispatch):
-    operation_cost JSON NULL
+    -- Cost:
+    operation_cost JSON NOT NULL DEFAULT '{"cost_type": "RENEWABLE", "fixed": 0.0, "variable": {"variable_cost_type": "COST", "power_units": "NATURAL_UNITS", "value_curve": {"curve_type": "INPUT_OUTPUT", "function_data": {"function_type": "LINEAR", "proportional_term": 0, "constant_term": 0}}, "vom_cost": {"curve_type": "INPUT_OUTPUT", "function_data": {"function_type": "LINEAR", "proportional_term": 0, "constant_term": 0}}}}'
 );
 
 -- Table of hydro generation units (HydroDispatch, HydroTurbine, HydroPumpTurbine)
@@ -220,8 +220,8 @@ CREATE TABLE hydro_generators (
     outflow_limits JSON NULL,
     conversion_factor REAL NULL DEFAULT 1.0 CHECK (conversion_factor > 0),
     travel_time REAL NULL CHECK (travel_time >= 0),
-    -- Cost (optional for hydro - has default in PSY):
-    operation_cost JSON NULL -- Note: efficiency (varies by type), turbine_type, and HydroPumpTurbine-specific
+    -- Cost:
+    operation_cost JSON NOT NULL DEFAULT '{"cost_type": "HYDRO_GEN", "fixed": 0.0, "variable": {"variable_cost_type": "COST", "power_units": "NATURAL_UNITS", "value_curve": {"curve_type": "INPUT_OUTPUT", "function_data": {"function_type": "LINEAR", "proportional_term": 0, "constant_term": 0}}, "vom_cost": {"curve_type": "INPUT_OUTPUT", "function_data": {"function_type": "LINEAR", "proportional_term": 0, "constant_term": 0}}}}' -- Note: efficiency (varies by type), turbine_type, and HydroPumpTurbine-specific
     -- fields (active_power_limits_pump, etc.) are stored in the attributes table
 );
 

@@ -297,9 +297,6 @@ const JSON_COLUMNS = Set([
     "efficiency",
 ])
 
-# Default values for fields that might be NULL in DB but required for certain types
-const DEFAULT_OPERATION_COST = Dict{String, Any}()
-
 function _build_openapi_dict(table_name::AbstractString, row)
     dict = Dict{String, Any}()
     for (k, v) in zip(propertynames(row), row)
@@ -320,30 +317,6 @@ function make_openapi_dict(
     row,
     extra_attributes::Dict{String, Any},
 ) where {T <: OpenAPI.APIModel}
-    dict = _build_openapi_dict(table_name, row)
-    return merge(dict, extra_attributes)
-end
-
-function make_openapi_dict(
-    ::Type{RenewableDispatch},
-    table_name::AbstractString,
-    row,
-    extra_attributes::Dict{String, Any},
-)
-    dict = _build_openapi_dict(table_name, row)
-    # Provide default operation_cost if NULL
-    if get(dict, "operation_cost", nothing) === nothing
-        dict["operation_cost"] = DEFAULT_OPERATION_COST
-    end
-    return merge(dict, extra_attributes)
-end
-
-function make_openapi_dict(
-    ::Type{EnergyReservoirStorage},
-    table_name::AbstractString,
-    row,
-    extra_attributes::Dict{String, Any},
-)
     dict = _build_openapi_dict(table_name, row)
     return merge(dict, extra_attributes)
 end

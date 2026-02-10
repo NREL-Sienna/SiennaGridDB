@@ -120,7 +120,7 @@ const TABLE_SCHEMAS = Dict(
             Bool,
             Float64,
             Float64,
-            Union{String, Nothing},  # JSON stored as String, nullable for RenewableNonDispatch
+            String,  # JSON stored as String
         ],
     ),
     "hydro_generators" => Tables.Schema(
@@ -162,7 +162,7 @@ const TABLE_SCHEMAS = Dict(
             Union{String, Nothing},  # JSON: {"min": ..., "max": ...}
             Union{Float64, Nothing},
             Union{Float64, Nothing},
-            Union{String, Nothing},  # JSON stored as String, nullable for hydro
+            String,  # JSON stored as String
         ],
     ),
     "storage_units" => Tables.Schema(
