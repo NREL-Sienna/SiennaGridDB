@@ -190,8 +190,8 @@ CREATE TABLE renewable_generators (
     -- Initial setpoints:
     active_power REAL NOT NULL DEFAULT 0.0,
     reactive_power REAL NOT NULL DEFAULT 0.0,
-    -- Cost:
-    operation_cost JSON NOT NULL DEFAULT '{"cost_type": "RENEWABLE", "fixed": 0.0, "variable": {"variable_cost_type": "COST", "power_units": "NATURAL_UNITS", "value_curve": {"curve_type": "INPUT_OUTPUT", "function_data": {"function_type": "LINEAR", "proportional_term": 0, "constant_term": 0}}, "vom_cost": {"curve_type": "INPUT_OUTPUT", "function_data": {"function_type": "LINEAR", "proportional_term": 0, "constant_term": 0}}}}'
+    -- Cost (NULL for RenewableNonDispatch):
+    operation_cost JSON NULL
 );
 
 -- Table of hydro generation units (HydroDispatch, HydroTurbine, HydroPumpTurbine)

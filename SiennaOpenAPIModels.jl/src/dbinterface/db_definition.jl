@@ -120,7 +120,7 @@ const TABLE_SCHEMAS = Dict(
             Bool,
             Float64,
             Float64,
-            String,  # JSON stored as String
+            Union{String, Nothing},  # JSON stored as String, NULL for RenewableNonDispatch
         ],
     ),
     "hydro_generators" => Tables.Schema(
