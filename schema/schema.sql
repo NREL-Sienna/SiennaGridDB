@@ -147,22 +147,18 @@ CREATE TABLE transmission_interchanges (
 CREATE TABLE thermal_generators (
     id INTEGER PRIMARY KEY REFERENCES entities (id),
     name TEXT NOT NULL UNIQUE,
-    prime_mover TEXT NOT NULL REFERENCES prime_mover_types(name),
+    prime_mover_type TEXT NOT NULL REFERENCES prime_mover_types(name),
     fuel TEXT NOT NULL DEFAULT 'OTHER' REFERENCES fuels(name),
     balancing_topology INTEGER NOT NULL REFERENCES balancing_topologies (id),
     rating REAL NOT NULL CHECK (rating >= 0),
     base_power REAL NOT NULL CHECK (base_power > 0),
-    -- Power limits (required for ThermalStandard):
-    active_power_limits_min REAL NOT NULL DEFAULT 0.0 CHECK (active_power_limits_min >= 0),
-    active_power_limits_max REAL NOT NULL CHECK (active_power_limits_max >= 0),
-    reactive_power_limits_min REAL NULL,
-    reactive_power_limits_max REAL NULL,
-    -- Ramp limits (MW/min):
-    ramp_up REAL NULL CHECK (ramp_up >= 0),
-    ramp_down REAL NULL CHECK (ramp_down >= 0),
-    -- Time limits (hours):
-    min_up_time REAL NULL CHECK (min_up_time >= 0),
-    min_down_time REAL NULL CHECK (min_down_time >= 0),
+    -- Power limits (JSON: {"min": ..., "max": ...}):
+    active_power_limits JSON NOT NULL,
+    reactive_power_limits JSON NULL,
+    -- Ramp limits (JSON: {"up": ..., "down": ...}, MW/min):
+    ramp_limits JSON NULL,
+    -- Time limits (JSON: {"up": ..., "down": ...}, hours):
+    time_limits JSON NULL,
     -- Operational flags:
     must_run BOOLEAN NOT NULL DEFAULT FALSE,
     available BOOLEAN NOT NULL DEFAULT TRUE,
@@ -178,7 +174,7 @@ CREATE TABLE thermal_generators (
 CREATE TABLE renewable_generators (
     id INTEGER PRIMARY KEY REFERENCES entities (id),
     name TEXT NOT NULL UNIQUE,
-    prime_mover TEXT NOT NULL REFERENCES prime_mover_types(name),
+    prime_mover_type TEXT NOT NULL REFERENCES prime_mover_types(name),
     balancing_topology INTEGER NOT NULL REFERENCES balancing_topologies (id),
     rating REAL NOT NULL CHECK (rating >= 0),
     base_power REAL NOT NULL CHECK (base_power > 0),
@@ -187,8 +183,8 @@ CREATE TABLE renewable_generators (
         power_factor > 0
         AND power_factor <= 1.0
     ),
-    reactive_power_limits_min REAL NULL,
-    reactive_power_limits_max REAL NULL,
+    -- Power limits (JSON: {"min": ..., "max": ...}):
+    reactive_power_limits JSON NULL,
     -- Operational flags:
     available BOOLEAN NOT NULL DEFAULT TRUE,
     -- Initial setpoints:
@@ -202,21 +198,17 @@ CREATE TABLE renewable_generators (
 CREATE TABLE hydro_generators (
     id INTEGER PRIMARY KEY REFERENCES entities (id),
     name TEXT NOT NULL UNIQUE,
-    prime_mover TEXT NOT NULL DEFAULT 'HY' REFERENCES prime_mover_types(name),
+    prime_mover_type TEXT NOT NULL DEFAULT 'HY' REFERENCES prime_mover_types(name),
     balancing_topology INTEGER NOT NULL REFERENCES balancing_topologies (id),
     rating REAL NOT NULL CHECK (rating >= 0),
     base_power REAL NOT NULL CHECK (base_power > 0),
-    -- Power limits (shared by all):
-    active_power_limits_min REAL NOT NULL DEFAULT 0.0 CHECK (active_power_limits_min >= 0),
-    active_power_limits_max REAL NOT NULL CHECK (active_power_limits_max >= 0),
-    reactive_power_limits_min REAL NULL,
-    reactive_power_limits_max REAL NULL,
-    -- Ramp limits (MW/min):
-    ramp_up REAL NULL CHECK (ramp_up >= 0),
-    ramp_down REAL NULL CHECK (ramp_down >= 0),
-    -- Time limits (hours):
-    min_up_time REAL NULL CHECK (min_up_time >= 0),
-    min_down_time REAL NULL CHECK (min_down_time >= 0),
+    -- Power limits (JSON: {"min": ..., "max": ...}):
+    active_power_limits JSON NOT NULL,
+    reactive_power_limits JSON NULL,
+    -- Ramp limits (JSON: {"up": ..., "down": ...}, MW/min):
+    ramp_limits JSON NULL,
+    -- Time limits (JSON: {"up": ..., "down": ...}, hours):
+    time_limits JSON NULL,
     -- Operational flags:
     available BOOLEAN NOT NULL DEFAULT TRUE,
     -- Initial setpoints:
@@ -224,8 +216,8 @@ CREATE TABLE hydro_generators (
     reactive_power REAL NOT NULL DEFAULT 0.0,
     -- HydroTurbine/HydroPumpTurbine fields (nullable for HydroDispatch):
     powerhouse_elevation REAL NULL DEFAULT 0.0 CHECK (powerhouse_elevation >= 0),
-    outflow_limits_min REAL NULL,
-    outflow_limits_max REAL NULL,
+    -- Outflow limits (JSON: {"min": ..., "max": ...}):
+    outflow_limits JSON NULL,
     conversion_factor REAL NULL DEFAULT 1.0 CHECK (conversion_factor > 0),
     travel_time REAL NULL CHECK (travel_time >= 0),
     -- Cost (optional for hydro - has default in PSY):
@@ -238,27 +230,22 @@ CREATE TABLE hydro_generators (
 CREATE TABLE storage_units (
     id INTEGER PRIMARY KEY REFERENCES entities (id),
     name TEXT NOT NULL UNIQUE,
-    prime_mover TEXT NOT NULL REFERENCES prime_mover_types(name),
+    prime_mover_type TEXT NOT NULL REFERENCES prime_mover_types(name),
     storage_technology_type TEXT NOT NULL,
     balancing_topology INTEGER NOT NULL REFERENCES balancing_topologies (id),
     rating REAL NOT NULL CHECK (rating >= 0),
     base_power REAL NOT NULL CHECK (base_power > 0),
-    -- Storage capacity and limits:
+    -- Storage capacity and limits (JSON: {"min": ..., "max": ...}):
     storage_capacity REAL NOT NULL CHECK (storage_capacity >= 0),
-    storage_level_limits_min REAL NOT NULL DEFAULT 0.0 CHECK (storage_level_limits_min >= 0),
-    storage_level_limits_max REAL NOT NULL DEFAULT 1.0 CHECK (storage_level_limits_max >= 0),
+    storage_level_limits JSON NOT NULL,
     initial_storage_capacity_level REAL NOT NULL CHECK (initial_storage_capacity_level >= 0),
-    -- Power limits (input = charging, output = discharging):
-    input_active_power_limits_min REAL NOT NULL DEFAULT 0.0 CHECK (input_active_power_limits_min >= 0),
-    input_active_power_limits_max REAL NOT NULL CHECK (input_active_power_limits_max >= 0),
-    output_active_power_limits_min REAL NOT NULL DEFAULT 0.0 CHECK (output_active_power_limits_min >= 0),
-    output_active_power_limits_max REAL NOT NULL CHECK (output_active_power_limits_max >= 0),
-    -- Efficiency (in = charging, out = discharging):
-    efficiency_in REAL NOT NULL DEFAULT 1.0 CHECK (efficiency_in > 0 AND efficiency_in <= 1.0),
-    efficiency_out REAL NOT NULL DEFAULT 1.0 CHECK (efficiency_out > 0 AND efficiency_out <= 1.0),
-    -- Reactive power:
-    reactive_power_limits_min REAL NULL,
-    reactive_power_limits_max REAL NULL,
+    -- Power limits (JSON: {"min": ..., "max": ...}, input = charging, output = discharging):
+    input_active_power_limits JSON NOT NULL,
+    output_active_power_limits JSON NOT NULL,
+    -- Efficiency (JSON: {"in": ..., "out": ...}):
+    efficiency JSON NOT NULL,
+    -- Reactive power (JSON: {"min": ..., "max": ...}):
+    reactive_power_limits JSON NULL,
     -- Initial setpoints:
     active_power REAL NOT NULL DEFAULT 0.0,
     reactive_power REAL NOT NULL DEFAULT 0.0,
@@ -289,12 +276,12 @@ CREATE TABLE hydro_reservoir_connections(
 -- Investment technology options for expansion problems
 CREATE TABLE supply_technologies (
     id integer PRIMARY KEY REFERENCES entities (id),
-    prime_mover text NOT NULL REFERENCES prime_mover_types(name),
+    prime_mover_type text NOT NULL REFERENCES prime_mover_types(name),
     fuel text NULL REFERENCES fuels(name),
     area text NULL REFERENCES planning_regions (name),
     balancing_topology text NULL REFERENCES balancing_topologies (name),
     scenario text NULL,
-    UNIQUE(prime_mover, fuel, scenario)
+    UNIQUE(prime_mover_type, fuel, scenario)
 );
 
 CREATE TABLE transport_technologies(

@@ -1,3 +1,7 @@
+# NOTE: ThermalStandard uses "fuel_type" but ThermalMultiStart uses "fuel" in OpenAPI schemas.
+# This inconsistency means we can't add a simple mapping here. The migration handles this
+# by checking both the table column and the fuel_type attribute.
+# TODO: Fix in PowerSystemSchemas to use consistent field names.
 const OPENAPI_FIELDS_TO_DB = Dict(
     ("transmission_lines", "arc") => "arc_id",
     ("thermal_generators", "bus") => "balancing_topology",
@@ -6,10 +10,6 @@ const OPENAPI_FIELDS_TO_DB = Dict(
     ("storage_units", "bus") => "balancing_topology",
     ("supply_technologies", "bus") => "balancing_topology",
     ("loads", "bus") => "balancing_topology",
-    ("thermal_generators", "prime_mover_type") => "prime_mover",
-    ("renewable_generators", "prime_mover_type") => "prime_mover",
-    ("hydro_generators", "prime_mover_type") => "prime_mover",
-    ("storage_units", "prime_mover_type") => "prime_mover",
     ("arcs", "from") => "from_id",
     ("arcs", "to") => "to_id",
     ("transmission_lines", "rating") => "continuous_rating",
