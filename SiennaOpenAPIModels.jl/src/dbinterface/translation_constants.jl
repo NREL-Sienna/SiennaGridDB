@@ -1,11 +1,15 @@
+# NOTE: ThermalStandard uses "fuel_type" but ThermalMultiStart uses "fuel" in OpenAPI schemas.
+# This inconsistency means we can't add a simple mapping here. The migration handles this
+# by checking both the table column and the fuel_type attribute.
+# TODO: Fix in PowerSystemSchemas to use consistent field names.
 const OPENAPI_FIELDS_TO_DB = Dict(
     ("transmission_lines", "arc") => "arc_id",
-    ("generation_units", "bus") => "balancing_topology",
+    ("thermal_generators", "bus") => "balancing_topology",
+    ("renewable_generators", "bus") => "balancing_topology",
+    ("hydro_generators", "bus") => "balancing_topology",
     ("storage_units", "bus") => "balancing_topology",
     ("supply_technologies", "bus") => "balancing_topology",
     ("loads", "bus") => "balancing_topology",
-    ("generation_units", "prime_mover_type") => "prime_mover",
-    ("storage_units", "prime_mover_type") => "prime_mover",
     ("arcs", "from") => "from_id",
     ("arcs", "to") => "to_id",
     ("transmission_lines", "rating") => "continuous_rating",
@@ -29,14 +33,14 @@ const TYPE_TO_TABLE_LIST = [
     StandardLoad => "loads",
     FixedAdmittance => "loads",
     InterruptiblePowerLoad => "loads",
-    ThermalStandard => "generation_units",
-    RenewableDispatch => "generation_units",
-    EnergyReservoirStorage => "storage_units", # Updated from generation_unit
-    HydroDispatch => "generation_units",
-    HydroTurbine => "generation_units",
-    HydroPumpTurbine => "storage_units", # Updated from generation_unit
-    ThermalMultiStart => "generation_units",
-    RenewableNonDispatch => "generation_units",
+    ThermalStandard => "thermal_generators",
+    ThermalMultiStart => "thermal_generators",
+    RenewableDispatch => "renewable_generators",
+    RenewableNonDispatch => "renewable_generators",
+    HydroDispatch => "hydro_generators",
+    HydroTurbine => "hydro_generators",
+    HydroPumpTurbine => "hydro_generators",
+    EnergyReservoirStorage => "storage_units",
     HydroReservoir => "hydro_reservoir",
 ]
 
@@ -59,13 +63,13 @@ const ALL_PSY_TYPES = [
     PSY.FixedAdmittance,
     PSY.InterruptiblePowerLoad,
     PSY.ThermalStandard,
+    PSY.ThermalMultiStart,
     PSY.RenewableDispatch,
-    PSY.EnergyReservoirStorage,
+    PSY.RenewableNonDispatch,
     PSY.HydroDispatch,
     PSY.HydroTurbine,
     PSY.HydroPumpTurbine,
-    PSY.ThermalMultiStart,
-    PSY.RenewableNonDispatch,
+    PSY.EnergyReservoirStorage,
     PSY.HydroReservoir,
 ]
 
@@ -91,12 +95,12 @@ const ALL_DESERIALIZABLE_TYPES = [
     FixedAdmittance,
     InterruptiblePowerLoad,
     ThermalStandard,
+    ThermalMultiStart,
     RenewableDispatch,
-    EnergyReservoirStorage,
+    RenewableNonDispatch,
     HydroDispatch,
     HydroTurbine,
     HydroPumpTurbine,
-    ThermalMultiStart,
-    RenewableNonDispatch,
+    EnergyReservoirStorage,
     HydroReservoir,
 ]

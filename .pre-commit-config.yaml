@@ -7,6 +7,13 @@ repos:
         entry: found Copier update rejection files; review them and remove them
         language: fail
         files: "\\.rej$"
+      # Validate schema files are in sync across locations
+      - id: schema-sync
+        name: schema sync validation
+        entry: scripts/check-schema-sync.sh
+        language: script
+        files: "schema\\.sql$|triggers\\.sql$"
+        pass_filenames: false
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:

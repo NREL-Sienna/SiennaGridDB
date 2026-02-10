@@ -16,4 +16,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: extractions/setup-just@v3
-      - run: just test
+      - run: just new-db

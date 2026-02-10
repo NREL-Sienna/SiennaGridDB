@@ -7,20 +7,22 @@ using Tables
 include("db_definition.jl")
 include("translation_constants.jl")
 
-function load_to_db!(db, data::Arc)
-    stmt_str = "INSERT INTO arc (id, from_id, to_id)
-        VALUES (?, ?, ?)"
-    DBInterface.execute(db, stmt_str, [data.id, data.from, data.to])
-end
-
 function get_row_field(c::OpenAPI.APIModel, table_name::AbstractString, col_name::Symbol)
-    k = Symbol(get(DB_TO_OPENAPI_FIELDS, (table_name, string(col_name)), col_name))
+    col_str = string(col_name)
+    k = Symbol(get(DB_TO_OPENAPI_FIELDS, (table_name, col_str), col_name))
 
     if !hasproperty(c, k)
         return nothing
-    else
-        return getproperty(c, k)
     end
+
+    val = getproperty(c, k)
+
+    # Serialize JSON columns
+    if col_str in JSON_COLUMNS && val !== nothing
+        return JSON.json(val)
+    end
+
+    return val
 end
 
 function _ignoreattribute(
@@ -61,17 +63,20 @@ function get_row(
     )
 end
 
-function _ignoreattribute(
-    ::Type{EnergyReservoirStorage},
+# Custom get_row for ThermalStandard: fuel_type field maps to fuel column
+# (ThermalMultiStart uses "fuel" directly, but ThermalStandard uses "fuel_type")
+function get_row(
     table_name::AbstractString,
     schema::Tables.Schema,
-    k::AbstractString,
+    c::ThermalStandard,
+    ::PSY.ThermalStandard,
 )
-    if k == "efficiency"
-        return true
-    end
-    col_name = get(OPENAPI_FIELDS_TO_DB, (table_name, k), k)
-    return in(Symbol(col_name), schema.names)
+    return tuple(
+        (
+            col_name == :fuel ? c.fuel_type : get_row_field(c, table_name, col_name) for
+            (col_name, col_type) in zip(schema.names, schema.types)
+        )...,
+    )
 end
 
 function _ignoreattribute(
@@ -86,44 +91,6 @@ function _ignoreattribute(
     end
     col_name = get(OPENAPI_FIELDS_TO_DB, (table_name, k), k)
     return in(Symbol(col_name), schema.names)
-end
-
-function get_row(
-    ::AbstractString,
-    ::Tables.Schema,
-    c::EnergyReservoirStorage,
-    ::PSY.EnergyReservoirStorage,
-)
-    return (
-        c.id,
-        c.name,
-        c.prime_mover_type,
-        c.storage_capacity,
-        c.bus,
-        c.efficiency.in,
-        c.efficiency.out,
-        c.rating,
-        c.base_power,
-    )
-end
-
-function get_row(
-    ::AbstractString,
-    ::Tables.Schema,
-    c::HydroPumpTurbine,
-    ::PSY.HydroPumpTurbine,
-)
-    return (
-        c.id,
-        c.name,
-        c.prime_mover_type,
-        nothing,  # max_capacity - storage capacity is now in HydroReservoir
-        c.bus,
-        c.efficiency.pump,     # efficiency_up (pumping water up)
-        c.efficiency.turbine,  # efficiency_down (water going down through turbine)
-        c.rating,
-        c.base_power,
-    )
 end
 
 function insert_uuid!(attribute_statement, table_name, id, uuid)
@@ -316,45 +283,42 @@ function get_entity_attributes(db)
     return attributes_dict
 end
 
+# JSON columns that should be parsed when reading from DB
+const JSON_COLUMNS = Set([
+    "operation_cost",
+    "active_power_limits",
+    "reactive_power_limits",
+    "ramp_limits",
+    "time_limits",
+    "outflow_limits",
+    "storage_level_limits",
+    "input_active_power_limits",
+    "output_active_power_limits",
+    "efficiency",
+])
+
+function _build_openapi_dict(table_name::AbstractString, row)
+    dict = Dict{String, Any}()
+    for (k, v) in zip(propertynames(row), row)
+        key = get(DB_TO_OPENAPI_FIELDS, (table_name, string(k)), string(k))
+        val = coalesce(v, nothing)
+        # Parse JSON columns from string
+        if key in JSON_COLUMNS && val isa String
+            val = JSON.parse(val)
+        end
+        dict[key] = val
+    end
+    return dict
+end
+
 function make_openapi_dict(
     ::Type{T},
     table_name::AbstractString,
     row,
     extra_attributes::Dict{String, Any},
 ) where {T <: OpenAPI.APIModel}
-    return merge(
-        Dict(
-            get(DB_TO_OPENAPI_FIELDS, (table_name, string(k)), string(k)) =>
-                coalesce(v, nothing) for (k, v) in zip(propertynames(row), row)
-        ),
-        extra_attributes,
-    )
-end
-
-function make_openapi_dict(
-    ::Type{EnergyReservoirStorage},
-    table_name::AbstractString,
-    row,
-    extra_attributes::Dict{String, Any},
-)
-    efficiency_dict = if !isnothing(row.efficiency_up) && !isnothing(row.efficiency_down)
-        Dict{String, Any}(
-            "efficiency" => Dict{String, Any}(
-                "in" => row.efficiency_up,
-                "out" => row.efficiency_down,
-            ),
-        )
-    else
-        Dict{String, Any}()
-    end
-    return merge(
-        Dict(
-            get(DB_TO_OPENAPI_FIELDS, (table_name, string(k)), string(k)) =>
-                coalesce(v, nothing) for (k, v) in zip(propertynames(row), row)
-        ),
-        efficiency_dict,
-        extra_attributes,
-    )
+    dict = _build_openapi_dict(table_name, row)
+    return merge(dict, extra_attributes)
 end
 
 function add_components_to_sys!(
@@ -428,7 +392,7 @@ function add_components_to_sys!(
         """
         SELECT hrc.sink_id FROM hydro_reservoir_connections hrc
         JOIN entities e ON hrc.sink_id = e.id
-        WHERE hrc.source_id = ? AND e.entity_table IN ('generation_units', 'storage_units')
+        WHERE hrc.source_id = ? AND e.entity_table IN ('hydro_generators', 'storage_units')
         """,
     )
     upstream_turbines_stmt = DBInterface.prepare(
@@ -436,7 +400,7 @@ function add_components_to_sys!(
         """
         SELECT hrc.source_id FROM hydro_reservoir_connections hrc
         JOIN entities e ON hrc.source_id = e.id
-        WHERE hrc.sink_id = ? AND e.entity_table IN ('generation_units', 'storage_units')
+        WHERE hrc.sink_id = ? AND e.entity_table IN ('hydro_generators', 'storage_units')
         """,
     )
     upstream_reservoirs_stmt = DBInterface.prepare(

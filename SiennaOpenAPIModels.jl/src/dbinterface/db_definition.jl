@@ -53,39 +53,171 @@ const TABLE_SCHEMAS = Dict(
         ["id", "name", "arc_id", "max_flow_from", "max_flow_to"],
         [Int64, String, Int64, Float64, Float64],
     ),
-    "generation_units" => Tables.Schema(
-        ["id", "name", "prime_mover", "fuel", "balancing_topology", "rating", "base_power"],
-        [Int64, String, String, Union{String, Nothing}, Int64, Float64, Float64],
-    ),
-    "storage_units" => Tables.Schema(
+    "thermal_generators" => Tables.Schema(
         [
             "id",
             "name",
-            "prime_mover",
-            "max_capacity",
+            "prime_mover_type",
+            "fuel",
             "balancing_topology",
-            "efficiency_up",
-            "efficiency_down",
             "rating",
             "base_power",
+            "active_power_limits",
+            "reactive_power_limits",
+            "ramp_limits",
+            "time_limits",
+            "must_run",
+            "available",
+            "status",
+            "active_power",
+            "reactive_power",
+            "operation_cost",
         ],
         [
             Int64,
             String,
             String,
-            Union{Float64, Nothing},
+            String,
             Int64,
-            Union{Float64, Nothing},
-            Union{Float64, Nothing},
             Float64,
             Float64,
+            String,  # JSON: {"min": ..., "max": ...}
+            Union{String, Nothing},  # JSON: {"min": ..., "max": ...}
+            Union{String, Nothing},  # JSON: {"up": ..., "down": ...}
+            Union{String, Nothing},  # JSON: {"up": ..., "down": ...}
+            Bool,
+            Bool,
+            Bool,
+            Float64,
+            Float64,
+            String,  # JSON stored as String
+        ],
+    ),
+    "renewable_generators" => Tables.Schema(
+        [
+            "id",
+            "name",
+            "prime_mover_type",
+            "balancing_topology",
+            "rating",
+            "base_power",
+            "power_factor",
+            "reactive_power_limits",
+            "available",
+            "active_power",
+            "reactive_power",
+            "operation_cost",
+        ],
+        [
+            Int64,
+            String,
+            String,
+            Int64,
+            Float64,
+            Float64,
+            Float64,
+            Union{String, Nothing},  # JSON: {"min": ..., "max": ...}
+            Bool,
+            Float64,
+            Float64,
+            Union{String, Nothing},  # JSON stored as String, NULL for RenewableNonDispatch
+        ],
+    ),
+    "hydro_generators" => Tables.Schema(
+        [
+            "id",
+            "name",
+            "prime_mover_type",
+            "balancing_topology",
+            "rating",
+            "base_power",
+            "active_power_limits",
+            "reactive_power_limits",
+            "ramp_limits",
+            "time_limits",
+            "available",
+            "active_power",
+            "reactive_power",
+            "powerhouse_elevation",
+            "outflow_limits",
+            "conversion_factor",
+            "travel_time",
+            "operation_cost",
+        ],
+        [
+            Int64,
+            String,
+            String,
+            Int64,
+            Float64,
+            Float64,
+            String,  # JSON: {"min": ..., "max": ...}
+            Union{String, Nothing},  # JSON: {"min": ..., "max": ...}
+            Union{String, Nothing},  # JSON: {"up": ..., "down": ...}
+            Union{String, Nothing},  # JSON: {"up": ..., "down": ...}
+            Bool,
+            Float64,
+            Float64,
+            Union{Float64, Nothing},
+            Union{String, Nothing},  # JSON: {"min": ..., "max": ...}
+            Union{Float64, Nothing},
+            Union{Float64, Nothing},
+            String,  # JSON stored as String
+        ],
+    ),
+    "storage_units" => Tables.Schema(
+        [
+            "id",
+            "name",
+            "prime_mover_type",
+            "storage_technology_type",
+            "balancing_topology",
+            "rating",
+            "base_power",
+            "storage_capacity",
+            "storage_level_limits",
+            "initial_storage_capacity_level",
+            "input_active_power_limits",
+            "output_active_power_limits",
+            "efficiency",
+            "reactive_power_limits",
+            "active_power",
+            "reactive_power",
+            "available",
+            "conversion_factor",
+            "storage_target",
+            "cycle_limits",
+            "operation_cost",
+        ],
+        [
+            Int64,
+            String,
+            String,
+            String,
+            Int64,
+            Float64,
+            Float64,
+            Float64,
+            String,  # JSON: {"min": ..., "max": ...}
+            Float64,
+            String,  # JSON: {"min": ..., "max": ...}
+            String,  # JSON: {"min": ..., "max": ...}
+            String,  # JSON: {"in": ..., "out": ...}
+            Union{String, Nothing},  # JSON: {"min": ..., "max": ...}
+            Float64,
+            Float64,
+            Bool,
+            Float64,
+            Float64,
+            Int64,
+            Union{String, Nothing},  # JSON stored as String, nullable
         ],
     ),
     "hydro_reservoir" => Tables.Schema(["id", "name"], [Int64, String]),
     "hydro_reservoir_connections" =>
         Tables.Schema(["source_id", "sink_id"], [Int64, Int64]),
     "supply_technologies" => Tables.Schema(
-        ["id", "prime_mover", "fuel", "area", "balancing_topology", "scenario"],
+        ["id", "prime_mover_type", "fuel", "area", "balancing_topology", "scenario"],
         [
             Int64,
             String,
@@ -99,14 +231,15 @@ const TABLE_SCHEMAS = Dict(
         ["id", "arc_id", "scenario"],
         [Int64, Union{Int64, Nothing}, Union{String, Nothing}],
     ),
-    # NOTE: operational_data is now a view (not a table), defined in views.sql
     "attributes" => Tables.Schema(
-        ["id", "entity_id", "TYPE", "name", "value", "json_type"],
-        [Int64, Int64, String, String, String, String],
+        ["id", "entity_id", "TYPE", "name", "value"],
+        # Note: json_type is a generated column, not included here
+        [Int64, Int64, String, String, String],
     ),
     "supplemental_attributes" => Tables.Schema(
-        ["id", "TYPE", "value", "json_type"],
-        [Int64, String, String, String],
+        ["id", "TYPE", "value"],
+        # Note: json_type is a generated column, not included here
+        [Int64, String, String],
     ),
     "supplemental_attributes_association" =>
         Tables.Schema(["attribute_id", "entity_id"], [Int64, Int64]),
