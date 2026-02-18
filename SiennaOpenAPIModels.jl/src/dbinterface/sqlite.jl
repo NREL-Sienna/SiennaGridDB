@@ -236,7 +236,7 @@ end
 
 function send_table_to_db!(::Type{T}, db, components, ids) where {T}
     table_name = TYPE_TO_TABLE[T]
-    obj_type = last(split(string(T), "."))
+    obj_type = string(nameof(T))
     schema = TABLE_SCHEMAS[table_name]
     return add_components_to_tables!(
         T,
@@ -297,11 +297,29 @@ const JSON_COLUMNS = Set([
     "efficiency",
 ])
 
+# Convert SQLite values to expected Julia types based on TABLE_SCHEMAS.
+# SQLite lacks native boolean type, so booleans come back as integers.
+_convert_sqlite_value(val, ::Type{T}) where {T} = val
+_convert_sqlite_value(val::Integer, ::Type{Bool}) = val != 0
+_convert_sqlite_value(val::Integer, ::Type{Union{Bool, Nothing}}) = val != 0
+_convert_sqlite_value(::Missing, ::Type{Union{T, Nothing}}) where {T} = nothing
+_convert_sqlite_value(::Nothing, ::Type{Union{T, Nothing}}) where {T} = nothing
+
+function _get_column_type(table_name::AbstractString, col_name::Symbol)
+    schema = get(TABLE_SCHEMAS, table_name, nothing)
+    schema === nothing && return Any
+    idx = findfirst(==(col_name), schema.names)
+    idx === nothing && return Any
+    return schema.types[idx]
+end
+
 function _build_openapi_dict(table_name::AbstractString, row)
     dict = Dict{String, Any}()
     for (k, v) in zip(propertynames(row), row)
+        expected_type = _get_column_type(table_name, k)
+        val = _convert_sqlite_value(coalesce(v, nothing), expected_type)
+        val === nothing && continue
         key = get(DB_TO_OPENAPI_FIELDS, (table_name, string(k)), string(k))
-        val = coalesce(v, nothing)
         # Parse JSON columns from string
         if key in JSON_COLUMNS && val isa String
             val = JSON.parse(val)
@@ -311,140 +329,100 @@ function _build_openapi_dict(table_name::AbstractString, row)
     return dict
 end
 
-function make_openapi_dict(
+function build_component_dict(
     ::Type{T},
+    db,
     table_name::AbstractString,
     row,
-    extra_attributes::Dict{String, Any},
-) where {T <: OpenAPI.APIModel}
-    dict = _build_openapi_dict(table_name, row)
-    return merge(dict, extra_attributes)
-end
-
-function add_components_to_sys!(
-    ::Type{OpenAPI_T},
-    sys::PSY.System,
-    db,
-    table_name,
-    rows,
     attributes::Dict{Int64, Dict{String, Any}},
-    resolver::Resolver,
-) where {OpenAPI_T}
-    for row in rows
-        extra_attributes = get(attributes, row.id, Dict{String, Any}())
-        dict = make_openapi_dict(OpenAPI_T, table_name, row, extra_attributes)
-        openapi_obj = OpenAPI.from_json(OpenAPI_T, dict)
-        sienna_obj = openapi2psy(openapi_obj, resolver)
-        if haskey(dict, "uuid")
-            IS.set_uuid!(IS.get_internal(sienna_obj), Base.UUID(dict["uuid"]))
-        end
-        PSY.add_component!(sys, sienna_obj)
-        resolver.id2uuid[row.id] = IS.get_uuid(sienna_obj)
-    end
+) where {T}
+    extra_attrs = get(attributes, row.id, Dict{String, Any}())
+    base_dict = _build_openapi_dict(table_name, row)
+    return merge(base_dict, extra_attrs)
 end
 
-function add_components_to_sys!(
+function build_component_dict(
     ::Type{AreaInterchange},
-    sys::PSY.System,
     db,
-    table_name,
-    rows,
+    table_name::AbstractString,
+    row,
     attributes::Dict{Int64, Dict{String, Any}},
-    resolver::Resolver,
 )
-    for row in rows
-        extra_attributes = get(attributes, row.id, Dict{String, Any}())
-        dict = merge(
-            Dict(
-                get(DB_TO_OPENAPI_FIELDS, (table_name, string(k)), string(k)) =>
-                    coalesce(v, nothing) for (k, v) in zip(propertynames(row), row)
-            ),
-            Dict{String, Any}(  # if you don't put {String, Any}, it fails
-                "flow_limits" => Dict{String, Any}(
-                    "from_to" => row.max_flow_to,
-                    "to_from" => row.max_flow_from,
-                ),
-            ),
-            extra_attributes,
-        )
-        openapi_obj = OpenAPI.from_json(AreaInterchange, dict)
-        sienna_obj = openapi2psy(openapi_obj, resolver)
-        if haskey(dict, "uuid")
-            IS.set_uuid!(IS.get_internal(sienna_obj), Base.UUID(dict["uuid"]))
-        end
-        PSY.add_component!(sys, sienna_obj)
-        resolver.id2uuid[row.id] = IS.get_uuid(sienna_obj)
-    end
+    extra_attrs = get(attributes, row.id, Dict{String, Any}())
+    base_dict = _build_openapi_dict(table_name, row)
+    base_dict["flow_limits"] =
+        Dict{String, Any}("from_to" => row.max_flow_to, "to_from" => row.max_flow_from)
+    return merge(base_dict, extra_attrs)
 end
 
-function add_components_to_sys!(
+function build_component_dict(
     ::Type{HydroReservoir},
-    sys::PSY.System,
     db,
-    table_name,
-    rows,
+    table_name::AbstractString,
+    row,
     attributes::Dict{Int64, Dict{String, Any}},
-    resolver::Resolver,
 )
-    # Prepared statements for connection queries
-    downstream_turbines_stmt = DBInterface.prepare(
-        db,
-        """
-        SELECT hrc.sink_id FROM hydro_reservoir_connections hrc
-        JOIN entities e ON hrc.sink_id = e.id
-        WHERE hrc.source_id = ? AND e.entity_table IN ('hydro_generators', 'storage_units')
-        """,
-    )
-    upstream_turbines_stmt = DBInterface.prepare(
-        db,
-        """
-        SELECT hrc.source_id FROM hydro_reservoir_connections hrc
-        JOIN entities e ON hrc.source_id = e.id
-        WHERE hrc.sink_id = ? AND e.entity_table IN ('hydro_generators', 'storage_units')
-        """,
-    )
-    upstream_reservoirs_stmt = DBInterface.prepare(
-        db,
-        """
+    extra_attrs = get(attributes, row.id, Dict{String, Any}())
+
+    # Query connections
+    downstream_turbines = Int64[
+        r.sink_id for r in DBInterface.execute(
+            db,
+            """
+    SELECT hrc.sink_id FROM hydro_reservoir_connections hrc
+    JOIN entities e ON hrc.sink_id = e.id
+    WHERE hrc.source_id = ? AND e.entity_table IN ('hydro_generators', 'storage_units')
+""",
+            (row.id,),
+        )
+    ]
+    upstream_turbines = Int64[
+        r.source_id for r in DBInterface.execute(
+            db,
+            """
+    SELECT hrc.source_id FROM hydro_reservoir_connections hrc
+    JOIN entities e ON hrc.source_id = e.id
+    WHERE hrc.sink_id = ? AND e.entity_table IN ('hydro_generators', 'storage_units')
+""",
+            (row.id,),
+        )
+    ]
+    upstream_reservoirs = Int64[
+        r.source_id for r in DBInterface.execute(
+            db,
+            """
         SELECT hrc.source_id FROM hydro_reservoir_connections hrc
         JOIN entities e ON hrc.source_id = e.id
         WHERE hrc.sink_id = ? AND e.entity_table = 'hydro_reservoir'
-        """,
-    )
-
-    for row in rows
-        extra_attributes = get(attributes, row.id, Dict{String, Any}())
-
-        # Get connections from the connections table using prepared statements
-        downstream_turbines = Int64[
-            r.sink_id for r in DBInterface.execute(downstream_turbines_stmt, (row.id,))
-        ]
-        upstream_turbines = Int64[
-            r.source_id for r in DBInterface.execute(upstream_turbines_stmt, (row.id,))
-        ]
-        upstream_reservoirs = Int64[
-            r.source_id for r in DBInterface.execute(upstream_reservoirs_stmt, (row.id,))
-        ]
-
-        dict = merge(
-            Dict(
-                get(DB_TO_OPENAPI_FIELDS, (table_name, string(k)), string(k)) =>
-                    coalesce(v, nothing) for (k, v) in zip(propertynames(row), row)
-            ),
-            Dict{String, Any}(
-                "downstream_turbines" => downstream_turbines,
-                "upstream_turbines" => upstream_turbines,
-                "upstream_reservoirs" => upstream_reservoirs,
-            ),
-            extra_attributes,
+    """,
+            (row.id,),
         )
-        openapi_obj = OpenAPI.from_json(HydroReservoir, dict)
-        sienna_obj = openapi2psy(openapi_obj, resolver)
-        if haskey(dict, "uuid")
-            IS.set_uuid!(IS.get_internal(sienna_obj), Base.UUID(dict["uuid"]))
+    ]
+
+    base_dict = _build_openapi_dict(table_name, row)
+    base_dict["downstream_turbines"] = downstream_turbines
+    base_dict["upstream_turbines"] = upstream_turbines
+    base_dict["upstream_reservoirs"] = upstream_reservoirs
+    return merge(base_dict, extra_attrs)
+end
+
+"""
+    foreach_component_dict(f, db)
+
+Iterate over all components in the database, calling `f(OPENAPI_T, dict)`
+for each component. This is the single source of truth for reading components from DB.
+"""
+function foreach_component_dict(f, db)
+    attributes = get_entity_attributes(db)
+    for OPENAPI_T in ALL_DESERIALIZABLE_TYPES
+        table_name = TYPE_TO_TABLE[OPENAPI_T]
+        type_name = string(nameof(OPENAPI_T))
+        query = get_query_for_table_name(table_name)
+        rows = DBInterface.execute(db, query, (type_name,))
+        for row in rows
+            dict = build_component_dict(OPENAPI_T, db, table_name, row, attributes)
+            f(OPENAPI_T, dict)
         end
-        PSY.add_component!(sys, sienna_obj)
-        resolver.id2uuid[row.id] = IS.get_uuid(sienna_obj)
     end
 end
 
@@ -479,31 +457,32 @@ function get_query_for_table_name(table_name)
 end
 
 function db2sys!(sys::PSY.System, db, resolver::Resolver; time_series=false)
-    attributes = get_entity_attributes(db)
     row_counts = Dict{String, Int64}()
-    all_entities = 0
-    # We need to parse ALL_TYPES in a specific order to resolver correctly
-    for OPENAPI_T in ALL_DESERIALIZABLE_TYPES
+
+    foreach_component_dict(db) do OPENAPI_T, dict
         table_name = TYPE_TO_TABLE[OPENAPI_T]
-        obj_type = last(split(string(OPENAPI_T), "."))
-        # Query the specific table joining with entities to filter by type
-        query = get_query_for_table_name(table_name)
-        rows = DBInterface.execute(db, query, (obj_type,))
-        # HydroReservoir needs db to query connections table
-        add_components_to_sys!(OPENAPI_T, sys, db, table_name, rows, attributes, resolver)
-        row_counts[table_name] =
-            get(row_counts, table_name, 0) + (length(resolver.id2uuid) - all_entities)
-        all_entities = length(resolver.id2uuid)
+        row_counts[table_name] = get(row_counts, table_name, 0) + 1
+
+        openapi_obj = OpenAPI.from_json(OPENAPI_T, dict)
+        sienna_obj = openapi2psy(openapi_obj, resolver)
+        if haskey(dict, "uuid")
+            IS.set_uuid!(IS.get_internal(sienna_obj), Base.UUID(dict["uuid"]))
+        end
+        PSY.add_component!(sys, sienna_obj)
+        resolver.id2uuid[dict["id"]] = IS.get_uuid(sienna_obj)
     end
+
     for (table_name, _) in TABLE_SCHEMAS
-        if table_name == "attributes" ||
-           table_name == "entities" ||
-           table_name == "prime_mover_types" ||
-           table_name == "fuels" ||
-           table_name == "entity_types" ||
-           table_name == "time_series_associations" ||
-           table_name == "static_time_series" ||
-           table_name == "hydro_reservoir_connections"
+        if table_name in (
+            "attributes",
+            "entities",
+            "prime_mover_types",
+            "fuels",
+            "entity_types",
+            "time_series_associations",
+            "static_time_series",
+            "hydro_reservoir_connections",
+        )
             continue
         end
         result = DBInterface.execute(db, "SELECT count(*) from $table_name")
@@ -523,4 +502,68 @@ function db2sys(db; time_series=false)
     resolver = Resolver(sys, Dict{Int64, UUID}())
     db2sys!(sys, db, resolver, time_series=time_series)
     return sys
+end
+
+"""
+    db2openapi_json(db, output_path; system_name="", base_power=100.0, description="")
+
+Export a SQLite database to OpenAPI-compliant JSON format.
+
+# Arguments
+
+  - `db`: SQLite database connection
+  - `output_path`: Path for the output JSON file
+  - `system_name`: Optional name for the system (default: "")
+  - `base_power`: System base power in MVA (default: 100.0)
+  - `description`: Optional system description (default: "")
+
+# Output JSON structure
+
+```json
+{
+  "system": {
+    "name": "...",
+    "base_power": 100.0,
+    "description": "..."
+  },
+  "components": {
+    "Area": [...],
+    "ACBus": [...],
+    "ThermalStandard": [...],
+    ...
+  }
+}
+```
+"""
+function db2openapi_json(
+    db,
+    output_path::AbstractString;
+    system_name::AbstractString="",
+    base_power::Real=100.0,
+    description::AbstractString="",
+)
+    components_dict = Dict{String, Vector{Dict{String, Any}}}()
+
+    foreach_component_dict(db) do OPENAPI_T, dict
+        type_name = string(nameof(OPENAPI_T))
+        if !haskey(components_dict, type_name)
+            components_dict[type_name] = Vector{Dict{String, Any}}()
+        end
+        push!(components_dict[type_name], dict)
+    end
+
+    output = Dict{String, Any}(
+        "system" => Dict{String, Any}(
+            "name" => system_name,
+            "base_power" => base_power,
+            "description" => description,
+        ),
+        "components" => components_dict,
+    )
+
+    open(output_path, "w") do io
+        JSON.print(io, output, 2)
+    end
+
+    return output_path
 end
