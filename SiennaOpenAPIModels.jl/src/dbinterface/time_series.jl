@@ -146,9 +146,7 @@ end
 
 function transform_associations!(sys::PSY.System, associations, ids::IDGenerator)
     associations = PSY.DataFrames.coalesce.(associations, nothing)
-    type_strings =
-        SiennaOpenAPIModels.ALL_DESERIALIZABLE_TYPES .|> (x -> last(split(string(x), ".")))
-    deserializable_string(x) = in(x, type_strings)
+    deserializable_string(x) = haskey(SiennaOpenAPIModels.TYPE_NAMES, x)
 
     associations = associations[deserializable_string.(associations[!, "owner_type"]), :]
     associations[!, "owner_id"] =
