@@ -287,3 +287,102 @@ SELECT CASE
         )
     END;
 END;
+
+-- Reverse cascade triggers: delete from entities when child table row is deleted
+CREATE TRIGGER IF NOT EXISTS delete_planning_regions_entity
+AFTER DELETE ON planning_regions
+FOR EACH ROW
+BEGIN
+    DELETE FROM entities WHERE id = OLD.id;
+END;
+
+CREATE TRIGGER IF NOT EXISTS delete_balancing_topologies_entity
+AFTER DELETE ON balancing_topologies
+FOR EACH ROW
+BEGIN
+    DELETE FROM entities WHERE id = OLD.id;
+END;
+
+CREATE TRIGGER IF NOT EXISTS delete_arcs_entity
+AFTER DELETE ON arcs
+FOR EACH ROW
+BEGIN
+    DELETE FROM entities WHERE id = OLD.id;
+END;
+
+CREATE TRIGGER IF NOT EXISTS delete_transmission_lines_entity
+AFTER DELETE ON transmission_lines
+FOR EACH ROW
+BEGIN
+    DELETE FROM entities WHERE id = OLD.id;
+END;
+
+CREATE TRIGGER IF NOT EXISTS delete_transmission_interchanges_entity
+AFTER DELETE ON transmission_interchanges
+FOR EACH ROW
+BEGIN
+    DELETE FROM entities WHERE id = OLD.id;
+END;
+
+CREATE TRIGGER IF NOT EXISTS delete_thermal_generators_entity
+AFTER DELETE ON thermal_generators
+FOR EACH ROW
+BEGIN
+    DELETE FROM entities WHERE id = OLD.id;
+END;
+
+CREATE TRIGGER IF NOT EXISTS delete_renewable_generators_entity
+AFTER DELETE ON renewable_generators
+FOR EACH ROW
+BEGIN
+    DELETE FROM entities WHERE id = OLD.id;
+END;
+
+CREATE TRIGGER IF NOT EXISTS delete_hydro_generators_entity
+AFTER DELETE ON hydro_generators
+FOR EACH ROW
+BEGIN
+    DELETE FROM entities WHERE id = OLD.id;
+END;
+
+CREATE TRIGGER IF NOT EXISTS delete_storage_units_entity
+AFTER DELETE ON storage_units
+FOR EACH ROW
+BEGIN
+    DELETE FROM entities WHERE id = OLD.id;
+END;
+
+CREATE TRIGGER IF NOT EXISTS delete_hydro_reservoir_entity
+AFTER DELETE ON hydro_reservoir
+FOR EACH ROW
+BEGIN
+    DELETE FROM entities WHERE id = OLD.id;
+END;
+
+CREATE TRIGGER IF NOT EXISTS delete_supply_technologies_entity
+AFTER DELETE ON supply_technologies
+FOR EACH ROW
+BEGIN
+    DELETE FROM entities WHERE id = OLD.id;
+END;
+
+CREATE TRIGGER IF NOT EXISTS delete_transport_technologies_entity
+AFTER DELETE ON transport_technologies
+FOR EACH ROW
+BEGIN
+    DELETE FROM entities WHERE id = OLD.id;
+END;
+
+CREATE TRIGGER IF NOT EXISTS delete_supplemental_attributes_entity
+AFTER DELETE ON supplemental_attributes
+FOR EACH ROW
+BEGIN
+    DELETE FROM entities WHERE id = OLD.id;
+END;
+
+CREATE TRIGGER IF NOT EXISTS delete_loads_entity
+AFTER DELETE ON loads
+FOR EACH ROW
+BEGIN
+    DELETE FROM entities WHERE id = OLD.id;
+END;
