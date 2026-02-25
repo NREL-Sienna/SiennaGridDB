@@ -190,7 +190,7 @@ function send_table_to_db!(::Type{HydroReservoir}, db, components, ids)
     for component in components
         uuid = IS.get_uuid(component)
         openapi_component = psy2openapi(component, ids)
-        row = (openapi_component.id, openapi_component.name)
+        row = get_row(table_name, schema, openapi_component, component)
         DBInterface.execute(entity_statement, (openapi_component.id,))
         DBInterface.execute(table_statement, row)
         insert_attributes!(
@@ -236,7 +236,7 @@ end
 
 function send_table_to_db!(::Type{T}, db, components, ids) where {T}
     table_name = TYPE_TO_TABLE[T]
-    obj_type = last(split(string(T), "."))
+    obj_type = string(nameof(T))
     schema = TABLE_SCHEMAS[table_name]
     return add_components_to_tables!(
         T,
@@ -295,6 +295,8 @@ const JSON_COLUMNS = Set([
     "input_active_power_limits",
     "output_active_power_limits",
     "efficiency",
+    "spillage_limits",
+    "head_to_volume_factor",
 ])
 
 function _build_openapi_dict(table_name::AbstractString, row)
@@ -414,30 +416,18 @@ function add_components_to_sys!(
 
     for row in rows
         extra_attributes = get(attributes, row.id, Dict{String, Any}())
-
-        # Get connections from the connections table using prepared statements
-        downstream_turbines = Int64[
+        # Add connections from the connections table
+        extra_attributes["downstream_turbines"] = Int64[
             r.sink_id for r in DBInterface.execute(downstream_turbines_stmt, (row.id,))
         ]
-        upstream_turbines = Int64[
+        extra_attributes["upstream_turbines"] = Int64[
             r.source_id for r in DBInterface.execute(upstream_turbines_stmt, (row.id,))
         ]
-        upstream_reservoirs = Int64[
+        extra_attributes["upstream_reservoirs"] = Int64[
             r.source_id for r in DBInterface.execute(upstream_reservoirs_stmt, (row.id,))
         ]
 
-        dict = merge(
-            Dict(
-                get(DB_TO_OPENAPI_FIELDS, (table_name, string(k)), string(k)) =>
-                    coalesce(v, nothing) for (k, v) in zip(propertynames(row), row)
-            ),
-            Dict{String, Any}(
-                "downstream_turbines" => downstream_turbines,
-                "upstream_turbines" => upstream_turbines,
-                "upstream_reservoirs" => upstream_reservoirs,
-            ),
-            extra_attributes,
-        )
+        dict = make_openapi_dict(HydroReservoir, table_name, row, extra_attributes)
         openapi_obj = OpenAPI.from_json(HydroReservoir, dict)
         sienna_obj = openapi2psy(openapi_obj, resolver)
         if haskey(dict, "uuid")
@@ -485,7 +475,7 @@ function db2sys!(sys::PSY.System, db, resolver::Resolver; time_series=false)
     # We need to parse ALL_TYPES in a specific order to resolver correctly
     for OPENAPI_T in ALL_DESERIALIZABLE_TYPES
         table_name = TYPE_TO_TABLE[OPENAPI_T]
-        obj_type = last(split(string(OPENAPI_T), "."))
+        obj_type = string(nameof(OPENAPI_T))
         # Query the specific table joining with entities to filter by type
         query = get_query_for_table_name(table_name)
         rows = DBInterface.execute(db, query, (obj_type,))

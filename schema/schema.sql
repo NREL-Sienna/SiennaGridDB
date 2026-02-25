@@ -162,7 +162,7 @@ CREATE TABLE thermal_generators (
     -- Operational flags:
     must_run BOOLEAN NOT NULL DEFAULT FALSE,
     available BOOLEAN NOT NULL DEFAULT TRUE,
-    STATUS BOOLEAN NOT NULL DEFAULT FALSE,
+    "status" BOOLEAN NOT NULL DEFAULT FALSE,
     -- Initial setpoints:
     active_power REAL NOT NULL DEFAULT 0.0,
     reactive_power REAL NOT NULL DEFAULT 0.0,
@@ -260,7 +260,25 @@ CREATE TABLE storage_units (
 );
 
 -- Topological hydro reservoirs
-CREATE TABLE hydro_reservoir(name text NOT NULL, UNIQUE(name));
+CREATE TABLE hydro_reservoir(
+    id INTEGER PRIMARY KEY REFERENCES entities (id) ON DELETE CASCADE,
+    name TEXT NOT NULL UNIQUE,
+    available BOOLEAN NOT NULL DEFAULT TRUE,
+    -- Storage level limits (JSON: {"min": ..., "max": ...}):
+    storage_level_limits JSON NOT NULL,
+    initial_level REAL NOT NULL,
+    -- Spillage limits (JSON: {"min": ..., "max": ...}, nullable):
+    spillage_limits JSON NULL,
+    inflow REAL NOT NULL DEFAULT 0.0,
+    outflow REAL NOT NULL DEFAULT 0.0,
+    level_targets REAL NULL,
+    intake_elevation REAL NOT NULL DEFAULT 0.0,
+    -- Head to volume relationship (JSON ValueCurve):
+    head_to_volume_factor JSON NOT NULL,
+    -- Cost (HydroReservoirCost):
+    operation_cost JSON NOT NULL DEFAULT '{"cost_type": "HYDRO_RES", "level_shortage_cost": 0.0, "level_surplus_cost": 0.0, "spillage_cost": 0.0}',
+    level_data_type TEXT NOT NULL DEFAULT 'USABLE_VOLUME'
+);
 
 CREATE TABLE hydro_reservoir_connections(
     source_id integer NOT NULL REFERENCES entities(id) ON DELETE CASCADE,

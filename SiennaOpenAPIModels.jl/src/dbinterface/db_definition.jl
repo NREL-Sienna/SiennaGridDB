@@ -213,7 +213,38 @@ const TABLE_SCHEMAS = Dict(
             Union{String, Nothing},  # JSON stored as String, nullable
         ],
     ),
-    "hydro_reservoir" => Tables.Schema(["id", "name"], [Int64, String]),
+    "hydro_reservoir" => Tables.Schema(
+        [
+            "id",
+            "name",
+            "available",
+            "storage_level_limits",
+            "initial_level",
+            "spillage_limits",
+            "inflow",
+            "outflow",
+            "level_targets",
+            "intake_elevation",
+            "head_to_volume_factor",
+            "operation_cost",
+            "level_data_type",
+        ],
+        [
+            Int64,
+            String,
+            Bool,
+            String,  # JSON
+            Float64,
+            Union{String, Nothing},  # JSON, nullable
+            Float64,
+            Float64,
+            Union{Float64, Nothing},
+            Float64,
+            String,  # JSON
+            String,  # JSON
+            String,
+        ],
+    ),
     "hydro_reservoir_connections" =>
         Tables.Schema(["source_id", "sink_id"], [Int64, Int64]),
     "supply_technologies" => Tables.Schema(

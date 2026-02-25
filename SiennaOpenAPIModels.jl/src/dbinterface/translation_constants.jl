@@ -76,7 +76,7 @@ const ALL_PSY_TYPES = [
 const ALL_TYPES = first.(TYPE_TO_TABLE_LIST)
 const PSY_TO_OPENAPI_TYPE = Dict(k => v for (k, v) in zip(ALL_PSY_TYPES, ALL_TYPES))
 const OPENAPI_TYPE_TO_PSY = Dict(v => k for (k, v) in zip(ALL_PSY_TYPES, ALL_TYPES))
-const TYPE_NAMES = Dict(string(t) => t for t in ALL_TYPES)
+const TYPE_NAMES = Dict(string(nameof(t)) => t for t in ALL_TYPES)
 
 const ALL_DESERIALIZABLE_TYPES = [
     Area,
