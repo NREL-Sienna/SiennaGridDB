@@ -118,8 +118,9 @@ CREATE TABLE balancing_topologies (
 -- Physical connection between entities.
 CREATE TABLE arcs (
     id integer PRIMARY KEY REFERENCES entities (id) ON DELETE CASCADE,
-    from_id integer,
-    to_id integer,
+    from_id integer NOT NULL,
+    to_id integer NOT NULL,
+    CHECK (from_id <> to_id),
     FOREIGN KEY (from_id) REFERENCES entities (id) ON DELETE CASCADE,
     FOREIGN KEY (to_id) REFERENCES entities (id) ON DELETE CASCADE
 );
@@ -301,9 +302,21 @@ CREATE TABLE supply_technologies (
     fuel text NULL REFERENCES fuels(name),
     area integer NULL REFERENCES planning_regions (id) ON DELETE SET NULL,
     balancing_topology integer NULL REFERENCES balancing_topologies (id) ON DELETE SET NULL,
-    scenario text NULL,
-    UNIQUE(prime_mover_type, fuel, scenario)
+    scenario text NULL
 );
+
+CREATE UNIQUE INDEX uq_supply_tech_all
+    ON supply_technologies(prime_mover_type, fuel, scenario)
+    WHERE fuel IS NOT NULL AND scenario IS NOT NULL;
+CREATE UNIQUE INDEX uq_supply_tech_no_fuel
+    ON supply_technologies(prime_mover_type, scenario)
+    WHERE fuel IS NULL AND scenario IS NOT NULL;
+CREATE UNIQUE INDEX uq_supply_tech_no_scenario
+    ON supply_technologies(prime_mover_type, fuel)
+    WHERE fuel IS NOT NULL AND scenario IS NULL;
+CREATE UNIQUE INDEX uq_supply_tech_no_fuel_no_scenario
+    ON supply_technologies(prime_mover_type)
+    WHERE fuel IS NULL AND scenario IS NULL;
 
 CREATE TABLE transport_technologies(
     id integer PRIMARY KEY REFERENCES entities (id) ON DELETE CASCADE,
@@ -345,7 +358,8 @@ CREATE TABLE supplemental_attributes_association (
     attribute_id integer NOT NULL,
     entity_id integer NOT NULL,
     FOREIGN KEY (entity_id) REFERENCES entities (id) ON DELETE CASCADE,
-    FOREIGN KEY (attribute_id) REFERENCES supplemental_attributes (id) ON DELETE CASCADE
+    FOREIGN KEY (attribute_id) REFERENCES supplemental_attributes (id) ON DELETE CASCADE,
+    PRIMARY KEY (attribute_id, entity_id)
 ) strict;
 
 CREATE TABLE time_series_associations(
@@ -387,7 +401,7 @@ CREATE TABLE loads (
 
 CREATE TABLE static_time_series (
     id integer PRIMARY KEY,
-    uuid text NULL,
+    uuid text NOT NULL,
     idx integer NOT NULL,
     value real NOT NULL
 );

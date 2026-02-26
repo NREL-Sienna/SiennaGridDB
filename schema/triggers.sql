@@ -12,6 +12,20 @@ SELECT RAISE(
     );
 END;
 
+CREATE TRIGGER IF NOT EXISTS check_balancing_topologies_entity_exists BEFORE
+INSERT ON balancing_topologies
+    WHEN NOT EXISTS (
+        SELECT 1
+        FROM entities
+        WHERE id = NEW.id
+            AND entity_table = 'balancing_topologies'
+    ) BEGIN
+SELECT RAISE(
+        ABORT,
+        'Entity ID must exist in entities table with entity_table balancing_topologies before insertion'
+    );
+END;
+
 CREATE TRIGGER IF NOT EXISTS check_arcs_entity_exists BEFORE
 INSERT ON arcs
     WHEN NOT EXISTS (
@@ -217,6 +231,40 @@ SELECT CASE
     END;
 END;
 
+CREATE TRIGGER enforce_arc_entity_types_update
+AFTER UPDATE OF from_id, to_id ON arcs BEGIN
+SELECT CASE
+        WHEN NOT EXISTS (
+            SELECT 1
+            FROM entities
+            WHERE id = NEW.from_id
+        ) THEN RAISE(ABORT, 'from_id entity does not exist')
+        WHEN NOT EXISTS (
+            SELECT 1
+            FROM entities
+            WHERE id = NEW.to_id
+        ) THEN RAISE(ABORT, 'to_id entity does not exist')
+        WHEN (
+            SELECT et.is_topology
+            FROM entities e
+            JOIN entity_types et ON e.entity_type = et.name
+            WHERE e.id = NEW.from_id
+        ) = 0 THEN RAISE(
+            ABORT,
+            'Invalid from_id entity type: must be a topology type (entity_types.is_topology = 1)'
+        )
+        WHEN (
+            SELECT et.is_topology
+            FROM entities e
+            JOIN entity_types et ON e.entity_type = et.name
+            WHERE e.id = NEW.to_id
+        ) = 0 THEN RAISE(
+            ABORT,
+            'Invalid to_id entity type: must be a topology type (entity_types.is_topology = 1)'
+        )
+    END;
+END;
+
 -- Validate entity categories for consistency
 CREATE TRIGGER validate_entity_category_consistency BEFORE
 INSERT ON entities BEGIN
@@ -262,6 +310,33 @@ SELECT CASE
     END;
 END;
 
+CREATE TRIGGER IF NOT EXISTS enforce_turbine_single_upstream_reservoir_update
+BEFORE UPDATE OF source_id, sink_id ON hydro_reservoir_connections
+    WHEN (
+        SELECT entity_table
+        FROM entities
+        WHERE id = NEW.sink_id
+    ) IN ('hydro_generators', 'storage_units')
+    AND (
+        SELECT entity_table
+        FROM entities
+        WHERE id = NEW.source_id
+    ) = 'hydro_reservoir' BEGIN
+SELECT CASE
+        WHEN EXISTS (
+            SELECT 1
+            FROM hydro_reservoir_connections hrc
+                JOIN entities e_source ON hrc.source_id = e_source.id
+            WHERE hrc.sink_id = NEW.sink_id
+                AND e_source.entity_table = 'hydro_reservoir'
+                AND hrc.rowid != OLD.rowid
+        ) THEN RAISE(
+            ABORT,
+            'Turbine already has an upstream reservoir. Each turbine can have at most 1 upstream reservoir.'
+        )
+    END;
+END;
+
 -- Enforce that a turbine can have at most 1 downstream reservoir
 -- (i.e., at most 1 row where source is a turbine and sink is a reservoir)
 CREATE TRIGGER IF NOT EXISTS enforce_turbine_single_downstream_reservoir BEFORE
@@ -285,6 +360,33 @@ SELECT CASE
                 JOIN entities e_sink ON hrc.sink_id = e_sink.id
             WHERE hrc.source_id = NEW.source_id
                 AND e_sink.entity_table = 'hydro_reservoir'
+        ) THEN RAISE(
+            ABORT,
+            'Turbine already has a downstream reservoir. Each turbine can have at most 1 downstream reservoir.'
+        )
+    END;
+END;
+
+CREATE TRIGGER IF NOT EXISTS enforce_turbine_single_downstream_reservoir_update
+BEFORE UPDATE OF source_id, sink_id ON hydro_reservoir_connections
+    WHEN (
+        SELECT entity_table
+        FROM entities
+        WHERE id = NEW.source_id
+    ) IN ('hydro_generators', 'storage_units')
+    AND (
+        SELECT entity_table
+        FROM entities
+        WHERE id = NEW.sink_id
+    ) = 'hydro_reservoir' BEGIN
+SELECT CASE
+        WHEN EXISTS (
+            SELECT 1
+            FROM hydro_reservoir_connections hrc
+                JOIN entities e_sink ON hrc.sink_id = e_sink.id
+            WHERE hrc.source_id = NEW.source_id
+                AND e_sink.entity_table = 'hydro_reservoir'
+                AND hrc.rowid != OLD.rowid
         ) THEN RAISE(
             ABORT,
             'Turbine already has a downstream reservoir. Each turbine can have at most 1 downstream reservoir.'
