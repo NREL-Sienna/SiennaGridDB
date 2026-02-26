@@ -296,19 +296,11 @@ CREATE TABLE supply_technologies (
     id integer PRIMARY KEY REFERENCES entities (id) ON DELETE CASCADE,
     prime_mover_type text NOT NULL REFERENCES prime_mover_types(name),
     fuel text NULL REFERENCES fuels(name),
-    area integer NULL REFERENCES planning_regions (id) ON DELETE SET NULL,
-    balancing_topology integer NULL REFERENCES balancing_topologies (id) ON DELETE SET NULL,
-    scenario text NULL
+    area text NULL REFERENCES planning_regions (name) ON DELETE SET NULL,
+    balancing_topology text NULL REFERENCES balancing_topologies (name) ON DELETE SET NULL,
+    scenario text NULL,
+    UNIQUE(prime_mover_type, fuel, scenario)
 );
-
-CREATE UNIQUE INDEX uq_supply_tech_all ON supply_technologies (prime_mover_type, fuel, scenario)
-    WHERE fuel IS NOT NULL AND scenario IS NOT NULL;
-CREATE UNIQUE INDEX uq_supply_tech_no_fuel ON supply_technologies (prime_mover_type, scenario)
-    WHERE fuel IS NULL AND scenario IS NOT NULL;
-CREATE UNIQUE INDEX uq_supply_tech_no_scenario ON supply_technologies (prime_mover_type, fuel)
-    WHERE fuel IS NOT NULL AND scenario IS NULL;
-CREATE UNIQUE INDEX uq_supply_tech_no_fuel_no_scenario ON supply_technologies (prime_mover_type)
-    WHERE fuel IS NULL AND scenario IS NULL;
 
 CREATE TABLE transport_technologies(
     id integer PRIMARY KEY REFERENCES entities (id) ON DELETE CASCADE,
@@ -331,8 +323,7 @@ CREATE TABLE attributes (
     name text NOT NULL,
     value json NOT NULL,
     json_type text generated always AS (json_type(value)) virtual,
-    FOREIGN KEY (entity_id) REFERENCES entities (id) ON DELETE CASCADE,
-    UNIQUE(entity_id, name)
+    FOREIGN KEY (entity_id) REFERENCES entities (id) ON DELETE CASCADE
 );
 
 -- NOTE: Supplemental are optional parameters that can be linked to entities.
@@ -349,7 +340,6 @@ CREATE TABLE supplemental_attributes (
 CREATE TABLE supplemental_attributes_association (
     attribute_id integer NOT NULL,
     entity_id integer NOT NULL,
-    PRIMARY KEY (attribute_id, entity_id),
     FOREIGN KEY (entity_id) REFERENCES entities (id) ON DELETE CASCADE,
     FOREIGN KEY (attribute_id) REFERENCES supplemental_attributes (id) ON DELETE CASCADE
 ) strict;
@@ -397,5 +387,3 @@ CREATE TABLE static_time_series (
     idx integer NOT NULL,
     value real NOT NULL
 );
-
-CREATE INDEX idx_static_time_series_uuid ON static_time_series (uuid);
