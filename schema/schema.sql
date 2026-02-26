@@ -323,7 +323,8 @@ CREATE TABLE attributes (
     name text NOT NULL,
     value json NOT NULL,
     json_type text generated always AS (json_type(value)) virtual,
-    FOREIGN KEY (entity_id) REFERENCES entities (id) ON DELETE CASCADE
+    FOREIGN KEY (entity_id) REFERENCES entities (id) ON DELETE CASCADE,
+    UNIQUE(entity_id, name)
 );
 
 -- NOTE: Supplemental are optional parameters that can be linked to entities.
