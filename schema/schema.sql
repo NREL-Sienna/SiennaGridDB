@@ -67,7 +67,10 @@ CREATE TABLE entities (
 );
 
 -- Table of possible entity types
-CREATE TABLE entity_types (name text PRIMARY KEY);
+CREATE TABLE entity_types (
+    name text PRIMARY KEY,
+    is_topology integer NOT NULL DEFAULT 0
+);
 
 -- NOTE: Sienna-griddb follows the convention of the EIA prime mover where we
 -- have a `prime_mover` and `fuel` to classify generators/storage units.

@@ -197,32 +197,22 @@ SELECT CASE
             WHERE id = NEW.to_id
         ) THEN RAISE(ABORT, 'to_id entity does not exist')
         WHEN (
-            SELECT entity_type
-            FROM entities
-            WHERE id = NEW.from_id
-        ) NOT IN (
-            'balancing_topologies',
-            'planning_regions',
-            'LoadZone',
-            'ACBus',
-            'Area'
-        ) THEN RAISE(
+            SELECT et.is_topology
+            FROM entities e
+            JOIN entity_types et ON e.entity_type = et.name
+            WHERE e.id = NEW.from_id
+        ) = 0 THEN RAISE(
             ABORT,
-            'Invalid from_id entity type: must be balancing topology or planning region'
+            'Invalid from_id entity type: must be a topology type (entity_types.is_topology = 1)'
         )
         WHEN (
-            SELECT entity_type
-            FROM entities
-            WHERE id = NEW.to_id
-        ) NOT IN (
-            'balancing_topologies',
-            'planning_regions',
-            'LoadZone',
-            'ACBus',
-            'Area'
-        ) THEN RAISE(
+            SELECT et.is_topology
+            FROM entities e
+            JOIN entity_types et ON e.entity_type = et.name
+            WHERE e.id = NEW.to_id
+        ) = 0 THEN RAISE(
             ABORT,
-            'Invalid to_id entity type: must be balancing topology or planning region'
+            'Invalid to_id entity type: must be a topology type (entity_types.is_topology = 1)'
         )
     END;
 END;
