@@ -20,7 +20,7 @@ DROP TABLE IF EXISTS balancing_topologies;
 
 DROP TABLE IF EXISTS supply_technologies;
 
-DROP TABLE IF EXISTS storage_technologies;
+DROP TABLE IF EXISTS storage_technology_types;
 
 DROP TABLE IF EXISTS transmission_lines;
 
@@ -41,8 +41,6 @@ DROP TABLE IF EXISTS static_time_series;
 DROP TABLE IF EXISTS entity_types;
 
 DROP TABLE IF EXISTS supplemental_attributes;
-
-DROP TABLE IF EXISTS attributes_associations;
 
 DROP TABLE IF EXISTS arcs;
 
@@ -84,6 +82,12 @@ CREATE TABLE prime_mover_types (
 );
 
 CREATE TABLE fuels(
+    id integer PRIMARY KEY,
+    name text NOT NULL UNIQUE,
+    description text NULL
+);
+
+CREATE TABLE storage_technology_types (
     id integer PRIMARY KEY,
     name text NOT NULL UNIQUE,
     description text NULL
@@ -231,7 +235,7 @@ CREATE TABLE storage_units (
     id INTEGER PRIMARY KEY REFERENCES entities (id) ON DELETE CASCADE,
     name TEXT NOT NULL UNIQUE,
     prime_mover_type TEXT NOT NULL REFERENCES prime_mover_types(name),
-    storage_technology_type TEXT NOT NULL,
+    storage_technology_type TEXT NOT NULL REFERENCES storage_technology_types(name),
     balancing_topology INTEGER NOT NULL REFERENCES balancing_topologies (id) ON DELETE CASCADE,
     rating REAL NOT NULL CHECK (rating >= 0),
     base_power REAL NOT NULL CHECK (base_power > 0),
@@ -292,17 +296,25 @@ CREATE TABLE supply_technologies (
     id integer PRIMARY KEY REFERENCES entities (id) ON DELETE CASCADE,
     prime_mover_type text NOT NULL REFERENCES prime_mover_types(name),
     fuel text NULL REFERENCES fuels(name),
-    area text NULL REFERENCES planning_regions (name) ON DELETE SET NULL,
-    balancing_topology text NULL REFERENCES balancing_topologies (name) ON DELETE SET NULL,
-    scenario text NULL,
-    UNIQUE(prime_mover_type, fuel, scenario)
+    area integer NULL REFERENCES planning_regions (id) ON DELETE SET NULL,
+    balancing_topology integer NULL REFERENCES balancing_topologies (id) ON DELETE SET NULL,
+    scenario text NULL
 );
+
+CREATE UNIQUE INDEX uq_supply_tech_all ON supply_technologies (prime_mover_type, fuel, scenario)
+    WHERE fuel IS NOT NULL AND scenario IS NOT NULL;
+CREATE UNIQUE INDEX uq_supply_tech_no_fuel ON supply_technologies (prime_mover_type, scenario)
+    WHERE fuel IS NULL AND scenario IS NOT NULL;
+CREATE UNIQUE INDEX uq_supply_tech_no_scenario ON supply_technologies (prime_mover_type, fuel)
+    WHERE fuel IS NOT NULL AND scenario IS NULL;
+CREATE UNIQUE INDEX uq_supply_tech_no_fuel_no_scenario ON supply_technologies (prime_mover_type)
+    WHERE fuel IS NULL AND scenario IS NULL;
 
 CREATE TABLE transport_technologies(
     id integer PRIMARY KEY REFERENCES entities (id) ON DELETE CASCADE,
     arc_id integer NULL REFERENCES arcs(id) ON DELETE SET NULL,
     scenario text NULL,
-    UNIQUE(id, arc_id, scenario)
+    UNIQUE(arc_id, scenario)
 );
 
 -- NOTE: Attributes are additional parameters that can be linked to entities.
@@ -319,7 +331,8 @@ CREATE TABLE attributes (
     name text NOT NULL,
     value json NOT NULL,
     json_type text generated always AS (json_type(value)) virtual,
-    FOREIGN KEY (entity_id) REFERENCES entities (id) ON DELETE CASCADE
+    FOREIGN KEY (entity_id) REFERENCES entities (id) ON DELETE CASCADE,
+    UNIQUE(entity_id, name)
 );
 
 -- NOTE: Supplemental are optional parameters that can be linked to entities.
@@ -336,6 +349,7 @@ CREATE TABLE supplemental_attributes (
 CREATE TABLE supplemental_attributes_association (
     attribute_id integer NOT NULL,
     entity_id integer NOT NULL,
+    PRIMARY KEY (attribute_id, entity_id),
     FOREIGN KEY (entity_id) REFERENCES entities (id) ON DELETE CASCADE,
     FOREIGN KEY (attribute_id) REFERENCES supplemental_attributes (id) ON DELETE CASCADE
 ) strict;
@@ -383,3 +397,5 @@ CREATE TABLE static_time_series (
     idx integer NOT NULL,
     value real NOT NULL
 );
+
+CREATE INDEX idx_static_time_series_uuid ON static_time_series (uuid);
