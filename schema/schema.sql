@@ -405,3 +405,7 @@ CREATE TABLE static_time_series (
     idx integer NOT NULL,
     value real NOT NULL
 );
+
+CREATE INDEX idx_static_time_series_uuid_idx ON static_time_series (uuid, idx);
+CREATE INDEX idx_arcs_from ON arcs (from_id);
+CREATE INDEX idx_arcs_to ON arcs (to_id);

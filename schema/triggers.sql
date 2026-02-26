@@ -265,21 +265,6 @@ SELECT CASE
     END;
 END;
 
--- Validate entity categories for consistency
-CREATE TRIGGER validate_entity_category_consistency BEFORE
-INSERT ON entities BEGIN
-SELECT CASE
-        WHEN NOT EXISTS (
-            SELECT 1
-            FROM entity_types
-            WHERE name = NEW.entity_type
-        ) THEN RAISE(
-            ABORT,
-            'Invalid entity_type not found in entity_types'
-        )
-    END;
-END;
-
 -- Enforce that a turbine can have at most 1 upstream reservoir
 -- (i.e., at most 1 row where sink is a turbine and source is a reservoir)
 CREATE TRIGGER IF NOT EXISTS enforce_turbine_single_upstream_reservoir BEFORE
