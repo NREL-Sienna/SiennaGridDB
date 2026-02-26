@@ -357,48 +357,53 @@ function build_component_dict(
     return merge(base_dict, extra_attrs)
 end
 
+# Prepared statements for HydroReservoir connection queries
+function _prepare_hydro_stmts(db)
+    return (
+        downstream_turbines=DBInterface.prepare(
+            db,
+            """
+            SELECT hrc.sink_id FROM hydro_reservoir_connections hrc
+            JOIN entities e ON hrc.sink_id = e.id
+            WHERE hrc.source_id = ? AND e.entity_table IN ('hydro_generators', 'storage_units')
+            """,
+        ),
+        upstream_turbines=DBInterface.prepare(
+            db,
+            """
+            SELECT hrc.source_id FROM hydro_reservoir_connections hrc
+            JOIN entities e ON hrc.source_id = e.id
+            WHERE hrc.sink_id = ? AND e.entity_table IN ('hydro_generators', 'storage_units')
+            """,
+        ),
+        upstream_reservoirs=DBInterface.prepare(
+            db,
+            """
+            SELECT hrc.source_id FROM hydro_reservoir_connections hrc
+            JOIN entities e ON hrc.source_id = e.id
+            WHERE hrc.sink_id = ? AND e.entity_table = 'hydro_reservoir'
+            """,
+        ),
+    )
+end
+
 function build_component_dict(
     ::Type{HydroReservoir},
-    db,
     table_name::AbstractString,
     row,
     attributes::Dict{Int64, Dict{String, Any}},
+    hydro_stmts::NamedTuple,
 )
     extra_attrs = get(attributes, row.id, Dict{String, Any}())
 
-    # Query connections
     downstream_turbines = Int64[
-        r.sink_id for r in DBInterface.execute(
-            db,
-            """
-    SELECT hrc.sink_id FROM hydro_reservoir_connections hrc
-    JOIN entities e ON hrc.sink_id = e.id
-    WHERE hrc.source_id = ? AND e.entity_table IN ('hydro_generators', 'storage_units')
-""",
-            (row.id,),
-        )
+        r.sink_id for r in DBInterface.execute(hydro_stmts.downstream_turbines, (row.id,))
     ]
     upstream_turbines = Int64[
-        r.source_id for r in DBInterface.execute(
-            db,
-            """
-    SELECT hrc.source_id FROM hydro_reservoir_connections hrc
-    JOIN entities e ON hrc.source_id = e.id
-    WHERE hrc.sink_id = ? AND e.entity_table IN ('hydro_generators', 'storage_units')
-""",
-            (row.id,),
-        )
+        r.source_id for r in DBInterface.execute(hydro_stmts.upstream_turbines, (row.id,))
     ]
     upstream_reservoirs = Int64[
-        r.source_id for r in DBInterface.execute(
-            db,
-            """
-        SELECT hrc.source_id FROM hydro_reservoir_connections hrc
-        JOIN entities e ON hrc.source_id = e.id
-        WHERE hrc.sink_id = ? AND e.entity_table = 'hydro_reservoir'
-    """,
-            (row.id,),
-        )
+        r.source_id for r in DBInterface.execute(hydro_stmts.upstream_reservoirs, (row.id,))
     ]
 
     base_dict = _build_openapi_dict(table_name, row)
@@ -416,14 +421,28 @@ for each component. This is the single source of truth for reading components fr
 """
 function foreach_component_dict(f, db)
     attributes = get_entity_attributes(db)
+    hydro_stmts = _prepare_hydro_stmts(db)
     for OPENAPI_T in ALL_DESERIALIZABLE_TYPES
         table_name = TYPE_TO_TABLE[OPENAPI_T]
         type_name = string(nameof(OPENAPI_T))
         query = get_query_for_table_name(table_name)
         rows = DBInterface.execute(db, query, (type_name,))
-        for row in rows
-            dict = build_component_dict(OPENAPI_T, db, table_name, row, attributes)
-            f(OPENAPI_T, dict)
+        if OPENAPI_T === HydroReservoir
+            for row in rows
+                dict = build_component_dict(
+                    OPENAPI_T,
+                    table_name,
+                    row,
+                    attributes,
+                    hydro_stmts,
+                )
+                f(OPENAPI_T, dict)
+            end
+        else
+            for row in rows
+                dict = build_component_dict(OPENAPI_T, db, table_name, row, attributes)
+                f(OPENAPI_T, dict)
+            end
         end
     end
 end
