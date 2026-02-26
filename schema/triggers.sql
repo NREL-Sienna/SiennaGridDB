@@ -1,3 +1,17 @@
+CREATE TRIGGER IF NOT EXISTS check_planning_regions_entity_exists BEFORE
+INSERT ON planning_regions
+    WHEN NOT EXISTS (
+        SELECT 1
+        FROM entities
+        WHERE id = NEW.id
+            AND entity_table = 'planning_regions'
+    ) BEGIN
+SELECT RAISE(
+        ABORT,
+        'Entity ID must exist in entities table with entity_table planning_regions before insertion'
+    );
+END;
+
 CREATE TRIGGER IF NOT EXISTS check_arcs_entity_exists BEFORE
 INSERT ON arcs
     WHEN NOT EXISTS (

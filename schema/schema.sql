@@ -296,8 +296,8 @@ CREATE TABLE supply_technologies (
     id integer PRIMARY KEY REFERENCES entities (id) ON DELETE CASCADE,
     prime_mover_type text NOT NULL REFERENCES prime_mover_types(name),
     fuel text NULL REFERENCES fuels(name),
-    area text NULL REFERENCES planning_regions (name) ON DELETE SET NULL,
-    balancing_topology text NULL REFERENCES balancing_topologies (name) ON DELETE SET NULL,
+    area integer NULL REFERENCES planning_regions (id) ON DELETE SET NULL,
+    balancing_topology integer NULL REFERENCES balancing_topologies (id) ON DELETE SET NULL,
     scenario text NULL,
     UNIQUE(prime_mover_type, fuel, scenario)
 );
