@@ -1,22 +1,3 @@
-CREATE VIEW IF NOT EXISTS deterministic_time_series_view AS WITH json_data AS (
-    SELECT deterministic_forecast_time_series.time_series_id,
-        deterministic_forecast_time_series.id,
-        deterministic_forecast_time_series.timestamp,
-        json_each.value,
-        ROW_NUMBER() OVER (
-            PARTITION BY deterministic_forecast_time_series.id
-            ORDER BY json_each.value
-        ) AS horizon
-    FROM deterministic_forecast_time_series,
-        json_each(deterministic_forecast_time_series.value)
-)
-SELECT time_series_id,
-    id,
-    timestamp,
-    horizon,
-    value
-FROM json_data;
-
 CREATE VIEW IF NOT EXISTS operational_data AS
 SELECT e.id AS entity_id,
     e.entity_table,
@@ -47,5 +28,4 @@ WHERE -- Only include entities that have at least one operational attribute
         OR tl.entity_id IS NOT NULL
         OR rl.entity_id IS NOT NULL
         OR oc.entity_id IS NOT NULL
-    )
-    AND e.entity_type IN ('ThermalStandard', 'ThermalMultiStart');
+    );
