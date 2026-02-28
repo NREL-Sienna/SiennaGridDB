@@ -69,7 +69,7 @@ CREATE TABLE entities (
 -- Table of possible entity types
 CREATE TABLE entity_types (
     name TEXT PRIMARY KEY,
-    is_topology BOOLEAN DEFAULT FALSE
+    is_topology BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 -- NOTE: Sienna-griddb follows the convention of the EIA prime mover where we
