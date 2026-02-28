@@ -66,10 +66,10 @@ CREATE TABLE entities (
     entity_table text NOT NULL,
     entity_type text NOT NULL,
     FOREIGN KEY (entity_type) REFERENCES entity_types (name)
-);
+) strict;
 
 -- Table of possible entity types
-CREATE TABLE entity_types (name text PRIMARY KEY);
+CREATE TABLE entity_types (name text PRIMARY KEY) strict;
 
 -- NOTE: Sienna-griddb follows the convention of the EIA prime mover where we
 -- have a `prime_mover` and `fuel` to classify generators/storage units.
@@ -81,20 +81,20 @@ CREATE TABLE prime_mover_types (
     id integer PRIMARY KEY,
     name text NOT NULL UNIQUE,
     description text NULL
-);
+) strict;
 
 CREATE TABLE fuels(
     id integer PRIMARY KEY,
     name text NOT NULL UNIQUE,
     description text NULL
-);
+) strict;
 
 -- Investment regions
 CREATE TABLE planning_regions (
     id integer PRIMARY KEY REFERENCES entities (id) ON DELETE CASCADE,
     name text NOT NULL UNIQUE,
     description text NULL
-);
+) strict;
 
 -- Balancing topologies for the system. Could be either buses, or larger
 -- aggregated regions.
@@ -103,7 +103,7 @@ CREATE TABLE balancing_topologies (
     name text NOT NULL UNIQUE,
     area integer NULL REFERENCES planning_regions (id) ON DELETE SET NULL,
     description text NULL
-);
+) strict;
 
 -- NOTE: The purpose of this table is to provide links different entities that
 -- naturally have a relantionship not model dependent (e.g., transmission lines,
@@ -115,7 +115,7 @@ CREATE TABLE arcs (
     to_id integer,
     FOREIGN KEY (from_id) REFERENCES entities (id) ON DELETE CASCADE,
     FOREIGN KEY (to_id) REFERENCES entities (id) ON DELETE CASCADE
-);
+) strict;
 
 -- Existing transmission lines
 CREATE TABLE transmission_lines (
@@ -285,7 +285,7 @@ CREATE TABLE hydro_reservoir_connections(
     sink_id integer NOT NULL REFERENCES entities(id) ON DELETE CASCADE,
     CHECK (source_id <> sink_id),
     PRIMARY KEY (source_id, sink_id)
-);
+) strict;
 -- investment for expansion problems.
 -- Investment technology options for expansion problems
 CREATE TABLE supply_technologies (
@@ -382,4 +382,4 @@ CREATE TABLE static_time_series (
     uuid text NULL,
     idx integer NOT NULL,
     value real NOT NULL
-);
+) strict;
