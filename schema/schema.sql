@@ -64,7 +64,7 @@ CREATE TABLE entities (
     entity_table TEXT NOT NULL,
     entity_type TEXT NOT NULL,
     FOREIGN KEY (entity_type) REFERENCES entity_types (name)
-);
+) strict;
 
 -- Table of possible entity types
 CREATE TABLE entity_types (
@@ -82,26 +82,26 @@ CREATE TABLE prime_mover_types (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL UNIQUE,
     description TEXT NULL
-);
+) strict;
 
 CREATE TABLE fuels (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL UNIQUE,
     description TEXT NULL
-);
+) strict;
 
 CREATE TABLE storage_technology_types (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL UNIQUE,
     description TEXT NULL
-);
+) strict;
 
 -- Investment regions
 CREATE TABLE planning_regions (
     id INTEGER PRIMARY KEY REFERENCES entities (id) ON DELETE CASCADE,
     name TEXT NOT NULL UNIQUE,
     description TEXT NULL
-);
+) strict;
 
 -- Balancing topologies for the system. Could be either buses, or larger
 -- aggregated regions.
@@ -110,7 +110,7 @@ CREATE TABLE balancing_topologies (
     name TEXT NOT NULL UNIQUE,
     area INTEGER NULL REFERENCES planning_regions (id) ON DELETE SET NULL,
     description TEXT NULL
-);
+) strict;
 
 -- NOTE: The purpose of this table is to provide links different entities that
 -- naturally have a relantionship not model dependent (e.g., transmission lines,
@@ -123,7 +123,7 @@ CREATE TABLE arcs (
     CHECK (from_id <> to_id),
     FOREIGN KEY (from_id) REFERENCES entities (id) ON DELETE CASCADE,
     FOREIGN KEY (to_id) REFERENCES entities (id) ON DELETE CASCADE
-);
+) strict;
 
 -- Existing transmission lines
 CREATE TABLE transmission_lines (
@@ -293,7 +293,7 @@ CREATE TABLE hydro_reservoir_connections (
     sink_id INTEGER NOT NULL REFERENCES entities(id) ON DELETE CASCADE,
     CHECK (source_id <> sink_id),
     PRIMARY KEY (source_id, sink_id)
-);
+) strict;
 -- investment for expansion problems.
 -- Investment technology options for expansion problems
 CREATE TABLE supply_technologies (
@@ -403,7 +403,7 @@ CREATE TABLE static_time_series (
     uuid TEXT NOT NULL,
     idx INTEGER NOT NULL,
     value REAL NOT NULL
-);
+) strict;
 
 CREATE INDEX idx_static_time_series_uuid_idx ON static_time_series (uuid, idx);
 CREATE INDEX idx_arcs_from ON arcs (from_id);
