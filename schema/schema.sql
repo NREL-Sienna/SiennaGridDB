@@ -321,8 +321,7 @@ CREATE UNIQUE INDEX uq_supply_tech_no_fuel_no_scenario
 CREATE TABLE transport_technologies (
     id INTEGER PRIMARY KEY REFERENCES entities (id) ON DELETE CASCADE,
     arc_id INTEGER NULL REFERENCES arcs(id) ON DELETE SET NULL,
-    scenario TEXT NULL,
-    UNIQUE(arc_id, scenario)
+    scenario TEXT NULL
 );
 
 -- NOTE: Attributes are additional parameters that can be linked to entities.
