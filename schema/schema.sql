@@ -58,8 +58,6 @@ DROP TABLE IF EXISTS supplemental_attributes_association;
 
 DROP TABLE IF EXISTS transport_technologies;
 
-DROP TABLE IF EXISTS known_units;
-
 DROP TABLE IF EXISTS unit_conventions;
 
 DROP TABLE IF EXISTS quantity_types;
@@ -497,8 +495,7 @@ CREATE TABLE quantity_types (
     name TEXT PRIMARY KEY NOT NULL,
     default_unit TEXT NOT NULL,
     dimension TEXT NOT NULL,
-    description TEXT NULL,
-    cim_domain_class TEXT NULL
+    description TEXT NULL
 ) strict;
 
 CREATE TABLE unit_conventions (
@@ -516,10 +513,3 @@ CREATE TABLE unit_conventions (
     UNIQUE(table_name, column_name)
 ) strict;
 
-CREATE TABLE known_units (
-    quantity_type TEXT NOT NULL REFERENCES quantity_types (name),
-    unit TEXT NOT NULL,
-    conversion_to_default REAL NULL,
-    description TEXT NULL,
-    PRIMARY KEY (quantity_type, unit)
-) strict;
