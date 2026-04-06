@@ -22,6 +22,10 @@ DROP TABLE IF EXISTS supply_technologies;
 
 DROP TABLE IF EXISTS storage_technology_types;
 
+DROP TABLE IF EXISTS storage_technologies;
+
+DROP TABLE IF EXISTS demand_technologies;
+
 DROP TABLE IF EXISTS transmission_lines;
 
 DROP TABLE IF EXISTS planning_regions;
@@ -298,30 +302,90 @@ CREATE TABLE hydro_reservoir_connections (
 -- Investment technology options for expansion problems
 CREATE TABLE supply_technologies (
     id INTEGER PRIMARY KEY REFERENCES entities (id) ON DELETE CASCADE,
+    name TEXT NOT NULL UNIQUE,
     prime_mover_type TEXT NOT NULL REFERENCES prime_mover_types(name),
-    fuel TEXT NULL REFERENCES fuels(name),
-    area INTEGER NULL REFERENCES planning_regions (id) ON DELETE SET NULL,
-    balancing_topology INTEGER NULL REFERENCES balancing_topologies (id) ON DELETE SET NULL,
-    scenario TEXT NULL
+    region JSON NOT NULL,
+    power_systems_type TEXT NOT NULL,
+    lifetime INTEGER NULL,
+    unit_size REAL NULL,
+    -- Capacity limits (JSON: {"min": ..., "max": ...}, MW):
+    capacity_limits JSON NULL,
+    -- Fuel information:
+    fuel TEXT NOT NULL DEFAULT '["OTHER"]',
+    start_fuel_mmbtu_per_mwh REAL NULL,
+    -- Fuel cofire limits (JSON: {"fuel1": {"min": ..., "max": ...}, "fuel2": {"min": ..., "max": ...}}):
+    cofire_level_limits JSON NULL,
+    -- Fuel cofire start limits (JSON: {"fuel1": ..., "fuel2": ...}):
+    cofire_start_limits JSON NULL,
+    -- CO2 emissions (JSON: {"fuel1": ..., "fuel2": ...}, tons per MMBTU):
+    co2 JSON NULL,
+    -- Operational information:
+    available BOOLEAN NOT NULL DEFAULT TRUE,
+    -- Ramp limits (JSON: {"up": ..., "down": ...}, MW/min):
+    ramp_limits JSON NULL,
+    -- Time limits (JSON: {"up": ..., "down": ...}, hours):
+    time_limits JSON NULL,
+    outage_factor REAL NULL,
+    min_generation_fraction REAL NULL,
+    -- Financial data:
+    -- Capital cost (complex structure, stored as JSON):
+    capital_costs JSON NOT NULL DEFAULT '{"curve_type": "INPUT_OUTPUT", "function_data": {"function_type": "LINEAR", "proportional_term": 0, "constant_term": 0}}',
+    -- Cost (complex structure, stored as JSON):
+    operation_costs JSON NOT NULL DEFAULT '{"cost_type": "THERMAL", "fixed": 0, "shut_down": 0, "start_up": 0, "variable": {"variable_cost_type": "COST", "power_units": "NATURAL_UNITS", "value_curve": {"curve_type": "INPUT_OUTPUT", "function_data": {"function_type": "LINEAR", "proportional_term": 0, "constant_term": 0}}, "vom_cost": {"curve_type": "INPUT_OUTPUT", "function_data": {"function_type": "LINEAR", "proportional_term": 0, "constant_term": 0}}}}',
+    -- Other financial parameters (complex structure, stored as JSON):
+    financial_data JSON NOT NULL
 );
 
-CREATE UNIQUE INDEX uq_supply_tech_all
-    ON supply_technologies(prime_mover_type, fuel, scenario)
-    WHERE fuel IS NOT NULL AND scenario IS NOT NULL;
-CREATE UNIQUE INDEX uq_supply_tech_no_fuel
-    ON supply_technologies(prime_mover_type, scenario)
-    WHERE fuel IS NULL AND scenario IS NOT NULL;
-CREATE UNIQUE INDEX uq_supply_tech_no_scenario
-    ON supply_technologies(prime_mover_type, fuel)
-    WHERE fuel IS NOT NULL AND scenario IS NULL;
-CREATE UNIQUE INDEX uq_supply_tech_no_fuel_no_scenario
-    ON supply_technologies(prime_mover_type)
-    WHERE fuel IS NULL AND scenario IS NULL;
+CREATE TABLE storage_technologies (
+    id INTEGER PRIMARY KEY REFERENCES entities (id) ON DELETE CASCADE,
+    name TEXT NOT NULL UNIQUE,
+    prime_mover_type TEXT NOT NULL REFERENCES prime_mover_types(name),
+    storage_tech TEXT NOT NULL DEFAULT '["OTHER"]',
+    region JSON NOT NULL,
+    power_systems_type TEXT NOT NULL,
+    lifetime INTEGER NULL,
+    unit_size_charge REAL NULL,
+    unit_size_discharge REAL NULL,
+    unit_size_energy REAL NULL,
+    -- Capacity limits (JSON: {"min": ..., "max": ...}, MW):
+    capacity_limits_charge JSON NULL,
+    capacity_limits_discharge JSON NULL,
+    capacity_limits_energy JSON NULL,
+    -- Operational information:
+    available BOOLEAN NOT NULL DEFAULT TRUE,
+    -- Duration limits (JSON: {"min": ..., "max": ...}, hours):
+    duration_limits JSON NULL,
+    -- Efficiency (JSON: {"in": ..., "out": ...}, fraction):
+    efficiency JSON NULL,
+    min_discharge_fraction REAL NULL,
+    losses REAL NULL,
+    -- Financial data:
+    -- Capital cost (complex structure, stored as JSON):
+    capital_costs_charge JSON NULL,
+    capital_costs_discharge JSON NOT NULL DEFAULT '{"curve_type": "INPUT_OUTPUT", "function_data": {"function_type": "LINEAR", "proportional_term": 0, "constant_term": 0}}',
+    capital_costs_energy JSON NOT NULL DEFAULT '{"curve_type": "INPUT_OUTPUT", "function_data": {"function_type": "LINEAR", "proportional_term": 0, "constant_term": 0}}',
+    -- Cost (complex structure, stored as JSON):
+    operation_costs JSON NOT NULL DEFAULT '{"cost_type": "THERMAL", "fixed": 0, "shut_down": 0, "start_up": 0, "variable": {"variable_cost_type": "COST", "power_units": "NATURAL_UNITS", "value_curve": {"curve_type": "INPUT_OUTPUT", "function_data": {"function_type": "LINEAR", "proportional_term": 0, "constant_term": 0}}, "vom_cost": {"curve_type": "INPUT_OUTPUT", "function_data": {"function_type": "LINEAR", "proportional_term": 0, "constant_term": 0}}}}',
+    -- Other financial parameters (complex structure, stored as JSON):
+    financial_data JSON NOT NULL
+);
 
 CREATE TABLE transport_technologies (
     id INTEGER PRIMARY KEY REFERENCES entities (id) ON DELETE CASCADE,
-    arc_id INTEGER NULL REFERENCES arcs(id) ON DELETE SET NULL,
-    scenario TEXT NULL
+    name TEXT NOT NULL UNIQUE,
+    power_systems_type TEXT NOT NULL,
+    available BOOLEAN NOT NULL DEFAULT TRUE,
+    capital_costs JSON NOT NULL DEFAULT '{"curve_type": "INPUT_OUTPUT", "function_data": {"function_type": "LINEAR", "proportional_term": 0, "constant_term": 0}}',
+    financial_data JSON NOT NULL,
+    unit_size REAL NULL
+);
+
+CREATE TABLE demand_technologies (
+    id INTEGER PRIMARY KEY REFERENCES entities (id) ON DELETE CASCADE,
+    name TEXT NOT NULL UNIQUE,
+    available BOOLEAN NOT NULL DEFAULT TRUE,
+    region TEXT NOT NULL,
+    power_systems_type TEXT NOT NULL
 );
 
 -- NOTE: Attributes are additional parameters that can be linked to entities.
