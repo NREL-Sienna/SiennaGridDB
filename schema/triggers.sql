@@ -464,6 +464,20 @@ BEGIN
     DELETE FROM entities WHERE id = OLD.id;
 END;
 
+CREATE TRIGGER IF NOT EXISTS delete_storage_technologies_entity
+AFTER DELETE ON storage_technologies
+FOR EACH ROW
+BEGIN
+    DELETE FROM entities WHERE id = OLD.id;
+END;
+
+CREATE TRIGGER IF NOT EXISTS delete_demand_technologies_entity
+AFTER DELETE ON demand_technologies
+FOR EACH ROW
+BEGIN
+    DELETE FROM entities WHERE id = OLD.id;
+END;
+
 CREATE TRIGGER IF NOT EXISTS delete_supplemental_attributes_entity
 AFTER DELETE ON supplemental_attributes
 FOR EACH ROW
