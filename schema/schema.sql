@@ -58,6 +58,12 @@ DROP TABLE IF EXISTS supplemental_attributes_association;
 
 DROP TABLE IF EXISTS transport_technologies;
 
+DROP TABLE IF EXISTS unit_conventions;
+
+DROP TABLE IF EXISTS quantity_types;
+
+DROP TABLE IF EXISTS system_metadata;
+
 PRAGMA foreign_keys = ON;
 
 -- NOTE: This table should not be interacted directly since it gets populated
@@ -112,8 +118,10 @@ CREATE TABLE planning_regions (
 CREATE TABLE balancing_topologies (
     id INTEGER PRIMARY KEY REFERENCES entities (id) ON DELETE CASCADE,
     name TEXT NOT NULL UNIQUE,
-    area INTEGER NULL REFERENCES planning_regions (id) ON DELETE SET NULL,
-    description TEXT NULL
+    area INTEGER NULL REFERENCES planning_regions (id) ON DELETE
+    SET
+        NULL,
+        description TEXT NULL
 ) strict;
 
 -- NOTE: The purpose of this table is to provide links different entities that
@@ -298,6 +306,7 @@ CREATE TABLE hydro_reservoir_connections (
     CHECK (source_id <> sink_id),
     PRIMARY KEY (source_id, sink_id)
 ) strict;
+
 -- investment for expansion problems.
 -- Investment technology options for expansion problems
 CREATE TABLE supply_technologies (
@@ -401,6 +410,8 @@ CREATE TABLE attributes (
     TYPE TEXT NOT NULL,
     name TEXT NOT NULL,
     value JSON NOT NULL,
+    unit TEXT NULL,
+    quantity_type TEXT NULL REFERENCES quantity_types (name),
     json_type TEXT generated always AS (json_type(value)) virtual,
     FOREIGN KEY (entity_id) REFERENCES entities (id) ON DELETE CASCADE,
     UNIQUE(entity_id, name)
@@ -444,6 +455,7 @@ CREATE TABLE time_series_associations(
     metadata_uuid TEXT NOT NULL,
     units TEXT NULL
 );
+
 CREATE UNIQUE INDEX uq_time_series_assoc_owner_type_name_res_feat ON time_series_associations (
     owner_id,
     time_series_type,
@@ -451,8 +463,8 @@ CREATE UNIQUE INDEX uq_time_series_assoc_owner_type_name_res_feat ON time_series
     resolution,
     features
 );
-CREATE INDEX idx_time_series_assoc_uuid ON time_series_associations (time_series_uuid);
 
+CREATE INDEX idx_time_series_assoc_uuid ON time_series_associations (time_series_uuid);
 
 CREATE TABLE loads (
     id INTEGER PRIMARY KEY REFERENCES entities (id) ON DELETE CASCADE,
@@ -466,9 +478,43 @@ CREATE TABLE static_time_series (
     id INTEGER PRIMARY KEY,
     uuid TEXT NOT NULL,
     idx INTEGER NOT NULL,
-    value REAL NOT NULL
+    value REAL NOT NULL,
+    unit TEXT NULL,
+    quantity_type TEXT NULL REFERENCES quantity_types (name)
 ) strict;
 
 CREATE INDEX idx_static_time_series_uuid_idx ON static_time_series (uuid, idx);
+
 CREATE INDEX idx_arcs_from ON arcs (from_id);
+
 CREATE INDEX idx_arcs_to ON arcs (to_id);
+
+-- Unit System Registry Tables
+-- These tables are schema-level metadata, not runtime data.
+-- They are sealed after migration and protected by immutability triggers.
+CREATE TABLE system_metadata (
+    KEY TEXT PRIMARY KEY NOT NULL,
+    value TEXT NOT NULL,
+    description TEXT NULL
+) strict;
+
+CREATE TABLE quantity_types (
+    name TEXT PRIMARY KEY NOT NULL,
+    default_unit TEXT NOT NULL,
+    dimension TEXT NOT NULL,
+    per_unit INTEGER NOT NULL DEFAULT 0,
+    description TEXT NULL
+) strict;
+
+CREATE TABLE unit_conventions (
+    id INTEGER PRIMARY KEY,
+    table_name TEXT NOT NULL,
+    column_name TEXT NOT NULL,
+    quantity_type TEXT NOT NULL REFERENCES quantity_types (name),
+    unit TEXT NOT NULL,
+    companion_column TEXT NULL,
+    is_per_unit INTEGER NOT NULL DEFAULT 0,
+    per_unit_base_column TEXT NULL,
+    description TEXT NULL,
+    UNIQUE(table_name, column_name)
+) strict;
