@@ -62,7 +62,7 @@ DROP TABLE IF EXISTS unit_conventions;
 
 DROP TABLE IF EXISTS quantity_types;
 
-DROP TABLE IF EXISTS system_metadata;
+DROP TABLE IF EXISTS unit_management_metadata;
 
 PRAGMA foreign_keys = ON;
 
@@ -479,8 +479,8 @@ CREATE TABLE static_time_series (
     uuid TEXT NOT NULL,
     idx INTEGER NOT NULL,
     value REAL NOT NULL,
-    unit TEXT NULL,
-    quantity_type TEXT NULL REFERENCES quantity_types (name)
+    unit TEXT NOT NULL,
+    quantity_type TEXT NOT NULL REFERENCES quantity_types (name)
 ) strict;
 
 CREATE INDEX idx_static_time_series_uuid_idx ON static_time_series (uuid, idx);
@@ -492,7 +492,7 @@ CREATE INDEX idx_arcs_to ON arcs (to_id);
 -- Unit System Registry Tables
 -- These tables are schema-level metadata, not runtime data.
 -- They are sealed after migration and protected by immutability triggers.
-CREATE TABLE system_metadata (
+CREATE TABLE unit_management_metadata (
     KEY TEXT PRIMARY KEY NOT NULL,
     value TEXT NOT NULL,
     description TEXT NULL
